@@ -1,6 +1,4 @@
-Domain Model
-
-Phiên bản đã rút gọn: giảm entity/quan hệ trùng lặp, bổ sung thuộc tính còn thiếu, vẫn giữ 3 loại lô (LoNguyenVatLieu, LoThanhPham, LoHangTraVe) và ChiTietLo để một lô có nhiều mặt hàng với số lượng riêng.
+### Domain Model
 
 1. Nhóm Tài khoản / Người dùng
 
