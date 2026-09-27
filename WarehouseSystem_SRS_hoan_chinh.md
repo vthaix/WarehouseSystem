@@ -1476,3 +1476,612 @@ NhuCauNVL_i = SoLuongTP × DinhMucNVL_i
 ThieuNVL_i = max(0, NhuCauNVL_i − TonKhoKhaDung_i)
 
 Tổng số lượng cần mua cho NVL i chỉ lấy phần ThieuNVL_i và chỉ được phát sinh thành YeuCauMuaNVL sau khi Ban giám đốc chọn “Cho phép mua”.
+
+## Domain Model
+
+erDiagram
+
+    %% =========================
+    %% 1. TAI KHOAN / NGUOI DUNG
+    %% =========================
+
+    NguoiDung {
+        string MaNguoiDung PK
+        string HoTen
+        string TenDangNhap
+        string MatKhau
+        string SoDienThoai
+        string Email
+        string TrangThai
+    }
+
+    KhachHang {
+        string MaKhachHang PK, FK
+        string DiaChi
+    }
+
+    NhanVien {
+        string MaNhanVien PK, FK
+        string MaBoPhan FK
+        string ChucVu
+    }
+
+    VaiTro {
+        string MaVaiTro PK
+        string TenVaiTro
+        string MoTa
+    }
+
+    NguoiDung_VaiTro {
+        string MaNguoiDung FK
+        string MaVaiTro FK
+    }
+
+    NguoiDung ||--o| KhachHang : "ke thua"
+    NguoiDung ||--o| NhanVien : "ke thua"
+    NguoiDung ||--o{ NguoiDung_VaiTro : "co"
+    VaiTro ||--o{ NguoiDung_VaiTro : "gan"
+
+
+    %% =========================
+    %% 2. DON HANG KHACH HANG
+    %% =========================
+
+    DonHang {
+        string MaDonHang PK
+        string MaKhachHang FK
+        date NgayDat
+        string TrangThaiDonHang
+        date NgayGiaoDuKien
+        string GhiChu
+    }
+
+    ChiTietDonHang {
+        string MaDonHang PK, FK
+        string MaMatHang PK, FK
+        decimal SoLuong
+        decimal DonGia
+    }
+
+    TrangThaiDonHang {
+        string MaTrangThai PK
+        string TenTrangThai
+        string MoTa
+    }
+
+    KhachHang ||--o{ DonHang : "dat"
+    DonHang ||--|{ ChiTietDonHang : "co"
+    MatHang ||--o{ ChiTietDonHang : "duoc_dat"
+
+
+    %% =========================
+    %% 3. MAT HANG
+    %% =========================
+
+    MatHang {
+        string MaMatHang PK
+        string TenMatHang
+        string LoaiHang
+        string DonViTinh
+        string MoTa
+        string TrangThai
+    }
+
+    NguyenVatLieu {
+        string MaMatHang PK, FK
+    }
+
+    ThanhPham {
+        string MaMatHang PK, FK
+    }
+
+    LoaiHang {
+        string MaLoaiHang PK
+        string TenLoaiHang
+        string MoTa
+    }
+
+    MatHang ||--o| NguyenVatLieu : "ke thua"
+    MatHang ||--o| ThanhPham : "ke thua"
+    LoaiHang ||--o{ MatHang : "phan loai"
+
+
+    %% =========================
+    %% 4. XUONG / NCC / BO PHAN
+    %% =========================
+
+    Xuong {
+        string MaXuong PK
+        string TenXuong
+        string DiaDiem
+        string MoTa
+        string TrangThai
+    }
+
+    NhaCungCap {
+        string MaNhaCungCap PK
+        string TenNhaCungCap
+        string DiaChi
+        string SoDienThoai
+        string Email
+        string GhiChu
+    }
+
+    BoPhan {
+        string MaBoPhan PK
+        string TenBoPhan
+        string MoTa
+    }
+
+    BoPhan ||--o{ NhanVien : "quan ly"
+
+
+    %% =========================
+    %% 5. KE HOACH SAN XUAT
+    %% =========================
+
+    KeHoachSanXuat {
+        string MaKeHoachSanXuat PK
+        string MaDonHang FK
+        string MaXuong FK
+        date NgayLap
+        date NgayNhanDuKien
+        string TrangThai
+        string GhiChu
+    }
+
+    ChiTietKeHoachSanXuat {
+        string MaKeHoachSanXuat PK, FK
+        string MaMatHang PK, FK
+        decimal SoLuong
+    }
+
+    DonHang ||--o{ KeHoachSanXuat : "lap"
+    Xuong ||--o{ KeHoachSanXuat : "thuc_hien"
+    KeHoachSanXuat ||--|{ ChiTietKeHoachSanXuat : "co"
+    MatHang ||--o{ ChiTietKeHoachSanXuat : "san_xuat"
+
+
+    %% =========================
+    %% 6. KE HOACH MUA BAN
+    %% =========================
+
+    KeHoachMuaBan {
+        string MaKeHoachMuaBan PK
+        date NgayLap
+        string LoaiKeHoach
+        string TrangThai
+        string GhiChu
+    }
+
+    ChiTietKeHoachMuaBan {
+        string MaKeHoachMuaBan PK, FK
+        string MaMatHang PK, FK
+        string MaNhaCungCap PK, FK
+        decimal SoLuong
+        decimal DonGiaDuKien
+    }
+
+    KeHoachMuaBan ||--|{ ChiTietKeHoachMuaBan : "co"
+    MatHang ||--o{ ChiTietKeHoachMuaBan : "duoc_lap_ke_hoach"
+    NhaCungCap ||--o{ ChiTietKeHoachMuaBan : "cung_cap"
+
+
+    %% =========================
+    %% 7. YEU CAU NHAP XUAT
+    %% =========================
+
+    YeuCauNhapXuat {
+        string MaYeuCau PK
+        string MaNguoiTao FK
+        string MaXuong FK
+        string LoaiYeuCau
+        date NgayYeuCau
+        string TrangThai
+        date NgayThucHienDuKien
+        string GhiChu
+    }
+
+    ChiTietYeuCauNhapXuat {
+        string MaYeuCau PK, FK
+        string MaMatHang PK, FK
+        decimal SoLuong
+        string LoaiHang
+        string GhiChu
+    }
+
+    YeuCauNhapKho {
+        string MaYeuCau PK, FK
+    }
+
+    YeuCauXuatKho {
+        string MaYeuCau PK, FK
+    }
+
+    NguoiDung ||--o{ YeuCauNhapXuat : "tao"
+    Xuong ||--o{ YeuCauNhapXuat : "gui"
+    YeuCauNhapXuat ||--|{ ChiTietYeuCauNhapXuat : "co"
+    MatHang ||--o{ ChiTietYeuCauNhapXuat : "yeu_cau"
+    YeuCauNhapXuat ||--o| YeuCauNhapKho : "ke_thua"
+    YeuCauNhapXuat ||--o| YeuCauXuatKho : "ke_thua"
+
+
+    %% =========================
+    %% 8. DON MUA HANG
+    %% =========================
+
+    DonMuaHang {
+        string MaDonMua PK
+        string MaNhaCungCap FK
+        string MaKeHoachMuaBan FK
+        date NgayLap
+        string TrangThai
+        date NgayGiaoDuKien
+        string GhiChu
+    }
+
+    ChiTietDonMuaHang {
+        string MaDonMua PK, FK
+        string MaMatHang PK, FK
+        decimal SoLuong
+        decimal DonGia
+    }
+
+    NhaCungCap ||--o{ DonMuaHang : "nhan_don"
+    KeHoachMuaBan ||--o{ DonMuaHang : "tao_tu"
+    DonMuaHang ||--|{ ChiTietDonMuaHang : "co"
+    MatHang ||--o{ ChiTietDonMuaHang : "duoc_mua"
+
+
+    %% =========================
+    %% 9. LO HANG
+    %% =========================
+
+    LoHang {
+        string MaLo PK
+    }
+
+    LoNguyenVatLieu {
+        string MaLo PK, FK
+        date NgayNhan
+    }
+
+    LoThanhPham {
+        string MaLo PK, FK
+        date NgayXuat
+    }
+
+    LoTraVe {
+        string MaLo PK, FK
+        date NgayTra
+    }
+
+    ChiTietLo {
+        string MaLo PK, FK
+        string MaMatHang PK, FK
+        decimal SoLuong
+        string GhiChu
+    }
+
+    LoHang ||--o| LoNguyenVatLieu : "ke thua"
+    LoHang ||--o| LoThanhPham : "ke thua"
+    LoHang ||--o| LoTraVe : "ke thua"
+    LoHang ||--|{ ChiTietLo : "co"
+    MatHang ||--o{ ChiTietLo : "nam_trong"
+
+
+    %% =========================
+    %% 10. KHO
+    %% =========================
+
+    Kho {
+        string MaKho PK
+        string TenKho
+        string DiaDiem
+        string TrangThai
+        string MoTa
+    }
+
+    KhoNguyenVatLieu {
+        string MaKho PK, FK
+    }
+
+    KhoThanhPham {
+        string MaKho PK, FK
+    }
+
+    KhoHangTraVe {
+        string MaKho PK, FK
+    }
+
+    Kho ||--o| KhoNguyenVatLieu : "ke thua"
+    Kho ||--o| KhoThanhPham : "ke thua"
+    Kho ||--o| KhoHangTraVe : "ke thua"
+
+
+    %% =========================
+    %% 11. TON KHO
+    %% =========================
+
+    TonKho {
+        string MaTonKho PK
+        string MaKho FK
+        string MaMatHang FK
+        string MaLo FK
+        decimal SoLuongTon
+        date NgayCapNhat
+    }
+
+    ChiTietTonKho {
+        string MaTonKho FK
+        string MaLo FK
+        string MaMatHang FK
+        decimal SoLuong
+    }
+
+    Kho ||--o{ TonKho : "co_ton"
+    MatHang ||--o{ TonKho : "ton"
+    LoHang ||--o{ TonKho : "theo_lo"
+    TonKho ||--o{ ChiTietTonKho : "chi_tiet"
+
+
+    %% =========================
+    %% 12. NHAP KHO
+    %% =========================
+
+    PhieuNhapKho {
+        string MaPhieuNhap PK
+        string MaKho FK
+        string MaYeuCau FK
+        string MaNguoiLap FK
+        date NgayNhap
+        string TrangThai
+        string GhiChu
+    }
+
+    ChiTietPhieuNhapKho {
+        string MaPhieuNhap PK, FK
+        string MaLo PK, FK
+        string MaMatHang PK, FK
+        decimal SoLuong
+    }
+
+    Kho ||--o{ PhieuNhapKho : "nhap"
+    YeuCauNhapKho ||--o{ PhieuNhapKho : "phat_sinh"
+    NguoiDung ||--o{ PhieuNhapKho : "lap"
+    PhieuNhapKho ||--|{ ChiTietPhieuNhapKho : "co"
+    LoHang ||--o{ ChiTietPhieuNhapKho : "nhap"
+    MatHang ||--o{ ChiTietPhieuNhapKho : "nhap"
+
+
+    %% =========================
+    %% 13. XUAT KHO
+    %% =========================
+
+    PhieuXuatKho {
+        string MaPhieuXuat PK
+        string MaKho FK
+        string MaYeuCau FK
+        string MaNguoiLap FK
+        date NgayXuat
+        string TrangThai
+        string GhiChu
+    }
+
+    ChiTietPhieuXuatKho {
+        string MaPhieuXuat PK, FK
+        string MaLo PK, FK
+        string MaMatHang PK, FK
+        decimal SoLuong
+    }
+
+    Kho ||--o{ PhieuXuatKho : "xuat"
+    YeuCauXuatKho ||--o{ PhieuXuatKho : "phat_sinh"
+    NguoiDung ||--o{ PhieuXuatKho : "lap"
+    PhieuXuatKho ||--|{ ChiTietPhieuXuatKho : "co"
+    LoHang ||--o{ ChiTietPhieuXuatKho : "xuat"
+    MatHang ||--o{ ChiTietPhieuXuatKho : "xuat"
+
+
+    %% =========================
+    %% 14. KIEM KE / CONG VIEC
+    %% =========================
+
+    DotKiemKe {
+        string MaDotKiemKe PK
+        string LoaiKiemKe
+        date NgayKiemKe
+        string DiaDiem
+        string TrangThai
+        string GhiChu
+    }
+
+    CongViec {
+        string MaCongViec PK
+        string MaDotKiemKe FK
+        string MaNguoiPhuTrach FK
+        string TenCongViec
+        date NgayThucHien
+        string TrangThai
+        string GhiChu
+    }
+
+    PhanCongCongViec {
+        string MaCongViec PK, FK
+        string MaNguoiThucHien PK, FK
+    }
+
+    DotKiemKe ||--o{ CongViec : "co"
+    NguoiDung ||--o{ CongViec : "phu_trach"
+    CongViec ||--o{ PhanCongCongViec : "phan_cong"
+    NguoiDung ||--o{ PhanCongCongViec : "thuc_hien"
+
+
+    %% =========================
+    %% 15. KET QUA KIEM KE
+    %% =========================
+
+    BienBanKiemKe {
+        string MaBienBan PK
+        string MaDotKiemKe FK
+        date NgayLap
+        string MaNguoiLap FK
+        string KetLuan
+        string GhiChu
+    }
+
+    ChiTietBienBanKiemKe {
+        string MaBienBan PK, FK
+        string MaLo PK, FK
+        string MaMatHang PK, FK
+        decimal SoLuongHeThong
+        decimal SoLuongThucTe
+        decimal ChenhLech
+        string GhiChu
+    }
+
+    ChenhLechKiemKe {
+        string MaChenhLech PK
+        string MaBienBan FK
+        string MaLo FK
+        string MaMatHang FK
+        decimal SoLuongChenhLech
+        string NguyenNhan
+        string TrangThaiXuLy
+    }
+
+    DotKiemKe ||--o| BienBanKiemKe : "lap"
+    NguoiDung ||--o{ BienBanKiemKe : "lap"
+    BienBanKiemKe ||--|{ ChiTietBienBanKiemKe : "co"
+    LoHang ||--o{ ChiTietBienBanKiemKe : "kiem_ke"
+    MatHang ||--o{ ChiTietBienBanKiemKe : "kiem_ke"
+    BienBanKiemKe ||--o{ ChenhLechKiemKe : "phat_hien"
+    LoHang ||--o{ ChenhLechKiemKe : "chenh_lech"
+    MatHang ||--o{ ChenhLechKiemKe : "chenh_lech"
+
+
+    %% =========================
+    %% 16. QC / AC
+    %% =========================
+
+    KetQuaKiemTraQCAC {
+        string MaKetQua PK
+        string MaCongViec FK
+        string MaLo FK
+        date NgayKiemTra
+        string KetQua
+        string GhiChu
+    }
+
+    ChiTietKetQuaKiemTraQCAC {
+        string MaKetQua PK, FK
+        string MaMatHang PK, FK
+        decimal SoLuongDat
+        decimal SoLuongLoi
+        string TinhTrang
+        string GhiChu
+    }
+
+    CongViec ||--o{ KetQuaKiemTraQCAC : "kiem_tra"
+    LoHang ||--o{ KetQuaKiemTraQCAC : "duoc_kiem_tra"
+    KetQuaKiemTraQCAC ||--|{ ChiTietKetQuaKiemTraQCAC : "co"
+    MatHang ||--o{ ChiTietKetQuaKiemTraQCAC : "kiem_tra"
+
+
+    %% =========================
+    %% 17. BAO CAO SAN XUAT
+    %% =========================
+
+    BaoCaoSanXuat {
+        string MaBaoCao PK
+        string MaXuong FK
+        string MaNguoiLap FK
+        date NgayLap
+        string GhiChu
+    }
+
+    ChiTietBaoCaoSanXuat {
+        string MaBaoCao PK, FK
+        string MaMatHang PK, FK
+        decimal SoLuongTon
+        decimal SoLuongCanThiet
+        string GhiChu
+    }
+
+    BaoCaoThanhPham {
+        string MaBaoCaoThanhPham PK
+        string MaLo FK
+        string MaXuong FK
+        date NgayHoanThanh
+        decimal SoLuongThanhPham
+        decimal SoLuongNVLSuDung
+        date HanSuDung
+        string GhiChu
+    }
+
+    ChiTietBaoCaoThanhPham {
+        string MaBaoCaoThanhPham PK, FK
+        string MaMatHang PK, FK
+        decimal SoLuong
+        string GhiChu
+    }
+
+    Xuong ||--o{ BaoCaoSanXuat : "bao_cao"
+    NguoiDung ||--o{ BaoCaoSanXuat : "lap"
+    BaoCaoSanXuat ||--|{ ChiTietBaoCaoSanXuat : "co"
+    MatHang ||--o{ ChiTietBaoCaoSanXuat : "bao_cao"
+
+    LoThanhPham ||--o{ BaoCaoThanhPham : "bao_cao"
+    Xuong ||--o{ BaoCaoThanhPham : "san_xuat"
+    BaoCaoThanhPham ||--|{ ChiTietBaoCaoThanhPham : "co"
+    MatHang ||--o{ ChiTietBaoCaoThanhPham : "chi_tiet"
+
+
+    %% =========================
+    %% 18. NGOAI LE
+    %% =========================
+
+    DeXuatXuLyNgoaiLe {
+        string MaDeXuat PK
+        string MaNguoiDeXuat FK
+        date NgayDeXuat
+        string NoiDung
+        string LyDo
+        string TrangThai
+        string GhiChu
+    }
+
+    PheDuyetXuLyNgoaiLe {
+        string MaPheDuyet PK
+        string MaDeXuat FK
+        string MaNguoiPheDuyet FK
+        date NgayPheDuyet
+        string KetQua
+        string GhiChu
+    }
+
+    NguoiDung ||--o{ DeXuatXuLyNgoaiLe : "de_xuat"
+    DeXuatXuLyNgoaiLe ||--o{ PheDuyetXuLyNgoaiLe : "duoc_duyet"
+    NguoiDung ||--o{ PheDuyetXuLyNgoaiLe : "phe_duyet"
+
+
+    %% =========================
+    %% 19. HO SO NHAP / XUAT
+    %% =========================
+
+    HoSoNhapKho {
+        string MaHoSoNhap PK
+        string MaPhieuNhap FK
+        date NgayLuu
+        string GhiChu
+    }
+
+    HoSoXuatKho {
+        string MaHoSoXuat PK
+        string MaPhieuXuat FK
+        date NgayLuu
+        string GhiChu
+    }
+
+    PhieuNhapKho ||--o| HoSoNhapKho : "luu_ho_so"
+    PhieuXuatKho ||--o| HoSoXuatKho : "luu_ho_so"
