@@ -588,7 +588,6 @@ classDiagram
 ```mermaid
 classDiagram
 
-
     class NguoiDung {
         +MaNguoiDung
         +HoTen
