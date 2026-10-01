@@ -1,5 +1,12 @@
 ### Domain Model
 
+> **Quy ước chung**
+> - Số lượng cần thiết (kế hoạch, báo cáo) tính theo **mặt hàng**, kèm đơn vị tính của mặt hàng. Ví dụ: 10 kg đường.
+> - **Lô chỉ là thông tin chi tiết đi kèm** khi thực tế phát sinh. Ví dụ: 4 kg đường lô A + 6 kg đường lô B.
+> - Chuỗi quan hệ của lô: **Mặt hàng → Chi tiết lô ← Lô hàng**. Mọi bảng chi tiết, tồn kho hay phiếu liên quan đến lô đều tham chiếu `MaChiTietLo`.
+
+---
+
 1. Nhóm Tài khoản / Người dùng
 
 ```mermaid
@@ -176,6 +183,12 @@ classDiagram
         +SoLuong
     }
 
+    class ChiTietNguyenLieuKeHoachSanXuat {
+        +MaMatHang
+        +SoLuongCanThiet
+        +GhiChu
+    }
+
     class MatHang {
         +MaMatHang
         +TenMatHang
@@ -188,19 +201,32 @@ classDiagram
     DonHang "1" --> "N" KeHoachSanXuat : phát sinh
     Xuong "1" --> "N" KeHoachSanXuat : thực hiện tại
     KeHoachSanXuat "1" --> "N" ChiTietKeHoachSanXuat : gồm
+    KeHoachSanXuat "1" --> "N" ChiTietNguyenLieuKeHoachSanXuat : cần nguyên liệu
     MatHang "1" --> "N" ChiTietKeHoachSanXuat : sản xuất
+    MatHang "1" --> "N" ChiTietNguyenLieuKeHoachSanXuat : là nguyên liệu
+
+    note for ChiTietKeHoachSanXuat "MaMatHang: thành phẩm cần sản xuất"
+    note for ChiTietNguyenLieuKeHoachSanXuat "Nguyên vật liệu cần theo mặt hàng, đơn vị tính lấy từ MatHang. Ví dụ: 10 kg đường (chưa gắn lô)"
 
 ```
 
 6. Nhóm Kế hoạch mua / bán và Đơn mua hàng
 
+Kế hoạch mua được phát sinh từ Kế hoạch sản xuất, không phụ thuộc vào khách hàng hay đơn hàng.
+
 ```mermaid
 classDiagram
 
+    class KeHoachSanXuat {
+        +MaKeHoachSanXuat
+        +NgayLap
+        +TrangThai
+    }
+
     class KeHoachMuaBan {
         +MaKeHoachMuaBan
+        +MaKeHoachSanXuat
         +NgayLap
-        +LoaiKeHoach
         +TrangThai
         +GhiChu
     }
@@ -244,6 +270,7 @@ classDiagram
         +TrangThai
     }
 
+    KeHoachSanXuat "1" --> "N" KeHoachMuaBan : phát sinh
     KeHoachMuaBan "1" --> "N" ChiTietKeHoachMuaBan : gồm
     MatHang "1" --> "N" ChiTietKeHoachMuaBan : kế hoạch
     KeHoachMuaBan "1" --> "N" DonMuaHang : phát sinh
@@ -252,23 +279,47 @@ classDiagram
     DonMuaHang "1" --> "N" ChiTietDonMuaHang : gồm
     MatHang "1" --> "N" ChiTietDonMuaHang : mua
 
+    note for ChiTietKeHoachMuaBan "Danh sách nguyên vật liệu lấy từ chi tiết nguyên liệu của Kế hoạch sản xuất"
+
 ```
 
-7. Nhóm Yêu cầu và Phiếu nhập / xuất kho
+7. Nhóm Phiếu yêu cầu xuất/nhập và Phiếu kho
 
 ```mermaid
 classDiagram
 
-    class YeuCauNhapXuat {
-        +MaYeuCau
+    class KeHoachSanXuat {
+        +MaKeHoachSanXuat
+        +NgayLap
+        +TrangThai
+    }
+
+    class Xuong {
+        +MaXuong
+        +TenXuong
+        +DiaDiem
+        +TrangThai
+    }
+
+    class Kho {
+        +MaKho
+        +TenKho
+        +LoaiKho
+        +TrangThai
+    }
+
+    class PhieuYeuCauNhapXuat {
+        +MaPhieuYeuCau
         +LoaiYeuCau
+        +MaKeHoachSanXuat
+        +MaXuong
         +NgayYeuCau
         +NgayThucHienDuKien
         +TrangThai
         +GhiChu
     }
 
-    class ChiTietYeuCauNhapXuat {
+    class ChiTietPhieuYeuCauNhapXuat {
         +MaMatHang
         +SoLuong
         +GhiChu
@@ -277,14 +328,14 @@ classDiagram
     class PhieuKho {
         +MaPhieu
         +LoaiPhieu
+        +MaKho
         +NgayLap
         +TrangThai
         +GhiChu
     }
 
     class ChiTietPhieuKho {
-        +MaMatHang
-        +MaLo
+        +MaChiTietLo
         +SoLuong
         +DonGia
         +GhiChu
@@ -306,16 +357,30 @@ classDiagram
         +GhiChu
     }
 
-    YeuCauNhapXuat "1" --> "N" ChiTietYeuCauNhapXuat : gồm
-    MatHang "1" --> "N" ChiTietYeuCauNhapXuat : yêu cầu
+    class ChiTietLo {
+        +MaChiTietLo
+        +MaLo
+        +MaMatHang
+        +SoLuong
+    }
 
-    YeuCauNhapXuat "1" --> "N" PhieuKho : phát sinh
+    KeHoachSanXuat "1" --> "N" PhieuYeuCauNhapXuat : phát sinh
+    Xuong "1" --> "N" PhieuYeuCauNhapXuat : yêu cầu bởi
+    PhieuYeuCauNhapXuat "1" --> "N" ChiTietPhieuYeuCauNhapXuat : gồm
+    MatHang "1" --> "N" ChiTietPhieuYeuCauNhapXuat : yêu cầu
+
+    PhieuYeuCauNhapXuat "1" --> "N" PhieuKho : phát sinh
+    Kho "1" --> "N" PhieuKho : thực hiện tại
     PhieuKho "1" --> "N" ChiTietPhieuKho : gồm
-    MatHang "1" --> "N" ChiTietPhieuKho : nhập/xuất
-    LoHang "1" --> "N" ChiTietPhieuKho : thuộc lô
 
-    note for YeuCauNhapXuat "LoaiYeuCau: Nhập kho / Xuất kho"
+    MatHang "1" --> "N" ChiTietLo : thuộc lô
+    LoHang "1" --> "N" ChiTietLo : gồm
+    ChiTietLo "1" --> "N" ChiTietPhieuKho : nhập/xuất
+
+    note for PhieuYeuCauNhapXuat "LoaiYeuCau: Xuất nguyên vật liệu / Nhập thành phẩm. Liên kết Kế hoạch sản xuất và Xưởng áp dụng cho 2 loại này"
+    note for ChiTietPhieuYeuCauNhapXuat "Yêu cầu theo mặt hàng, chưa gắn lô"
     note for PhieuKho "LoaiPhieu: Phiếu nhập / Phiếu xuất"
+    note for ChiTietPhieuKho "Phiếu kho ghi nhận thực tế theo lô. Ví dụ: xuất 4 kg đường lô A + 6 kg đường lô B"
 
 ```
 
@@ -347,6 +412,8 @@ classDiagram
     }
 
     class ChiTietLo {
+        +MaChiTietLo
+        +MaLo
         +MaMatHang
         +SoLuong
         +DonGia
@@ -388,6 +455,15 @@ classDiagram
         +MoTa
     }
 
+    class TonKho {
+        +MaTonKho
+        +MaKho
+        +MaChiTietLo
+        +SoLuongTon
+        +MucTonToiThieu
+        +NgayCapNhat
+    }
+
     class MatHang {
         +MaMatHang
         +TenMatHang
@@ -403,27 +479,28 @@ classDiagram
         +TrangThai
     }
 
-    class TonKho {
-        +MaTonKho
-        +SoLuongTon
-        +MucTonToiThieu
-        +NgayCapNhat
+    class ChiTietLo {
+        +MaChiTietLo
+        +MaLo
+        +MaMatHang
+        +SoLuong
     }
 
     Kho "1" --> "N" TonKho : theo dõi
-    MatHang "1" --> "N" TonKho : tồn
-    LoHang "1" --> "N" TonKho : theo lô
+    MatHang "1" --> "N" ChiTietLo : thuộc lô
+    LoHang "1" --> "N" ChiTietLo : gồm
+    ChiTietLo "1" --> "N" TonKho : tồn theo lô
 
     note for Kho "LoaiKho: Kho NVL / Kho thành phẩm / Kho hàng trả về"
 
 ```
 
-10. Nhóm Kiểm kê
+10. Nhóm Phiếu kiểm kê
 
 ```mermaid
 classDiagram
 
-    class KiemKe {
+    class PhieuKiemKe {
         +MaKiemKe
         +NgayKiemKe
         +MaKho
@@ -433,9 +510,8 @@ classDiagram
         +GhiChu
     }
 
-    class ChiTietKiemKe {
-        +MaMatHang
-        +MaLo
+    class ChiTietPhieuKiemKe {
+        +MaChiTietLo
         +SoLuongHeThong
         +SoLuongThucTe
         +ChenhLech
@@ -465,10 +541,18 @@ classDiagram
         +TrangThai
     }
 
-    Kho "1" --> "N" KiemKe : được kiểm kê
-    KiemKe "1" --> "N" ChiTietKiemKe : gồm
-    MatHang "1" --> "N" ChiTietKiemKe : kiểm kê
-    LoHang "1" --> "N" ChiTietKiemKe : theo lô
+    class ChiTietLo {
+        +MaChiTietLo
+        +MaLo
+        +MaMatHang
+        +SoLuong
+    }
+
+    Kho "1" --> "N" PhieuKiemKe : được kiểm kê
+    PhieuKiemKe "1" --> "N" ChiTietPhieuKiemKe : gồm
+    MatHang "1" --> "N" ChiTietLo : thuộc lô
+    LoHang "1" --> "N" ChiTietLo : gồm
+    ChiTietLo "1" --> "N" ChiTietPhieuKiemKe : được kiểm kê
 
 ```
 
@@ -479,14 +563,13 @@ classDiagram
 
     class KetQuaKiemTraQCAC {
         +MaKetQua
-        +MaLo
         +NgayKiemTra
         +KetQua
         +GhiChu
     }
 
     class ChiTietKetQuaKiemTraQCAC {
-        +MaMatHang
+        +MaChiTietLo
         +SoLuongKiemTra
         +SoLuongDat
         +SoLuongLoi
@@ -508,13 +591,23 @@ classDiagram
         +TrangThai
     }
 
-    LoHang "1" --> "N" KetQuaKiemTraQCAC : được kiểm tra
+    class ChiTietLo {
+        +MaChiTietLo
+        +MaLo
+        +MaMatHang
+        +SoLuong
+    }
+
     KetQuaKiemTraQCAC "1" --> "N" ChiTietKetQuaKiemTraQCAC : gồm
-    MatHang "1" --> "N" ChiTietKetQuaKiemTraQCAC : kiểm tra
+    MatHang "1" --> "N" ChiTietLo : thuộc lô
+    LoHang "1" --> "N" ChiTietLo : gồm
+    ChiTietLo "1" --> "N" ChiTietKetQuaKiemTraQCAC : được kiểm tra
 
 ```
 
 12. Nhóm Báo cáo sản xuất / Thành phẩm
+
+Số lượng cần thiết và số lượng NVL sử dụng được tính **theo mặt hàng** (kèm đơn vị tính). Phần chia theo lô nằm ở bảng chi tiết riêng `ChiTietLoBaoCaoSanXuat`.
 
 ```mermaid
 classDiagram
@@ -527,11 +620,17 @@ classDiagram
     }
 
     class ChiTietBaoCaoSanXuat {
+        +MaChiTietBaoCao
         +MaMatHang
-        +MaLo
         +SoLuong
         +SoLuongCanThiet
         +SoLuongNVLSuDung
+        +GhiChu
+    }
+
+    class ChiTietLoBaoCaoSanXuat {
+        +MaChiTietLo
+        +SoLuong
         +GhiChu
     }
 
@@ -544,16 +643,30 @@ classDiagram
         +TrangThai
     }
 
-    class LoThanhPham {
-        +NgaySanXuat
-        +NgayXuat
+    class LoHang {
+        +MaLo
+        +NgayTao
+        +TrangThai
+    }
+
+    class ChiTietLo {
+        +MaChiTietLo
+        +MaLo
+        +MaMatHang
+        +SoLuong
     }
 
     BaoCaoSanXuat "1" --> "N" ChiTietBaoCaoSanXuat : gồm
     MatHang "1" --> "N" ChiTietBaoCaoSanXuat : báo cáo
-    LoThanhPham "1" --> "N" ChiTietBaoCaoSanXuat : thành phẩm
+    ChiTietBaoCaoSanXuat "1" --> "N" ChiTietLoBaoCaoSanXuat : chia theo lô
+
+    MatHang "1" --> "N" ChiTietLo : thuộc lô
+    LoHang "1" --> "N" ChiTietLo : gồm
+    ChiTietLo "1" --> "N" ChiTietLoBaoCaoSanXuat : lô được báo cáo
 
     note for BaoCaoSanXuat "LoaiBaoCao: Báo cáo sản xuất / Báo cáo thành phẩm"
+    note for ChiTietBaoCaoSanXuat "SoLuongCanThiet, SoLuongNVLSuDung tính theo mặt hàng + đơn vị tính. Ví dụ: cần 10 kg đường"
+    note for ChiTietLoBaoCaoSanXuat "Phân bổ theo lô. Ví dụ: 4 kg đường lô A + 6 kg đường lô B. Tổng các dòng = SoLuongNVLSuDung (hoặc SoLuong với thành phẩm)"
 
 ```
 
@@ -681,10 +794,16 @@ classDiagram
         +SoLuong
     }
 
+    class ChiTietNguyenLieuKeHoachSanXuat {
+        +MaMatHang
+        +SoLuongCanThiet
+        +GhiChu
+    }
+
     class KeHoachMuaBan {
         +MaKeHoachMuaBan
+        +MaKeHoachSanXuat
         +NgayLap
-        +LoaiKeHoach
         +TrangThai
         +GhiChu
     }
@@ -710,16 +829,18 @@ classDiagram
         +TongTien
     }
 
-    class YeuCauNhapXuat {
-        +MaYeuCau
+    class PhieuYeuCauNhapXuat {
+        +MaPhieuYeuCau
         +LoaiYeuCau
+        +MaKeHoachSanXuat
+        +MaXuong
         +NgayYeuCau
         +NgayThucHienDuKien
         +TrangThai
         +GhiChu
     }
 
-    class ChiTietYeuCauNhapXuat {
+    class ChiTietPhieuYeuCauNhapXuat {
         +MaMatHang
         +SoLuong
         +GhiChu
@@ -728,14 +849,14 @@ classDiagram
     class PhieuKho {
         +MaPhieu
         +LoaiPhieu
+        +MaKho
         +NgayLap
         +TrangThai
         +GhiChu
     }
 
     class ChiTietPhieuKho {
-        +MaMatHang
-        +MaLo
+        +MaChiTietLo
         +SoLuong
         +DonGia
         +GhiChu
@@ -764,6 +885,8 @@ classDiagram
     }
 
     class ChiTietLo {
+        +MaChiTietLo
+        +MaLo
         +MaMatHang
         +SoLuong
         +DonGia
@@ -781,12 +904,14 @@ classDiagram
 
     class TonKho {
         +MaTonKho
+        +MaKho
+        +MaChiTietLo
         +SoLuongTon
         +MucTonToiThieu
         +NgayCapNhat
     }
 
-    class KiemKe {
+    class PhieuKiemKe {
         +MaKiemKe
         +NgayKiemKe
         +MaKho
@@ -795,9 +920,8 @@ classDiagram
         +KetLuan
     }
 
-    class ChiTietKiemKe {
-        +MaMatHang
-        +MaLo
+    class ChiTietPhieuKiemKe {
+        +MaChiTietLo
         +SoLuongHeThong
         +SoLuongThucTe
         +ChenhLech
@@ -806,14 +930,13 @@ classDiagram
 
     class KetQuaKiemTraQCAC {
         +MaKetQua
-        +MaLo
         +NgayKiemTra
         +KetQua
         +GhiChu
     }
 
     class ChiTietKetQuaKiemTraQCAC {
-        +MaMatHang
+        +MaChiTietLo
         +SoLuongKiemTra
         +SoLuongDat
         +SoLuongLoi
@@ -828,11 +951,16 @@ classDiagram
     }
 
     class ChiTietBaoCaoSanXuat {
+        +MaChiTietBaoCao
         +MaMatHang
-        +MaLo
         +SoLuong
         +SoLuongCanThiet
         +SoLuongNVLSuDung
+    }
+
+    class ChiTietLoBaoCaoSanXuat {
+        +MaChiTietLo
+        +SoLuong
     }
 
     class DeXuatXuLyNgoaiLe {
@@ -867,7 +995,10 @@ classDiagram
     Xuong "1" --> "N" KeHoachSanXuat : thực hiện tại
     KeHoachSanXuat "1" --> "N" ChiTietKeHoachSanXuat : gồm
     MatHang "1" --> "N" ChiTietKeHoachSanXuat : sản xuất
+    KeHoachSanXuat "1" --> "N" ChiTietNguyenLieuKeHoachSanXuat : cần nguyên liệu
+    MatHang "1" --> "N" ChiTietNguyenLieuKeHoachSanXuat : là nguyên liệu
 
+    KeHoachSanXuat "1" --> "N" KeHoachMuaBan : phát sinh
     KeHoachMuaBan "1" --> "N" ChiTietKeHoachMuaBan : gồm
     MatHang "1" --> "N" ChiTietKeHoachMuaBan : kế hoạch
     KeHoachMuaBan "1" --> "N" DonMuaHang : phát sinh
@@ -875,13 +1006,14 @@ classDiagram
     DonMuaHang "1" --> "N" ChiTietDonMuaHang : gồm
     MatHang "1" --> "N" ChiTietDonMuaHang : mua
 
-    YeuCauNhapXuat "1" --> "N" ChiTietYeuCauNhapXuat : gồm
-    MatHang "1" --> "N" ChiTietYeuCauNhapXuat : yêu cầu
-
-    YeuCauNhapXuat "1" --> "N" PhieuKho : phát sinh
+    KeHoachSanXuat "1" --> "N" PhieuYeuCauNhapXuat : phát sinh
+    Xuong "1" --> "N" PhieuYeuCauNhapXuat : yêu cầu bởi
+    PhieuYeuCauNhapXuat "1" --> "N" ChiTietPhieuYeuCauNhapXuat : gồm
+    MatHang "1" --> "N" ChiTietPhieuYeuCauNhapXuat : yêu cầu
+    PhieuYeuCauNhapXuat "1" --> "N" PhieuKho : phát sinh
+    Kho "1" --> "N" PhieuKho : thực hiện tại
     PhieuKho "1" --> "N" ChiTietPhieuKho : gồm
-    MatHang "1" --> "N" ChiTietPhieuKho : nhập/xuất
-    LoHang "1" --> "N" ChiTietPhieuKho : thuộc lô
+    ChiTietLo "1" --> "N" ChiTietPhieuKho : nhập/xuất
 
     LoHang <|-- LoNguyenVatLieu
     LoHang <|-- LoThanhPham
@@ -891,21 +1023,19 @@ classDiagram
     MatHang "1" --> "N" ChiTietLo : thuộc lô
 
     Kho "1" --> "N" TonKho : theo dõi
-    MatHang "1" --> "N" TonKho : tồn
-    LoHang "1" --> "N" TonKho : theo lô
+    ChiTietLo "1" --> "N" TonKho : tồn theo lô
 
-    Kho "1" --> "N" KiemKe : kiểm kê
-    KiemKe "1" --> "N" ChiTietKiemKe : gồm
-    MatHang "1" --> "N" ChiTietKiemKe : kiểm kê
-    LoHang "1" --> "N" ChiTietKiemKe : theo lô
+    Kho "1" --> "N" PhieuKiemKe : được kiểm kê
+    PhieuKiemKe "1" --> "N" ChiTietPhieuKiemKe : gồm
+    ChiTietLo "1" --> "N" ChiTietPhieuKiemKe : được kiểm kê
 
-    LoHang "1" --> "N" KetQuaKiemTraQCAC : kiểm tra
     KetQuaKiemTraQCAC "1" --> "N" ChiTietKetQuaKiemTraQCAC : gồm
-    MatHang "1" --> "N" ChiTietKetQuaKiemTraQCAC : kiểm tra
+    ChiTietLo "1" --> "N" ChiTietKetQuaKiemTraQCAC : được kiểm tra
 
     BaoCaoSanXuat "1" --> "N" ChiTietBaoCaoSanXuat : gồm
     MatHang "1" --> "N" ChiTietBaoCaoSanXuat : báo cáo
-    LoHang "1" --> "N" ChiTietBaoCaoSanXuat : liên quan
+    ChiTietBaoCaoSanXuat "1" --> "N" ChiTietLoBaoCaoSanXuat : chia theo lô
+    ChiTietLo "1" --> "N" ChiTietLoBaoCaoSanXuat : lô được báo cáo
 
     DeXuatXuLyNgoaiLe "1" --> "N" PheDuyetXuLyNgoaiLe : được phê duyệt
 ```
