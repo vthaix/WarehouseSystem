@@ -1,13 +1,9 @@
 # WarehouseSystem
 
-Express + EJS + MySQL, một ứng dụng monolithic. Mã ứng dụng và tài liệu nằm trong `app/`.
-
-Cài và khởi động Docker Desktop (Linux containers), chạy từ repository root:
 
 ```sh
-git clone <URL-repository-cua-ban>
-cd WarehouseSystem
 docker compose up -d --build --wait
+docker compose --profile dev up -d
 docker compose ps
 docker compose exec app node scripts/show-demo-login.cjs
 ```
