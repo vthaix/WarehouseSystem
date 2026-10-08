@@ -1,0 +1,102 @@
+services:
+  setup:
+    image: warehouse-system-app:${APP_IMAGE_TAG:-local}
+    build:
+      context: .
+      target: runtime
+    command: ["node", "scripts/setup-secrets.cjs"]
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD:-}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-}
+      SESSION_SECRET: ${SESSION_SECRET:-}
+      DEMO_PASSWORD: ${DEMO_PASSWORD:-}
+    volumes:
+      - app_secrets:/var/lib/warehouse-app-secrets
+      - mysql_secrets:/var/lib/warehouse-mysql-secrets
+    restart: "no"
+    network_mode: none
+
+  mysql:
+    image: mysql:8.4
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--default-time-zone=+00:00"]
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-warehouse_system}
+      MYSQL_USER: ${DB_USER:-warehouse_app}
+      MYSQL_PASSWORD_FILE: /run/warehouse-mysql-secrets/db_password
+      MYSQL_ROOT_PASSWORD_FILE: /run/warehouse-mysql-secrets/root_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - mysql_secrets:/run/warehouse-mysql-secrets:ro
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=$$(cat /run/warehouse-mysql-secrets/db_password) mysql --protocol=TCP -h 127.0.0.1 -u\"$$MYSQL_USER\" -D\"$$MYSQL_DATABASE\" -e 'SELECT 1' >/dev/null"]
+      interval: 5s
+      timeout: 5s
+      retries: 24
+      start_period: 40s
+    networks: [backend]
+    restart: unless-stopped
+
+  app:
+    image: warehouse-system-app:${APP_IMAGE_TAG:-local}
+    build:
+      context: .
+      target: runtime
+    init: true
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      HOST: 0.0.0.0
+      PORT: "3000"
+      STORAGE_DRIVER: mysql
+      DB_HOST: mysql
+      DB_PORT: "3306"
+      DB_NAME: ${DB_NAME:-warehouse_system}
+      DB_USER: ${DB_USER:-warehouse_app}
+      DB_PASSWORD_FILE: /run/warehouse-app-secrets/db_password
+      SESSION_SECRET_FILE: /run/warehouse-app-secrets/session_secret
+      DEMO_PASSWORD_FILE: /run/warehouse-app-secrets/demo_password
+      AUTO_MIGRATE: ${AUTO_MIGRATE:-true}
+      SEED_DEMO: ${SEED_DEMO:-true}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      TRUST_PROXY: ${TRUST_PROXY:-0}
+    ports:
+      - "${APP_BIND_ADDRESS:-127.0.0.1}:${APP_PORT:-3000}:3000"
+    volumes:
+      - app_secrets:/run/warehouse-app-secrets:ro
+    depends_on:
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "scripts/healthcheck.cjs"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+    networks: [backend, frontend]
+    restart: unless-stopped
+    stop_grace_period: 20s
+
+  adminer:
+    image: adminer:5
+    profiles: [dev]
+    environment:
+      ADMINER_DEFAULT_SERVER: mysql
+    ports:
+      - "127.0.0.1:${ADMINER_PORT:-8080}:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks: [backend, frontend]
+    restart: unless-stopped
+
+networks:
+  backend:
+    internal: true
+  frontend:
+
+volumes:
+  mysql_data:
+  app_secrets:
+  mysql_secrets:

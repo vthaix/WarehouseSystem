@@ -1,0 +1,31 @@
+{
+  "name": "warehouse-system",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test",
+    "check": "node scripts/check.cjs",
+    "test:browser": "node e2e/run.cjs",
+    "test:docker-browser": "node e2e/docker.cjs",
+    "db:migrate": "node scripts/database.cjs migrate",
+    "db:seed": "node scripts/database.cjs seed",
+    "db:status": "node scripts/database.cjs status",
+    "format": "prettier --write src public tests e2e scripts/check.cjs README.md docs/IMPLEMENTATION.md"
+  },
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "helmet": "^8.1.0",
+    "mysql2": "^3.24.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.0",
+    "prettier": "^3.9.9"
+  }
+}

@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title><%= title %> · Warehouse</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <script src="/js/app.js" defer></script><script src="/js/forms.js" defer></script><script src="/js/workflow-forms.js" defer></script>
+</head>
+<body>
+  <div id="app" data-boot="<%= boot %>">
+  <% if (user) { %>
+    <div class="layout"><%- include('../partials/sidebar') %><main><%- include('../partials/header') %><div class="content" id="content"><%- include('../'+view) %></div></main></div>
+  <% } else { %><%- include('../'+view) %><% } %>
+  </div>
+  <div id="toast" role="status" aria-live="polite"></div><dialog id="modal"><div id="modal-body"></div></dialog>
+</body>
+</html>

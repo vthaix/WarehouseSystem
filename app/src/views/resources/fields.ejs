@@ -1,0 +1,6 @@
+<% if(Array.isArray(value)){ %>
+<% value.forEach((entry,index)=>{ %><div class="panel content"><h3>Dòng <%= index+1 %></h3><% if(entry&&typeof entry==='object'){ %><%- include('fields',{value:entry}) %><% }else{ %><p><%= format(entry) %></p><% } %></div><% }) %>
+<% }else{ %>
+<dl><% Object.entries(value).filter(([k,v])=>!['actions','allocations','lines','materials','outputs','warehouses'].includes(k)&&typeof v!=='object').forEach(([k,v])=>{ %><dt><%= fieldNames[k]||({'id':'Mã dữ liệu','code':'Mã chứng từ','name':'Tên','status':'Trạng thái','created_at':'Ngày tạo','version':'Phiên bản','note':'Ghi chú','title':'Tiêu đề','description':'Mô tả','type':'Loại','customer_name':'Khách hàng','source_code':'Chứng từ nguồn','manager_id':'Quản lý kho','posted_by':'Nhân viên ghi phiếu','posted_at':'Ngày ghi sổ','fulfilled_quantity':'Lượng đã thực hiện'})[k]||k %></dt><dd><%= k==='status'?statusLabel(v):format(v) %></dd><% }) %></dl>
+<% Object.entries(value).filter(([k,v])=>k!=='actions'&&v&&typeof v==='object').forEach(([k,v])=>{ %><h2><%= ({lines:'Chi tiết chứng từ',outputs:'Thành phẩm',materials:'Nguyên liệu',allocations:'Phân bổ hàng',warehouses:'Phạm vi kho',assignee_ids:'Người được giao'})[k]||fieldNames[k]||k %></h2><%- include('fields',{value:v}) %><% }) %>
+<% } %>

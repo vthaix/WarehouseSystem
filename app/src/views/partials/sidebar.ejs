@@ -1,0 +1,7 @@
+<aside class="sidebar">
+  <a href="/dashboard" class="brand" data-nav="dashboard"><span class="brand-icon">▦</span><span>warehouse<small>VẬN HÀNH KHO HÀNG</small></span></a>
+  <div class="nav-label">KHÔNG GIAN LÀM VIỆC</div>
+  <nav><a class="nav-link <%= current==='dashboard'?'active':'' %>" href="/dashboard" data-nav="dashboard"><span class="nav-icon">⊞</span>Tổng quan</a>
+  <% available.forEach(m=>{ %><a class="nav-link <%= current===m[0]?'active':'' %>" href="<%= m[5] %>?module=<%= m[0] %>" data-nav="<%= m[0] %>"><span class="nav-icon"><%= m[2] %></span><%= m[1] %></a><% }) %>
+  </nav><div class="sidebar-note">Theo dõi nguồn chứng từ.<br>Kiểm soát lô và chất lượng.<br>Đối chiếu từng lần ghi sổ.</div>
+</aside>

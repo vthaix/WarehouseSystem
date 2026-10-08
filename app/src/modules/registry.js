@@ -1,0 +1,16 @@
+module.exports = [
+  require("./auth"),
+  require("./catalog"),
+  require("./customer-orders"),
+  require("./business-plans"),
+  require("./purchasing"),
+  require("./production"),
+  require("./quality"),
+  require("./stock-requests"),
+  require("./warehouse"),
+  require("./stocktakes"),
+  require("./exceptions"),
+  require("./tasks"),
+  require("./reporting"),
+  require("./notifications"),
+];

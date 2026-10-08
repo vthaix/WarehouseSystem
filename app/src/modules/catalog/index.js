@@ -1,0 +1,33 @@
+module.exports = {
+  name: "catalog",
+  uc: [
+    "UC-06",
+    "UC-06.1",
+    "UC-06.2",
+    "UC-06.3",
+    "UC-07",
+    "UC-07.1",
+    "UC-07.2",
+    "UC-07.3",
+    "UC-22",
+  ],
+  tables: [
+    "categories",
+    "warehouses",
+    "warehouse_locations",
+    "suppliers",
+    "units",
+    "items",
+    "lots",
+  ],
+  resources: [
+    "categories",
+    "warehouses",
+    "warehouse-locations",
+    "suppliers",
+    "items",
+    "lots",
+  ],
+  screen: "UI-10–12",
+  status: "read-only",
+};

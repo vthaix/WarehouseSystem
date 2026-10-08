@@ -1,0 +1,3 @@
+<div class="heading"><div><div class="eyebrow">WAREHOUSE / CHI TIẾT</div><h1><%= record.code||record.title||title %></h1></div><a class="button" href="<%= module[5] %>?module=<%= current %>">Về danh sách</a></div>
+<div class="panel content"><%- include('fields',{value:record}) %>
+<% if(current==='items'){ %><a class="button" href="/products/<%= record.id %>/edit">Sửa mặt hàng</a><% } %></div>
