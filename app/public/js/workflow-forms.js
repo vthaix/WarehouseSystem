@@ -101,7 +101,7 @@ createForm = async function () {
           (s) =>
             s.campaign_type === "QUALITY_CHECK" &&
             s.assignee_ids.includes(user.id) &&
-            ["PLANNED", "IN_PROGRESS", "COMPLETED"].includes(s.status),
+            s.status === "IN_PROGRESS",
         ),
         lots = await options("lots");
       if (!campaigns.length)
@@ -178,7 +178,7 @@ createForm = async function () {
     }
     if (current === "stock-requests") {
       const warehouses = await options("warehouses"),
-        managers = await options("users"),
+        managers = await options("warehouse-managers"),
         reports = (await options("production-reports")).filter(
           (r) => r.status === "SUBMITTED",
         ),
@@ -237,8 +237,8 @@ createForm = async function () {
         ]) {
           const enabled =
             k === sourceField(purpose) ||
-            (["warehouse_id", "manager_id"].includes(k) &&
-              purpose !== "MATERIAL_PURCHASE");
+            k === "warehouse_id" ||
+            (k === "manager_id" && purpose !== "MATERIAL_PURCHASE");
           const el = document.querySelector("#f-" + k);
           el.disabled = !enabled;
           el.required = enabled;

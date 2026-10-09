@@ -30,7 +30,9 @@ WarehouseSystem/
     │   ├── app.js
     │   └── server.js
     ├── database/
-    │   ├── migrations/001_foundation.sql
+    │   ├── adminer/KhoHang.sql       # schema tiếng Việt dùng chung
+    │   ├── legacy/001_foundation.sql # schema cũ, không còn chạy
+    │   ├── migrations/              # thay đổi sau schema gốc
     │   └── seeders/foundation.js
     ├── public/                    # CSS, JS, images, uploads
     ├── scripts/                   # secret setup, DB commands, health, SQL smoke
@@ -60,4 +62,4 @@ WarehouseSystem/
 
 ## Còn phải hoàn thiện
 
-CRUD danh mục, các module đơn/kế hoạch/mua/sản xuất/QC/nhập-xuất/kiểm kê/ngoại lệ/công việc/báo cáo; migration nghiệp vụ đúng mô tả mới; transaction/khóa hàng/rollback/idempotency/audit; cấp user production; kiểm thử đồng thời và backup restore. Những điểm cần chốt về QC/campaign/dispatch/hồ sơ tổng hợp có trong MODULE_MATRIX. Nền tảng chạy được sau clone không đồng nghĩa toàn bộ chương trình đã hoàn thành.
+CRUD danh mục và các module đơn/kế hoạch/mua/sản xuất/QC/nhập-xuất/kiểm kê/ngoại lệ/công việc/báo cáo; transaction/khóa hàng/rollback/idempotency/audit; cấp user production; kiểm thử đồng thời và backup restore. Schema nghiệp vụ đã có trong `KhoHang`, nhưng service chưa triển khai đầy đủ. Những điểm cần chốt về QC/campaign/dispatch/hồ sơ tổng hợp có trong MODULE_MATRIX. Nền tảng chạy được sau clone không đồng nghĩa toàn bộ chương trình đã hoàn thành.

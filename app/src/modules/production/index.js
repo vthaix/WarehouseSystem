@@ -10,5 +10,5 @@ module.exports = {
   ],
   resources: ["production-plans", "production-reports", "finished-reports"],
   screen: "UI-28–29",
-  status: "pending",
+  status: "partial",
 };

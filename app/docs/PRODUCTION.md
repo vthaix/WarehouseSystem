@@ -53,7 +53,7 @@ Thử restore vào **project cô lập**, không ghi đè DB đang dùng. Tạo 
 docker compose -p warehouse-restore -f compose.restore.yml exec -T mysql sh -c 'MYSQL_PWD="$(cat /run/warehouse-mysql-secrets/db_password)" exec mysql -u"$MYSQL_USER" "$MYSQL_DATABASE"' < backups/warehouse.sql
 ```
 
-Kiểm tra schema_migrations, số dòng, FK, đăng nhập bằng tài khoản backup và luồng nghiệp vụ đã ghi sổ trước khi công nhận backup sử dụng được. Chưa thực hiện thử restore trong đợt nền tảng này.
+Kiểm tra `LichSuCSDL`, số dòng, FK, đăng nhập bằng tài khoản backup và luồng nghiệp vụ đã ghi sổ trước khi công nhận backup sử dụng được. Chưa thực hiện thử restore trong đợt nền tảng này.
 
 ## Update và rollback
 

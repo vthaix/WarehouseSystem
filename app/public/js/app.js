@@ -533,7 +533,7 @@ async function loadTable() {
     };
     target
       .querySelectorAll("[data-detail]")
-      .forEach((el) => (el.onclick = () => detail(cached[el.dataset.detail])));
+      .forEach((el) => (el.onclick = () => showDetail(cached[el.dataset.detail])));
     target
       .querySelectorAll("[data-act]")
       .forEach(
@@ -671,6 +671,15 @@ function detail(r) {
         document.querySelector("#form-error").innerHTML = errorHTML(e);
       }
     };
+}
+async function showDetail(row) {
+  try {
+    if (["customer-orders", "production-plans", "business-plans", "purchase-orders", "production-reports", "finished-reports", "qc-inspections", "stock-requests", "stock-documents", "warehouse-records"].includes(current))
+      return detail((await api(current + "/" + row.id)).data);
+    return detail(row);
+  } catch (error) {
+    toast(error.message);
+  }
 }
 function tableData(rows) {
   if (!rows.length) return '<div class="empty">Chưa có dòng dữ liệu.</div>';
@@ -848,7 +857,7 @@ window.addEventListener("DOMContentLoaded", () => {
     (el) =>
       (el.onclick = (e) => {
         e.preventDefault();
-        detail(cached[el.dataset.detail]);
+        showDetail(cached[el.dataset.detail]);
       }),
   );
   document

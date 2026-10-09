@@ -12,11 +12,16 @@ class CatalogService {
       user,
       resource === "units" ? ["WAREHOUSE_MANAGER"] : P.read[resource],
     );
-    return this.repository.list(resource, query);
+    const result = await this.repository.list(resource, query);
+    if (user.roles.includes("WAREHOUSE_MANAGER"))
+      result.data.forEach((row) => { row.actions = ["edit", "delete"]; });
+    return result;
   }
   async get(user, resource, id) {
     P.role(user, P.read[resource]);
-    return this.repository.get(resource, id);
+    const result = await this.repository.get(resource, id);
+    if (user.roles.includes("WAREHOUSE_MANAGER")) result.actions = ["edit", "delete"];
+    return result;
   }
   async sampleItems(user, query = {}) {
     P.role(user, ["CUSTOMER"]);

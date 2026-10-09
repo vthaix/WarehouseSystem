@@ -19,7 +19,7 @@ Adminer dành cho development:
 docker compose --profile dev up -d --wait
 ```
 
-Mở http://localhost:8080, chọn MySQL, server `mysql`; lấy tài khoản từ lệnh xem login. Tắt bằng `docker compose stop adminer`.
+Mở http://localhost:8080, chọn MySQL, server `mysql`, database `KhoHang`; lấy tài khoản từ lệnh xem login. Tài khoản `warehouse_app` có toàn quyền trên `KhoHang`; phân quyền người dùng sản phẩm được kiểm tra trong code. Tắt Adminer bằng `docker compose stop adminer`.
 
 ## Cấu hình và vòng đời
 
@@ -33,7 +33,7 @@ docker compose exec app node scripts/database.cjs migrate
 docker compose exec app node scripts/database.cjs seed
 ```
 
-`down` giữ volumes; `down -v` chỉ dùng khi chủ động xóa/reset dữ liệu thử. Không sửa migration đã áp dụng: thêm file số tăng dần. Checksum kiểm tra lịch sử. DDL MySQL không rollback toàn bộ, migration cần chạy lại an toàn khi gián đoạn. Seed giữ password hash đã có, chỉ tạo dữ liệu nền/demo, không tự ghi tồn kho.
+`down` giữ volumes; `down -v` chỉ dùng khi chủ động xóa/reset dữ liệu thử. Schema gốc là `database/adminer/KhoHang.sql`; sau khi đã áp dụng, không sửa file này mà thêm migration số tăng dần trong `database/migrations`. Checksum kiểm tra lịch sử. DDL MySQL không rollback toàn bộ, migration cần chạy lại an toàn khi gián đoạn. Seed giữ password hash đã có, chỉ tạo dữ liệu nền/demo, không tự ghi tồn kho.
 
 ## Kiểm thử
 

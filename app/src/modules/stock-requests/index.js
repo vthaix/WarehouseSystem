@@ -4,5 +4,5 @@ module.exports = {
   tables: ["stock_requests", "stock_request_lines"],
   resources: ["stock-requests"],
   screen: "UI-16–17",
-  status: "pending",
+  status: "partial",
 };

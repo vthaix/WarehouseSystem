@@ -10,5 +10,5 @@ module.exports = {
   ],
   resources: ["stock-documents", "warehouse-records"],
   screen: "UI-13–15",
-  status: "pending",
+  status: "partial",
 };

@@ -4,5 +4,5 @@ module.exports = {
   tables: ["business_plans", "business_plan_lines"],
   resources: ["business-plans"],
   screen: "UI-06–07",
-  status: "pending",
+  status: "partial",
 };

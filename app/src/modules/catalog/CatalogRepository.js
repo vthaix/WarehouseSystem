@@ -5,6 +5,7 @@ const tables = {
   suppliers: "suppliers",
   units: "units",
   items: "items",
+  lots: "lots",
 };
 const C = require("../../services/domain/core");
 const paginate = require("../../utils/pagination");
@@ -27,8 +28,9 @@ class CatalogRepository {
       values = [];
     if (query.q) {
       C.text(query.q, "q", 150);
-      where.push("(t.code LIKE ? OR t.name LIKE ?)");
-      values.push("%" + query.q + "%", "%" + query.q + "%");
+      where.push(resource === "lots" ? "t.code LIKE ?" : "(t.code LIKE ? OR t.name LIKE ?)");
+      values.push("%" + query.q + "%");
+      if (resource !== "lots") values.push("%" + query.q + "%");
     }
     if (resource === "items" && query.kind) {
       C.fail(

@@ -15,11 +15,19 @@ async function migrate(pool) {
       "CREATE TABLE IF NOT EXISTS schema_migrations (name VARCHAR(150) PRIMARY KEY, checksum CHAR(64) NOT NULL, applied_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)) ENGINE=InnoDB",
     );
     const directory = path.resolve(__dirname, "../../database/migrations");
-    for (const name of fs
-      .readdirSync(directory)
-      .filter((n) => /^\d+_[a-z0-9_]+\.sql$/.test(n))
-      .sort()) {
-      const sql = fs.readFileSync(path.join(directory, name), "utf8"),
+    const migrations = [
+      {
+        name: "001_kho_hang.sql",
+        file: path.resolve(__dirname, "../../database/adminer/KhoHang.sql"),
+      },
+      ...fs
+        .readdirSync(directory)
+        .filter((name) => /^\d+_[a-z0-9_]+\.sql$/.test(name))
+        .sort()
+        .map((name) => ({ name, file: path.join(directory, name) })),
+    ];
+    for (const { name, file } of migrations) {
+      const sql = fs.readFileSync(file, "utf8"),
         checksum = crypto.createHash("sha256").update(sql).digest("hex");
       const [existing] = await connection.execute(
         "SELECT checksum FROM schema_migrations WHERE name = ?",

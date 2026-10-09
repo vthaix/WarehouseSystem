@@ -105,8 +105,8 @@ const { getPool, closePool } = require("../src/config/database");
     assert.equal((await call("/api/v1/customer-orders")).status, 403);
     assert.equal((await call("/api/v1/items", "POST", {}, false)).status, 403);
     res = await call("/api/v1/items", "POST", {});
-    assert.equal(res.status, 501);
-    assert.equal((await res.json()).error.code, "NOT_IMPLEMENTED");
+    assert.equal(res.status, 422);
+    assert.equal((await res.json()).error.code, "VALIDATION_ERROR");
     const notices = (await (await call("/api/v1/notifications")).json()).data;
     assert.equal(notices.length, 1);
     await call("/api/v1/notifications/" + notices[0].id + "/read", "PATCH", {});
@@ -162,7 +162,7 @@ const { getPool, closePool } = require("../src/config/database");
       ),
     );
     assert.ok(!samples.some((item) => item.code === "TP-005"));
-    assert.equal((await call("/api/v1/customer-orders")).status, 501);
+    assert.equal((await call("/api/v1/customer-orders")).status, 200);
     assert.equal(
       (await call("/api/v1/notifications/" + notices[0].id)).status,
       404,

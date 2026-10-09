@@ -29,5 +29,5 @@ module.exports = {
     "lots",
   ],
   screen: "UI-10–12",
-  status: "read-only",
+  status: "partial",
 };

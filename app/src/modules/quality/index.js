@@ -4,5 +4,5 @@ module.exports = {
   tables: ["qc_inspections", "qc_inspection_lines"],
   resources: ["qc-inspections"],
   screen: "UI-18",
-  status: "pending",
+  status: "partial",
 };

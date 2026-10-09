@@ -206,6 +206,7 @@ async function createForm() {
           { id: "PRODUCTION_RECEIPT", name: "Nhập thành phẩm sản xuất" },
           { id: "PRODUCTION_ISSUE", name: "Cấp nguyên liệu sản xuất" },
           { id: "SALE_ISSUE", name: "Giao thành phẩm bán" },
+          { id: "MATERIAL_PURCHASE", name: "Bổ sung nguyên liệu" },
         ]) +
         f("warehouse_id", "select", true, await options("warehouses")) +
         f(
@@ -215,6 +216,7 @@ async function createForm() {
           user.workshop_ids.map((id) => ({ id, name: "Xưởng " + id })),
         ) +
         f("requested_date", "date") +
+        f("manager_id", "select", false, [{ id: "", name: "Chọn quản lý kho" }, ...(await options("warehouse-managers"))]) +
         f("purchase_order_id", "select", false, [
           { id: "", name: "Chọn đơn mua" },
           ...(await options("purchase-orders")),
@@ -227,6 +229,7 @@ async function createForm() {
           { id: "", name: "Chọn kế hoạch sản xuất" },
           ...(await options("production-plans")),
         ]) +
+        f("production_report_id", "select", false, [{ id: "", name: "Chọn báo cáo nhu cầu" }, ...(await options("production-reports"))]) +
         f("note", "textarea", false) +
         '<div class="span2 notice">Chọn nguồn rồi bấm “Lấy dòng nguồn”. Số lượng có thể điều chỉnh trong giới hạn chứng từ.</div><button type="button" class="button" id="source-lines">Lấy dòng nguồn</button><div class="span2" id="source-editor"></div>';
       builder = (d) => {
@@ -236,11 +239,13 @@ async function createForm() {
           SALE_ISSUE: "business_plan_id",
           PRODUCTION_RECEIPT: "production_plan_id",
           PRODUCTION_ISSUE: "production_plan_id",
+          MATERIAL_PURCHASE: "production_report_id",
         }[d.purpose];
         for (const k of [
           "purchase_order_id",
           "business_plan_id",
           "production_plan_id",
+          "production_report_id",
         ])
           if (k !== sourceField) delete b[k];
         return b;
@@ -248,6 +253,7 @@ async function createForm() {
     } else if (current === "qc-inspections") {
       const lots = await options("lots");
       html =
+        f("campaign_id", "select", true, await options("quality-campaigns")) +
         f("inspected_at", "datetime-local") +
         f("note", "textarea", false) +
         f("lot_id", "select", true, lots) +
@@ -256,6 +262,7 @@ async function createForm() {
         f("failed_quantity", "number") +
         f("issue", "textarea", false);
       builder = (d) => ({
+        campaign_id: d.campaign_id,
         inspected_at: new Date(d.inspected_at + "+07:00").toISOString(),
         note: d.note,
         lines: [
@@ -307,10 +314,12 @@ async function createForm() {
       current === "finished-reports"
     ) {
       const plans = await options("production-plans");
-      const materials = plans
-        .flatMap((p) => p.materials || [])
-        .filter((v, i, a) => a.findIndex((x) => x.item_id === v.item_id) === i)
-        .map((i) => ({ id: i.item_id, name: i.item_name }));
+      const materials = current === "production-reports"
+        ? (await options("items")).filter((item) => item.kind === "MATERIAL")
+        : plans
+          .flatMap((p) => p.materials || [])
+          .filter((v, i, a) => a.findIndex((x) => x.item_id === v.item_id) === i)
+          .map((i) => ({ id: i.item_id, name: i.item_name }));
       const outputs = plans
         .flatMap((p) => p.outputs || [])
         .filter((v, i, a) => a.findIndex((x) => x.item_id === v.item_id) === i)
@@ -444,6 +453,7 @@ async function createForm() {
               SALE_ISSUE: ["business-plans", d.business_plan_id],
               PRODUCTION_RECEIPT: ["production-plans", d.production_plan_id],
               PRODUCTION_ISSUE: ["production-plans", d.production_plan_id],
+              MATERIAL_PURCHASE: ["production-reports", d.production_report_id],
             },
             [resource, id] = specs[d.purpose],
             source = (await api(resource + "/" + id)).data,
@@ -459,7 +469,7 @@ async function createForm() {
               ["quantity"],
               lines.map((l) => ({
                 ...l,
-                quantity: l.required_quantity || l.quantity,
+                quantity: d.purpose === "MATERIAL_PURCHASE" ? l.shortage_quantity : l.required_quantity || l.quantity,
               })),
             );
           document.querySelector("#source-editor").innerHTML = e.html;
@@ -848,10 +858,9 @@ async function editForm(r) {
       current === "finished-reports"
     ) {
       const p = (await api("production-plans/" + r.production_plan_id)).data;
-      const mats = p.materials.map((l) => ({
-          id: l.item_id,
-          name: l.item_name,
-        })),
+      const mats = current === "production-reports"
+        ? (await options("items")).filter((item) => item.kind === "MATERIAL")
+        : p.materials.map((l) => ({ id: l.item_id, name: l.item_name })),
         outs = p.outputs.map((l) => ({ id: l.item_id, name: l.item_name }));
       html = f("note", "textarea", false, [], r.note || "");
       if (current === "production-reports") {

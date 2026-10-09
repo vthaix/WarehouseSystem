@@ -1,6 +1,6 @@
 # Thiết kế MVC và đặc tả route API hệ thống quản lý kho
 
-**Trạng thái triển khai Docker/MySQL:** đây là hợp đồng thiết kế, không phải toàn bộ endpoint đã dùng SQL. Xem [MODULE_MATRIX.md](MODULE_MATRIX.md); module pending trả 501 sau kiểm tra quyền. Nền tảng auth/catalog đọc/notifications đã hoạt động trên MySQL.
+**Trạng thái triển khai Docker/MySQL:** đây là hợp đồng thiết kế, không phải toàn bộ endpoint đã dùng SQL. Xem [MODULE_MATRIX.md](MODULE_MATRIX.md); module pending trả 501 sau kiểm tra quyền. Auth, danh mục đọc, thông báo, đơn hàng khách hàng và kế hoạch sản xuất tối thiểu đã hoạt động trên MySQL.
 
 **Phiên bản:** 1.0 — bản thiết kế để triển khai và rà soát.  
 **Ngày:** 08/10/2026.  

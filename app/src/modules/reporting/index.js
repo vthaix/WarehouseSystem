@@ -8,5 +8,5 @@ module.exports = {
     "reports/stocktakes",
   ],
   screen: "UI-24–26",
-  status: "pending",
+  status: "ready",
 };

@@ -63,4 +63,4 @@ Các endpoint cũ không mâu thuẫn vẫn theo `API.md`. Các endpoint lookup 
 
 Kiểm thử domain/HTTP bao phủ quyền, state/version/replay, rollback, giới hạn nguồn/QC, phân công nhiều người, trả NCC, ngoại lệ thành phẩm, kiểm kê và hồ sơ tổng hợp. Kiểm thử Edge xuyên suốt tạo/sửa đơn → kế hoạch → nhu cầu → mua → QC NVL → điều phối/nhập → sản xuất → QC thành phẩm → điều phối/xuất từng phần → hồ sơ → kiểm kê.
 
-Đã chuẩn bị mysql2 pool/transaction và truy vấn đọc repository có tham số; chưa nối nghiệp vụ vào MySQL, chưa có migration/schema chốt, session store bền vững, locking đa tiến trình hay triển khai production. Xem README để chạy và biết giới hạn của bản mẫu.
+Ứng dụng hiện dùng `KhoHang` và session MySQL bền vững. Đơn hàng khách hàng cùng kế hoạch sản xuất tối thiểu đã dùng transaction, khóa hàng và kiểm phiên bản; các module kho/sản xuất còn lại vẫn chưa nối nghiệp vụ đầy đủ vào MySQL. Xem README và MODULE_MATRIX để biết phạm vi đã triển khai.

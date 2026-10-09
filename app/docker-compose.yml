@@ -20,7 +20,7 @@ services:
     image: mysql:8.4
     command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--default-time-zone=+00:00"]
     environment:
-      MYSQL_DATABASE: ${DB_NAME:-warehouse_system}
+      MYSQL_DATABASE: ${DB_NAME:-KhoHang}
       MYSQL_USER: ${DB_USER:-warehouse_app}
       MYSQL_PASSWORD_FILE: /run/warehouse-mysql-secrets/db_password
       MYSQL_ROOT_PASSWORD_FILE: /run/warehouse-mysql-secrets/root_password
@@ -52,7 +52,7 @@ services:
       STORAGE_DRIVER: mysql
       DB_HOST: mysql
       DB_PORT: "3306"
-      DB_NAME: ${DB_NAME:-warehouse_system}
+      DB_NAME: ${DB_NAME:-KhoHang}
       DB_USER: ${DB_USER:-warehouse_app}
       DB_PASSWORD_FILE: /run/warehouse-app-secrets/db_password
       SESSION_SECRET_FILE: /run/warehouse-app-secrets/session_secret

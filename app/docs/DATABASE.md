@@ -1,6 +1,6 @@
 # Thiết kế cơ sở dữ liệu MySQL cho hệ thống quản lý kho
 
-**Trạng thái thực tế:** DDL bên dưới là thiết kế tham chiếu. Chỉ tập foundation đã được chọn vào `database/migrations/001_foundation.sql`, cộng sessions/login_attempts/schema_migrations. Không chạy toàn bộ DDL dưới đây như schema production. Bảng nghiệp vụ còn chờ chỉnh theo mô tả mới; xem [MODULE_MATRIX.md](MODULE_MATRIX.md). QC nguyên vật liệu lỗi trả trước nhập, không tự đưa vào QUARANTINE khi có mâu thuẫn với mô tả cũ.
+**Trạng thái thực tế:** Database ứng dụng hiện là `KhoHang`. Schema triển khai nằm tại [`database/adminer/KhoHang.sql`](../database/adminer/KhoHang.sql), gồm 49 bảng tên tiếng Việt không dấu; migration tạo thêm `LichSuCSDL`. DDL tiếng Anh ở phần 7 là **nguồn thiết kế tham chiếu** cho script tạo schema, không import trực tiếp. Các bảng nghiệp vụ đã có schema nhưng nhiều module ứng dụng còn trả 501; xem [MODULE_MATRIX.md](MODULE_MATRIX.md). QC nguyên vật liệu lỗi trả trước nhập, không tự đưa vào QUARANTINE khi có mâu thuẫn với mô tả cũ.
 
 **Phiên bản:** 1.0 — bản thiết kế để triển khai và rà soát.  
 **Ngày:** 08/10/2026.  
@@ -14,7 +14,7 @@ Quy ước: **[GỐC]** là nghiệp vụ lấy từ đặc tả; **[ĐỀ XUẤ
 
 [ĐỀ XUẤT] Target schema MySQL 8.4, InnoDB, utf8mb4, collation utf8mb4_unicode_ci. Anh đã chọn MySQL; phiên bản 8.4 là mục tiêu của thiết kế, cần kiểm tra môi trường trước khi chạy migration. Schema dưới đây không phải CSDL đã tạo hoặc đã kiểm thử trên MySQL thật.
 
-Một database `warehouse_system`; tên bảng/cột snake_case, số khóa BIGINT UNSIGNED AUTO_INCREMENT. Mọi bảng có id, created_at và updated_at. created_at/updated_at dùng DATETIME(6), ứng dụng ghi UTC. SQL minh họa DEFAULT CURRENT_TIMESTAMP(6) yêu cầu connection timezone `+00:00`; ngày lịch nghiệp vụ dùng DATE.
+Một database `KhoHang`; tên bảng/cột triển khai dùng tiếng Việt không dấu theo PascalCase. Các tên snake_case tiếng Anh bên dưới là từ điển tham chiếu để tạo schema và ánh xạ truy vấn cũ. Khóa chính BIGINT UNSIGNED AUTO_INCREMENT, thời gian DATETIME(6) theo UTC; ngày lịch nghiệp vụ dùng DATE.
 
 Số lượng DECIMAL(18,3); tiền/đơn giá DECIMAL(19,4); dùng chuỗi trong JSON. Mã nghiệp vụ VARCHAR có UNIQUE. Không dựa vào MAX(id)+1 để sinh mã: sinh từ ID sau INSERT trong transaction hoặc dùng UUID ngắn và retry xung đột. Độ lớn mã và quy tắc prefix được giữ trong service.
 
@@ -903,13 +903,12 @@ Báo cáo tồn tại mốc T: SUM quantity_delta WHERE posted_at <= T, GROUP BY
 
 Báo cáo kiểm kê dùng snapshot và số đếm, không lấy balances sau điều chỉnh để thay system_quantity. Báo cáo phiếu lọc theo posted_at chứ không theo ngày tạo bản nháp vì phiên bản này không lưu nháp phiếu.
 
-## 7 DDL nền để chuyển thành migration
+## 7 DDL tham chiếu tiếng Anh
 
-DDL sau định nghĩa đầy đủ các bảng trong tài liệu. Không gồm stored procedures/triggers, seed hay bảo đảm các quy tắc liên bảng; service vẫn bắt buộc triển khai phần 4–5. DDL không tự tạo tài khoản MySQL hoặc cấu hình backup.
+DDL sau là nguồn tham chiếu để sinh `KhoHang.sql` và ánh xạ tên cột. **Không chạy trực tiếp đoạn này trên database ứng dụng.** Nó không gồm stored procedures/triggers, seed hay bảo đảm các quy tắc liên bảng; service vẫn bắt buộc triển khai phần 4–5.
 
 ```sql
-CREATE DATABASE IF NOT EXISTS warehouse_system CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE warehouse_system;
+-- DDL tham chiếu tiếng Anh; database đang chạy là KhoHang với tên bảng tiếng Việt.
 SET time_zone = '+00:00';
 CREATE TABLE users (
   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,

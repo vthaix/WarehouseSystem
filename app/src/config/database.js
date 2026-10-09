@@ -1,9 +1,10 @@
 const mysql = require("mysql2/promise");
+const { wrapSql } = require("./vietnamese-sql");
 let pool;
 function getPool() {
   if (!process.env.DB_NAME || !process.env.DB_USER)
     throw new Error("Đặt DB_NAME và DB_USER trước khi kết nối MySQL.");
-  return (pool ||= mysql.createPool({
+  return (pool ||= wrapSql(mysql.createPool({
     host: process.env.DB_HOST || "127.0.0.1",
     port: Number(process.env.DB_PORT || 3306),
     user: process.env.DB_USER,
@@ -17,7 +18,7 @@ function getPool() {
     multipleStatements: false,
     timezone: "Z",
     connectTimeout: 5000,
-  }));
+  })));
 }
 async function withTransaction(work) {
   const connection = await getPool().getConnection();
