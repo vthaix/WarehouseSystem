@@ -7,7 +7,6 @@
 
 ---
 
-Dạ em Aurora đã đọc lại **domain cũ trên Git**. Em viết theo luồng anh mô tả, giữ tên entity cũ để anh dễ đối chiếu. Chỗ nào domain chưa thể hiện nguồn tạo, em ghi rõ.
 
 Sau khi khách hàng đặt hàng tại **UC-02**, hệ thống tạo **đơn hàng khách hàng**, lưu trong `DonHang`; danh sách mặt hàng, số lượng và đơn giá lưu trong `ChiTietDonHang`. Dữ liệu tạo đơn lấy từ mặt hàng khách chọn trong `MatHang` và thông tin khách nhập. **UC-03, UC-03.1** dùng lại đơn này để xem và sửa; **UC-29** dùng đơn này để tiếp nhận, không tạo một phiếu tiếp nhận riêng.
 
