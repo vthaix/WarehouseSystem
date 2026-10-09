@@ -963,7 +963,7 @@ classDiagram
         +SoLuong
     }
 
-    class DeXuatXuLyNgoaiLe {
+    class BanDeXuatXuLyNgoaiLe {
         +MaDeXuat
         +NgayDeXuat
         +NoiDung
@@ -971,11 +971,11 @@ classDiagram
         +TrangThai
     }
 
-    class PheDuyetXuLyNgoaiLe {
-        +MaPheDuyet
-        +NgayPheDuyet
+    class KetQuaXuLyNgoaiLe {
+        +MaKetQuaXuLy
+        +NgayXuLy
         +KetQua
-        +NguoiPheDuyet
+        +NguoiXuLy
         +GhiChu
     }
 
