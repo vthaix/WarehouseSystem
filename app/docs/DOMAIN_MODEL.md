@@ -612,7 +612,7 @@ Số lượng cần thiết và số lượng NVL sử dụng được tính **t
 ```mermaid
 classDiagram
 
-    class BaoCaoSanXuat {
+    class BanBaoCaoSanXuat {
         +MaBaoCao
         +NgayLap
         +LoaiBaoCao
@@ -656,7 +656,7 @@ classDiagram
         +SoLuong
     }
 
-    BaoCaoSanXuat "1" --> "N" ChiTietBaoCaoSanXuat : gồm
+    BanBaoCaoSanXuat "1" --> "N" ChiTietBaoCaoSanXuat : gồm
     MatHang "1" --> "N" ChiTietBaoCaoSanXuat : báo cáo
     ChiTietBaoCaoSanXuat "1" --> "N" ChiTietLoBaoCaoSanXuat : chia theo lô
 
@@ -664,7 +664,7 @@ classDiagram
     LoHang "1" --> "N" ChiTietLo : gồm
     ChiTietLo "1" --> "N" ChiTietLoBaoCaoSanXuat : lô được báo cáo
 
-    note for BaoCaoSanXuat "LoaiBaoCao: Báo cáo sản xuất / Báo cáo thành phẩm"
+    note for BanBaoCaoSanXuat "LoaiBaoCao: Báo cáo sản xuất / Báo cáo thành phẩm"
     note for ChiTietBaoCaoSanXuat "SoLuongCanThiet, SoLuongNVLSuDung tính theo mặt hàng + đơn vị tính. Ví dụ: cần 10 kg đường"
     note for ChiTietLoBaoCaoSanXuat "Phân bổ theo lô. Ví dụ: 4 kg đường lô A + 6 kg đường lô B. Tổng các dòng = SoLuongNVLSuDung (hoặc SoLuong với thành phẩm)"
 
@@ -942,7 +942,7 @@ classDiagram
         +TinhTrang
     }
 
-    class BaoCaoSanXuat {
+    class BanBaoCaoSanXuat {
         +MaBaoCao
         +NgayLap
         +LoaiBaoCao
