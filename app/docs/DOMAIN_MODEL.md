@@ -675,24 +675,23 @@ classDiagram
 ```mermaid
 classDiagram
 
-    class DeXuatXuLyNgoaiLe {
+    class BanDeXuatXuLyNgoaiLe {
         +MaDeXuat
         +NgayDeXuat
         +NoiDung
         +LyDo
         +TrangThai
-        +GhiChu
     }
 
-    class PheDuyetXuLyNgoaiLe {
-        +MaPheDuyet
-        +NgayPheDuyet
+    class KetQuaXuLyNgoaiLe {
+        +MaKetQuaXuLy
+        +NgayXuLy
         +KetQua
-        +NguoiPheDuyet
+        +NguoiXuLy
         +GhiChu
     }
 
-    DeXuatXuLyNgoaiLe "1" --> "N" PheDuyetXuLyNgoaiLe : được phê duyệt
+    BanDeXuatXuLyNgoaiLe "1" --> "N" KetQuaXuLyNgoaiLe : được phê duyệt
 
 ```
 
