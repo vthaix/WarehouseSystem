@@ -68,7 +68,6 @@ classDiagram
     NguoiDung <|-- KhachHang
     VaiTro "1" --> "N" NguoiDung : có
     BoPhan "1" --> "N" NhanVien : quản lý
-
 ```
 
 2. Nhóm Đơn hàng khách hàng
