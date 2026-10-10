@@ -1,31 +1,12 @@
-### Domain Model
+# Domain Model đã chỉnh sửa
 
----
+Kế hoạch sản xuất là dự kiến ban đầu, phát sinh từ đơn hàng và phân công cho xưởng. `ChiTietKeHoachSanXuat` chứa cả dòng thành phẩm và dòng NVL cần/còn thiếu, phân biệt bằng `LoaiChiTiet`; không có entity chi tiết NVL kế hoạch riêng.
 
+Xưởng đối chiếu kế hoạch với tồn kho để lập báo cáo sản xuất thực tế. Báo cáo sản xuất liên kết kế hoạch sản xuất, làm nguồn lập kế hoạch MUA, đơn mua NVL và yêu cầu xuất NVL cho sản xuất. Đơn mua vẫn liên kết kế hoạch MUA đã phê duyệt và đồng thời tham chiếu chính báo cáo nguồn đó.
 
-Sau khi khách hàng đặt hàng tại **UC-02**, hệ thống tạo **đơn hàng khách hàng**, lưu trong `DonHang`; danh sách mặt hàng, số lượng và đơn giá lưu trong `ChiTietDonHang`. Dữ liệu tạo đơn lấy từ mặt hàng khách chọn trong `MatHang` và thông tin khách nhập. **UC-03, UC-03.1** dùng lại đơn này để xem và sửa; **UC-29** dùng đơn này để tiếp nhận, không tạo một phiếu tiếp nhận riêng.
+Báo cáo thành phẩm ghi nhận kết quả sản xuất thực tế và làm nguồn lập kế hoạch BAN. Hai loại báo cáo tiếp tục dùng chung `BanBaoCaoSanXuat`, phân biệt bằng `LoaiBaoCao`; hai loại kế hoạch dùng chung `KeHoachMuaBan`, phân biệt bằng `LoaiKeHoach`. Các quan hệ có điều kiện theo loại phải được kiểm tra khi triển khai.
 
-Bộ phận lập kế hoạch dựa trên `DonHang`, `ChiTietDonHang` để lập **kế hoạch sản xuất**, lưu trong `KeHoachSanXuat`. Các thành phẩm cần sản xuất lưu trong `ChiTietKeHoachSanXuat`; danh sách NVL cần thiết lưu trong `ChiTietNguyenLieuKeHoachSanXuat`; xưởng thực hiện lấy từ `Xuong`. **Domain cũ đã có quan hệ đơn hàng → kế hoạch sản xuất, nhưng đặc tả chưa có bước tạo kế hoạch đầy đủ**; theo luồng anh mô tả, bước này nằm sau tiếp nhận tại UC-29. **UC-31** xem đơn và kế hoạch liên quan để phê duyệt; không cần tạo thêm phiếu phê duyệt riêng.
-
-Chủ xưởng nhận kế hoạch sản xuất, lấy nhu cầu NVL từ `ChiTietNguyenLieuKeHoachSanXuat` và tra cứu tồn kho tại **UC-22**, sử dụng `TonKho`, `ChiTietLo`, `MatHang`. Nếu thiếu NVL, chủ xưởng lập **phiếu báo cáo sản xuất tại UC-34**. Trong domain cũ, phiếu này được lưu bằng `BanBaoCaoSanXuat`, còn từng mặt hàng và số lượng báo cáo lưu trong `ChiTietBaoCaoSanXuat`. Nguồn lập phiếu là kế hoạch sản xuất, nhu cầu NVL và kết quả tra cứu tồn kho. 
-
-Bộ phận lập kế hoạch sử dụng nhu cầu mua bổ sung để lập **kế hoạch mua NVL tại UC-04**. Trong domain cũ, kế hoạch này vẫn tên là `KeHoachMuaBan`, danh sách NVL cần mua nằm trong `ChiTietKeHoachMuaBan`. **Quan hệ hiện có trong domain là `KeHoachSanXuat` → `KeHoachMuaBan`; chưa có quan hệ từ báo cáo sản xuất sang kế hoạch mua.** Nếu anh muốn kế hoạch mua lấy từ phần thiếu trong báo cáo thì cần bổ sung liên kết đó. **UC-05, UC-05.1, UC-05.2** dùng kế hoạch đã tạo để xem, sửa, xóa; **UC-32** phê duyệt chính kế hoạch này.
-
-Sau khi kế hoạch mua được duyệt, bộ phận mua hàng thực hiện **UC-27** để tạo **đơn mua NVL**, lưu trong `DonMuaHang`, các dòng hàng mua lưu trong `ChiTietDonMuaHang`. Nguồn tạo đơn là `KeHoachMuaBan`, `ChiTietKeHoachMuaBan`; thông tin NCC lấy từ `NhaCungCap`, còn giá và điều kiện giao hàng do bộ phận mua hàng bổ sung. **UC-14** xem/quản lý đơn mua này. Domain cũ không có một entity “phiếu yêu cầu mua” riêng.
-
-Khi NCC giao hàng, cần ghi nhận **lô NVL** bằng `LoHang`, `LoNguyenVatLieu`, `ChiTietLo` để QC/AC có dữ liệu kiểm tra. Thông tin thực nhận được đối chiếu với đơn mua. **Domain cũ có các entity lô nhưng chưa nối rõ đơn mua → lô nhận, và đặc tả chưa xác định đầy đủ bước tạo lô.** QC/AC thực hiện **UC-12.1** để tạo **kết quả kiểm tra chất lượng**, lưu trong `KetQuaKiemTraQCAC`; lượng kiểm tra, lượng đạt và lượng lỗi của từng dòng lô lưu trong `ChiTietKetQuaKiemTraQCAC`. **UC-12, UC-12.2, UC-12.3** sử dụng kết quả này để xem, sửa, xóa.
-
-Phần NVL đạt được nhập kho bằng **phiếu nhập kho**, lưu trong `PhieuKho` với loại phiếu nhập; từng dòng thực nhập lưu trong `ChiTietPhieuKho`, sau đó cập nhật `TonKho`. **UC-10** tạo phiếu nhập từ kết quả QC đạt, chi tiết lô và thông tin kho thực nhập; **UC-08** quản lý phiếu đã tạo, **UC-20** tổng hợp phiếu để xem hồ sơ nhập. Theo yêu cầu mới của anh, việc nhập diễn ra ngay khi kết luận QC, nhưng **domain cũ chưa có liên kết kết quả QC → phiếu kho và chưa có chứng từ riêng ghi nhận trả NCC**.
-
-Khi cần xuất NVL cho xưởng, chủ xưởng thực hiện **UC-23** để lập **phiếu yêu cầu xuất**, lưu trong `PhieuYeuCauNhapXuat`, danh sách mặt hàng cần xuất lưu trong `ChiTietPhieuYeuCauNhapXuat`. Theo domain cũ, nguồn tạo yêu cầu là `KeHoachSanXuat` và xưởng được phân công. **UC-24, UC-24.1, UC-24.2** sử dụng yêu cầu này để xem, sửa, hủy. Nhân viên kho thực hiện **UC-11.01** từ yêu cầu đó, chọn các lô thực xuất và tạo `PhieuKho` loại xuất cùng `ChiTietPhieuKho`, đồng thời trừ `TonKho`. Như vậy, **phiếu yêu cầu ghi lượng muốn xuất; phiếu kho ghi lượng và lô thực sự đã xuất**.
-
-Khi sản xuất xong, chủ xưởng thực hiện **UC-35** để lập **báo cáo thành phẩm**. Domain cũ dùng chung `BanBaoCaoSanXuat` cho cả báo cáo sản xuất và báo cáo thành phẩm, phân biệt bằng `LoaiBaoCao`. Các mặt hàng, lượng thành phẩm và NVL đã dùng nằm trong `ChiTietBaoCaoSanXuat`; nếu cần ghi rõ dùng NVL từ lô nào thì lưu trong `ChiTietLoBaoCaoSanXuat`. Nguồn báo cáo là kết quả sản xuất thực tế và các lô liên quan. Thành phẩm được ghi nhận bằng `LoHang`, `LoThanhPham`, `ChiTietLo`, sau đó QC/AC kiểm tra và tiếp tục tạo `KetQuaKiemTraQCAC`, `ChiTietKetQuaKiemTraQCAC`.
-
-Nếu quản lý cần trình giám đốc xử lý ngoại lệ thì tạo **đề xuất xử lý ngoại lệ** từ phần hàng lỗi trong kết quả QC hoặc chênh lệch kiểm kê. **UC-17** sử dụng đề xuất đó để phê duyệt. Riêng phần này, **domain cũ đang không thống nhất tên**: sơ đồ nhóm ghi `BanDeXuatXuLyNgoaiLe`, `KetQuaXuLyNgoaiLe`, còn đường nối tổng thể và Word ghi `DeXuatXuLyNgoaiLe`, `PheDuyetXuLyNgoaiLe`. Đây là cùng phần nghiệp vụ đang bị lệch tên, không phải bốn loại giấy tờ khác nhau.
-
-Khi giao thành phẩm cho khách, **UC-11.02** lấy dữ liệu từ `DonHang`, `ChiTietDonHang`, có thể kèm `PhieuYeuCauNhapXuat`, rồi lấy lô thành phẩm đạt chất lượng để lập `PhieuKho` loại xuất và `ChiTietPhieuKho`. **UC-09** quản lý phiếu xuất; **UC-19** tổng hợp để xem hồ sơ xuất. Hồ sơ nhập/xuất là dữ liệu tổng hợp từ các phiếu này, domain cũ không có entity hồ sơ riêng.
-
-Ngoài luồng sản xuất, **UC-13** lập đợt kiểm kê; **UC-15** ghi số đếm thực tế vào **phiếu kiểm kê**, trong domain cũ tên là `PhieuKiemKe`, `ChiTietPhieuKiemKe`. Nguồn dữ liệu gồm kho, từng dòng lô, tồn hệ thống và số lượng thực đếm. **UC-28** dùng kết quả đó để lập biên bản; domain cũ chưa có entity biên bản riêng nên nội dung kết luận nằm trên phiếu kiểm kê. **UC-16** dùng các dòng chênh lệch để xử lý, **UC-21** tổng hợp để xem báo cáo kiểm kê.
+Trong sơ đồ, `N` biểu diễn nhiều. Các trường liên kết `MaBaoCao` tham chiếu báo cáo nguồn; số lượng báo cáo là dữ liệu thực tế, còn số lượng trong kế hoạch sản xuất là dự kiến. Các nhóm ngoài phạm vi sửa được giữ nguyên; tên báo cáo và xử lý ngoại lệ trong sơ đồ tổng thể được thống nhất với các nhóm chi tiết của file nguồn.
 
 1. Nhóm Tài khoản / Người dùng
 
@@ -68,6 +49,7 @@ classDiagram
     NguoiDung <|-- KhachHang
     VaiTro "1" --> "N" NguoiDung : có
     BoPhan "1" --> "N" NhanVien : quản lý
+
 ```
 
 2. Nhóm Đơn hàng khách hàng
@@ -198,13 +180,12 @@ classDiagram
     }
 
     class ChiTietKeHoachSanXuat {
+        +MaChiTietKeHoachSanXuat
         +MaMatHang
+        +LoaiChiTiet
         +SoLuong
-    }
-
-    class ChiTietNguyenLieuKeHoachSanXuat {
-        +MaMatHang
         +SoLuongCanThiet
+        +SoLuongConThieu
         +GhiChu
     }
 
@@ -220,21 +201,27 @@ classDiagram
     DonHang "1" --> "N" KeHoachSanXuat : phát sinh
     Xuong "1" --> "N" KeHoachSanXuat : thực hiện tại
     KeHoachSanXuat "1" --> "N" ChiTietKeHoachSanXuat : gồm
-    KeHoachSanXuat "1" --> "N" ChiTietNguyenLieuKeHoachSanXuat : cần nguyên liệu
-    MatHang "1" --> "N" ChiTietKeHoachSanXuat : sản xuất
-    MatHang "1" --> "N" ChiTietNguyenLieuKeHoachSanXuat : là nguyên liệu
+    MatHang "1" --> "N" ChiTietKeHoachSanXuat : thành phẩm hoặc NVL
 
-    note for ChiTietKeHoachSanXuat "MaMatHang: thành phẩm cần sản xuất"
-    note for ChiTietNguyenLieuKeHoachSanXuat "Nguyên vật liệu cần theo mặt hàng, đơn vị tính lấy từ MatHang. Ví dụ: 10 kg đường (chưa gắn lô)"
+    note for ChiTietKeHoachSanXuat "LoaiChiTiet: THANH_PHAM / NGUYEN_VAT_LIEU. Thành phẩm dùng SoLuong; NVL dùng SoLuongCanThiet và SoLuongConThieu. Đơn vị tính lấy từ MatHang; đây là dữ liệu dự kiến ban đầu."
 
 ```
 
 6. Nhóm Kế hoạch mua / bán và Đơn mua hàng
 
-Kế hoạch mua được phát sinh từ Kế hoạch sản xuất, không phụ thuộc vào khách hàng hay đơn hàng.
+Kế hoạch mua lấy nhu cầu thiếu thực tế từ báo cáo sản xuất; kế hoạch bán lấy thành phẩm thực tế từ báo cáo thành phẩm. Hai loại báo cáo dùng chung BanBaoCaoSanXuat, phân biệt bằng LoaiBaoCao.
 
 ```mermaid
 classDiagram
+
+    class BanBaoCaoSanXuat {
+        +MaBaoCao
+        +MaKeHoachSanXuat
+        +MaXuong
+        +NgayLap
+        +LoaiBaoCao
+        +GhiChu
+    }
 
     class KeHoachSanXuat {
         +MaKeHoachSanXuat
@@ -244,7 +231,8 @@ classDiagram
 
     class KeHoachMuaBan {
         +MaKeHoachMuaBan
-        +MaKeHoachSanXuat
+        +MaBaoCao
+        +LoaiKeHoach
         +NgayLap
         +TrangThai
         +GhiChu
@@ -258,6 +246,7 @@ classDiagram
 
     class DonMuaHang {
         +MaDonMua
+        +MaBaoCao
         +NgayLap
         +TrangThai
         +NgayGiaoDuKien
@@ -289,7 +278,9 @@ classDiagram
         +TrangThai
     }
 
-    KeHoachSanXuat "1" --> "N" KeHoachMuaBan : phát sinh
+    KeHoachSanXuat "1" --> "N" BanBaoCaoSanXuat : đối chiếu thực tế
+    BanBaoCaoSanXuat "1" --> "N" KeHoachMuaBan : nguồn lập theo loại báo cáo
+    BanBaoCaoSanXuat "1" --> "N" DonMuaHang : căn cứ nhu cầu NVL
     KeHoachMuaBan "1" --> "N" ChiTietKeHoachMuaBan : gồm
     MatHang "1" --> "N" ChiTietKeHoachMuaBan : kế hoạch
     KeHoachMuaBan "1" --> "N" DonMuaHang : phát sinh
@@ -298,7 +289,9 @@ classDiagram
     DonMuaHang "1" --> "N" ChiTietDonMuaHang : gồm
     MatHang "1" --> "N" ChiTietDonMuaHang : mua
 
-    note for ChiTietKeHoachMuaBan "Danh sách nguyên vật liệu lấy từ chi tiết nguyên liệu của Kế hoạch sản xuất"
+    note for KeHoachMuaBan "LoaiKeHoach=MUA: MaBaoCao trỏ báo cáo sản xuất; LoaiKeHoach=BAN: MaBaoCao trỏ báo cáo thành phẩm. Mỗi kế hoạch chỉ thuộc một loại."
+    note for DonMuaHang "MaBaoCao phải trỏ báo cáo sản xuất và cùng báo cáo nguồn của kế hoạch MUA liên quan. Không tạo đơn mua từ kế hoạch BAN."
+    note for ChiTietKeHoachMuaBan "MUA: lấy NVL còn thiếu từ ChiTietBaoCaoSanXuat. BAN: lấy thành phẩm thực tế từ ChiTietBaoCaoSanXuat."
 
 ```
 
@@ -306,6 +299,15 @@ classDiagram
 
 ```mermaid
 classDiagram
+
+    class BanBaoCaoSanXuat {
+        +MaBaoCao
+        +MaKeHoachSanXuat
+        +MaXuong
+        +NgayLap
+        +LoaiBaoCao
+        +GhiChu
+    }
 
     class KeHoachSanXuat {
         +MaKeHoachSanXuat
@@ -330,7 +332,7 @@ classDiagram
     class PhieuYeuCauNhapXuat {
         +MaPhieuYeuCau
         +LoaiYeuCau
-        +MaKeHoachSanXuat
+        +MaBaoCao
         +MaXuong
         +NgayYeuCau
         +NgayThucHienDuKien
@@ -383,7 +385,7 @@ classDiagram
         +SoLuong
     }
 
-    KeHoachSanXuat "1" --> "N" PhieuYeuCauNhapXuat : phát sinh
+    BanBaoCaoSanXuat "1" --> "N" PhieuYeuCauNhapXuat : căn cứ thực tế
     Xuong "1" --> "N" PhieuYeuCauNhapXuat : yêu cầu bởi
     PhieuYeuCauNhapXuat "1" --> "N" ChiTietPhieuYeuCauNhapXuat : gồm
     MatHang "1" --> "N" ChiTietPhieuYeuCauNhapXuat : yêu cầu
@@ -396,7 +398,7 @@ classDiagram
     LoHang "1" --> "N" ChiTietLo : gồm
     ChiTietLo "1" --> "N" ChiTietPhieuKho : nhập/xuất
 
-    note for PhieuYeuCauNhapXuat "LoaiYeuCau: Xuất nguyên vật liệu / Nhập thành phẩm. Liên kết Kế hoạch sản xuất và Xưởng áp dụng cho 2 loại này"
+    note for PhieuYeuCauNhapXuat "Xuất NVL: lấy dữ liệu báo cáo sản xuất thực tế. Nhập thành phẩm: lấy dữ liệu báo cáo thành phẩm. MaBaoCao phải khớp loại yêu cầu và xưởng; không lấy trực tiếp từ kế hoạch ban đầu."
     note for ChiTietPhieuYeuCauNhapXuat "Yêu cầu theo mặt hàng, chưa gắn lô"
     note for PhieuKho "LoaiPhieu: Phiếu nhập / Phiếu xuất"
     note for ChiTietPhieuKho "Phiếu kho ghi nhận thực tế theo lô. Ví dụ: xuất 4 kg đường lô A + 6 kg đường lô B"
@@ -631,8 +633,21 @@ Số lượng cần thiết và số lượng NVL sử dụng được tính **t
 ```mermaid
 classDiagram
 
+    class KeHoachSanXuat {
+        +MaKeHoachSanXuat
+        +NgayLap
+        +TrangThai
+    }
+
+    class Xuong {
+        +MaXuong
+        +TenXuong
+    }
+
     class BanBaoCaoSanXuat {
         +MaBaoCao
+        +MaKeHoachSanXuat
+        +MaXuong
         +NgayLap
         +LoaiBaoCao
         +GhiChu
@@ -643,6 +658,7 @@ classDiagram
         +MaMatHang
         +SoLuong
         +SoLuongCanThiet
+        +SoLuongConThieu
         +SoLuongNVLSuDung
         +GhiChu
     }
@@ -675,6 +691,8 @@ classDiagram
         +SoLuong
     }
 
+    KeHoachSanXuat "1" --> "N" BanBaoCaoSanXuat : đối chiếu thực tế
+    Xuong "1" --> "N" BanBaoCaoSanXuat : lập báo cáo
     BanBaoCaoSanXuat "1" --> "N" ChiTietBaoCaoSanXuat : gồm
     MatHang "1" --> "N" ChiTietBaoCaoSanXuat : báo cáo
     ChiTietBaoCaoSanXuat "1" --> "N" ChiTietLoBaoCaoSanXuat : chia theo lô
@@ -683,8 +701,8 @@ classDiagram
     LoHang "1" --> "N" ChiTietLo : gồm
     ChiTietLo "1" --> "N" ChiTietLoBaoCaoSanXuat : lô được báo cáo
 
-    note for BanBaoCaoSanXuat "LoaiBaoCao: Báo cáo sản xuất / Báo cáo thành phẩm"
-    note for ChiTietBaoCaoSanXuat "SoLuongCanThiet, SoLuongNVLSuDung tính theo mặt hàng + đơn vị tính. Ví dụ: cần 10 kg đường"
+    note for BanBaoCaoSanXuat "LoaiBaoCao: SAN_XUAT / THANH_PHAM. Cùng một entity: SAN_XUAT làm căn cứ mua NVL và yêu cầu xuất NVL; THANH_PHAM làm căn cứ kế hoạch bán."
+    note for ChiTietBaoCaoSanXuat "Báo cáo sản xuất ghi nhu cầu NVL và phần thiếu thực tế bằng SoLuongCanThiet, SoLuongConThieu. Báo cáo thành phẩm ghi SoLuong thành phẩm và SoLuongNVLSuDung. Đơn vị tính lấy từ MatHang."
     note for ChiTietLoBaoCaoSanXuat "Phân bổ theo lô. Ví dụ: 4 kg đường lô A + 6 kg đường lô B. Tổng các dòng = SoLuongNVLSuDung (hoặc SoLuong với thành phẩm)"
 
 ```
@@ -808,19 +826,19 @@ classDiagram
     }
 
     class ChiTietKeHoachSanXuat {
+        +MaChiTietKeHoachSanXuat
         +MaMatHang
+        +LoaiChiTiet
         +SoLuong
-    }
-
-    class ChiTietNguyenLieuKeHoachSanXuat {
-        +MaMatHang
         +SoLuongCanThiet
+        +SoLuongConThieu
         +GhiChu
     }
 
     class KeHoachMuaBan {
         +MaKeHoachMuaBan
-        +MaKeHoachSanXuat
+        +MaBaoCao
+        +LoaiKeHoach
         +NgayLap
         +TrangThai
         +GhiChu
@@ -834,6 +852,7 @@ classDiagram
 
     class DonMuaHang {
         +MaDonMua
+        +MaBaoCao
         +NgayLap
         +TrangThai
         +NgayGiaoDuKien
@@ -850,7 +869,7 @@ classDiagram
     class PhieuYeuCauNhapXuat {
         +MaPhieuYeuCau
         +LoaiYeuCau
-        +MaKeHoachSanXuat
+        +MaBaoCao
         +MaXuong
         +NgayYeuCau
         +NgayThucHienDuKien
@@ -963,6 +982,8 @@ classDiagram
 
     class BanBaoCaoSanXuat {
         +MaBaoCao
+        +MaKeHoachSanXuat
+        +MaXuong
         +NgayLap
         +LoaiBaoCao
         +GhiChu
@@ -973,6 +994,7 @@ classDiagram
         +MaMatHang
         +SoLuong
         +SoLuongCanThiet
+        +SoLuongConThieu
         +SoLuongNVLSuDung
     }
 
@@ -1012,11 +1034,11 @@ classDiagram
     DonHang "1" --> "N" KeHoachSanXuat : phát sinh
     Xuong "1" --> "N" KeHoachSanXuat : thực hiện tại
     KeHoachSanXuat "1" --> "N" ChiTietKeHoachSanXuat : gồm
-    MatHang "1" --> "N" ChiTietKeHoachSanXuat : sản xuất
-    KeHoachSanXuat "1" --> "N" ChiTietNguyenLieuKeHoachSanXuat : cần nguyên liệu
-    MatHang "1" --> "N" ChiTietNguyenLieuKeHoachSanXuat : là nguyên liệu
+    MatHang "1" --> "N" ChiTietKeHoachSanXuat : thành phẩm hoặc NVL
 
-    KeHoachSanXuat "1" --> "N" KeHoachMuaBan : phát sinh
+    KeHoachSanXuat "1" --> "N" BanBaoCaoSanXuat : đối chiếu thực tế
+    BanBaoCaoSanXuat "1" --> "N" KeHoachMuaBan : nguồn lập theo loại báo cáo
+    BanBaoCaoSanXuat "1" --> "N" DonMuaHang : căn cứ nhu cầu NVL
     KeHoachMuaBan "1" --> "N" ChiTietKeHoachMuaBan : gồm
     MatHang "1" --> "N" ChiTietKeHoachMuaBan : kế hoạch
     KeHoachMuaBan "1" --> "N" DonMuaHang : phát sinh
@@ -1024,7 +1046,7 @@ classDiagram
     DonMuaHang "1" --> "N" ChiTietDonMuaHang : gồm
     MatHang "1" --> "N" ChiTietDonMuaHang : mua
 
-    KeHoachSanXuat "1" --> "N" PhieuYeuCauNhapXuat : phát sinh
+    BanBaoCaoSanXuat "1" --> "N" PhieuYeuCauNhapXuat : căn cứ thực tế
     Xuong "1" --> "N" PhieuYeuCauNhapXuat : yêu cầu bởi
     PhieuYeuCauNhapXuat "1" --> "N" ChiTietPhieuYeuCauNhapXuat : gồm
     MatHang "1" --> "N" ChiTietPhieuYeuCauNhapXuat : yêu cầu
@@ -1050,10 +1072,16 @@ classDiagram
     KetQuaKiemTraQCAC "1" --> "N" ChiTietKetQuaKiemTraQCAC : gồm
     ChiTietLo "1" --> "N" ChiTietKetQuaKiemTraQCAC : được kiểm tra
 
-    BaoCaoSanXuat "1" --> "N" ChiTietBaoCaoSanXuat : gồm
+    Xuong "1" --> "N" BanBaoCaoSanXuat : lập báo cáo
+    BanBaoCaoSanXuat "1" --> "N" ChiTietBaoCaoSanXuat : gồm
     MatHang "1" --> "N" ChiTietBaoCaoSanXuat : báo cáo
     ChiTietBaoCaoSanXuat "1" --> "N" ChiTietLoBaoCaoSanXuat : chia theo lô
     ChiTietLo "1" --> "N" ChiTietLoBaoCaoSanXuat : lô được báo cáo
 
-    DeXuatXuLyNgoaiLe "1" --> "N" PheDuyetXuLyNgoaiLe : được phê duyệt
+    BanDeXuatXuLyNgoaiLe "1" --> "N" KetQuaXuLyNgoaiLe : được phê duyệt
+    note for ChiTietKeHoachSanXuat "Gồm thành phẩm và NVL dự kiến; NVL cần và còn thiếu nằm ngay trong entity này."
+    note for BanBaoCaoSanXuat "SAN_XUAT: căn cứ mua và xuất NVL. THANH_PHAM: căn cứ kế hoạch bán."
+    note for KeHoachMuaBan "MUA dùng báo cáo SAN_XUAT; BAN dùng báo cáo THANH_PHAM."
+    note for DonMuaHang "Liên kết báo cáo SAN_XUAT; phải khớp báo cáo nguồn của kế hoạch MUA."
+    note for PhieuYeuCauNhapXuat "Xuất NVL lấy dữ liệu báo cáo SAN_XUAT; không lấy trực tiếp từ kế hoạch sản xuất."
 ```
