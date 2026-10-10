@@ -1,5 +1,7 @@
 # Đặc tả giao diện và luồng màn hình hệ thống quản lý kho
 
+**Cập nhật 10/10/2026:** form kế hoạch mua trên MySQL chọn kế hoạch sản xuất hoặc yêu cầu bổ sung NVL, điền dòng hàng từ nguồn. Khách/đơn chỉ dùng cho kế hoạch bán. Xem [DOMAIN_ALIGNMENT.md](DOMAIN_ALIGNMENT.md).
+
 **Trạng thái Docker/MySQL:** login, dashboard, danh mục đọc và thông báo đã dùng SQL; màn hình nghiệp vụ pending hiển thị trạng thái chưa hoàn thiện với HTTP 501. Bản demo memory giữ các form nghiệp vụ. Xem [MODULE_MATRIX.md](MODULE_MATRIX.md).
 
 **Phiên bản:** 1.0 — bản thiết kế để triển khai và rà soát.  

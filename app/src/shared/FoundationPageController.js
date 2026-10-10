@@ -12,6 +12,8 @@ class FoundationPageController {
     this.runtime = runtime;
   }
   async context(req, current = "dashboard") {
+    const serviceQuery = { ...req.query };
+    delete serviceQuery.module;
     const user = safeUser(req.user),
       available = modules.filter(
         (m) => m[3].includes("*") || user.roles.some((r) => m[3].includes(r)),
@@ -42,32 +44,42 @@ class FoundationPageController {
     if (current === "dashboard" || current === "notifications")
       result = await this.runtime.notifications.list(
         req.user,
-        current === "dashboard" ? { per_page: 5 } : req.query,
+        current === "dashboard" ? { per_page: 5 } : serviceQuery,
       );
     else if (this.runtime.catalog.supports(current))
-      result = await this.runtime.catalog.list(req.user, current, req.query);
+      result = await this.runtime.catalog.list(req.user, current, serviceQuery);
     else if (current === "customer-orders")
-      result = await this.runtime.orders.list(req.user, req.query);
+      result = await this.runtime.orders.list(req.user, serviceQuery);
     else if (current === "production-plans")
-      result = await this.runtime.productionPlans.list(req.user, req.query);
+      result = await this.runtime.productionPlans.list(req.user, serviceQuery);
     else if (current === "business-plans")
-      result = await this.runtime.businessPlans.list(req.user, req.query);
+      result = await this.runtime.businessPlans.list(req.user, serviceQuery);
     else if (current === "purchase-orders")
-      result = await this.runtime.purchaseOrders.list(req.user, req.query);
+      result = await this.runtime.purchaseOrders.list(req.user, serviceQuery);
     else if (current === "production-reports")
-      result = await this.runtime.productionReports.list(req.user, req.query);
+      result = await this.runtime.productionReports.list(
+        req.user,
+        serviceQuery,
+      );
     else if (current === "finished-reports")
-      result = await this.runtime.finishedReports.list(req.user, req.query);
+      result = await this.runtime.finishedReports.list(req.user, serviceQuery);
     else if (current === "qc-inspections")
-      result = await this.runtime.quality.list(req.user, req.query);
+      result = await this.runtime.quality.list(req.user, serviceQuery);
     else if (current === "stock-requests")
-      result = await this.runtime.stockRequests.list(req.user, req.query);
+      result = await this.runtime.stockRequests.list(req.user, serviceQuery);
     else if (current === "stock-documents")
-      result = await this.runtime.warehouseFlow.documents(req.user, req.query);
+      result = await this.runtime.warehouseFlow.documents(
+        req.user,
+        serviceQuery,
+      );
     else if (current === "warehouse-records")
-      result = await this.runtime.warehouseRecords.list(req.user, req.query);
+      result = await this.runtime.warehouseRecords.list(req.user, serviceQuery);
     else if (current.startsWith("reports/"))
-      result = await this.runtime.reports.run(req.user, current.slice("reports/".length), req.query);
+      result = await this.runtime.reports.run(
+        req.user,
+        current.slice("reports/".length),
+        serviceQuery,
+      );
     const context = {
       user,
       available,
@@ -87,7 +99,9 @@ class FoundationPageController {
       },
       title: module?.[1] || "Tổng quan",
       csrf: req.session.csrf,
-      canCreate: (P.create[current] || []).some((role) => user.roles.includes(role)) && supported,
+      canCreate:
+        (P.create[current] || []).some((role) => user.roles.includes(role)) &&
+        supported,
       supported,
       statusLabel: (s) => labels[s] || s,
       format: (v) =>
@@ -102,6 +116,7 @@ class FoundationPageController {
               : labels[v] || v,
     };
     context.boot = JSON.stringify({
+      storage: "mysql",
       user,
       csrf: context.csrf,
       current,
@@ -140,27 +155,42 @@ class FoundationPageController {
           ? await this.runtime.orders.get(req.user, req.params.id)
           : req.params.resource === "production-plans"
             ? await this.runtime.productionPlans.get(req.user, req.params.id)
-          : req.params.resource === "business-plans"
-            ? await this.runtime.businessPlans.get(req.user, req.params.id)
-          : req.params.resource === "purchase-orders"
-            ? await this.runtime.purchaseOrders.get(req.user, req.params.id)
-          : req.params.resource === "production-reports"
-            ? await this.runtime.productionReports.get(req.user, req.params.id)
-          : req.params.resource === "finished-reports"
-            ? await this.runtime.finishedReports.get(req.user, req.params.id)
-          : req.params.resource === "qc-inspections"
-            ? await this.runtime.quality.get(req.user, req.params.id)
-          : req.params.resource === "stock-requests"
-            ? await this.runtime.stockRequests.get(req.user, req.params.id)
-          : req.params.resource === "stock-documents"
-            ? await this.runtime.warehouseFlow.document(req.user, req.params.id)
-          : req.params.resource === "warehouse-records"
-            ? await this.runtime.warehouseRecords.get(req.user, req.params.id)
-        : await this.runtime.catalog.get(
-            req.user,
-            req.params.resource,
-            req.params.id,
-          );
+            : req.params.resource === "business-plans"
+              ? await this.runtime.businessPlans.get(req.user, req.params.id)
+              : req.params.resource === "purchase-orders"
+                ? await this.runtime.purchaseOrders.get(req.user, req.params.id)
+                : req.params.resource === "production-reports"
+                  ? await this.runtime.productionReports.get(
+                      req.user,
+                      req.params.id,
+                    )
+                  : req.params.resource === "finished-reports"
+                    ? await this.runtime.finishedReports.get(
+                        req.user,
+                        req.params.id,
+                      )
+                    : req.params.resource === "qc-inspections"
+                      ? await this.runtime.quality.get(req.user, req.params.id)
+                      : req.params.resource === "stock-requests"
+                        ? await this.runtime.stockRequests.get(
+                            req.user,
+                            req.params.id,
+                          )
+                        : req.params.resource === "stock-documents"
+                          ? await this.runtime.warehouseFlow.document(
+                              req.user,
+                              req.params.id,
+                            )
+                          : req.params.resource === "warehouse-records"
+                            ? await this.runtime.warehouseRecords.get(
+                                req.user,
+                                req.params.id,
+                              )
+                            : await this.runtime.catalog.get(
+                                req.user,
+                                req.params.resource,
+                                req.params.id,
+                              );
     res.render("layouts/main", {
       ...context,
       view: "resources/show",

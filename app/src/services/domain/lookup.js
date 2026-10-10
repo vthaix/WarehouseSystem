@@ -3,6 +3,29 @@ module.exports = function install(Service) {
   const base = Service.prototype.lookup,
     baseResult = Service.prototype.result;
   Service.prototype.lookup = function (u, n, q = {}) {
+    if (n === "stock-requests" && u.roles.includes("PLANNER")) {
+      return this.repo
+        .all(n)
+        .filter((row) => row.purpose === "MATERIAL_PURCHASE")
+        .map((row) => ({
+          id: row.id,
+          code: row.code,
+          name: row.code,
+          status: row.status,
+          purpose: row.purpose,
+          lines: row.lines,
+        }));
+    }
+    if (n === "warehouse-managers") {
+      P.role(u, ["WORKSHOP_OWNER", "DIRECTOR", "WAREHOUSE_MANAGER"]);
+      return this.repo
+        .all("users")
+        .filter(
+          (row) =>
+            row.status !== "LOCKED" && row.roles.includes("WAREHOUSE_MANAGER"),
+        )
+        .map((row) => ({ id: row.id, name: row.full_name, roles: row.roles }));
+    }
     if (n === "users") {
       P.role(u, ["DIRECTOR", "WAREHOUSE_MANAGER", "WORKSHOP_OWNER"]);
       let rows = this.repo

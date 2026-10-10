@@ -9,6 +9,7 @@ let user,
   retryKey,
   reportAsOf;
 const pageSize = 20;
+const isMysql = JSON.parse(app.dataset.boot || "{}").storage === "mysql";
 const labels = {
   CUSTOMER_ACCEPTED: "Đã tiếp nhận",
   ORDER_PENDING_REVIEW: "Chờ phê duyệt",
@@ -533,7 +534,9 @@ async function loadTable() {
     };
     target
       .querySelectorAll("[data-detail]")
-      .forEach((el) => (el.onclick = () => showDetail(cached[el.dataset.detail])));
+      .forEach(
+        (el) => (el.onclick = () => showDetail(cached[el.dataset.detail])),
+      );
     target
       .querySelectorAll("[data-act]")
       .forEach(
@@ -674,7 +677,20 @@ function detail(r) {
 }
 async function showDetail(row) {
   try {
-    if (["customer-orders", "production-plans", "business-plans", "purchase-orders", "production-reports", "finished-reports", "qc-inspections", "stock-requests", "stock-documents", "warehouse-records"].includes(current))
+    if (
+      [
+        "customer-orders",
+        "production-plans",
+        "business-plans",
+        "purchase-orders",
+        "production-reports",
+        "finished-reports",
+        "qc-inspections",
+        "stock-requests",
+        "stock-documents",
+        "warehouse-records",
+      ].includes(current)
+    )
       return detail((await api(current + "/" + row.id)).data);
     return detail(row);
   } catch (error) {

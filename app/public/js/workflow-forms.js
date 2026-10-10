@@ -293,7 +293,7 @@ createForm = async function () {
           document.querySelector("#form-error").innerHTML = errorHTML(e);
         }
       };
-      bindForm((d) => ({ ...d, lines: readLines() }), current);
+      bindForm((d) => { const body = { ...d, lines: readLines() }; if (body.purpose === "MATERIAL_PURCHASE") { delete body.warehouse_id; delete body.manager_id; } return body; }, current);
       return;
     }
     if (current === "production-reports") {
@@ -323,6 +323,9 @@ createForm = async function () {
       const requests = (await options("stock-requests")).filter(
         (r) => r.status === "FULFILLED" && r.manager_id === user.id,
       );
+      const production = (await options("production-plans")).filter((p) =>
+        ["APPROVED", "IN_PROGRESS"].includes(p.status),
+      );
       openModal(
         "Lưu hồ sơ kho tổng hợp",
         formWrap(
@@ -336,6 +339,7 @@ createForm = async function () {
     }
     await originalCreateForm();
     if (current === "business-plans" && document.querySelector("#data-form")) {
+      const reports = isMysql ? (await options("production-reports")).filter(r => r.status === "SUBMITTED") : [];
       const requests = (await options("stock-requests")).filter(
         (r) =>
           r.purpose === "MATERIAL_PURCHASE" &&
@@ -344,23 +348,52 @@ createForm = async function () {
       const grid = document.querySelector("#data-form .form-grid");
       grid.insertAdjacentHTML(
         "afterbegin",
-        f("source_request_id", "select", false, [
-          { id: "", name: "Chọn yêu cầu bổ sung NVL" },
-          ...requests,
-        ]),
+        (isMysql ? f("production_report_id", "select", false, [{ id: "", name: "Chọn báo cáo nhu cầu thực tế" }, ...reports]) : "") +
+        (isMysql
+          ? f("production_plan_id", "select", false, [
+              { id: "", name: "Chọn kế hoạch sản xuất nguồn" },
+              ...production,
+            ])
+          : "") +
+          f("source_request_id", "select", false, [
+            { id: "", name: "Chọn yêu cầu bổ sung NVL" },
+            ...requests,
+          ]),
       );
       const sync = () => {
         const el = document.querySelector("#f-source_request_id");
         el.disabled = document.querySelector("#f-type").value !== "PURCHASE";
         el.parentElement.hidden = el.disabled;
+        const plan = document.querySelector("#f-production_plan_id");
+        if (plan) {
+          plan.disabled = el.disabled;
+          plan.parentElement.hidden = el.disabled;
+          plan.required = false;
+        }
+        const report = document.querySelector("#f-production_report_id");
+        if (report) { report.disabled = el.disabled; report.parentElement.hidden = el.disabled; report.required = !el.disabled && !el.value; }
       };
       document.querySelector("#f-type").addEventListener("change", sync);
       sync();
+      if (isMysql) document.querySelector("#f-production_report_id").onchange = () => {
+        const report = reports.find(r => r.id === document.querySelector("#f-production_report_id").value);
+        document.querySelector("#f-source_request_id").value = "";
+        if (report) {
+          document.querySelector("#f-production_plan_id").value = report.production_plan_id;
+          document.querySelector("#lines-rows").innerHTML = "";
+          const lines = report.lines.filter(l => Number(l.shortage_quantity) > 0).map(l => ({ ...l, quantity: l.shortage_quantity, unit_price: "0" }));
+          lineEditor("NVL thiếu thực tế", lines.map(l => ({id:l.item_id,name:l.item_name || l.item_id})), "lines", ["quantity","unit_price"], lines).mount();
+        }
+        sync();
+      };
       document.querySelector("#f-source_request_id").onchange = () => {
         const req = requests.find(
           (r) => r.id === document.querySelector("#f-source_request_id").value,
         );
+        sync();
         if (req) {
+          if (isMysql)
+            document.querySelector("#f-production_plan_id").value = "";
           document.querySelector("#lines-rows").innerHTML = "";
           const e = lineEditor(
             "NVL cần mua",
@@ -372,15 +405,46 @@ createForm = async function () {
           e.mount();
         }
       };
+      if (isMysql)
+        document.querySelector("#f-production_plan_id").onchange = () => {
+          const plan = production.find(
+            (p) =>
+              p.id === document.querySelector("#f-production_plan_id").value,
+          );
+          document.querySelector("#f-source_request_id").value = "";
+          sync();
+          if (plan) {
+            document.querySelector("#lines-rows").innerHTML = "";
+            const e = lineEditor(
+              "NVL theo kế hoạch sản xuất",
+              plan.materials.map((l) => ({
+                id: l.item_id,
+                name: l.item_name || l.item_id,
+              })),
+              "lines",
+              ["quantity", "unit_price"],
+              plan.materials.map((l) => ({
+                item_id: l.item_id,
+                quantity: l.required_quantity,
+                unit_price: "0",
+              })),
+            );
+            e.mount();
+          }
+        };
       bindForm((d) => {
         const b = { ...d, lines: readLines() };
         if (b.type === "PURCHASE") {
           delete b.customer_id;
           delete b.customer_order_id;
           if (!b.source_request_id) delete b.source_request_id;
+          if (!b.production_plan_id) delete b.production_plan_id;
+          if (!b.production_report_id) delete b.production_report_id;
         } else {
           delete b.supplier_id;
           delete b.source_request_id;
+          delete b.production_plan_id;
+          delete b.production_report_id;
         }
         return b;
       }, current);

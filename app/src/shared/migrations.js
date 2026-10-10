@@ -43,7 +43,7 @@ async function migrate(pool) {
         .split(/;\s*(?:\r?\n|$)/)
         .map((s) => s.trim())
         .filter(Boolean))
-        await connection.query(statement);
+        await applyStatement(connection, statement, name);
       await connection.execute(
         "INSERT INTO schema_migrations (name,checksum) VALUES (?,?)",
         [name, checksum],
@@ -62,4 +62,60 @@ async function status(pool) {
   );
   return rows;
 }
-module.exports = { migrate, status };
+module.exports = { migrate, status, applyStatement };
+
+// Recover the DDL/ledger crash window for this data-preserving domain migration.
+async function applyStatement(connection, statement, name) {
+  if (name === "005_domain_names_and_purchase_source.sql") {
+    const rename = statement.match(/RENAME TABLE\s+([\s\S]+);?$/i);
+    if (rename) {
+      const pairs = rename[1]
+        .split(",")
+        .map((part) => part.trim().match(/^(\w+)\s+TO\s+(\w+)$/i));
+      if (pairs.some((pair) => !pair))
+        throw new Error("Domain rename không hợp lệ.");
+      const [rows] = await connection.query(
+        "SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE()",
+      );
+      const tables = new Set(rows.map((row) => row.TABLE_NAME));
+      if (pairs.every((pair) => !tables.has(pair[1]) && tables.has(pair[2])))
+        return;
+      if (!pairs.every((pair) => tables.has(pair[1]) && !tables.has(pair[2])))
+        throw new Error(
+          "Tên bảng domain không nhất quán, cần kiểm tra trước migration.",
+        );
+    }
+    if (/^ALTER TABLE KeHoachMuaBan/i.test(statement)) {
+      const [columns] = await connection.execute(
+        "SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=? AND COLUMN_NAME=?",
+        ["KeHoachMuaBan", "MaKeHoachSanXuat"],
+      );
+      if (columns.length) {
+        const [constraints] = await connection.execute(
+          "SELECT CONSTRAINT_NAME FROM information_schema.TABLE_CONSTRAINTS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=?",
+          ["KeHoachMuaBan"],
+        );
+        const [indexes] = await connection.execute(
+          "SELECT INDEX_NAME FROM information_schema.STATISTICS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=?",
+          ["KeHoachMuaBan"],
+        );
+        const names = new Set([
+          ...constraints.map((r) => r.CONSTRAINT_NAME),
+          ...indexes.map((r) => r.INDEX_NAME),
+        ]);
+        if (
+          [
+            "KhoaNgoai_KeHoachMuaBan_SanXuat",
+            "KiemTra_KeHoachMuaBan_NguonBan",
+            "ChiMuc_KeHoachMuaBan_SanXuat",
+          ].every((value) => names.has(value))
+        )
+          return;
+        throw new Error(
+          "Cột nguồn sản xuất đã có nhưng thiếu ràng buộc migration.",
+        );
+      }
+    }
+  }
+  await connection.query(statement);
+}

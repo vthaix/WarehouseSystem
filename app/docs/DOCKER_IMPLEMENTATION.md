@@ -1,5 +1,7 @@
 # Báo cáo nền tảng Docker/MySQL
 
+**Báo cáo này ghi giai đoạn nền tảng trước đây.** Cập nhật 10/10/2026 và các phần đã build tiếp: [DOMAIN_ALIGNMENT.md](DOMAIN_ALIGNMENT.md). Schema hiện có 54 bảng, tên canonical đã thống nhất theo domain; kế hoạch mua đã liên kết nguồn và có kiểm thử đồng thời. Chưa hoàn thiện toàn bộ luồng domain.
+
 Đã đọc toàn bộ SRS và khảo sát code hiện có trước khi sửa. Giữ EJS, CSS/form dùng chung, policy/validator, controller xác thực và domain demo; thêm bootstrap SQL riêng thay vì trộn hai nơi lưu dữ liệu. [MODULE_MATRIX.md](MODULE_MATRIX.md) phân loại UC gốc, SUP và phần cần chốt; không thêm UC-26/30/33.
 
 ## Cây thư mục thực tế

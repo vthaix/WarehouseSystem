@@ -1,5 +1,7 @@
 # Thiết kế triển khai Express theo mô tả công việc mới
 
+**Cập nhật 10/10/2026:** tiến độ theo DOMAIN_MODEL.md mới ở [DOMAIN_ALIGNMENT.md](DOMAIN_ALIGNMENT.md); thêm migration 005/006, thống nhất tên bảng và nối nguồn kế hoạch mua NVL.
+
 Ngày: 08/10/2026. Nguồn ưu tiên: phần **Mô tả công việc** đầu `SRS.md`. Công nghệ Express MVC + EJS + MySQL. Phần dưới ghi thiết kế và hành vi demo bộ nhớ đã xây dựng trước. Theo yêu cầu Docker mới, nền tảng SQL đã được triển khai riêng; trạng thái thực tế nằm ở [DOCKER_IMPLEMENTATION.md](DOCKER_IMPLEMENTATION.md) và [MODULE_MATRIX.md](MODULE_MATRIX.md). Chưa chuyển các nghiệp vụ kho/sản xuất sang SQL.
 
 ## Kiến trúc

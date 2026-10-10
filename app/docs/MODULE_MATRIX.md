@@ -1,5 +1,7 @@
 # Module → UC → dữ liệu → route → màn hình
 
+**Cập nhật 10/10/2026:** xem [DOMAIN_ALIGNMENT.md](DOMAIN_ALIGNMENT.md) để đối chiếu với domain mới và tên bảng vật lý sau migration 005/006. Các tên tiếng Anh bên dưới là tên logic. Catalog, mua hàng, QC và nhập/xuất đã có service SQL; trạng thái lịch sử bên dưới chưa đại diện cho toàn bộ code hiện tại. Luồng nguồn mua NVL đã được kiểm thử SQL trong lượt này. COUNT, ngoại lệ và quản lý công việc vẫn pending.
+
 Đối chiếu toàn bộ SRS trước khi triển khai nền tảng Docker/MySQL. `[GỐC]` là UC; `SUP` là phần hỗ trợ đề xuất. Trạng thái bên dưới dành cho chế độ MySQL, không phải bản demo bộ nhớ.
 
 | Module          | UC / SUP                                                                  | Bảng hiện có hoặc cần bổ sung                                                                              | Route /api/v1                                                             | Màn hình  | MySQL     |

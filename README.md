@@ -1,5 +1,7 @@
 # WarehouseSystem
 
+Tiến độ theo quy trình domain cập nhật: [DOMAIN_ALIGNMENT.md](app/docs/DOMAIN_ALIGNMENT.md). Database hiện có 54 bảng; đã nối và kiểm thử nguồn mua NVL, vẫn còn phần lô nhiều mặt hàng/kiểm kê/ngoại lệ cần hoàn thiện.
+
 
 ```sh
 docker compose up -d --build --wait

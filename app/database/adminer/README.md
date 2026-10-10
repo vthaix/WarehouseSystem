@@ -14,4 +14,4 @@ Docker tự tạo schema và dữ liệu mẫu khi khởi động với volume m
 
 Giá trị trạng thái như `ACTIVE`, `SUBMITTED`, `AVAILABLE` là mã nghiệp vụ, không phải tên bảng/cột và được giữ nguyên để ứng dụng xử lý. Các quy tắc liên bảng như quyền truy cập, tổng số lượng và chuyển trạng thái nằm trong transaction/service của ứng dụng.
 
-`generate_schema.py` tạo lại `KhoHang.sql` và `identifiers.json` từ DDL tham chiếu trong `docs/DATABASE.md`. Chạy `python3 database/adminer/generate_schema.py` từ thư mục `app` khi thay đổi thiết kế.
+`generate_schema.py` là công cụ tạo schema gốc trước triển khai. Không chạy lại để ghi đè KhoHang.sql đã áp dụng: checksum và migration sau đó phụ thuộc tên bảng gốc. Schema hiện tại là KhoHang.sql cộng migrations 002–006; mapping identifiers.json đã cập nhật theo tên domain mới. Sau import schema gốc thủ công, chạy migration trước khi khởi động app. Xem docs/DOMAIN_ALIGNMENT.md.

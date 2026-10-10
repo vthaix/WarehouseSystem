@@ -1,5 +1,7 @@
 # Thiết kế cơ sở dữ liệu MySQL cho hệ thống quản lý kho
 
+**Schema hiện hành 10/10/2026:** `database/adminer/KhoHang.sql` cộng migrations 002–006; 54 bảng tiếng Việt. Tên canonical và phần còn thiếu theo domain mới nằm ở [DOMAIN_ALIGNMENT.md](DOMAIN_ALIGNMENT.md). DDL tiếng Anh bên dưới là tham chiếu lịch sử, không chạy trực tiếp để thay thế schema hiện có.
+
 **Trạng thái thực tế:** Database ứng dụng hiện là `KhoHang`. Schema triển khai nằm tại [`database/adminer/KhoHang.sql`](../database/adminer/KhoHang.sql), gồm 49 bảng tên tiếng Việt không dấu; migration tạo thêm `LichSuCSDL`. DDL tiếng Anh ở phần 7 là **nguồn thiết kế tham chiếu** cho script tạo schema, không import trực tiếp. Các bảng nghiệp vụ đã có schema nhưng nhiều module ứng dụng còn trả 501; xem [MODULE_MATRIX.md](MODULE_MATRIX.md). QC nguyên vật liệu lỗi trả trước nhập, không tự đưa vào QUARANTINE khi có mâu thuẫn với mô tả cũ.
 
 **Phiên bản:** 1.0 — bản thiết kế để triển khai và rà soát.  
