@@ -11,3 +11,5 @@ docs
 e2e
 public/uploads/*
 !public/uploads/.gitkeep
+src/images/categories/*
+!src/images/categories/.gitkeep

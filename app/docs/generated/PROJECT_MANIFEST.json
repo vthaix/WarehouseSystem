@@ -1,0 +1,4240 @@
+{
+  "format": 1,
+  "architecture": "five-backends-and-web-gateway",
+  "databaseIsolation": "shared-mysql-with-cross-schema-dependencies",
+  "serviceMigrations": [
+    "001_split_existing",
+    "002_qualified_views",
+    "003_auto_increment",
+    "004_partial_receipts",
+    "005_quarantine_disposition",
+    "006_stock_qc_correction",
+    "007_category_images"
+  ],
+  "services": [
+    {
+      "name": "identity-service",
+      "database": "KhoHang_Identity",
+      "user": "identity_db",
+      "entrypoint": "src/services/identity-service/index.js",
+      "dockerfile": "src/services/identity-service/Dockerfile",
+      "objects": [
+        {
+          "name": "NguoiDung",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "TenDangNhap",
+              "definition": "varchar(80) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MatKhauBam",
+              "definition": "varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "HoTen",
+              "definition": "varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "ThuDienTu",
+              "definition": "varchar(254) COLLATE utf8mb4_unicode_ci DEFAULT NULL"
+            },
+            {
+              "name": "TrangThai",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "SoLanDangNhapSai",
+              "definition": "int NOT NULL"
+            },
+            {
+              "name": "KhoaDen",
+              "definition": "datetime(6) DEFAULT NULL"
+            },
+            {
+              "name": "PhienBanPhien",
+              "definition": "int NOT NULL"
+            },
+            {
+              "name": "PhienBan",
+              "definition": "int NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "VaiTro",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "Ma",
+              "definition": "varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "Ten",
+              "definition": "varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "NguoiDungVaiTro",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaNguoiDung",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaVaiTro",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "NguoiDungXuong",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaXuong",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaNguoiDung",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "BoPhan",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "Ma",
+              "definition": "varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "Ten",
+              "definition": "varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MoTa",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            }
+          ]
+        },
+        {
+          "name": "NhanVien",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaNguoiDung",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaNhanVien",
+              "definition": "varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MaBoPhan",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "ChucVu",
+              "definition": "varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL"
+            }
+          ]
+        },
+        {
+          "name": "LanThuDangNhap",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "KhoaLanThu",
+              "definition": "char(64) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "BatDauCuaSo",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "SoLan",
+              "definition": "int unsigned NOT NULL"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "business-service",
+      "database": "KhoHang_Business",
+      "user": "business_db",
+      "entrypoint": "src/services/business-service/index.js",
+      "dockerfile": "src/services/business-service/Dockerfile",
+      "objects": [
+        {
+          "name": "KhachHang",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaNguoiDung",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "Ma",
+              "definition": "varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "Ten",
+              "definition": "varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "SoDienTho",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL"
+            },
+            {
+              "name": "DiaChi",
+              "definition": "varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "Xuong",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "Ma",
+              "definition": "varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "Ten",
+              "definition": "varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "DiaChi",
+              "definition": "varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL"
+            },
+            {
+              "name": "ConHoatDong",
+              "definition": "tinyint(1) NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "NhaCungCap",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "Ma",
+              "definition": "varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "Ten",
+              "definition": "varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "SoDienTho",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL"
+            },
+            {
+              "name": "ThuDienTu",
+              "definition": "varchar(254) COLLATE utf8mb4_unicode_ci DEFAULT NULL"
+            },
+            {
+              "name": "DiaChi",
+              "definition": "varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL"
+            },
+            {
+              "name": "MaSoThue",
+              "definition": "varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL"
+            },
+            {
+              "name": "ConHoatDong",
+              "definition": "tinyint(1) NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "LoaiHang",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "Ma",
+              "definition": "varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "Ten",
+              "definition": "varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MoTa",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "ConHoatDong",
+              "definition": "tinyint(1) NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "DuongDanAnh",
+              "definition": "varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL"
+            }
+          ]
+        },
+        {
+          "name": "DonViTinh",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "Ma",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "Ten",
+              "definition": "varchar(80) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "MatHang",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaLoaiHang",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaDonViTinh",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "Ma",
+              "definition": "varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "Ten",
+              "definition": "varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "Loai",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MoTa",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "DonGiaThamKhao",
+              "definition": "decimal(19,4) NOT NULL"
+            },
+            {
+              "name": "LaHangMau",
+              "definition": "tinyint(1) NOT NULL"
+            },
+            {
+              "name": "DuongDanAnh",
+              "definition": "varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL"
+            },
+            {
+              "name": "DaCongBo",
+              "definition": "tinyint(1) NOT NULL"
+            },
+            {
+              "name": "ConHoatDong",
+              "definition": "tinyint(1) NOT NULL"
+            },
+            {
+              "name": "PhienBan",
+              "definition": "int NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "DonHang",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "Ma",
+              "definition": "varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MaKhachHang",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "DiaChiGiaoHang",
+              "definition": "varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "NgayGiaoChamNhat",
+              "definition": "date NOT NULL"
+            },
+            {
+              "name": "GhiChu",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "TrangThai",
+              "definition": "varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MaNguoiTiepNhan",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "NgayTiepNhan",
+              "definition": "datetime(6) DEFAULT NULL"
+            },
+            {
+              "name": "MaNguoiDuyet",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "NgayDuyet",
+              "definition": "datetime(6) DEFAULT NULL"
+            },
+            {
+              "name": "LyDoTuChoi",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "TongTienBaoGia",
+              "definition": "decimal(19,4) NOT NULL"
+            },
+            {
+              "name": "PhienBan",
+              "definition": "int NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "ChiTietDonHang",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaDonHang",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaMatHang",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "SoLuong",
+              "definition": "decimal(18,3) NOT NULL"
+            },
+            {
+              "name": "DonGia",
+              "definition": "decimal(19,4) NOT NULL"
+            },
+            {
+              "name": "GhiChu",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "KeHoachMuaBan",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "Ma",
+              "definition": "varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "Kieu",
+              "definition": "varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MaNhaCungCap",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaKhachHang",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaDonHang",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "NgayDuKien",
+              "definition": "date NOT NULL"
+            },
+            {
+              "name": "GhiChu",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "TrangThai",
+              "definition": "varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MaNguoiTao",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaNguoiDuyet",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "NgayDuyet",
+              "definition": "datetime(6) DEFAULT NULL"
+            },
+            {
+              "name": "LyDoTuChoi",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "TongTien",
+              "definition": "decimal(19,4) NOT NULL"
+            },
+            {
+              "name": "PhienBan",
+              "definition": "int NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "MaYeuCauNguon",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaKeHoachSanXuat",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaBaoCaoSanXuat",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaBaoCaoThanhPham",
+              "definition": "bigint unsigned DEFAULT NULL"
+            }
+          ]
+        },
+        {
+          "name": "ChiTietKeHoachMuaBan",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaKeHoachKinhDoanh",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaMatHang",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "SoLuong",
+              "definition": "decimal(18,3) NOT NULL"
+            },
+            {
+              "name": "DonGia",
+              "definition": "decimal(19,4) NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "DonMuaHang",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "Ma",
+              "definition": "varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MaKeHoachKinhDoanh",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaNhaCungCap",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaNguoiTao",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "NgayGiaoDuKien",
+              "definition": "date NOT NULL"
+            },
+            {
+              "name": "DieuKhoanGiaoHang",
+              "definition": "text COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "TrangThai",
+              "definition": "varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "TongTien",
+              "definition": "decimal(19,4) NOT NULL"
+            },
+            {
+              "name": "PhienBan",
+              "definition": "int NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "MaBaoCaoSanXuat",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "LoaiNguonDonMua",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'PLAN'"
+            }
+          ]
+        },
+        {
+          "name": "ChiTietDonMuaHang",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaDonMuaHang",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaChiTietKeHoachKinhDoanh",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaMatHang",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "SoLuong",
+              "definition": "decimal(18,3) NOT NULL"
+            },
+            {
+              "name": "DonGia",
+              "definition": "decimal(19,4) NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "KeHoachSanXuat",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "Ma",
+              "definition": "varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MaDonHang",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaXuong",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaNguoiTao",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "NgayBatDau",
+              "definition": "date NOT NULL"
+            },
+            {
+              "name": "NgayKetThuc",
+              "definition": "date NOT NULL"
+            },
+            {
+              "name": "TrangThai",
+              "definition": "varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "PhienBan",
+              "definition": "int NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "GhiChu",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            }
+          ]
+        },
+        {
+          "name": "ChiTietKeHoachSanXuat",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaKeHoachSanXuat",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaMatHang",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "SoLuong",
+              "definition": "decimal(18,3) DEFAULT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "LoaiChiTiet",
+              "definition": "varchar(24) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'THANH_PHAM'"
+            },
+            {
+              "name": "SoLuongCan",
+              "definition": "decimal(18,3) DEFAULT NULL"
+            },
+            {
+              "name": "SoLuongConThieu",
+              "definition": "decimal(18,3) DEFAULT NULL"
+            },
+            {
+              "name": "MaNguyenLieuCu",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "SoLuongGoc",
+              "definition": "decimal(18,3) DEFAULT NULL"
+            },
+            {
+              "name": "TyLeDuPhong",
+              "definition": "decimal(5,2) DEFAULT NULL"
+            }
+          ]
+        },
+        {
+          "name": "BanBaoCaoSanXuat",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "Ma",
+              "definition": "varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MaKeHoachSanXuat",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaNguoiTao",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "GhiChu",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "TrangThai",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "NgayGui",
+              "definition": "datetime(6) DEFAULT NULL"
+            },
+            {
+              "name": "PhienBan",
+              "definition": "int NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "LoaiBaoCao",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'SAN_XUAT'"
+            },
+            {
+              "name": "NgayHoanThanh",
+              "definition": "date DEFAULT NULL"
+            },
+            {
+              "name": "MaThanhPhamCu",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MucDichBaoCao",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL"
+            },
+            {
+              "name": "PhanTramTienDo",
+              "definition": "decimal(5,2) DEFAULT NULL"
+            },
+            {
+              "name": "GuiBoPhanLapKeHoach",
+              "definition": "tinyint(1) NOT NULL DEFAULT '0'"
+            },
+            {
+              "name": "XacNhanHoanTat",
+              "definition": "tinyint(1) DEFAULT NULL"
+            }
+          ]
+        },
+        {
+          "name": "ChiTietBaoCaoSanXuat",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaBaoCaoSanXuat",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaMatHang",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "SoLuongHienCo",
+              "definition": "decimal(18,3) DEFAULT NULL"
+            },
+            {
+              "name": "SoLuongCan",
+              "definition": "decimal(18,3) DEFAULT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "LoaiChiTiet",
+              "definition": "varchar(24) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'NHU_CAU'"
+            },
+            {
+              "name": "SoLuong",
+              "definition": "decimal(18,3) DEFAULT NULL"
+            },
+            {
+              "name": "SoLuongSuDung",
+              "definition": "decimal(18,3) DEFAULT NULL"
+            }
+          ]
+        },
+        {
+          "name": "ChiTietLoBaoCaoSanXuat",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaBaoCaoThanhPham",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaChiTietLo",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "SoLuong",
+              "definition": "decimal(18,3) NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "MaChiTietBaoCao",
+              "definition": "bigint unsigned DEFAULT NULL"
+            }
+          ]
+        },
+        {
+          "name": "BaoCaoSanXuat",
+          "kind": "VIEW",
+          "columns": []
+        },
+        {
+          "name": "BaoCaoThanhPham",
+          "kind": "VIEW",
+          "columns": []
+        },
+        {
+          "name": "ChiTietNhuCauSanXuat",
+          "kind": "VIEW",
+          "columns": []
+        },
+        {
+          "name": "NguyenLieuSuDung",
+          "kind": "VIEW",
+          "columns": []
+        },
+        {
+          "name": "ThanhPhamKeHoachTuongThich",
+          "kind": "VIEW",
+          "columns": []
+        },
+        {
+          "name": "ChiTietNguyenLieuKeHoachSanXuat",
+          "kind": "VIEW",
+          "columns": []
+        },
+        {
+          "name": "LuuTruBaoCaoThanhPhamTruoc012",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "Ma",
+              "definition": "varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MaKeHoachSanXuat",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaNguoiTao",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "NgayHoanThanh",
+              "definition": "date NOT NULL"
+            },
+            {
+              "name": "GhiChu",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "TrangThai",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "NgayGui",
+              "definition": "datetime(6) DEFAULT NULL"
+            },
+            {
+              "name": "PhienBan",
+              "definition": "int NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "LuuTruNguyenLieuKeHoachTruoc009",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaKeHoachSanXuat",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaMatHang",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "SoLuongCan",
+              "definition": "decimal(18,3) NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "LuuTruNguyenLieuSuDungTruoc012",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaBaoCaoThanhPham",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaMatHang",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "SoLuongSuDung",
+              "definition": "decimal(18,3) NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "warehouse-service",
+      "database": "KhoHang_Warehouse",
+      "user": "warehouse_db",
+      "entrypoint": "src/services/warehouse-service/index.js",
+      "dockerfile": "src/services/warehouse-service/Dockerfile",
+      "objects": [
+        {
+          "name": "Kho",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "Ma",
+              "definition": "varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "Ten",
+              "definition": "varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "DiaChi",
+              "definition": "varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL"
+            },
+            {
+              "name": "ConHoatDong",
+              "definition": "tinyint(1) NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "ViTriKho",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaKho",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "Ma",
+              "definition": "varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "Ten",
+              "definition": "varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "ConHoatDong",
+              "definition": "tinyint(1) NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "LoHang",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "Ma",
+              "definition": "varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "LoaiLo",
+              "definition": "varchar(24) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "GhiChu",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "HuongTra",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL"
+            },
+            {
+              "name": "TrangThaiTra",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL"
+            },
+            {
+              "name": "PhienBanTra",
+              "definition": "int NOT NULL DEFAULT '1'"
+            },
+            {
+              "name": "MaNguoiNhanTra",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaKhoNhanTra",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaNguoiLapTra",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaKeHoachNhapThanhPham",
+              "definition": "bigint unsigned DEFAULT NULL"
+            }
+          ]
+        },
+        {
+          "name": "ChiTietLo",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "Ma",
+              "definition": "varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MaMatHang",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaChiTietDonMuaHang",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaKeHoachSanXuat",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "NgaySanXuat",
+              "definition": "date DEFAULT NULL"
+            },
+            {
+              "name": "HanSuDung",
+              "definition": "date DEFAULT NULL"
+            },
+            {
+              "name": "SoLuongNhan",
+              "definition": "decimal(18,3) NOT NULL"
+            },
+            {
+              "name": "TrangThaiKiemTra",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "PhienBan",
+              "definition": "int NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "MaLoHang",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaYeuCauNhapThanhPham",
+              "definition": "bigint unsigned DEFAULT NULL"
+            }
+          ]
+        },
+        {
+          "name": "KetQuaKiemTraQCAC",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "Ma",
+              "definition": "varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MaNguoiKiemTra",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "NgayKiemTra",
+              "definition": "datetime(6) NOT NULL"
+            },
+            {
+              "name": "GhiChu",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "TrangThai",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "PhienBan",
+              "definition": "int NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "MaLichKiemTra",
+              "definition": "bigint unsigned DEFAULT NULL"
+            }
+          ]
+        },
+        {
+          "name": "ChiTietKetQuaKiemTraQCAC",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaPhieuKiemTraChatLuong",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaChiTietLo",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "SoLuongKiemTra",
+              "definition": "decimal(18,3) NOT NULL"
+            },
+            {
+              "name": "SoLuongDat",
+              "definition": "decimal(18,3) NOT NULL"
+            },
+            {
+              "name": "SoLuongLoi",
+              "definition": "decimal(18,3) NOT NULL"
+            },
+            {
+              "name": "Loi",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "PhieuYeuCauNhapXuat",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "Ma",
+              "definition": "varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "Kieu",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "PhuongThuc",
+              "definition": "varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MaDonMuaHang",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaKeHoachKinhDoanh",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaKeHoachSanXuat",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaXuong",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaKho",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaNguoiTao",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "NgayYeuCau",
+              "definition": "date NOT NULL"
+            },
+            {
+              "name": "TrangThai",
+              "definition": "varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "GhiChu",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "PhienBan",
+              "definition": "int NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "MaBaoCaoSanXuat",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaNguoiPhuTrach",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "LoaiNguonSanXuat",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'REPORT'"
+            }
+          ]
+        },
+        {
+          "name": "ChiTietPhieuYeuCauNhapXuat",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaYeuCauKho",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaMatHang",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "SoLuong",
+              "definition": "decimal(18,3) NOT NULL"
+            },
+            {
+              "name": "GhiChu",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "PhieuKho",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "Ma",
+              "definition": "varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "Kieu",
+              "definition": "varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MaYeuCauKho",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaKho",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaNguoiGhiSo",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "NgayGhiSo",
+              "definition": "datetime(6) NOT NULL"
+            },
+            {
+              "name": "TrangThai",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "GhiChu",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "KhoaChongLap",
+              "definition": "varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "MaCongViec",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaLoTraVe",
+              "definition": "bigint unsigned DEFAULT NULL"
+            }
+          ]
+        },
+        {
+          "name": "ChiTietPhieuKho",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaPhieuKho",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaChiTietYeuCauKho",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaChiTietLo",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaViTriKho",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "NhomChatLuong",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "SoLuong",
+              "definition": "decimal(18,3) NOT NULL"
+            },
+            {
+              "name": "LyDoChenhLech",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "MaPhanCongKho",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaChiTietTraVe",
+              "definition": "bigint unsigned DEFAULT NULL"
+            }
+          ]
+        },
+        {
+          "name": "TonKho",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaChiTietLo",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaViTriKho",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "NhomChatLuong",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "SoLuong",
+              "definition": "decimal(18,3) NOT NULL"
+            },
+            {
+              "name": "PhienBan",
+              "definition": "int NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "BienDongKho",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaChiTietLo",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaViTriKho",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "NhomChatLuong",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "BienDongSoLuong",
+              "definition": "decimal(18,3) NOT NULL"
+            },
+            {
+              "name": "MaChiTietPhieuKho",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaDeXuatXuLy",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaChiTietKiemKe",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "NgayGhiSo",
+              "definition": "datetime(6) NOT NULL"
+            },
+            {
+              "name": "MaNguoiTao",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "KhoaNghiepVu",
+              "definition": "varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "DotKiemKe",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "Ma",
+              "definition": "varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MaNguoiTao",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "NgayDuKien",
+              "definition": "date NOT NULL"
+            },
+            {
+              "name": "BatDauLuc",
+              "definition": "datetime(6) DEFAULT NULL"
+            },
+            {
+              "name": "KetThucLuc",
+              "definition": "datetime(6) DEFAULT NULL"
+            },
+            {
+              "name": "LoaiMatHang",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL"
+            },
+            {
+              "name": "TrangThai",
+              "definition": "varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "GhiChu",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "PhienBan",
+              "definition": "int NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "LoaiDot",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'COUNT'"
+            },
+            {
+              "name": "LoaiKiemTra",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL"
+            },
+            {
+              "name": "DiaDiem",
+              "definition": "varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL"
+            }
+          ]
+        },
+        {
+          "name": "PhieuKiemKe",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaDotKiemKe",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaKho",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "TrangThai",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "NgayChotSo",
+              "definition": "datetime(6) DEFAULT NULL"
+            },
+            {
+              "name": "NgayHoanTat",
+              "definition": "datetime(6) DEFAULT NULL"
+            },
+            {
+              "name": "PhienBan",
+              "definition": "int NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NhanXet",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "TrangThaiBienBan",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'DRAFT'"
+            },
+            {
+              "name": "NgayGui",
+              "definition": "datetime(6) DEFAULT NULL"
+            },
+            {
+              "name": "MaNguoiTao",
+              "definition": "bigint unsigned DEFAULT NULL"
+            }
+          ]
+        },
+        {
+          "name": "PhanCongKiemKe",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaKhoKiemKe",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaNguoiDung",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "ChiTietPhieuKiemKe",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaKhoKiemKe",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaChiTietLo",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaViTriKho",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "NhomChatLuong",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "SoLuongHeThong",
+              "definition": "decimal(18,3) NOT NULL"
+            },
+            {
+              "name": "SoLuongThucTe",
+              "definition": "decimal(18,3) DEFAULT NULL"
+            },
+            {
+              "name": "MaNguoiDem",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "NgayDem",
+              "definition": "datetime(6) DEFAULT NULL"
+            },
+            {
+              "name": "NguyenNhan",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "TrangThaiXuLy",
+              "definition": "varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "PhienBan",
+              "definition": "int NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "BienBanKiemKe",
+          "kind": "VIEW",
+          "columns": []
+        },
+        {
+          "name": "PhanCongKetLuanKiemKe",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaPhieuKiemKe",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaNguoiDung",
+              "definition": "bigint unsigned NOT NULL"
+            }
+          ]
+        },
+        {
+          "name": "BanDeXuatXuLyNgoaiLe",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "Ma",
+              "definition": "varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "Kieu",
+              "definition": "varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MaChiTietKiemTraChatLuong",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaChiTietKiemKe",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaNguoiTao",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "HanhDong",
+              "definition": "varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "SoLuong",
+              "definition": "decimal(18,3) NOT NULL"
+            },
+            {
+              "name": "LyDo",
+              "definition": "text COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "GhiChuXuLy",
+              "definition": "text COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "TrangThai",
+              "definition": "varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MaNguoiDuyet",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "NgayDuyet",
+              "definition": "datetime(6) DEFAULT NULL"
+            },
+            {
+              "name": "LyDoTuChoi",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "NgayApDung",
+              "definition": "datetime(6) DEFAULT NULL"
+            },
+            {
+              "name": "PhienBan",
+              "definition": "int NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "KetQuaXuLyNgoaiLe",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaDeXuatXuLy",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "PhienBanDeXuat",
+              "definition": "int NOT NULL"
+            },
+            {
+              "name": "QuyetDinh",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MaNguoiDuyet",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "LyDo",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "NgayDuyet",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "PhanBoXuLy",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaDeXuatXuLy",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaViTriKho",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "SoLuong",
+              "definition": "decimal(18,3) NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "ChiTietLoTraVe",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaLoHang",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaChiTietLoGoc",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "SoLuong",
+              "definition": "decimal(18,3) NOT NULL"
+            },
+            {
+              "name": "MaDeXuatXuLy",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "MaChiTietKiemTraChatLuong",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaChiTietPhieuXuat",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaChiTietLoNhan",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaViTriNhan",
+              "definition": "bigint unsigned DEFAULT NULL"
+            }
+          ]
+        },
+        {
+          "name": "ChungTuBuQC",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaKetQuaKiemTra",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "PhienBanGoc",
+              "definition": "int NOT NULL"
+            },
+            {
+              "name": "MaNguoiTao",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "LyDo",
+              "definition": "text COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "DuLieuTruoc",
+              "definition": "json NOT NULL"
+            },
+            {
+              "name": "DuLieuSau",
+              "definition": "json NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "TaiKiemChatLuong",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaDeXuatXuLy",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "PhienBanDeXuat",
+              "definition": "int NOT NULL"
+            },
+            {
+              "name": "MaNguoiKiemTra",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "SoLuong",
+              "definition": "decimal(18,3) NOT NULL"
+            },
+            {
+              "name": "KetLuan",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "GhiChu",
+              "definition": "text COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "CongViec",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "Ma",
+              "definition": "varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "TieuDe",
+              "definition": "varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MoTa",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "BatDauLuc",
+              "definition": "datetime(6) NOT NULL"
+            },
+            {
+              "name": "KetThucLuc",
+              "definition": "datetime(6) NOT NULL"
+            },
+            {
+              "name": "MucDoUuTien",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "TrangThai",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MaDotKiemKe",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaDonMuaHang",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaNguoiTao",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "PhienBan",
+              "definition": "int NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "MaYeuCauKho",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "LoaiCongViec",
+              "definition": "varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL"
+            },
+            {
+              "name": "MaNguoiPhuTrach",
+              "definition": "bigint unsigned DEFAULT NULL"
+            }
+          ]
+        },
+        {
+          "name": "PhanCongCongViec",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaCongViec",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaNguoiDung",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "LoLichKiemTra",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaLichKiemTra",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaChiTietLo",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "PhanCongLichKiemTra",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaLichKiemTra",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaNguoiDung",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "PhanCongKho",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaYeuCauKho",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaCongViec",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaChiTietYeuCauKho",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaNguoiDung",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaChiTietLo",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaViTriKho",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "NhomChatLuong",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "SoLuong",
+              "definition": "decimal(18,3) NOT NULL"
+            },
+            {
+              "name": "SoLuongDaGhi",
+              "definition": "decimal(18,3) NOT NULL DEFAULT '0.000'"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "YeuCauChongLap",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaNguoiDung",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "ThaoTac",
+              "definition": "varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "KhoaChongLap",
+              "definition": "varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MaBamYeuCau",
+              "definition": "char(64) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MaPhanHoi",
+              "definition": "smallint NOT NULL"
+            },
+            {
+              "name": "NoiDungPhanHoi",
+              "definition": "json NOT NULL"
+            },
+            {
+              "name": "HetHanLuc",
+              "definition": "datetime(6) NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "NhatKyHeThong",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaNguoiThucHien",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "LoaiTaiNguyen",
+              "definition": "varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MaTaiNguyen",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "HanhDong",
+              "definition": "varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "DuLieuTruoc",
+              "definition": "json DEFAULT NULL"
+            },
+            {
+              "name": "DuLieuSau",
+              "definition": "json DEFAULT NULL"
+            },
+            {
+              "name": "MaYeuCau",
+              "definition": "varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        },
+        {
+          "name": "LuuTruBienBanKiemKeTruoc015",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "Ma",
+              "definition": "varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MaKhoKiemKe",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaNguoiTao",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "TrangThai",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "NhanXet",
+              "definition": "text COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "NgayGui",
+              "definition": "datetime(6) DEFAULT NULL"
+            },
+            {
+              "name": "PhienBan",
+              "definition": "int NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "notification-service",
+      "database": "KhoHang_Notification",
+      "user": "notification_db",
+      "entrypoint": "src/services/notification-service/index.js",
+      "dockerfile": "src/services/notification-service/Dockerfile",
+      "objects": [
+        {
+          "name": "ThongBao",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaNguoiDung",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "TieuDeThongBao",
+              "definition": "varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "NoiDung",
+              "definition": "text COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "LoaiTaiNguyen",
+              "definition": "varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "MaTaiNguyen",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "NgayDoc",
+              "definition": "datetime(6) DEFAULT NULL"
+            },
+            {
+              "name": "KhoaThongBao",
+              "definition": "varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "reporting-service",
+      "database": "KhoHang_Reporting",
+      "user": "reporting_db",
+      "entrypoint": "src/services/reporting-service/index.js",
+      "dockerfile": "src/services/reporting-service/Dockerfile",
+      "objects": [
+        {
+          "name": "HoSoKho",
+          "kind": "VIEW",
+          "columns": []
+        },
+        {
+          "name": "LuuTruHoSoKhoTruoc013",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaBanGhi",
+              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
+            },
+            {
+              "name": "MaYeuCauKho",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "MaNguoiPhuTrach",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "GhiChu",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "NgayTao",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "NgayCapNhat",
+              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "web-gateway",
+      "database": "KhoHang_Gateway",
+      "user": "gateway_db",
+      "entrypoint": "src/services/web-gateway/index.js",
+      "dockerfile": "src/services/web-gateway/Dockerfile",
+      "objects": [
+        {
+          "name": "PhienDangNhap",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaPhien",
+              "definition": "varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL"
+            },
+            {
+              "name": "HetHanLuc",
+              "definition": "bigint unsigned NOT NULL"
+            },
+            {
+              "name": "DuLieu",
+              "definition": "json NOT NULL"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/auth/csrf",
+      "owner": "web-gateway / identity-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "owner": "web-gateway / identity-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/auth/me",
+      "owner": "web-gateway / identity-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/auth/logout",
+      "owner": "web-gateway / identity-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/source-imports/purchase-report-options",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/source-imports/:target",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/customer-return-deliveries",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/customer-returns",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/customer-returns/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/customer-returns",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/customer-returns/:id/receive",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/customer-returns/:id/cancel",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/lot-headers",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/lot-headers/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/tasks",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/tasks/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/tasks",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/tasks/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "DELETE",
+      "path": "/tasks/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/tasks/:id/progress",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/catalog-data",
+      "owner": "reporting-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/modules",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/sample-items",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/lookup/:resource",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/customer-orders",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/customer-orders/:id",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/customer-orders",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/customer-orders/:id",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/customer-orders/:id/receive",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/customer-orders/:id/review",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/production-plans",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/production-plans/:id",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/production-plans",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/production-plans/:id/cancel",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/production-plans/:id",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/production-plans/:id/review",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/business-plans",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/business-plans/:id",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/business-plans",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/business-plans/:id",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "DELETE",
+      "path": "/business-plans/:id",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/business-plans/:id/review",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/purchase-orders",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/purchase-orders/:id",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/purchase-orders",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/production-reports",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/production-reports/:id",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/production-reports",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/production-reports/:id",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/production-reports/:id/submit",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/finished-reports",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/finished-reports/:id",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/finished-reports",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/finished-reports/:id",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/finished-reports/:id/submit",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/reports/inventory",
+      "owner": "reporting-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/reports/inventory/export",
+      "owner": "reporting-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/reports/stock-documents",
+      "owner": "reporting-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/reports/stock-documents/export",
+      "owner": "reporting-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/reports/stocktakes",
+      "owner": "reporting-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/reports/stocktakes/export",
+      "owner": "reporting-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/quality-campaigns",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/quality-campaigns/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/quality-campaigns",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/quality-campaigns/:id/start",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/quality-campaigns/:id/close",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/stocktakes",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/qc-inspections/:id/correct",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/tasks/:id/cancelAllocation",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/stocktakes",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/stocktakes/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/stocktakes/:id/start",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/stocktakes/:id/close",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/stocktake-minutes",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/stocktake-minutes/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/stocktake-minutes",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/stocktake-minutes/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/stocktake-minutes/:id/submit",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/exception-proposals",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/exception-proposals/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/exception-proposals",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/exception-proposals/:id/review",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/exception-proposals/:id/apply",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/exception-proposals/:id/reinspect",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/stocktake-differences",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/stocktakes/:id/warehouses/:warehouse/lines",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/stocktakes/:id/warehouses/:warehouse/counts",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/stocktakes/:id/warehouses/:warehouse/complete",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/qc-inspections",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/qc-inspections/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/qc-inspections",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/qc-inspections/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "DELETE",
+      "path": "/qc-inspections/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/stock-requests",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/stock-requests/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/stock-requests",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/stock-requests/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "DELETE",
+      "path": "/stock-requests/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/stock-requests/:id/allocations",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/stock-requests/:id/dispatch",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/stock-documents",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/stock-documents/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/stock-documents",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/warehouse-records",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/warehouse-records/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/warehouse-records",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/categories",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/categories/:id",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/categories",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/categories/:id",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "DELETE",
+      "path": "/categories/:id",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/warehouses",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/warehouses/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/warehouses",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/warehouses/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "DELETE",
+      "path": "/warehouses/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/warehouse-locations",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/warehouse-locations/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/warehouse-locations",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/warehouse-locations/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "DELETE",
+      "path": "/warehouse-locations/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/suppliers",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/suppliers/:id",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/suppliers",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/suppliers/:id",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "DELETE",
+      "path": "/suppliers/:id",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/items",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/items/:id",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/items",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/items/:id",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "DELETE",
+      "path": "/items/:id",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/lots",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/lots/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/lots",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/lots/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "DELETE",
+      "path": "/lots/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/notifications",
+      "owner": "notification-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/notifications/:id",
+      "owner": "notification-service",
+      "pending": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/notifications/:id/read",
+      "owner": "notification-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/tasks/:id/postTask",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/category-images",
+      "owner": "web-gateway",
+      "pending": false
+    }
+  ],
+  "roles": {
+    "read": {
+      "customer-returns": [
+        "WAREHOUSE_MANAGER",
+        "WAREHOUSE_STAFF",
+        "QC_INSPECTOR",
+        "DIRECTOR"
+      ],
+      "customer-orders": [
+        "CUSTOMER",
+        "PLANNER",
+        "DIRECTOR"
+      ],
+      "business-plans": [
+        "PLANNER",
+        "DIRECTOR",
+        "PURCHASER",
+        "WORKSHOP_OWNER",
+        "WAREHOUSE_STAFF"
+      ],
+      "purchase-orders": [
+        "PURCHASER",
+        "WORKSHOP_OWNER",
+        "WAREHOUSE_STAFF",
+        "QC_INSPECTOR"
+      ],
+      "categories": [
+        "WAREHOUSE_MANAGER",
+        "WORKSHOP_OWNER"
+      ],
+      "warehouses": [
+        "WAREHOUSE_MANAGER",
+        "WORKSHOP_OWNER"
+      ],
+      "warehouse-locations": [
+        "WAREHOUSE_MANAGER",
+        "WORKSHOP_OWNER"
+      ],
+      "suppliers": [
+        "WAREHOUSE_MANAGER"
+      ],
+      "items": [
+        "WAREHOUSE_MANAGER",
+        "WORKSHOP_OWNER"
+      ],
+      "lots": [
+        "WAREHOUSE_MANAGER",
+        "WORKSHOP_OWNER"
+      ],
+      "stock-requests": [
+        "WORKSHOP_OWNER",
+        "WAREHOUSE_STAFF",
+        "WAREHOUSE_MANAGER",
+        "PLANNER"
+      ],
+      "stock-documents": [
+        "WAREHOUSE_MANAGER",
+        "WAREHOUSE_STAFF",
+        "DIRECTOR",
+        "WORKSHOP_OWNER"
+      ],
+      "qc-inspections": [
+        "QC_INSPECTOR",
+        "DIRECTOR",
+        "WORKSHOP_OWNER"
+      ],
+      "stocktakes": [
+        "DIRECTOR",
+        "STOCKTAKER",
+        "WAREHOUSE_MANAGER",
+        "QC_INSPECTOR"
+      ],
+      "stocktake-minutes": [
+        "STOCKTAKER",
+        "DIRECTOR",
+        "QC_INSPECTOR"
+      ],
+      "exception-proposals": [
+        "DIRECTOR",
+        "WAREHOUSE_MANAGER",
+        "QC_INSPECTOR"
+      ],
+      "tasks": [
+        "DIRECTOR",
+        "PLANNER",
+        "PURCHASER",
+        "WORKSHOP_OWNER",
+        "WAREHOUSE_MANAGER",
+        "WAREHOUSE_STAFF",
+        "QC_INSPECTOR",
+        "STOCKTAKER"
+      ],
+      "production-plans": [
+        "PLANNER",
+        "DIRECTOR",
+        "WORKSHOP_OWNER",
+        "WAREHOUSE_STAFF"
+      ],
+      "production-reports": [
+        "WORKSHOP_OWNER",
+        "PLANNER",
+        "DIRECTOR"
+      ],
+      "finished-reports": [
+        "WORKSHOP_OWNER",
+        "DIRECTOR",
+        "PLANNER"
+      ],
+      "notifications": [
+        "*"
+      ],
+      "warehouse-records": [
+        "WAREHOUSE_MANAGER",
+        "DIRECTOR",
+        "WORKSHOP_OWNER"
+      ]
+    },
+    "create": {
+      "customer-returns": [
+        "WAREHOUSE_MANAGER"
+      ],
+      "customer-orders": [
+        "CUSTOMER"
+      ],
+      "business-plans": [
+        "PLANNER"
+      ],
+      "purchase-orders": [
+        "PURCHASER"
+      ],
+      "stock-requests": [
+        "WORKSHOP_OWNER"
+      ],
+      "stock-documents": [
+        "WAREHOUSE_STAFF"
+      ],
+      "qc-inspections": [
+        "QC_INSPECTOR"
+      ],
+      "stocktakes": [
+        "DIRECTOR"
+      ],
+      "stocktake-minutes": [
+        "STOCKTAKER",
+        "QC_INSPECTOR"
+      ],
+      "exception-proposals": [
+        "WAREHOUSE_MANAGER",
+        "QC_INSPECTOR"
+      ],
+      "tasks": [
+        "DIRECTOR"
+      ],
+      "production-plans": [
+        "PLANNER"
+      ],
+      "production-reports": [
+        "WORKSHOP_OWNER"
+      ],
+      "finished-reports": [
+        "WORKSHOP_OWNER"
+      ],
+      "categories": [
+        "WAREHOUSE_MANAGER"
+      ],
+      "warehouses": [
+        "WAREHOUSE_MANAGER"
+      ],
+      "warehouse-locations": [
+        "WAREHOUSE_MANAGER"
+      ],
+      "suppliers": [
+        "WAREHOUSE_MANAGER"
+      ],
+      "items": [
+        "WAREHOUSE_MANAGER"
+      ],
+      "lots": [
+        "WAREHOUSE_MANAGER"
+      ],
+      "warehouse-records": [
+        "WAREHOUSE_MANAGER"
+      ]
+    },
+    "editable": {
+      "customer-orders": [
+        "CUSTOMER"
+      ],
+      "business-plans": [
+        "PLANNER"
+      ],
+      "stock-requests": [
+        "WORKSHOP_OWNER"
+      ],
+      "qc-inspections": [
+        "QC_INSPECTOR"
+      ],
+      "tasks": [
+        "DIRECTOR",
+        "WAREHOUSE_MANAGER"
+      ],
+      "production-plans": [
+        "PLANNER"
+      ],
+      "production-reports": [
+        "WORKSHOP_OWNER"
+      ],
+      "finished-reports": [
+        "WORKSHOP_OWNER"
+      ],
+      "stocktake-minutes": [
+        "STOCKTAKER",
+        "QC_INSPECTOR"
+      ],
+      "categories": [
+        "WAREHOUSE_MANAGER"
+      ],
+      "warehouses": [
+        "WAREHOUSE_MANAGER"
+      ],
+      "warehouse-locations": [
+        "WAREHOUSE_MANAGER"
+      ],
+      "suppliers": [
+        "WAREHOUSE_MANAGER"
+      ],
+      "items": [
+        "WAREHOUSE_MANAGER"
+      ],
+      "lots": [
+        "WAREHOUSE_MANAGER"
+      ]
+    }
+  },
+  "screens": [
+    [
+      "customer-returns",
+      "Hàng khách trả",
+      "↩",
+      [
+        "WAREHOUSE_MANAGER",
+        "WAREHOUSE_STAFF",
+        "QC_INSPECTOR",
+        "DIRECTOR"
+      ],
+      [
+        "WAREHOUSE_MANAGER"
+      ],
+      "/customer-returns",
+      "Nhận hàng theo phiếu giao gốc và cách ly để QC kiểm tra."
+    ],
+    [
+      "customer-orders",
+      "Đơn hàng",
+      "◫",
+      [
+        "CUSTOMER",
+        "PLANNER",
+        "DIRECTOR"
+      ],
+      [
+        "CUSTOMER"
+      ],
+      "/customer/orders",
+      "Tiếp nhận và theo dõi đơn đặt hàng."
+    ],
+    [
+      "business-plans",
+      "Kế hoạch mua / bán",
+      "▤",
+      [
+        "PLANNER",
+        "DIRECTOR",
+        "PURCHASER",
+        "WORKSHOP_OWNER",
+        "WAREHOUSE_STAFF"
+      ],
+      [
+        "PLANNER"
+      ],
+      "/plans",
+      "Điều phối nhu cầu mua và giao hàng."
+    ],
+    [
+      "purchase-orders",
+      "Đơn mua hàng",
+      "▧",
+      [
+        "PURCHASER",
+        "WORKSHOP_OWNER",
+        "WAREHOUSE_STAFF",
+        "QC_INSPECTOR"
+      ],
+      [
+        "PURCHASER"
+      ],
+      "/purchases",
+      "Nhập thủ công hoặc lấy dữ liệu từ báo cáo, kế hoạch mua đã duyệt."
+    ],
+    [
+      "categories",
+      "Danh mục",
+      "▦",
+      [
+        "WAREHOUSE_MANAGER",
+        "WORKSHOP_OWNER"
+      ],
+      [
+        "WAREHOUSE_MANAGER"
+      ],
+      "/catalog/categories",
+      "Phân nhóm nguyên liệu và thành phẩm."
+    ],
+    [
+      "items",
+      "Mặt hàng",
+      "◇",
+      [
+        "WAREHOUSE_MANAGER",
+        "WORKSHOP_OWNER"
+      ],
+      [
+        "WAREHOUSE_MANAGER"
+      ],
+      "/catalog/data",
+      "Nguyên liệu, thành phẩm và hàng mẫu."
+    ],
+    [
+      "warehouses",
+      "Kho hàng",
+      "⌂",
+      [
+        "WAREHOUSE_MANAGER",
+        "WORKSHOP_OWNER"
+      ],
+      [
+        "WAREHOUSE_MANAGER"
+      ],
+      "/catalog/data",
+      "Thông tin các kho trong hệ thống."
+    ],
+    [
+      "warehouse-locations",
+      "Vị trí lưu kho",
+      "⊞",
+      [
+        "WAREHOUSE_MANAGER",
+        "WORKSHOP_OWNER"
+      ],
+      [
+        "WAREHOUSE_MANAGER"
+      ],
+      "/catalog/data",
+      "Quản lý kệ và ô lưu trữ."
+    ],
+    [
+      "suppliers",
+      "Nhà cung cấp",
+      "◎",
+      [
+        "WAREHOUSE_MANAGER"
+      ],
+      [
+        "WAREHOUSE_MANAGER"
+      ],
+      "/catalog/data",
+      "Thông tin đối tác cung ứng."
+    ],
+    [
+      "lots",
+      "Lô hàng",
+      "▥",
+      [
+        "WAREHOUSE_MANAGER",
+        "WORKSHOP_OWNER"
+      ],
+      [
+        "WAREHOUSE_MANAGER"
+      ],
+      "/catalog/data",
+      "Theo dõi nguồn, hạn dùng và QC."
+    ],
+    [
+      "stock-requests",
+      "Yêu cầu nhập / xuất",
+      "⇄",
+      [
+        "WORKSHOP_OWNER",
+        "WAREHOUSE_STAFF",
+        "WAREHOUSE_MANAGER",
+        "PLANNER"
+      ],
+      [
+        "WORKSHOP_OWNER"
+      ],
+      "/workshop/requests",
+      "Lập yêu cầu theo chứng từ nguồn."
+    ],
+    [
+      "stock-documents",
+      "Phiếu nhập / xuất",
+      "⇥",
+      [
+        "WAREHOUSE_MANAGER",
+        "WAREHOUSE_STAFF",
+        "DIRECTOR",
+        "WORKSHOP_OWNER"
+      ],
+      [],
+      "/warehouse/documents",
+      "Tra cứu chứng từ đã ghi sổ."
+    ],
+    [
+      "qc-inspections",
+      "Kiểm tra QC / AC",
+      "✓",
+      [
+        "QC_INSPECTOR",
+        "DIRECTOR",
+        "WORKSHOP_OWNER"
+      ],
+      [
+        "QC_INSPECTOR"
+      ],
+      "/quality/inspections",
+      "Số đạt và lỗi trước khi nhập kho."
+    ],
+    [
+      "production-plans",
+      "Kế hoạch sản xuất",
+      "⚒",
+      [
+        "PLANNER",
+        "DIRECTOR",
+        "WORKSHOP_OWNER",
+        "WAREHOUSE_STAFF"
+      ],
+      [
+        "PLANNER"
+      ],
+      "/production/plans",
+      "Kế hoạch thành phẩm và nguyên liệu."
+    ],
+    [
+      "production-reports",
+      "Báo cáo sản xuất",
+      "▱",
+      [
+        "WORKSHOP_OWNER",
+        "PLANNER",
+        "DIRECTOR"
+      ],
+      [
+        "WORKSHOP_OWNER"
+      ],
+      "/production/reports",
+      "Tiến độ, sự cố hoặc thiếu NVL khi đang sản xuất; gửi Ban giám đốc."
+    ],
+    [
+      "finished-reports",
+      "Báo cáo thành phẩm",
+      "▣",
+      [
+        "WORKSHOP_OWNER",
+        "DIRECTOR",
+        "PLANNER"
+      ],
+      [
+        "WORKSHOP_OWNER"
+      ],
+      "/production/finished-reports",
+      "Sản lượng và lô hoàn thành."
+    ],
+    [
+      "stocktakes",
+      "Kiểm kê kho",
+      "≡",
+      [
+        "DIRECTOR",
+        "STOCKTAKER",
+        "WAREHOUSE_MANAGER",
+        "QC_INSPECTOR"
+      ],
+      [
+        "DIRECTOR"
+      ],
+      "/stocktakes",
+      "Chốt snapshot và kiểm đếm từng kho."
+    ],
+    [
+      "stocktake-minutes",
+      "Biên bản kiểm kê",
+      "▨",
+      [
+        "STOCKTAKER",
+        "DIRECTOR",
+        "QC_INSPECTOR"
+      ],
+      [
+        "STOCKTAKER",
+        "QC_INSPECTOR"
+      ],
+      "/stocktake-minutes",
+      "Tổng hợp số đếm và gửi biên bản."
+    ],
+    [
+      "exception-proposals",
+      "Xử lý ngoại lệ",
+      "△",
+      [
+        "DIRECTOR",
+        "WAREHOUSE_MANAGER",
+        "QC_INSPECTOR"
+      ],
+      [
+        "WAREHOUSE_MANAGER",
+        "QC_INSPECTOR"
+      ],
+      "/approvals/exceptions",
+      "Đề xuất điều chỉnh chênh lệch kiểm kê."
+    ],
+    [
+      "tasks",
+      "Công việc",
+      "▢",
+      [
+        "DIRECTOR",
+        "PLANNER",
+        "PURCHASER",
+        "WORKSHOP_OWNER",
+        "WAREHOUSE_MANAGER",
+        "WAREHOUSE_STAFF",
+        "QC_INSPECTOR",
+        "STOCKTAKER"
+      ],
+      [
+        "DIRECTOR"
+      ],
+      "/tasks",
+      "Phân công và kiểm soát lịch nhân viên."
+    ],
+    [
+      "reports/inventory",
+      "Báo cáo tồn kho",
+      "◴",
+      [
+        "DIRECTOR",
+        "WAREHOUSE_MANAGER",
+        "WORKSHOP_OWNER"
+      ],
+      [],
+      "/reports/inventory",
+      "Tồn kho tại một mốc thời gian."
+    ],
+    [
+      "reports/stock-documents",
+      "Báo cáo nhập / xuất",
+      "↗",
+      [
+        "DIRECTOR",
+        "WORKSHOP_OWNER"
+      ],
+      [],
+      "/reports/stock-documents",
+      "Đối chiếu phiếu theo kho và ngày."
+    ],
+    [
+      "reports/stocktakes",
+      "Báo cáo kiểm kê",
+      "▥",
+      [
+        "DIRECTOR"
+      ],
+      [],
+      "/reports/stocktakes",
+      "Snapshot, thực tế và chênh lệch."
+    ],
+    [
+      "warehouse-records",
+      "Hồ sơ kho tổng hợp",
+      "▨",
+      [
+        "WAREHOUSE_MANAGER",
+        "DIRECTOR",
+        "WORKSHOP_OWNER"
+      ],
+      [
+        "WAREHOUSE_MANAGER"
+      ],
+      "/warehouse/records",
+      "Tổng hợp phiếu kho từ các nhân viên."
+    ],
+    [
+      "notifications",
+      "Thông báo",
+      "♧",
+      [
+        "*"
+      ],
+      [],
+      "/notifications",
+      "Thông tin nghiệp vụ dành cho bạn."
+    ]
+  ]
+}

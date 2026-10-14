@@ -1,5 +1,16 @@
-<div class="heading"><div><div class="eyebrow">WAREHOUSE / VẬN HÀNH</div><h1>Không gian làm việc</h1><div class="subtitle">Các chức năng và thông báo dành cho vai trò của bạn.</div></div></div>
-<div class="intro"><div><div class="eyebrow">SẴN SÀNG CHO NGÀY LÀM VIỆC</div><h2>Xin chào, <%= user.full_name %>.</h2><p>Chọn một nghiệp vụ bên dưới để bắt đầu. Các thao tác phê duyệt và ghi sổ được kiểm tra theo quyền và trạng thái chứng từ.</p></div><div class="intro-mark">▦</div></div>
-<div class="cards"><% available.filter(m=>m[0]!=='notifications').forEach(m=>{ %><a class="card" href="<%= m[5] %>?module=<%= m[0] %>" data-go="<%= m[0] %>"><span class="card-icon"><%= m[2] %></span><h3><%= m[1] %></h3><p><%= m[6] %></p><span class="card-link">Mở chức năng →</span></a><% }) %></div>
-<div class="panel"><div class="panel-title"><h2>Thông báo gần đây</h2><a class="button small" href="/notifications" data-go="notifications">Xem tất cả →</a></div><div id="recent"><% if(!rows.length){ %><div class="empty">Bạn chưa có thông báo mới.</div><% } %><% rows.forEach(n=>{ %><div class="notification"><strong><%= n.title %></strong><span class="subtitle"><%= new Date(n.created_at).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'}) %></span></div><% }) %></div></div>
+<div class="heading"><div><div class="eyebrow">SWEET BAKERY / TỔNG QUAN</div><h1>Tổng quan vận hành</h1><div class="subtitle">Không gian làm việc của bạn, từ nguyên liệu đến từng mẻ bánh.</div></div></div>
+<div class="summary-grid">
+  <div class="summary-card"><div class="summary-top"><span>Nghiệp vụ được cấp</span><span class="summary-symbol" aria-hidden="true">⊞</span></div><div class="summary-value"><%= available.filter(m=>m[0]!=='notifications').length %></div><div class="summary-caption">Các chức năng trong phạm vi của bạn</div></div>
+  <div class="summary-card"><div class="summary-top"><span>Vai trò đang sử dụng</span><span class="summary-symbol" aria-hidden="true">◎</span></div><div class="summary-value"><%= user.roles.length %></div><div class="summary-caption"><%= user.roles.map(r=>labels[r]).join(', ') %></div></div>
+  <div class="summary-card"><div class="summary-top"><span>Thông báo gần đây</span><span class="summary-symbol" aria-hidden="true">♧</span></div><div class="summary-value" id="dashboard-notifications-count"><%= rows.length %></div><div class="summary-caption">Trong danh sách thông báo mới nhất</div></div>
+</div>
+<div class="intro"><div><div class="eyebrow">CHÀO MỪNG TRỞ LẠI</div><h2>Xin chào, <%= user.full_name %>.</h2><p>Mọi công việc đã sẵn sàng. Chọn nghiệp vụ bạn cần để bắt đầu ngày làm việc.</p></div><div class="intro-mark" aria-hidden="true">✿</div></div>
+<div class="dashboard-layout">
+  <section><div class="dashboard-section-head"><h2>Nghiệp vụ của bạn</h2><span>Truy cập nhanh</span></div>
+    <div class="cards"><% available.filter(m=>m[0]!=='notifications').forEach(m=>{ %><a class="card" href="<%= m[5] %>?module=<%= m[0] %>" data-go="<%= m[0] %>"><span class="card-icon"><%= m[2] %></span><h3><%= m[1] %></h3><p><%= m[6] %></p><span class="card-link">Mở chức năng ↗</span></a><% }) %></div>
+  </section>
+  <section class="dashboard-activity"><div class="dashboard-section-head"><h2>Cập nhật gần đây</h2></div>
+    <div class="panel"><div class="panel-title"><h2>Thông báo</h2><a class="button small" href="/notifications" data-go="notifications">Xem tất cả ↗</a></div><div id="recent"><% if(!rows.length){ %><div class="empty"><div class="empty-icon">♧</div>Bạn chưa có thông báo mới.<br><span class="hint">Cập nhật công việc sẽ xuất hiện tại đây.</span></div><% } %><% rows.forEach(n=>{ %><div class="notification"><strong><%= n.title %></strong><span class="subtitle"><%= new Date(n.created_at).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'}) %></span></div><% }) %></div></div>
+  </section>
+</div>
 <%- include('../partials/footer') %>

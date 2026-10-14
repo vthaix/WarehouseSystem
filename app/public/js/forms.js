@@ -18,7 +18,7 @@ function bindForm(builder, path, method = "POST") {
     const submit = form.querySelector("[type=submit]");
     submit.disabled = true;
     try {
-      const body = builder(Object.fromEntries(new FormData(form)));
+      const body = await builder(Object.fromEntries(new FormData(form)));
       await api(path, method, body, retryKey);
       modal.close();
       toast("Đã lưu thông tin thành công.");
@@ -50,7 +50,7 @@ function lineEditor(
         const row = document.createElement("div");
         row.className = "line-row";
         row.dataset.section = section;
-        row.innerHTML = `<div><label>Mặt hàng *</label><select data-key="item_id" aria-label="Mặt hàng">${items.map((i) => `<option value="${i.id}" ${r.item_id === i.id ? "selected" : ""}>${esc(i.name || i.item_name)}</option>`).join("")}</select></div>${fields.map((k) => `<div><label>${esc(fieldLabel(k))}${k === "expiry_date" ? "" : " *"}</label><input aria-label="${esc(fieldLabel(k))}" data-key="${k}" type="${k.includes("date") ? "date" : k === "lot_code" ? "text" : "number"}" value="${esc(r[k] ?? (k === "unit_price" ? "0" : k.includes("quantity") ? "1" : ""))}" ${k.includes("quantity") || k === "unit_price" ? 'min="0" step="0.001"' : ""} ${k === "expiry_date" ? "" : "required"}></div>`).join("")}<button class="button small danger" type="button" aria-label="Xóa dòng">✕</button>`;
+        row.innerHTML = `<div><label>Mặt hàng *</label><select data-key="item_id" aria-label="Mặt hàng">${items.map((i) => `<option value="${i.id}" ${r.item_id === i.id ? "selected" : ""}>${esc(i.name || i.item_name)}</option>`).join("")}</select></div>${fields.map((k) => `<div><label>${esc(fieldLabel(k))}${k === "expiry_date" ? "" : " *"}</label><input aria-label="${esc(fieldLabel(k))}" data-key="${k}" type="${k.includes("date") ? "date" : k === "lot_code" ? "text" : "number"}" value="${esc(r[k] ?? (k === "unit_price" ? "0" : k.includes("quantity") ? "1" : ""))}" ${k === "unit_price" ? 'min="0" step="0.0001"' : k.includes("quantity") ? 'min="0" step="0.001"' : ""} ${k === "expiry_date" ? "" : "required"}></div>`).join("")}<button class="button small danger" type="button" aria-label="Xóa dòng">✕</button>`;
         row.querySelector("button").onclick = () => {
           row.remove();
           retryKey = crypto.randomUUID();
@@ -216,7 +216,10 @@ async function createForm() {
           user.workshop_ids.map((id) => ({ id, name: "Xưởng " + id })),
         ) +
         f("requested_date", "date") +
-        f("manager_id", "select", false, [{ id: "", name: "Chọn quản lý kho" }, ...(await options("warehouse-managers"))]) +
+        f("manager_id", "select", false, [
+          { id: "", name: "Chọn quản lý kho" },
+          ...(await options("warehouse-managers")),
+        ]) +
         f("purchase_order_id", "select", false, [
           { id: "", name: "Chọn đơn mua" },
           ...(await options("purchase-orders")),
@@ -229,7 +232,10 @@ async function createForm() {
           { id: "", name: "Chọn kế hoạch sản xuất" },
           ...(await options("production-plans")),
         ]) +
-        f("production_report_id", "select", false, [{ id: "", name: "Chọn báo cáo nhu cầu" }, ...(await options("production-reports"))]) +
+        f("production_report_id", "select", false, [
+          { id: "", name: "Chọn báo cáo nhu cầu" },
+          ...(await options("production-reports")),
+        ]) +
         f("note", "textarea", false) +
         '<div class="span2 notice">Chọn nguồn rồi bấm “Lấy dòng nguồn”. Số lượng có thể điều chỉnh trong giới hạn chứng từ.</div><button type="button" class="button" id="source-lines">Lấy dòng nguồn</button><div class="span2" id="source-editor"></div>';
       builder = (d) => {
@@ -314,12 +320,15 @@ async function createForm() {
       current === "finished-reports"
     ) {
       const plans = await options("production-plans");
-      const materials = current === "production-reports"
-        ? (await options("items")).filter((item) => item.kind === "MATERIAL")
-        : plans
-          .flatMap((p) => p.materials || [])
-          .filter((v, i, a) => a.findIndex((x) => x.item_id === v.item_id) === i)
-          .map((i) => ({ id: i.item_id, name: i.item_name }));
+      const materials =
+        current === "production-reports"
+          ? (await options("items")).filter((item) => item.kind === "MATERIAL")
+          : plans
+              .flatMap((p) => p.materials || [])
+              .filter(
+                (v, i, a) => a.findIndex((x) => x.item_id === v.item_id) === i,
+              )
+              .map((i) => ({ id: i.item_id, name: i.item_name }));
       const outputs = plans
         .flatMap((p) => p.outputs || [])
         .filter((v, i, a) => a.findIndex((x) => x.item_id === v.item_id) === i)
@@ -348,11 +357,12 @@ async function createForm() {
             "used_quantity",
           ]);
         editors.push(out, mat);
-        html += f("completed_date", "date") + out.html + mat.html;
+        html += f("completed_date", "date") + (isMysql?f('production_completed','select',true,[{id:'false',name:'Chưa hoàn tất — chưa được lập báo cáo thành phẩm'},{id:'true',name:'Đã hoàn tất toàn bộ sản xuất'}]):'') + out.html + mat.html;
         builder = (d) => ({
           ...d,
           outputs: readLines("outputs"),
           materials: readLines("materials"),
+          ...(isMysql?{production_completed:d.production_completed==='true'}:{}),
         });
       }
     } else if (current === "stocktakes") {
@@ -469,7 +479,10 @@ async function createForm() {
               ["quantity"],
               lines.map((l) => ({
                 ...l,
-                quantity: d.purpose === "MATERIAL_PURCHASE" ? l.shortage_quantity : l.required_quantity || l.quantity,
+                quantity:
+                  d.purpose === "MATERIAL_PURCHASE"
+                    ? l.shortage_quantity
+                    : l.required_quantity || l.quantity,
               })),
             );
           document.querySelector("#source-editor").innerHTML = e.html;
@@ -800,7 +813,9 @@ async function editForm(r) {
         ? (await api("purchase-orders/" + r.purchase_order_id)).data
         : r.business_plan_id
           ? (await api("business-plans/" + r.business_plan_id)).data
-          : (await api("production-plans/" + r.production_plan_id)).data;
+          : r.production_report_id
+            ? (await api((r.purpose === "PRODUCTION_RECEIPT" ? "finished-reports" : "production-reports") + "/" + r.production_report_id)).data
+            : (await api("production-plans/" + r.production_plan_id)).data;
       const src =
         source.lines ||
         (r.purpose === "PRODUCTION_ISSUE" ? source.materials : source.outputs);
@@ -838,7 +853,12 @@ async function editForm(r) {
           items.filter((i) => i.kind === "MATERIAL"),
           "materials",
           ["required_quantity"],
-          r.materials,
+          isMysql
+            ? r.materials.map((l) => ({
+                ...l,
+                required_quantity: l.base_quantity || "",
+              }))
+            : r.materials,
         );
       editors.push(out, mat);
       html =
@@ -858,9 +878,12 @@ async function editForm(r) {
       current === "finished-reports"
     ) {
       const p = (await api("production-plans/" + r.production_plan_id)).data;
-      const mats = current === "production-reports"
-        ? (await options("items")).filter((item) => item.kind === "MATERIAL")
-        : p.materials.map((l) => ({ id: l.item_id, name: l.item_name })),
+      const mats =
+          current === "production-reports"
+            ? (await options("items")).filter(
+                (item) => item.kind === "MATERIAL",
+              )
+            : p.materials.map((l) => ({ id: l.item_id, name: l.item_name })),
         outs = p.outputs.map((l) => ({ id: l.item_id, name: l.item_name }));
       html = f("note", "textarea", false, [], r.note || "");
       if (current === "production-reports") {
@@ -892,6 +915,7 @@ async function editForm(r) {
         editors.push(o, m);
         html +=
           f("completed_date", "date", true, [], r.completed_date) +
+          (isMysql?f('production_completed','select',true,[{id:'false',name:'Chưa xác nhận hoàn tất'},{id:'true',name:'Đã hoàn tất toàn bộ sản xuất'}],String(Boolean(r.production_completed))):'')+
           o.html +
           m.html;
         builder = (d) => ({
@@ -899,6 +923,7 @@ async function editForm(r) {
           ...d,
           outputs: readLines("outputs"),
           materials: readLines("materials"),
+          ...(isMysql?{production_completed:d.production_completed==='true'}:{}),
         });
       }
     } else if (current === "qc-inspections") {

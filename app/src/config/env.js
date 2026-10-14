@@ -2,7 +2,7 @@ const path = require("node:path");
 function loadEnv() {
   const file = path.resolve(__dirname, "../../.env");
   if (require("node:fs").existsSync(file)) process.loadEnvFile(file);
-  for (const name of ["DB_PASSWORD", "SESSION_SECRET", "DEMO_PASSWORD"]) {
+  for (const name of ["DB_PASSWORD", "SESSION_SECRET", "DEMO_PASSWORD", "INTERNAL_SECRET"]) {
     const secretFile = process.env[name + "_FILE"];
     if (secretFile) {
       if (process.env[name])

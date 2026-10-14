@@ -1,3 +1,5 @@
-# Migration sau schema gốc
+# Migration nguồn lịch sử
 
-`database/adminer/KhoHang.sql` là migration `001_kho_hang.sql` đã áp dụng. Không sửa file đó sau khi triển khai vì checksum sẽ thay đổi. Các thay đổi schema tiếp theo đặt ở thư mục này bằng file số tăng dần, ví dụ `002_them_cot.sql`.
+Thư mục này chứa migration 001–026 của schema nguồn trước cutover. Giữ nguyên file và checksum đã chạy. Không thêm thay đổi runtime service vào schema nguồn rồi kỳ vọng dữ liệu owner tự cập nhật.
+
+Sau cutover, migration mới ở database/services/migrations (hiện 001–006), cần wiring bootstrap/checkpoint, snapshot và kiểm thử database riêng. Xem [SERVICE_DATABASES.md](../../docs/SERVICE_DATABASES.md).

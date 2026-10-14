@@ -1,0 +1,550 @@
+// Generated from src/config/navigation.js by npm run docs:sync.
+const warehouseNavigation = {
+  "labels": {
+    "QC_FAILURE": "Hàng QC lỗi",
+    "STOCKTAKE_DIFFERENCE": "Chênh lệch kiểm kê",
+    "TIEN_DO": "Tiến độ",
+    "SU_CO": "Sự cố",
+    "NHU_CAU": "Thiếu / nhu cầu NVL",
+    "RELEASE": "Giải phóng / tái kiểm để sử dụng lại",
+    "SCRAP": "Tiêu hủy",
+    "RETURN_SUPPLIER": "Trả nhà cung cấp",
+    "QUARANTINE_DISPOSITION": "Xử lý hàng cách ly",
+    "STOCK_QC_CORRECTION": "Điều chỉnh QC hàng đã nhập",
+    "CUSTOMER_ACCEPTED": "Đã tiếp nhận",
+    "ORDER_PENDING_REVIEW": "Chờ phê duyệt",
+    "ORDER_SUBMITTED": "Chờ tiếp nhận",
+    "QUALITY_CHECK": "Kiểm tra chất lượng",
+    "COUNT": "Kiểm đếm tồn kho",
+    "PROCUREMENT": "Bổ sung NVL",
+    "CLOSED_WITH_RETURNS": "Đã nhận, có trả NCC",
+    "CUSTOMER": "Khách hàng",
+    "PLANNER": "Lập kế hoạch",
+    "PURCHASER": "Mua hàng",
+    "WAREHOUSE_MANAGER": "Quản lý kho",
+    "WAREHOUSE_STAFF": "Nhân viên kho",
+    "QC_INSPECTOR": "QC/AC",
+    "STOCKTAKER": "Ban kiểm kê",
+    "WORKSHOP_OWNER": "Chủ xưởng",
+    "DIRECTOR": "Giám đốc",
+    "SUBMITTED": "Đã gửi",
+    "RECEIVED": "Đã tiếp nhận",
+    "APPROVED": "Đã duyệt",
+    "REJECTED": "Bị từ chối",
+    "IN_PROGRESS": "Đang thực hiện",
+    "COMPLETED": "Hoàn thành",
+    "PENDING_APPROVAL": "Chờ duyệt",
+    "PENDING": "Chờ xử lý",
+    "PARTIALLY_FULFILLED": "Xử lý một phần",
+    "FULFILLED": "Đã xử lý đủ",
+    "PARTIALLY_RECEIVED": "Nhận một phần",
+    "POSTED": "Đã ghi sổ",
+    "PLANNED": "Đã lên lịch",
+    "COUNTING": "Đang kiểm đếm",
+    "CLOSED": "Đã đóng",
+    "CANCELLED": "Đã hủy",
+    "VOID": "Đã hủy",
+    "DRAFT": "Bản nháp",
+    "APPLIED": "Đã áp dụng",
+    "AVAILABLE": "Khả dụng",
+    "QUARANTINE": "Cách ly",
+    "PASSED": "Đạt",
+    "PARTIAL": "Đạt một phần",
+    "FAILED": "Không đạt",
+    "IN": "Nhập",
+    "OUT": "Xuất",
+    "PURCHASE": "Mua",
+    "SALE": "Bán",
+    "MATERIAL": "Nguyên liệu",
+    "FINISHED_PRODUCT": "Thành phẩm"
+  },
+  "modules": [
+    [
+      "customer-returns",
+      "Hàng khách trả",
+      "↩",
+      [
+        "WAREHOUSE_MANAGER",
+        "WAREHOUSE_STAFF",
+        "QC_INSPECTOR",
+        "DIRECTOR"
+      ],
+      [
+        "WAREHOUSE_MANAGER"
+      ],
+      "/customer-returns",
+      "Nhận hàng theo phiếu giao gốc và cách ly để QC kiểm tra."
+    ],
+    [
+      "customer-orders",
+      "Đơn hàng",
+      "◫",
+      [
+        "CUSTOMER",
+        "PLANNER",
+        "DIRECTOR"
+      ],
+      [
+        "CUSTOMER"
+      ],
+      "/customer/orders",
+      "Tiếp nhận và theo dõi đơn đặt hàng."
+    ],
+    [
+      "business-plans",
+      "Kế hoạch mua / bán",
+      "▤",
+      [
+        "PLANNER",
+        "DIRECTOR",
+        "PURCHASER",
+        "WORKSHOP_OWNER",
+        "WAREHOUSE_STAFF"
+      ],
+      [
+        "PLANNER"
+      ],
+      "/plans",
+      "Điều phối nhu cầu mua và giao hàng."
+    ],
+    [
+      "purchase-orders",
+      "Đơn mua hàng",
+      "▧",
+      [
+        "PURCHASER",
+        "WORKSHOP_OWNER",
+        "WAREHOUSE_STAFF",
+        "QC_INSPECTOR"
+      ],
+      [
+        "PURCHASER"
+      ],
+      "/purchases",
+      "Nhập thủ công hoặc lấy dữ liệu từ báo cáo, kế hoạch mua đã duyệt."
+    ],
+    [
+      "categories",
+      "Danh mục",
+      "▦",
+      [
+        "WAREHOUSE_MANAGER",
+        "WORKSHOP_OWNER"
+      ],
+      [
+        "WAREHOUSE_MANAGER"
+      ],
+      "/catalog/categories",
+      "Phân nhóm nguyên liệu và thành phẩm."
+    ],
+    [
+      "items",
+      "Mặt hàng",
+      "◇",
+      [
+        "WAREHOUSE_MANAGER",
+        "WORKSHOP_OWNER"
+      ],
+      [
+        "WAREHOUSE_MANAGER"
+      ],
+      "/catalog/data",
+      "Nguyên liệu, thành phẩm và hàng mẫu."
+    ],
+    [
+      "warehouses",
+      "Kho hàng",
+      "⌂",
+      [
+        "WAREHOUSE_MANAGER",
+        "WORKSHOP_OWNER"
+      ],
+      [
+        "WAREHOUSE_MANAGER"
+      ],
+      "/catalog/data",
+      "Thông tin các kho trong hệ thống."
+    ],
+    [
+      "warehouse-locations",
+      "Vị trí lưu kho",
+      "⊞",
+      [
+        "WAREHOUSE_MANAGER",
+        "WORKSHOP_OWNER"
+      ],
+      [
+        "WAREHOUSE_MANAGER"
+      ],
+      "/catalog/data",
+      "Quản lý kệ và ô lưu trữ."
+    ],
+    [
+      "suppliers",
+      "Nhà cung cấp",
+      "◎",
+      [
+        "WAREHOUSE_MANAGER"
+      ],
+      [
+        "WAREHOUSE_MANAGER"
+      ],
+      "/catalog/data",
+      "Thông tin đối tác cung ứng."
+    ],
+    [
+      "lots",
+      "Lô hàng",
+      "▥",
+      [
+        "WAREHOUSE_MANAGER",
+        "WORKSHOP_OWNER"
+      ],
+      [
+        "WAREHOUSE_MANAGER"
+      ],
+      "/catalog/data",
+      "Theo dõi nguồn, hạn dùng và QC."
+    ],
+    [
+      "stock-requests",
+      "Yêu cầu nhập / xuất",
+      "⇄",
+      [
+        "WORKSHOP_OWNER",
+        "WAREHOUSE_STAFF",
+        "WAREHOUSE_MANAGER",
+        "PLANNER"
+      ],
+      [
+        "WORKSHOP_OWNER"
+      ],
+      "/workshop/requests",
+      "Lập yêu cầu theo chứng từ nguồn."
+    ],
+    [
+      "stock-documents",
+      "Phiếu nhập / xuất",
+      "⇥",
+      [
+        "WAREHOUSE_MANAGER",
+        "WAREHOUSE_STAFF",
+        "DIRECTOR",
+        "WORKSHOP_OWNER"
+      ],
+      [],
+      "/warehouse/documents",
+      "Tra cứu chứng từ đã ghi sổ."
+    ],
+    [
+      "qc-inspections",
+      "Kiểm tra QC / AC",
+      "✓",
+      [
+        "QC_INSPECTOR",
+        "DIRECTOR",
+        "WORKSHOP_OWNER"
+      ],
+      [
+        "QC_INSPECTOR"
+      ],
+      "/quality/inspections",
+      "Số đạt và lỗi trước khi nhập kho."
+    ],
+    [
+      "production-plans",
+      "Kế hoạch sản xuất",
+      "⚒",
+      [
+        "PLANNER",
+        "DIRECTOR",
+        "WORKSHOP_OWNER",
+        "WAREHOUSE_STAFF"
+      ],
+      [
+        "PLANNER"
+      ],
+      "/production/plans",
+      "Kế hoạch thành phẩm và nguyên liệu."
+    ],
+    [
+      "production-reports",
+      "Báo cáo sản xuất",
+      "▱",
+      [
+        "WORKSHOP_OWNER",
+        "PLANNER",
+        "DIRECTOR"
+      ],
+      [
+        "WORKSHOP_OWNER"
+      ],
+      "/production/reports",
+      "Tiến độ, sự cố hoặc thiếu NVL khi đang sản xuất; gửi Ban giám đốc."
+    ],
+    [
+      "finished-reports",
+      "Báo cáo thành phẩm",
+      "▣",
+      [
+        "WORKSHOP_OWNER",
+        "DIRECTOR",
+        "PLANNER"
+      ],
+      [
+        "WORKSHOP_OWNER"
+      ],
+      "/production/finished-reports",
+      "Sản lượng và lô hoàn thành."
+    ],
+    [
+      "stocktakes",
+      "Kiểm kê kho",
+      "≡",
+      [
+        "DIRECTOR",
+        "STOCKTAKER",
+        "WAREHOUSE_MANAGER",
+        "QC_INSPECTOR"
+      ],
+      [
+        "DIRECTOR"
+      ],
+      "/stocktakes",
+      "Chốt snapshot và kiểm đếm từng kho."
+    ],
+    [
+      "stocktake-minutes",
+      "Biên bản kiểm kê",
+      "▨",
+      [
+        "STOCKTAKER",
+        "DIRECTOR",
+        "QC_INSPECTOR"
+      ],
+      [
+        "STOCKTAKER",
+        "QC_INSPECTOR"
+      ],
+      "/stocktake-minutes",
+      "Tổng hợp số đếm và gửi biên bản."
+    ],
+    [
+      "exception-proposals",
+      "Xử lý ngoại lệ",
+      "△",
+      [
+        "DIRECTOR",
+        "WAREHOUSE_MANAGER",
+        "QC_INSPECTOR"
+      ],
+      [
+        "WAREHOUSE_MANAGER",
+        "QC_INSPECTOR"
+      ],
+      "/approvals/exceptions",
+      "Đề xuất điều chỉnh chênh lệch kiểm kê."
+    ],
+    [
+      "tasks",
+      "Công việc",
+      "▢",
+      [
+        "DIRECTOR",
+        "PLANNER",
+        "PURCHASER",
+        "WORKSHOP_OWNER",
+        "WAREHOUSE_MANAGER",
+        "WAREHOUSE_STAFF",
+        "QC_INSPECTOR",
+        "STOCKTAKER"
+      ],
+      [
+        "DIRECTOR"
+      ],
+      "/tasks",
+      "Phân công và kiểm soát lịch nhân viên."
+    ],
+    [
+      "reports/inventory",
+      "Báo cáo tồn kho",
+      "◴",
+      [
+        "DIRECTOR",
+        "WAREHOUSE_MANAGER",
+        "WORKSHOP_OWNER"
+      ],
+      [],
+      "/reports/inventory",
+      "Tồn kho tại một mốc thời gian."
+    ],
+    [
+      "reports/stock-documents",
+      "Báo cáo nhập / xuất",
+      "↗",
+      [
+        "DIRECTOR",
+        "WORKSHOP_OWNER"
+      ],
+      [],
+      "/reports/stock-documents",
+      "Đối chiếu phiếu theo kho và ngày."
+    ],
+    [
+      "reports/stocktakes",
+      "Báo cáo kiểm kê",
+      "▥",
+      [
+        "DIRECTOR"
+      ],
+      [],
+      "/reports/stocktakes",
+      "Snapshot, thực tế và chênh lệch."
+    ],
+    [
+      "warehouse-records",
+      "Hồ sơ kho tổng hợp",
+      "▨",
+      [
+        "WAREHOUSE_MANAGER",
+        "DIRECTOR",
+        "WORKSHOP_OWNER"
+      ],
+      [
+        "WAREHOUSE_MANAGER"
+      ],
+      "/warehouse/records",
+      "Tổng hợp phiếu kho từ các nhân viên."
+    ],
+    [
+      "notifications",
+      "Thông báo",
+      "♧",
+      [
+        "*"
+      ],
+      [],
+      "/notifications",
+      "Thông tin nghiệp vụ dành cho bạn."
+    ]
+  ],
+  "fieldNames": {
+    "image_path": "Ảnh danh mục",
+    "quarantine_source": "Hàng / vị trí xử lý",
+    "result": "Kết luận tái kiểm",
+    "original_stock_document_line_id": "Dòng phiếu giao gốc",
+    "returned_lot_detail_id": "Dòng lô nhận trả",
+    "return_receiver_id": "Nhân viên nhận",
+    "return_warehouse_id": "Kho nhận",
+    "return_location_id": "Vị trí cách ly",
+    "return_header_id": "Lô trả",
+    "return_line_id": "Dòng trả",
+    "receiver_id": "Nhân viên nhận",
+    "conclusion_assignee_ids": "QC/AC lập kết luận (tùy chọn)",
+    "reinspections": "Lịch sử tái kiểm",
+    "campaign_type": "Loại đợt",
+    "quality_kind": "Loại hàng QC",
+    "campaign_id": "Lịch QC được giao",
+    "location": "Địa điểm",
+    "lot_ids": "Các lô cần kiểm tra",
+    "source_request_id": "Yêu cầu bổ sung NVL",
+    "production_report_id": "Báo cáo nhu cầu NVL",
+    "report_purpose": "Mục đích báo cáo",
+    "progress_percentage": "Tiến độ (%)",
+    "send_to_planner": "Người nhận báo cáo",
+    "production_completed": "Xác nhận hoàn tất sản xuất",
+    "source_mode": "Cách lập đơn mua",
+    "production_source_mode": "Nguồn xuất NVL",
+    "finished_report_id": "Báo cáo thành phẩm",
+    "report_kind": "Loại báo cáo",
+    "base_quantity": "Nhu cầu gốc",
+    "reserve_rate": "Dự phòng (%)",
+    "estimated_shortage_quantity": "Thiếu dự kiến",
+    "decision_history": "Lịch sử phê duyệt",
+    "compensations": "Chứng từ bù QC",
+    "detail_kind": "Loại chi tiết",
+    "lot_header_id": "Lô hàng",
+    "manager_id": "Quản lý kho phụ trách",
+    "task_id": "Công việc được giao",
+    "stock_request_id": "Yêu cầu kho",
+    "task_type": "Loại công việc",
+    "returned_supplier_quantity": "Lượng trả NCC",
+    "shortage_quantity": "Lượng thiếu",
+    "type": "Loại",
+    "decision": "Quyết định",
+    "difference": "Dòng chênh lệch",
+    "code": "Mã",
+    "name": "Tên",
+    "title": "Tên công việc",
+    "description": "Mô tả",
+    "note": "Ghi chú",
+    "status": "Trạng thái",
+    "version": "Phiên bản",
+    "item_id": "Mặt hàng",
+    "item_name": "Tên hàng",
+    "unit": "Đơn vị",
+    "quantity": "Số lượng",
+    "unit_price": "Đơn giá",
+    "fulfilled_quantity": "Đã xử lý",
+    "remaining_quantity": "Còn lại",
+    "delivery_address": "Địa chỉ giao hàng",
+    "latest_delivery_date": "Hạn giao hàng",
+    "planned_date": "Ngày kế hoạch",
+    "expected_delivery_date": "Ngày dự kiến nhận",
+    "delivery_terms": "Điều khoản giao",
+    "supplier_id": "Nhà cung cấp",
+    "customer_id": "Khách hàng",
+    "customer_order_id": "Đơn khách hàng",
+    "business_plan_id": "Kế hoạch mua / bán",
+    "purchase_order_id": "Đơn mua",
+    "production_plan_id": "Kế hoạch sản xuất",
+    "warehouse_id": "Kho",
+    "workshop_id": "Xưởng",
+    "category_id": "Danh mục",
+    "unit_id": "Đơn vị",
+    "kind": "Loại mặt hàng",
+    "reference_price": "Giá tham khảo",
+    "is_sample": "Hàng mẫu",
+    "is_published": "Đã công bố",
+    "is_active": "Đang hoạt động",
+    "received_quantity": "Lượng nhận",
+    "purchase_order_line_id": "Dòng đơn mua",
+    "manufactured_date": "Ngày sản xuất",
+    "expiry_date": "Hạn dùng",
+    "requested_date": "Ngày yêu cầu",
+    "purpose": "Mục đích",
+    "inspected_at": "Thời gian kiểm tra",
+    "lot_id": "Dòng lô",
+    "inspected_quantity": "Số kiểm",
+    "passed_quantity": "Số đạt",
+    "failed_quantity": "Số lỗi",
+    "issue": "Mô tả lỗi",
+    "start_date": "Bắt đầu",
+    "end_date": "Kết thúc",
+    "start_at": "Bắt đầu",
+    "end_at": "Kết thúc",
+    "assignee_ids": "Người thực hiện",
+    "priority": "Ưu tiên",
+    "remarks": "Nhận xét biên bản",
+    "stocktake_id": "Đợt kiểm kê",
+    "stocktake_line_id": "Dòng chênh lệch",
+    "reason": "Lý do",
+    "resolution_note": "Phương án xử lý",
+    "available_quantity": "Tồn khả dụng khi lập báo cáo",
+    "required_quantity": "Nhu cầu",
+    "used_quantity": "Đã sử dụng",
+    "completed_date": "Ngày hoàn thành",
+    "lot_code": "Mã lô",
+    "lines": "Chi tiết hàng",
+    "outputs": "Thành phẩm",
+    "materials": "Nguyên vật liệu",
+    "system_quantity": "Snapshot",
+    "actual_quantity": "Thực tế",
+    "created_at": "Ngày tạo",
+    "posted_at": "Ngày ghi sổ",
+    "quoted_total": "Tổng báo giá",
+    "total_amount": "Tổng tiền",
+    "quality_bucket": "Nhóm chất lượng",
+    "location_id": "Vị trí"
+  }
+};

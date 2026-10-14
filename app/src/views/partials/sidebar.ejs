@@ -1,5 +1,5 @@
-<aside class="sidebar">
-  <a href="/dashboard" class="brand" data-nav="dashboard"><span class="brand-icon">▦</span><span>warehouse<small>VẬN HÀNH KHO HÀNG</small></span></a>
+<aside class="sidebar" id="sidebar-navigation">
+  <a href="/dashboard" class="brand" data-nav="dashboard"><span class="brand-icon">✿</span><span>sweet bakery<small>XƯỞNG BÁNH ĐÓNG GÓI</small></span></a>
   <div class="nav-label">KHÔNG GIAN LÀM VIỆC</div>
   <nav><a class="nav-link <%= current==='dashboard'?'active':'' %>" href="/dashboard" data-nav="dashboard"><span class="nav-icon">⊞</span>Tổng quan</a>
   <% available.forEach(m=>{ %><a class="nav-link <%= current===m[0]?'active':'' %>" href="<%= m[5] %>?module=<%= m[0] %>" data-nav="<%= m[0] %>"><span class="nav-icon"><%= m[2] %></span><%= m[1] %></a><% }) %>

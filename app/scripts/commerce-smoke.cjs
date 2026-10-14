@@ -61,7 +61,11 @@ function client() {
     postKey,
     customerOrderId,
     productionPlanId,
-    orderReviewKey;
+    orderReviewKey,
+    productionReportId,
+    groupedHeaderId,
+    planOnlyRequestId;
+  const groupedDetailIds = [];
   try {
     const planner = client(),
       director = client(),
@@ -72,12 +76,12 @@ function client() {
       staff = client();
     await planner.login("planner");
     const [items] = await pool.execute(
-      "SELECT id FROM items WHERE kind='MATERIAL' AND is_active=1 LIMIT 1",
+      "SELECT id FROM items WHERE kind='MATERIAL' AND is_active=1 LIMIT 2",
     );
     const [suppliers] = await pool.execute(
       "SELECT id FROM suppliers WHERE is_active=1 LIMIT 1",
     );
-    assert.ok(items.length && suppliers.length);
+    assert.ok(items.length === 2 && suppliers.length);
     const date = new Date(Date.now() + 14 * 86400000)
       .toISOString()
       .slice(0, 10);
@@ -98,6 +102,8 @@ function client() {
       { version: order.data.version },
     );
     assert.equal(received.status, 200, JSON.stringify(received));
+    const importedOrder=await planner.call('/api/v1/source-imports/production-plans?source_id='+customerOrderId);
+    assert.equal(importedOrder.status,200,JSON.stringify(importedOrder));assert.equal(importedOrder.data.outputs[0].quantity,'1.000');assert.equal(importedOrder.data.outputs[0].item_id,sample.id);
     const production = await planner.call("/api/v1/production-plans", "POST", {
       customer_order_id: customerOrderId,
       workshop_id: workshopId,
@@ -108,6 +114,7 @@ function client() {
     });
     assert.equal(production.status, 201, JSON.stringify(production));
     productionPlanId = production.data.id;
+    assert.equal(production.data.materials[0].base_quantity,'5.000');assert.equal(production.data.materials[0].required_quantity,'5.500');assert.equal(production.data.materials[0].estimated_shortage_quantity,'5.500');
     await director.login("director");
     orderReviewKey = crypto.randomUUID();
     const orderApproved = await director.call(
@@ -117,16 +124,58 @@ function client() {
       orderReviewKey,
     );
     assert.equal(orderApproved.status, 200, JSON.stringify(orderApproved));
+    await workshop.login("workshop");
+    const importedMaterials=await workshop.call('/api/v1/source-imports/production-reports?source_id='+productionPlanId);
+    assert.equal(importedMaterials.status,200,JSON.stringify(importedMaterials));assert.equal(importedMaterials.data.lines[0].required_quantity,'5.500');
+    const remainingOrder=await planner.call('/api/v1/source-imports/production-plans?source_id='+customerOrderId);assert.equal(remainingOrder.status,200);assert.deepEqual(remainingOrder.data.outputs,[]);
+    const [[earlyWarehouse]]=await pool.execute('SELECT id FROM warehouses WHERE is_active=1 LIMIT 1');
+    const [[earlyManager]]=await pool.execute("SELECT id FROM users WHERE username='manager'");
+    const planOnly=await workshop.call('/api/v1/stock-requests','POST',{purpose:'PRODUCTION_ISSUE',production_source_mode:'PLAN',production_plan_id:productionPlanId,workshop_id:workshopId,warehouse_id:String(earlyWarehouse.id),manager_id:String(earlyManager.id),requested_date:date,lines:[{item_id:String(items[0].id),quantity:'0.250'}]});
+    assert.equal(planOnly.status,201,JSON.stringify(planOnly));planOnlyRequestId=planOnly.data.id;assert.equal(planOnly.data.production_report_id,null);
+    const cancelledPlanOnly=await workshop.call('/api/v1/stock-requests/'+planOnlyRequestId,'DELETE',{version:planOnly.data.version});assert.equal(cancelledPlanOnly.status,200,JSON.stringify(cancelledPlanOnly));
+    const actualReport = await workshop.call(
+      "/api/v1/production-reports",
+      "POST",
+      {
+        production_plan_id: productionPlanId,
+        lines: [
+          {
+            item_id: String(items[0].id),
+            available_quantity: "0.000",
+            required_quantity: "5.000",
+          },
+          {
+            item_id: String(items[1].id),
+            available_quantity: "0.000",
+            required_quantity: "1.000",
+          },
+        ],
+      },
+    );
+    assert.equal(actualReport.status, 201, JSON.stringify(actualReport));
+    productionReportId = actualReport.data.id;
+    const sent = await workshop.call(
+      `/api/v1/production-reports/${productionReportId}/submit`,
+      "POST",
+      { version: actualReport.data.version },
+    );
+    assert.equal(sent.status, 200, JSON.stringify(sent));
     const plan = await planner.call("/api/v1/business-plans", "POST", {
       type: "PURCHASE",
       supplier_id: String(suppliers[0].id),
       production_plan_id: productionPlanId,
+      production_report_id: productionReportId,
       planned_date: date,
       lines: [
         {
           item_id: String(items[0].id),
           quantity: "5.000",
           unit_price: "10.0000",
+        },
+        {
+          item_id: String(items[1].id),
+          quantity: "1.000",
+          unit_price: "0.0000",
         },
       ],
     });
@@ -158,7 +207,7 @@ function client() {
     });
     assert.equal(purchase.status, 201, JSON.stringify(purchase));
     purchaseId = purchase.data.id;
-    assert.equal(purchase.data.lines.length, 1);
+    assert.equal(purchase.data.lines.length, 2);
     assert.equal(
       (
         await purchaser.call("/api/v1/purchase-orders", "POST", {
@@ -170,6 +219,7 @@ function client() {
       409,
     );
     await manager.login("manager");
+    const importReceipt=await manager.call('/api/v1/source-imports/lots?source_id='+purchaseId);assert.equal(importReceipt.status,200,JSON.stringify(importReceipt));assert.equal(importReceipt.data.lines[0].quantity,'5.000');
     const code =
       "LOT-TEST-" + crypto.randomBytes(5).toString("hex").toUpperCase();
     const lot = await manager.call("/api/v1/lots", "POST", {
@@ -180,6 +230,33 @@ function client() {
     });
     assert.equal(lot.status, 201, JSON.stringify(lot));
     lotId = lot.data.id;
+    const remainingReceipt=await manager.call('/api/v1/source-imports/lots?source_id='+purchaseId);assert.equal(remainingReceipt.status,200);assert.equal(remainingReceipt.data.lines[0].quantity,'3.000');
+    const grouped = await manager.call("/api/v1/lots", "POST", {
+      code: code + "-GROUP",
+      lines: [
+        {
+          purchase_order_line_id: purchase.data.lines[0].id,
+          received_quantity: "1.000",
+        },
+        {
+          purchase_order_line_id: purchase.data.lines[1].id,
+          received_quantity: "1.000",
+        },
+      ],
+    });
+    assert.equal(grouped.status, 201, JSON.stringify(grouped));
+    groupedHeaderId = grouped.data.lot_header_id;
+    groupedDetailIds.push(...grouped.data.lines.map((r) => r.id));
+    assert.equal(grouped.data.lines.length, 2);
+    assert.equal(
+      new Set(grouped.data.lines.map((r) => String(r.item_id))).size,
+      2,
+    );
+    assert.ok(
+      grouped.data.lines.every((r) => r.lot_header_id === groupedHeaderId),
+    );
+    const header = await manager.call("/api/v1/lot-headers/" + groupedHeaderId);
+    assert.equal(header.data.details.length, 2);
     assert.equal(
       (
         await manager.call("/api/v1/lots", "POST", {
@@ -229,6 +306,8 @@ function client() {
     });
     assert.equal(inspected.status, 201, JSON.stringify(inspected));
     qcId = inspected.data.id;
+    const [returned]=await pool.execute("SELECT r.quantity,r.original_lot_detail_id,h.return_direction FROM returned_lot_lines r JOIN lot_headers h ON h.id=r.lot_header_id JOIN qc_inspection_lines q ON q.id=r.qc_inspection_line_id WHERE q.qc_inspection_id=?",[qcId]);
+    assert.equal(returned.length,1);assert.equal(returned[0].quantity,'0.500');assert.equal(returned[0].return_direction,'NCC');assert.equal(String(returned[0].original_lot_detail_id),lotId);
     const completed = await director.call(
       `/api/v1/quality-campaigns/${campaignId}`,
     );
@@ -245,6 +324,8 @@ function client() {
     const [managers] = await pool.execute(
       "SELECT id FROM users WHERE username='manager' LIMIT 1",
     );
+    const qcReceipt=await workshop.call('/api/v1/source-imports/stock-requests?purpose=PURCHASE_RECEIPT&source_id='+purchaseId+'&workshop_id='+workshopId+'&warehouse_id='+String(warehouses[0].id));
+    assert.equal(qcReceipt.status,200,JSON.stringify(qcReceipt));assert.equal(qcReceipt.data.lines[0].quantity,'1.500');assert.equal(qcReceipt.data.lines.length,1);
     const request = await workshop.call("/api/v1/stock-requests", "POST", {
       purpose: "PURCHASE_RECEIPT",
       purchase_order_id: purchaseId,
@@ -302,7 +383,7 @@ function client() {
             lot_id: lotId,
             location_id: String(locations[0].id),
             quality_bucket: "AVAILABLE",
-            quantity: "1.500",
+            quantity: "0.500",
           },
         ],
       },
@@ -323,7 +404,7 @@ function client() {
             lot_id: lotId,
             location_id: String(locations[0].id),
             quality_bucket: "AVAILABLE",
-            quantity: "1.500",
+            quantity: "0.500",
           },
         ],
       },
@@ -335,12 +416,45 @@ function client() {
       "SELECT quantity FROM inventory_balances WHERE lot_id=? AND location_id=? AND quality_bucket='AVAILABLE'",
       [lotId, locations[0].id],
     );
-    assert.equal(String(balance.quantity), "1.500");
+    assert.equal(String(balance.quantity), "0.500");
+    const automaticRecords = await manager.call("/api/v1/warehouse-records");
+    assert.ok(
+      automaticRecords.data.some((r) => r.stock_request_id === stockRequestId),
+    );
+    const inventoryAccess = await workshop.call("/api/v1/reports/inventory");
+    for(const resource of ['items','categories','warehouses','warehouse-locations','lots']){
+      const read=await workshop.call('/api/v1/catalog-data?resource='+resource);assert.equal(read.status,200,JSON.stringify(read));
+      assert.equal((await workshop.call('/api/v1/'+resource,'POST',{})).status,403);
+    }
+    assert.equal(inventoryAccess.status, 200, JSON.stringify(inventoryAccess));
+    await require("./production-delivery-flow.cjs")({
+      pool,
+      workshop,
+      manager,
+      staff,
+      director,
+      planner,
+      qc,
+      productionPlanId,
+      productionReportId,
+      customerOrderId,
+      workshopId,
+      warehouseId: String(warehouses[0].id),
+      managerId: String(managers[0].id),
+      staffId: String(staffUsers[0].id),
+      inspectorId: String(inspectors[0].id),
+      locationId: String(locations[0].id),
+      materialId: String(items[0].id),
+      finishedItemId: sample.id,
+      lotId,
+      date,
+    });
     console.log(
       "COMMERCE PASS: purchase plan, order, QC, request, dispatch, one-time stock posting.",
     );
   } finally {
     try {
+      if(planOnlyRequestId){await pool.execute('DELETE FROM stock_request_lines WHERE stock_request_id=?',[planOnlyRequestId]);await pool.execute('DELETE FROM stock_requests WHERE id=?',[planOnlyRequestId]);await pool.execute("DELETE FROM audit_logs WHERE resource_type='stock-requests' AND resource_id=?",[planOnlyRequestId]);}
       if (documentId) {
         await pool.execute(
           "DELETE FROM inventory_movements WHERE stock_document_line_id IN (SELECT id FROM stock_document_lines WHERE stock_document_id=?)",
@@ -353,6 +467,20 @@ function client() {
         await pool.execute("DELETE FROM stock_documents WHERE id=?", [
           documentId,
         ]);
+      }
+      if (qcId) {
+        const [returned] = await pool.execute(
+          "SELECT r.lot_header_id FROM returned_lot_lines r JOIN qc_inspection_lines q ON q.id=r.qc_inspection_line_id WHERE q.qc_inspection_id=?",
+          [qcId],
+        );
+        await pool.execute(
+          "DELETE FROM returned_lot_lines WHERE qc_inspection_line_id IN (SELECT id FROM qc_inspection_lines WHERE qc_inspection_id=?)",
+          [qcId],
+        );
+        for (const r of returned)
+          await pool.execute("DELETE FROM lot_headers WHERE id=?", [
+            r.lot_header_id,
+          ]);
       }
       if (lotId)
         await pool.execute("DELETE FROM inventory_balances WHERE lot_id=?", [
@@ -395,6 +523,17 @@ function client() {
         await pool.execute("DELETE FROM stocktakes WHERE id=?", [campaignId]);
       }
       if (lotId) await pool.execute("DELETE FROM lots WHERE id=?", [lotId]);
+      for (const id of groupedDetailIds) {
+        await pool.execute(
+          "DELETE FROM audit_logs WHERE resource_type='lots' AND resource_id=?",
+          [id],
+        );
+        await pool.execute("DELETE FROM lots WHERE id=?", [id]);
+      }
+      if (groupedHeaderId)
+        await pool.execute("DELETE FROM lot_headers WHERE id=?", [
+          groupedHeaderId,
+        ]);
       if (purchaseId) {
         await pool.execute(
           "DELETE FROM purchase_order_lines WHERE purchase_order_id=?",
@@ -412,6 +551,23 @@ function client() {
         await pool.execute("DELETE FROM business_plans WHERE id=?", [planId]);
       }
       if (productionPlanId) {
+        if (productionReportId) {
+          await pool.execute(
+            "DELETE FROM production_report_lines WHERE production_report_id=?",
+            [productionReportId],
+          );
+          await pool.execute("DELETE FROM production_reports WHERE id=?", [
+            productionReportId,
+          ]);
+          await pool.execute(
+            "DELETE FROM notifications WHERE resource_type='production-reports' AND resource_id=?",
+            [productionReportId],
+          );
+          await pool.execute(
+            "DELETE FROM audit_logs WHERE resource_type='production-reports' AND resource_id=?",
+            [productionReportId],
+          );
+        }
         await pool.execute(
           "DELETE FROM notifications WHERE resource_type='production-plans' AND resource_id=?",
           [productionPlanId],

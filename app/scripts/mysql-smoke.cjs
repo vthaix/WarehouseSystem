@@ -112,10 +112,10 @@ const { getPool, closePool } = require("../src/config/database");
     await call("/api/v1/notifications/" + notices[0].id + "/read", "PATCH", {});
     const [[sessions]] = await pool.query("SELECT COUNT(*) AS n FROM sessions");
     assert.ok(Number(sessions.n) > 0);
-    const userRepo = new (require("../src/modules/auth/UserRepository"))(pool),
+    const userRepo = new (require("../src/services/identity-service/modules/auth/UserRepository"))(pool),
       owner = await userRepo.find("workshop");
     assert.equal(owner.workshop_ids.length, 1);
-    const auth = new (require("../src/modules/auth/AuthService"))(
+    const auth = new (require("../src/services/identity-service/modules/auth/AuthService"))(
         userRepo,
         pool,
       ),

@@ -72,16 +72,18 @@ const { chromium } = require("@playwright/test"),
     )[5];
     await planning.goto(base + planningUrl + "?module=business-plans");
     await planning.locator("#create").click();
-    await planning.locator("#f-production_plan_id").waitFor();
+    await planning.locator("#f-production_report_id").waitFor();
     assert.equal(
       await planning
-        .locator("#f-production_plan_id")
+        .locator("#f-production_report_id")
         .evaluate((el) => el.required),
       true,
     );
     await planning.locator("#f-type").selectOption("SALE");
+    assert.equal(await planning.locator("#f-finished_report_id").isDisabled(), false);
+    assert.equal(await planning.locator("#f-finished_report_id").evaluate(el => el.required), true);
     assert.equal(
-      await planning.locator("#f-production_plan_id").isDisabled(),
+      await planning.locator("#f-production_report_id").isDisabled(),
       true,
     );
     assert.equal(
@@ -89,13 +91,14 @@ const { chromium } = require("@playwright/test"),
       true,
     );
     await planning.locator("#f-type").selectOption("PURCHASE");
+    assert.equal(await planning.locator("#f-finished_report_id").isDisabled(), true);
     assert.equal(
-      await planning.locator("#f-production_plan_id").isDisabled(),
+      await planning.locator("#f-production_report_id").isDisabled(),
       false,
     );
     assert.equal(
       await planning
-        .locator("#f-production_plan_id")
+        .locator("#f-production_report_id")
         .evaluate((el) => el.required),
       true,
     );
@@ -105,6 +108,12 @@ const { chromium } = require("@playwright/test"),
       fullPage: true,
     });
     await interactive.close();
+    const directorContext=await browser.newContext({viewport:{width:1440,height:1000}}),directorPage=await directorContext.newPage();
+    directorPage.on('pageerror',error=>errors.push(error.message));
+    await directorPage.goto(base+'/login');await directorPage.locator('#username').fill('director');await directorPage.locator('#password').fill(secrets.password);await directorPage.locator('#login-form button').click();await directorPage.waitForURL('**/dashboard');
+    await directorPage.goto(base+'/stocktakes?module=stocktakes');await directorPage.locator('#create').click();await directorPage.locator('#f-campaign_type').selectOption('COUNT');assert.ok(await directorPage.locator('#f-warehouse_id').isVisible());assert.ok(await directorPage.locator('#f-assignee_ids option').count()>0);await directorPage.locator('#modal button[data-close]').click().catch(()=>directorPage.keyboard.press('Escape'));
+    await directorPage.goto(base+'/tasks?module=tasks');assert.equal((await directorPage.locator('body').innerText()).includes('NOT_IMPLEMENTED'),false);
+    assert.deepEqual(errors,[]);await directorContext.close();
     await page.goto("http://127.0.0.1:" + (process.env.ADMINER_PORT || 8080));
     await page.locator('input[name="auth[server]"]').fill("mysql");
     await page.locator('input[name="auth[username]"]').fill(secrets.dbUser);

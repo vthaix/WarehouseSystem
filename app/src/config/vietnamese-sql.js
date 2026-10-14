@@ -8,10 +8,10 @@ const reverseColumns = Object.fromEntries(
   ]),
 );
 
-function translateSql(sql) {
+function translateSql(sql, tableNames = {}) {
   if (typeof sql !== "string") return sql;
   let result = "";
-  for (let i = 0; i < sql.length; ) {
+  for (let i = 0; i < sql.length;) {
     const char = sql[i];
     if (char === "'" || char === '"') {
       const quote = char;
@@ -35,15 +35,15 @@ function translateSql(sql) {
     if (char === "`" && sql.indexOf("`", i + 1) !== -1) {
       const end = sql.indexOf("`", i + 1);
       const oldName = sql.slice(i + 1, end);
-      result += "`" + (names[oldName] || oldName) + "`";
+      result += tableNames[oldName] || "`" + (names[oldName] || oldName) + "`";
       i = end + 1;
       continue;
     }
-    if (/[a-z_]/.test(char)) {
+    if (/[A-Za-z_]/.test(char)) {
       let end = i + 1;
-      while (end < sql.length && /[a-z_0-9]/.test(sql[end])) end++;
+      while (end < sql.length && /[A-Za-z_0-9]/.test(sql[end])) end++;
       const oldName = sql.slice(i, end);
-      result += names[oldName] || oldName;
+      result += tableNames[oldName] || names[oldName] || oldName;
       i = end;
       continue;
     }
@@ -66,19 +66,19 @@ function translateRows(rows) {
   });
 }
 
-function wrapSql(target) {
+function wrapSql(target, tableNames = {}) {
   return new Proxy(target, {
     get(object, property) {
       if (property === "query" || property === "execute")
         return async (sql, ...args) => {
           const [rows, fields] = await object[property](
-            translateSql(sql),
+            translateSql(sql, tableNames),
             ...args,
           );
           return [translateRows(rows), fields];
         };
       if (property === "getConnection")
-        return async () => wrapSql(await object.getConnection());
+        return async () => wrapSql(await object.getConnection(), tableNames);
       const value = object[property];
       return typeof value === "function" ? value.bind(object) : value;
     },

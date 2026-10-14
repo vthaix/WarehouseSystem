@@ -5,6 +5,10 @@ const { getPool, closePool } = require("../src/config/database");
   try {
     const command = process.argv[2],
       pool = getPool();
+    if (process.env.SERVICE_DB_LAYOUT === "split" && command !== "status")
+      throw new Error(
+        "Use docker compose run --rm split-databases. Legacy migrate/seed/roles are disabled after database cutover.",
+      );
     if (command === "migrate")
       await require("../src/shared/migrations").migrate(pool);
     else if (command === "seed")

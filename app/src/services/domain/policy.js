@@ -1,5 +1,6 @@
 const { fail } = require("./core");
 const read = {
+  "customer-returns": ["WAREHOUSE_MANAGER", "WAREHOUSE_STAFF", "QC_INSPECTOR", "DIRECTOR"],
   "customer-orders": ["CUSTOMER", "PLANNER", "DIRECTOR"],
   "business-plans": [
     "PLANNER",
@@ -14,12 +15,12 @@ const read = {
     "WAREHOUSE_STAFF",
     "QC_INSPECTOR",
   ],
-  categories: ["WAREHOUSE_MANAGER"],
-  warehouses: ["WAREHOUSE_MANAGER"],
-  "warehouse-locations": ["WAREHOUSE_MANAGER"],
+  categories: ["WAREHOUSE_MANAGER", "WORKSHOP_OWNER"],
+  warehouses: ["WAREHOUSE_MANAGER", "WORKSHOP_OWNER"],
+  "warehouse-locations": ["WAREHOUSE_MANAGER", "WORKSHOP_OWNER"],
   suppliers: ["WAREHOUSE_MANAGER"],
-  items: ["WAREHOUSE_MANAGER"],
-  lots: ["WAREHOUSE_MANAGER"],
+  items: ["WAREHOUSE_MANAGER", "WORKSHOP_OWNER"],
+  lots: ["WAREHOUSE_MANAGER", "WORKSHOP_OWNER"],
   "stock-requests": ["WORKSHOP_OWNER", "WAREHOUSE_STAFF", "WAREHOUSE_MANAGER"],
   "stock-documents": [
     "WAREHOUSE_MANAGER",
@@ -31,18 +32,28 @@ const read = {
   stocktakes: ["DIRECTOR", "STOCKTAKER", "WAREHOUSE_MANAGER"],
   "stocktake-minutes": ["STOCKTAKER", "DIRECTOR"],
   "exception-proposals": ["DIRECTOR", "WAREHOUSE_MANAGER", "QC_INSPECTOR"],
-  tasks: ["DIRECTOR"],
+  tasks: [
+    "DIRECTOR",
+    "WAREHOUSE_MANAGER",
+    "WAREHOUSE_STAFF",
+    "QC_INSPECTOR",
+    "STOCKTAKER",
+    "WORKSHOP_OWNER",
+    "PLANNER",
+    "PURCHASER",
+  ],
   "production-plans": [
     "PLANNER",
     "DIRECTOR",
     "WORKSHOP_OWNER",
     "WAREHOUSE_STAFF",
   ],
-  "production-reports": ["WORKSHOP_OWNER", "PLANNER"],
-  "finished-reports": ["WORKSHOP_OWNER", "DIRECTOR"],
+  "production-reports": ["WORKSHOP_OWNER", "PLANNER", "DIRECTOR"],
+  "finished-reports": ["WORKSHOP_OWNER", "DIRECTOR", "PLANNER"],
   notifications: ["*"],
 };
 const create = {
+  "customer-returns": ["WAREHOUSE_MANAGER"],
   "customer-orders": ["CUSTOMER"],
   "business-plans": ["PLANNER"],
   "purchase-orders": ["PURCHASER"],
@@ -117,9 +128,15 @@ function scope(u, r, n) {
 }
 read["qc-inspections"].push("DIRECTOR", "WORKSHOP_OWNER");
 read["stocktakes"].push("QC_INSPECTOR");
+read["stocktake-minutes"].push("QC_INSPECTOR");
+create["stocktake-minutes"].push("QC_INSPECTOR");
+editable["stocktake-minutes"].push("QC_INSPECTOR");
 read["stock-requests"].push("PLANNER");
 read.tasks = [
   "DIRECTOR",
+  "PLANNER",
+  "PURCHASER",
+  "WORKSHOP_OWNER",
   "WAREHOUSE_MANAGER",
   "WAREHOUSE_STAFF",
   "QC_INSPECTOR",

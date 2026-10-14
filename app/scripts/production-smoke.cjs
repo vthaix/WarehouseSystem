@@ -54,7 +54,8 @@ function client() {
     finishedId,
     lotId,
     reviewKey,
-    materialRequestId;
+    materialRequestId,
+    purchaseOrderId;
   const purchasePlanIds = [];
   try {
     const customer = client(),
@@ -106,6 +107,7 @@ function client() {
     );
     assert.equal(approved.status, 200, JSON.stringify(approved));
     await workshop.login("workshop");
+    await require('./production-report-flow.cjs')({pool,client,workshop,planner,director,planId});
     const production = await workshop.call(
       "/api/v1/production-reports",
       "POST",
@@ -122,7 +124,8 @@ function client() {
     );
     assert.equal(production.status, 201, JSON.stringify(production));
     productionId = production.data.id;
-    assert.equal(production.data.lines[0].shortage_quantity, "2.000");
+    assert.equal(production.data.lines[0].shortage_quantity, "3.000");
+    assert.equal(production.data.lines[0].available_quantity, "0.000");
     const submitted = await workshop.call(
       `/api/v1/production-reports/${productionId}/submit`,
       "POST",
@@ -149,6 +152,7 @@ function client() {
     const [[supplier]] = await pool.execute(
       "SELECT id FROM suppliers WHERE is_active=1 LIMIT 1",
     );
+    await require('./import-purchase-flow.cjs')({pool,client,reportId:productionId,materialId:String(materials[0].id),finishedItemId:item.id,supplierId:String(supplier.id),date:delivery,planner,customer});
     const payload = {
       type: "PURCHASE",
       supplier_id: String(supplier.id),
@@ -187,6 +191,18 @@ function client() {
     purchasePlanIds.push(purchasePlan.data.id);
     assert.equal(purchasePlan.data.production_plan_id, planId);
     assert.equal(purchasePlan.data.source_request_id, materialRequestId);
+    assert.equal(purchasePlan.data.production_report_id, productionId);
+    const reportsLookup = await planner.call(
+      "/api/v1/lookup/production-reports",
+    );
+    assert.ok(
+      reportsLookup.data.find((r) => r.id === productionId).lines.length,
+    );
+    const directOnly = { ...missingSource, production_plan_id: planId };
+    assert.equal(
+      (await planner.call("/api/v1/business-plans", "POST", directOnly)).status,
+      422,
+    );
     assert.equal(
       (
         await workshop.call(
@@ -212,7 +228,7 @@ function client() {
     );
     const overPurchase = await planner.call("/api/v1/business-plans", "POST", {
       ...payload,
-      lines: [{ ...payload.lines[0], quantity: "2.000" }],
+      lines: [{ ...payload.lines[0], quantity: "3.000" }],
     });
     assert.equal(overPurchase.status, 422);
     const invalidEdit = await planner.call(
@@ -220,7 +236,7 @@ function client() {
       "PATCH",
       {
         version: purchasePlan.data.version,
-        lines: [{ ...payload.lines[0], quantity: "2.001" }],
+        lines: [{ ...payload.lines[0], quantity: "3.001" }],
       },
     );
     assert.equal(invalidEdit.status, 422);
@@ -228,7 +244,7 @@ function client() {
       [1, 2].map(() =>
         planner.call("/api/v1/business-plans", "POST", {
           ...payload,
-          lines: [{ ...payload.lines[0], quantity: "1.500" }],
+          lines: [{ ...payload.lines[0], quantity: "2.500" }],
         }),
       ),
     );
@@ -250,9 +266,45 @@ function client() {
       200,
       JSON.stringify(reviewedPurchase),
     );
+    const purchaser = client();
+    await purchaser.login("purchaser");
+    const buying = {
+      business_plan_id: purchasePlan.data.id,
+      expected_delivery_date: delivery,
+      delivery_terms: "Test report trace",
+    };
+    assert.equal(
+      (
+        await purchaser.call("/api/v1/purchase-orders", "POST", {
+          ...buying,
+          production_report_id: "999999999",
+        })
+      ).status,
+      422,
+    );
+    const bought = await purchaser.call(
+      "/api/v1/purchase-orders",
+      "POST",
+      buying,
+    );
+    assert.equal(bought.status, 201, JSON.stringify(bought));
+    purchaseOrderId = bought.data.id;
+    assert.equal(bought.data.production_report_id, productionId);
+    assert.equal(
+      (await purchaser.call("/api/v1/purchase-orders", "POST", buying)).status,
+      409,
+    );
+    const blockedReportEdit = await workshop.call(
+      `/api/v1/production-reports/${productionId}`,
+      "PATCH",
+      { version: submitted.data.version, note: "Cannot edit submitted source" },
+    );
+    assert.equal(blockedReportEdit.status, 409);
     const code =
       "FIN-TEST-" + crypto.randomBytes(5).toString("hex").toUpperCase();
+    const prematureFinal=await workshop.call('/api/v1/finished-reports','POST',{production_plan_id:planId,production_completed:false,completed_date:delivery,outputs:[{item_id:item.id,lot_code:code+'-EARLY',quantity:'2.000',manufactured_date:delivery}],materials:[]});assert.equal(prematureFinal.status,422,JSON.stringify(prematureFinal));
     const finished = await workshop.call("/api/v1/finished-reports", "POST", {
+      production_completed:true,
       production_plan_id: planId,
       completed_date: delivery,
       outputs: [
@@ -263,12 +315,13 @@ function client() {
           manufactured_date: delivery,
         },
       ],
-      materials: [{ item_id: String(materials[0].id), used_quantity: "1.000" }],
+      materials: [],
     });
     assert.equal(finished.status, 201, JSON.stringify(finished));
     finishedId = finished.data.id;
     lotId = finished.data.outputs[0].lot_id;
     const over = await workshop.call("/api/v1/finished-reports", "POST", {
+      production_completed:true,
       production_plan_id: planId,
       completed_date: delivery,
       outputs: [
@@ -281,7 +334,7 @@ function client() {
       ],
       materials: [],
     });
-    assert.equal(over.status, 422);
+    assert.equal(over.status, 409);assert.equal(over.error.code,'IN_USE');
     const done = await workshop.call(
       `/api/v1/finished-reports/${finishedId}/submit`,
       "POST",
@@ -289,6 +342,57 @@ function client() {
     );
     assert.equal(done.status, 200, JSON.stringify(done));
     assert.equal(done.data.status, "SUBMITTED");
+    const finalPlan=await workshop.call('/api/v1/production-plans/'+planId);assert.equal(finalPlan.data.status,'COMPLETED');
+    const afterCompletion=await workshop.call('/api/v1/production-reports','POST',{production_plan_id:planId,report_purpose:'SU_CO',note:'Too late'});assert.equal(afterCompletion.status,409,JSON.stringify(afterCompletion));
+    const [[customerSource]] = await pool.execute(
+      "SELECT customer_id FROM customer_orders WHERE id=?",
+      [orderId],
+    );
+    const selling = {
+      type: "SALE",
+      customer_id: String(customerSource.customer_id),
+      customer_order_id: orderId,
+      finished_report_id: finishedId,
+      planned_date: delivery,
+      lines: [{ item_id: item.id, quantity: "2.000", unit_price: "10.0000" }],
+    };
+    const noReport = { ...selling };
+    delete noReport.finished_report_id;
+    assert.equal(
+      (await planner.call("/api/v1/business-plans", "POST", noReport)).status,
+      422,
+    );
+    assert.equal(
+      (
+        await planner.call("/api/v1/business-plans", "POST", {
+          ...selling,
+          finished_report_id: "999999999",
+        })
+      ).status,
+      409,
+    );
+    const lookupFinished = await planner.call(
+      "/api/v1/lookup/finished-reports",
+    );
+    assert.ok(
+      lookupFinished.data.find((r) => r.id === finishedId).outputs.length,
+    );
+    const sale = await planner.call("/api/v1/business-plans", "POST", selling);
+    assert.equal(sale.status, 201, JSON.stringify(sale));
+    purchasePlanIds.push(sale.data.id);
+    assert.equal(sale.data.finished_report_id, finishedId);
+    const earlyApproval = await director.call(
+      `/api/v1/business-plans/${sale.data.id}/review`,
+      "POST",
+      { version: sale.data.version, decision: "APPROVE" },
+      crypto.randomUUID(),
+    );
+    assert.equal(earlyApproval.status, 409, JSON.stringify(earlyApproval));
+    assert.equal(earlyApproval.error.code, "INSUFFICIENT_STOCK");
+    assert.equal(
+      (await planner.call("/api/v1/business-plans", "POST", selling)).status,
+      422,
+    );
     const [balances] = await pool.execute(
       "SELECT id FROM inventory_balances WHERE lot_id=?",
       [lotId],
@@ -297,8 +401,42 @@ function client() {
     console.log(
       "PRODUCTION PASS: material report/shortage, purchase source trace, lookup/UI data, over-demand rollback, concurrent source limits, approval, finished lot, no inventory posting.",
     );
+  } catch (error) {
+    console.error("SMOKE_FAILURE", error.message);
+    throw error;
   } finally {
     try {
+      if (purchaseOrderId) {
+        await pool.execute(
+          "DELETE FROM purchase_order_lines WHERE purchase_order_id=?",
+          [purchaseOrderId],
+        );
+        await pool.execute("DELETE FROM purchase_orders WHERE id=?", [
+          purchaseOrderId,
+        ]);
+        await pool.execute(
+          "DELETE FROM audit_logs WHERE resource_type='purchase-orders' AND resource_id=?",
+          [purchaseOrderId],
+        );
+      }
+      if (finishedId) {
+        const [owned] = await pool.execute(
+          "SELECT id FROM business_plans WHERE finished_report_id=?",
+          [finishedId],
+        );
+        for (const row of owned)
+          if (!purchasePlanIds.includes(String(row.id)))
+            purchasePlanIds.push(String(row.id));
+      }
+      if (productionId) {
+        const [owned] = await pool.execute(
+          "SELECT id FROM business_plans WHERE production_report_id=?",
+          [productionId],
+        );
+        for (const row of owned)
+          if (!purchasePlanIds.includes(String(row.id)))
+            purchasePlanIds.push(String(row.id));
+      }
       for (const id of purchasePlanIds) {
         await pool.execute(
           "DELETE FROM business_plan_lines WHERE business_plan_id=?",
@@ -334,6 +472,10 @@ function client() {
         );
         await pool.execute(
           "DELETE FROM finished_report_materials WHERE finished_report_id=?",
+          [finishedId],
+        );
+        await pool.execute(
+          "DELETE FROM report_details WHERE production_report_id=?",
           [finishedId],
         );
         await pool.execute("DELETE FROM finished_reports WHERE id=?", [

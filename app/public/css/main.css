@@ -1,10 +1,10 @@
 :root {
   font-family: Inter, "Segoe UI", sans-serif;
-  color: #19342e;
-  background: #f4f6f3;
-  --green: #12634b;
-  --muted: #70817b;
-  --line: #e2e8e1;
+  color: #211b20;
+  background: #fff7fa;
+  --accent: #b82361;
+  --muted: #796b74;
+  --line: #efdee5;
 }
 * {
   box-sizing: border-box;
@@ -35,12 +35,12 @@ a {
 }
 .layout {
   display: grid;
-  grid-template-columns: 244px 1fr;
+  grid-template-columns: 268px minmax(0, 1fr);
   min-height: 100vh;
 }
 .sidebar {
-  background: #123d31;
-  color: #d4e3d9;
+  background: #201a20;
+  color: #f4e7ee;
   padding: 30px 18px;
   position: sticky;
   top: 0;
@@ -57,25 +57,25 @@ a {
   gap: 10px;
 }
 .brand-icon {
-  background: #daedb0;
-  color: #173a2c;
+  background: #ffb8d3;
+  color: #351e2b;
   border-radius: 10px;
   padding: 8px;
   font-size: 20px;
 }
 .brand small {
   display: block;
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 2px;
   font-weight: 400;
-  color: #afc4b8;
+  color: #d6bac9;
   margin-top: 4px;
 }
 .nav-label {
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 1.7px;
   margin: 36px 12px 14px;
-  color: #8fac9b;
+  color: #ccaebf;
 }
 .nav-link {
   display: flex;
@@ -83,15 +83,15 @@ a {
   gap: 12px;
   padding: 12px;
   border-radius: 8px;
-  font-size: 13px;
+  font-size: 15px;
   margin: 3px 0;
 }
 .nav-link:hover {
   background: #ffffff0c;
 }
 .nav-link.active {
-  background: #dcedb0;
-  color: #234231;
+  background: #ffb8d3;
+  color: #3b2131;
   font-weight: 650;
 }
 .nav-icon {
@@ -100,12 +100,12 @@ a {
   text-align: center;
 }
 .sidebar-note {
-  font-size: 12px;
+  font-size: 14px;
   border-top: 1px solid #ffffff20;
   margin-top: 30px;
   padding: 20px 10px;
   line-height: 1.7;
-  color: #acc2b5;
+  color: #d6bac9;
 }
 .topbar {
   height: 78px;
@@ -117,7 +117,7 @@ a {
   padding: 0 38px;
 }
 .topbar-left {
-  font-size: 13px;
+  font-size: 15px;
   color: var(--muted);
 }
 .profile {
@@ -129,19 +129,19 @@ a {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #e9eedc;
+  background: #ffe2ee;
   display: grid;
   place-items: center;
-  color: var(--green);
+  color: var(--accent);
   font-weight: 700;
 }
 .profile-text {
-  font-size: 12px;
+  font-size: 14px;
 }
 .profile-text small {
   display: block;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
   margin-top: 3px;
 }
 .content {
@@ -150,15 +150,15 @@ a {
   margin: auto;
 }
 .eyebrow {
-  font-size: 10px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 1.7px;
-  color: var(--green);
+  color: var(--accent);
   font-weight: 650;
   margin-bottom: 10px;
 }
 h1 {
-  font-size: 30px;
+  font-size: 34px;
   letter-spacing: -1px;
   line-height: 1.2;
   margin: 0 0 10px;
@@ -168,11 +168,11 @@ h2 {
   margin: 0;
 }
 h3 {
-  font-size: 15px;
+  font-size: 17px;
   margin: 0 0 8px;
 }
 .subtitle {
-  font-size: 13px;
+  font-size: 15px;
   color: var(--muted);
   line-height: 1.7;
 }
@@ -188,31 +188,31 @@ h3 {
   background: white;
   padding: 10px 16px;
   border-radius: 7px;
-  font-size: 12px;
-  color: #234a3c;
+  font-size: 14px;
+  color: #342631;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
 }
 .button.primary {
-  background: var(--green);
+  background: var(--accent);
   color: white;
-  border-color: var(--green);
+  border-color: var(--accent);
 }
 .button.danger {
-  color: #b14432;
+  color: #ad2348;
 }
 .button.small {
   padding: 7px 11px;
-  font-size: 11px;
+  font-size: 13px;
 }
 .button:hover {
   filter: brightness(0.96);
 }
 .intro {
-  background: #e8eddc;
-  border: 1px solid #dce4cc;
+  background: #ffe5ef;
+  border: 1px solid #f3c7d9;
   border-radius: 12px;
   padding: 30px;
   display: flex;
@@ -228,13 +228,13 @@ h3 {
 .intro p {
   max-width: 540px;
   line-height: 1.8;
-  font-size: 13px;
-  color: #5f7564;
+  font-size: 15px;
+  color: #79616f;
   margin: 0;
 }
 .intro-mark {
   font-size: 70px;
-  color: #a6b988;
+  color: #ca487f;
   line-height: 1;
 }
 .cards {
@@ -254,25 +254,25 @@ h3 {
   transform: translateY(-2px);
 }
 .card-icon {
-  background: #eef2e7;
+  background: #fff0f6;
   border-radius: 9px;
   display: inline-grid;
   place-items: center;
   width: 40px;
   height: 40px;
   margin-bottom: 20px;
-  color: var(--green);
+  color: var(--accent);
   font-size: 19px;
 }
 .card p {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--muted);
   line-height: 1.7;
   margin-bottom: 20px;
 }
 .card-link {
-  font-size: 12px;
-  color: var(--green);
+  font-size: 14px;
+  color: var(--accent);
   font-weight: 650;
 }
 .panel {
@@ -301,7 +301,7 @@ h3 {
 }
 .filters label {
   margin: 0;
-  font-size: 11px;
+  font-size: 13px;
 }
 .table-wrap {
   overflow: auto;
@@ -309,34 +309,34 @@ h3 {
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 12px;
+  font-size: 14px;
   white-space: nowrap;
 }
 th {
   text-align: left;
   padding: 14px 20px;
-  background: #fafbf8;
-  color: #7a8980;
-  font-size: 10px;
+  background: #fff3f8;
+  color: #796b74;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.7px;
 }
 td {
   padding: 17px 20px;
-  border-top: 1px solid #edf0eb;
-  color: #5a6f64;
+  border-top: 1px solid #f5e8ee;
+  color: #594651;
 }
 td strong {
-  color: #214536;
+  color: #342631;
   font-weight: 600;
 }
 .badge {
-  font-size: 10px;
+  font-size: 12px;
   padding: 5px 9px;
   border-radius: 5px;
-  background: #edf0ec;
-  color: #64756c;
+  background: #f4edf1;
+  color: #796b74;
   display: inline-block;
 }
 .badge.APPROVED,
@@ -345,58 +345,58 @@ td strong {
 .badge.POSTED,
 .badge.COMPLETED,
 .badge.APPLIED {
-  background: #e7f2e9;
-  color: #337c48;
+  background: #fce4ef;
+  color: #962452;
 }
 .badge.SUBMITTED,
 .badge.PENDING,
 .badge.PENDING_APPROVAL,
 .badge.RECEIVED,
 .badge.COUNTING {
-  background: #fbf0d9;
-  color: #a47824;
+  background: #f4edf1;
+  color: #594651;
 }
 .badge.REJECTED,
 .badge.FAILED,
 .badge.CANCELLED {
-  background: #fae8e3;
-  color: #b45442;
+  background: #ffe1e9;
+  color: #ad2348;
 }
 .pagination {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 16px 22px;
-  font-size: 11px;
+  font-size: 13px;
   color: var(--muted);
 }
 .empty {
   text-align: center;
   padding: 60px 24px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 15px;
 }
 .empty-icon {
   font-size: 32px;
   margin-bottom: 12px;
 }
 .notice {
-  background: #fff8e8;
-  border: 1px solid #f0e0ba;
-  color: #886e32;
+  background: #fff0f6;
+  border: 1px solid #f3c7d9;
+  color: #873152;
   border-radius: 7px;
   padding: 12px 16px;
   margin: 0 0 20px;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.6;
 }
 .error {
-  color: #a33f30;
-  background: #fcedea;
-  border: 1px solid #f5d5cd;
+  color: #ad2348;
+  background: #fff0f4;
+  border: 1px solid #f3c7d9;
   padding: 13px;
   border-radius: 6px;
-  font-size: 12px;
+  font-size: 14px;
   white-space: pre-wrap;
 }
 .login {
@@ -405,7 +405,7 @@ td strong {
   grid-template-columns: 1fr 1fr;
 }
 .login-art {
-  background: #123d31;
+  background: #201a20;
   padding: 70px;
   color: white;
   display: flex;
@@ -415,9 +415,9 @@ td strong {
   overflow: hidden;
 }
 .login-art:after {
-  content: "▦";
+  content: "✿";
   font-size: 460px;
-  color: #dcedb018;
+  color: #ffb8d318;
   position: absolute;
   right: -40px;
   bottom: -90px;
@@ -431,9 +431,9 @@ td strong {
 }
 .login-art p {
   max-width: 370px;
-  color: #b0c7b9;
+  color: #edcedf;
   line-height: 1.9;
-  font-size: 14px;
+  font-size: 16px;
 }
 .login-form {
   display: flex;
@@ -453,26 +453,26 @@ td strong {
 }
 label {
   display: block;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 550;
   margin: 18px 0 7px;
 }
 input,
 select,
 textarea {
-  border: 1px solid #dce4dc;
+  border: 1px solid #e8d4de;
   border-radius: 6px;
   background: white;
   padding: 10px 12px;
-  font-size: 12px;
+  font-size: 14px;
   min-height: 39px;
-  color: #244637;
+  color: #342631;
   max-width: 100%;
 }
 input:focus,
 select:focus,
 textarea:focus {
-  outline: 2px solid #8dad80;
+  outline: 2px solid #d44f86;
   outline-offset: 2px;
 }
 .login-box input {
@@ -483,13 +483,13 @@ textarea:focus {
   margin-top: 24px;
 }
 .hint {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--muted);
   line-height: 1.8;
   margin-top: 18px;
 }
 .hint code {
-  color: var(--green);
+  color: var(--accent);
 }
 .form-grid {
   display: grid;
@@ -517,13 +517,13 @@ textarea:focus {
   margin: 24px 0;
 }
 .detail-grid dt {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--muted);
   margin-bottom: 7px;
 }
 .detail-grid dd {
   margin: 0;
-  font-size: 13px;
+  font-size: 15px;
   overflow-wrap: anywhere;
 }
 dialog {
@@ -532,10 +532,10 @@ dialog {
   width: min(860px, 94vw);
   max-height: 90vh;
   padding: 28px;
-  color: #234637;
+  color: #342631;
 }
 dialog::backdrop {
-  background: #122c2466;
+  background: #211b2077;
   backdrop-filter: blur(3px);
 }
 .dialog-head {
@@ -574,11 +574,11 @@ dialog::backdrop {
   position: fixed;
   bottom: 24px;
   right: 24px;
-  background: #183f30;
+  background: #211b20;
   color: white;
   padding: 14px 22px;
   border-radius: 8px;
-  font-size: 13px;
+  font-size: 15px;
   display: none;
   z-index: 10;
 }
@@ -590,7 +590,7 @@ dialog::backdrop {
   gap: 20px;
 }
 .notification p {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--muted);
   margin: 7px 0 0;
 }
@@ -598,11 +598,11 @@ dialog::backdrop {
   padding: 60px;
   text-align: center;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 15px;
 }
 .footer {
-  font-size: 10px;
-  color: #98a59b;
+  font-size: 12px;
+  color: #796b74;
   margin-top: 26px;
   display: flex;
   justify-content: space-between;
@@ -701,4 +701,52 @@ dialog::backdrop {
 }
 .profile {
   flex-shrink: 0;
+}
+
+/* Sweet Bakery: pink accents, dark navigation and clear white work surfaces. */
+:root { font-size: 16px; line-height: 1.55; }
+.sidebar { background: linear-gradient(160deg, #201a20, #30202c); }
+.brand { letter-spacing: -.7px; font-size: 24px; }
+.brand small { letter-spacing: 1.2px; font-size: 11px; }
+.brand-icon { border-radius: 14px; width: 44px; height: 44px; display: grid; place-items: center; padding: 0; font-size: 27px; flex-shrink: 0; }
+.nav-link { transition: background .15s, color .15s; border-radius: 12px; }
+.nav-link.active { box-shadow: 0 4px 16px #0002; }
+.topbar { min-height: 82px; height: auto; padding-top: 14px; padding-bottom: 14px; gap: 16px; }
+.content { padding-top: 38px; }
+.card, .panel { border-radius: 18px; box-shadow: 0 6px 24px #351e2b05; }
+.card { transition: transform .2s, box-shadow .2s; }
+.card:hover { box-shadow: 0 12px 28px #b8236112; }
+.card-icon { width: 46px; height: 46px; border-radius: 14px; }
+.button { border-radius: 10px; min-height: 42px; font-weight: 600; transition: box-shadow .15s, background .15s; }
+.button.primary { box-shadow: 0 4px 12px #b823611c; }
+.intro { border-radius: 20px; background: linear-gradient(115deg, #ffe5ef, #fff6fa); position: relative; overflow: hidden; }
+.intro h2 { font-size: 27px; }
+.intro-mark { font-size: 110px; padding: 0 24px; }
+tbody tr:hover { background: #fff8fb; }
+th { color: #68525e; font-weight: 700; }
+.badge { border-radius: 30px; font-weight: 600; }
+input, select, textarea { min-height: 44px; border-radius: 10px; }
+input:focus, select:focus, textarea:focus { outline-width: 2px; }
+a:focus-visible, button:focus-visible { outline: 3px solid #d44f86; outline-offset: 3px; }
+.login-art { background: radial-gradient(ellipse at 90% 80%, #64334e, transparent 60%), #201a20; }
+.login-art:after { color: #ffb8d31a; bottom: -110px; }
+.login-art > * { position: relative; z-index: 1; }
+.login-art h1 { font-size: clamp(36px, 4vw, 56px); letter-spacing: -1.5px; }
+.login-form { background: #fff; }
+.login-box { width: min(420px, 100%); }
+.login-box h1 { font-size: 32px; }
+dialog { border-radius: 20px; box-shadow: 0 24px 80px #211b2033; }
+.form-actions { flex-wrap: wrap; }
+@media (max-width: 767px) {
+  .topbar { flex-wrap: wrap; min-height: 76px; }
+  .profile { gap: 8px; flex-wrap: wrap; max-width: 100%; }
+  .profile-text { font-size: 13px; }
+  .brand { font-size: 23px; }
+  .content { padding: 24px 16px; }
+  .login-art h1 { font-size: 34px; margin-top: 28px; }
+  .login-art:after { font-size: 220px; bottom: -80px; }
+  .notification { flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *:before, *:after { transition: none !important; }
 }

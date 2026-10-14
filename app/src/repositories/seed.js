@@ -59,12 +59,12 @@ function seed(repo, password) {
   repo.add("units", { name: "cái" });
   repo.add("warehouses", {
     code: "KHO-01",
-    name: "Kho trung tâm",
+    name: "Kho nguyên liệu làm bánh",
     is_active: true,
   });
   repo.add("warehouses", {
     code: "KHO-02",
-    name: "Kho thành phẩm",
+    name: "Kho bánh đóng gói",
     is_active: true,
   });
   repo.add("warehouse-locations", {
@@ -81,12 +81,12 @@ function seed(repo, password) {
   });
   repo.add("suppliers", {
     code: "NCC-01",
-    name: "Công ty Nguyên liệu Việt",
+    name: "Công ty Nguyên liệu Bánh Việt",
     is_active: true,
   });
   repo.add("items", {
     code: "NVL-001",
-    name: "Thép tấm",
+    name: "Bột mì làm bánh",
     kind: "MATERIAL",
     category_id: "1",
     unit_id: "1",
@@ -98,12 +98,12 @@ function seed(repo, password) {
   });
   repo.add("items", {
     code: "TP-001",
-    name: "Kệ kho tiêu chuẩn",
+    name: "Bánh quy bơ đóng gói 200 g",
     kind: "FINISHED_PRODUCT",
     category_id: "2",
     unit_id: "2",
     unit: "cái",
-    reference_price: "1250000.0000",
+    reference_price: "35000.0000",
     is_active: true,
     is_sample: true,
     is_published: true,
@@ -112,18 +112,18 @@ function seed(repo, password) {
     code: "DH-0001",
     customer_id: "1",
     customer_name: "Khách hàng",
-    delivery_address: "Xưởng cơ khí, TP. Hồ Chí Minh",
+    delivery_address: "Cửa hàng bánh ngọt, TP. Hồ Chí Minh",
     latest_delivery_date: today(),
     status: "SUBMITTED",
-    quoted_total: "12500000.0000",
+    quoted_total: "350000.0000",
     lines: [
       {
         id: "order-line-1",
         item_id: "2",
-        item_name: "Kệ kho tiêu chuẩn",
+        item_name: "Bánh quy bơ đóng gói 200 g",
         unit: "cái",
         quantity: "10.000",
-        unit_price: "1250000.0000",
+        unit_price: "35000.0000",
       },
     ],
   });

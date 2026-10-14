@@ -1,61 +1,49 @@
-# Chạy sau khi clone
+# Chạy Docker
 
-Lệnh Docker chạy từ **repository root**. Cấu hình root include `app/docker-compose.yml`; cần Compose v2.20.3 trở lên. [Tài liệu include](https://docs.docker.com/compose/how-tos/multiple-compose-files/include/).
+Cập nhật 14/10/2026. Chạy từ root WarehouseSystem; root Compose include cấu hình trong app/.
 
-```sh
+```powershell
 docker compose up -d --build --wait
 docker compose ps
-docker compose logs --tail=100 app mysql setup
-docker compose exec app node scripts/show-demo-login.cjs
+docker compose logs --tail=100 app identity-service business-service warehouse-service notification-service reporting-service
 ```
 
-Ứng dụng http://localhost:3000. Demo: customer, customer2, planner, purchaser, manager, staff, staff2, qc, stocktaker, workshop, director. Lệnh xem login cũng hiển thị thông tin Adminer; đầu ra chứa mật khẩu, không chia sẻ công khai.
+Lần sau bật lại: `docker compose up -d`. Khi thay code/image: thêm `--build`. `--wait` đợi service running/healthy; `ps` chỉ xem trạng thái.
 
-Không cần `.env` lần đầu. Service `setup` sinh password DB/root/demo và session secret ngẫu nhiên vào hai named volumes, giữ nguyên khi chạy lại. App không có root password. MySQL đợi setup, app đợi DB healthy rồi migration/seed. MySQL không mở port ra host; web bind localhost.
+Chuỗi bootstrap: setup → MySQL healthy → migrate nguồn legacy → split-databases → backend → gateway. Setup/migrate/split-databases là job một lần, exit 0 là bình thường. Runtime không tự chạy DDL.
 
-Adminer dành cho development:
+Giao diện http://localhost:3000. Gateway có tên Compose `app`; năm backend và MySQL chỉ trong network nội bộ.
 
-```sh
-docker compose --profile dev up -d --wait
+## Adminer
+
+```powershell
+docker compose --profile dev up -d adminer
 ```
 
-Mở http://localhost:8080, chọn MySQL, server `mysql`, database `KhoHang`; lấy tài khoản từ lệnh xem login. Tài khoản `warehouse_app` có toàn quyền trên `KhoHang`; phân quyền người dùng sản phẩm được kiểm tra trong code. Tắt Adminer bằng `docker compose stop adminer`.
+Mở http://localhost:8080, hệ quản trị MySQL, server mysql. Chọn database và tài khoản theo bảng [SERVICE_DATABASES.md](SERVICE_DATABASES.md), ví dụ KhoHang_Warehouse / warehouse_db / warehouse123. KhoHang cũ là snapshot trước cutover, không phải dữ liệu đang hoạt động.
 
-## Cấu hình và vòng đời
+## Dữ liệu và migration
 
-Đổi port: copy `.env.example` **root** thành `.env`, chỉnh APP_PORT. Root `.env` dùng cho Compose; `app/.env` dành cho Node chạy trực tiếp và không vào image. Nếu tự cung cấp secret, phải khớp volume hiện hữu; sửa env không tự đổi password MySQL hoặc user demo.
+`docker compose down` dừng và bỏ container, giữ volumes dữ liệu/secret/backup. `down -v` xóa volumes, chỉ dùng khi chủ động bỏ dữ liệu. Build lại không xóa dữ liệu.
 
-```sh
-docker compose down
-docker compose up -d --wait
+Clone mới tạo nguồn từ migration 001–026/seed rồi chuyển sang sáu database. Sau cutover không copy/seed đè dữ liệu service. Thay schema mới phải thêm migration service, không chỉ sửa seed hay snapshot SQL. Hiện có migration service 001–007.
+
+Không chạy migrate/seed/roles trên gateway: các thao tác này bị chặn với database service. Nâng cấp theo chuỗi job trong Compose và xem log:
+
+```powershell
+docker compose logs --tail=100 migrate split-databases
 docker compose exec app node scripts/database.cjs status
-docker compose exec app node scripts/database.cjs migrate
-docker compose exec app node scripts/database.cjs seed
 ```
-
-`down` giữ volumes; `down -v` chỉ dùng khi chủ động xóa/reset dữ liệu thử. Schema gốc là `database/adminer/KhoHang.sql`; sau khi đã áp dụng, không sửa file này mà thêm migration số tăng dần trong `database/migrations`. Checksum kiểm tra lịch sử. DDL MySQL không rollback toàn bộ, migration cần chạy lại an toàn khi gián đoạn. Seed giữ password hash đã có, chỉ tạo dữ liệu nền/demo, không tự ghi tồn kho.
 
 ## Kiểm thử
 
-```sh
-docker build --target test -t warehouse-system-test ./app
-docker run --rm warehouse-system-test
-docker compose exec app node scripts/mysql-smoke.cjs before-restart
-docker compose restart app
-docker compose exec app node scripts/mysql-smoke.cjs after-restart
+Từ app/: `npm test`, `npm run check`. Acceptance MySQL dùng database cô lập và các tài khoản service thật:
+
+```powershell
+docker compose build app
+docker compose run --rm --no-deps -T split-databases node scripts/split-acceptance.cjs
 ```
 
-Đợi app healthy trước bước cuối. Smoke dành riêng cho development: migration/seed lặp, FK/CHECK/DECIMAL, scope/RBAC/CSRF, thông báo, SQL session, giới hạn login và 501. Cookie tạm nằm trong container, dùng `restart`, không recreate giữa hai bước.
+Script tạo dữ liệu trong namespace acceptance, mở sáu process HTTP kiểm thử, không gọi backend dữ liệu chính. Kiểm thử browser cần Node và Edge/Chromium: `npm run test:imports:browser`, `npm run test:docker-browser`.
 
-Kiểm thử trình duyệt cần Node và Chrome/Edge hoặc Playwright Chromium:
-
-```sh
-docker compose --profile dev up -d --wait
-cd app
-npm ci
-npm run check
-npm test
-npm run test:docker-browser
-```
-
-Browser SQL kiểm tra EJS khi tắt JavaScript và Adminer; `npm run test:browser` kiểm tra demo bộ nhớ đầy đủ. `/health` kiểm tra process; `/health/ready` truy vấn DB, lỗi trả 503. Healthcheck unhealthy không tự restart container; cần giám sát sự cố kéo dài.
+Cấu hình credentials/persistence: [SERVICE_DATABASES.md](SERVICE_DATABASES.md). Production: [PRODUCTION.md](PRODUCTION.md).

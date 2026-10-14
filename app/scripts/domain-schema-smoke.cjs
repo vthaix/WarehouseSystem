@@ -22,6 +22,23 @@ const identifiers = require("../database/adminer/identifiers.json");
   const before = await fingerprints();
   const [rows] = await pool.query("SHOW TABLES");
   const tables = new Set(rows.map((row) => Object.values(row)[0]));
+  const [objects] = await pool.query("SELECT TABLE_NAME,TABLE_TYPE FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE()");
+  const objectTypes = new Map(objects.map(row => [row.TABLE_NAME, row.TABLE_TYPE]));
+  for (const name of ['BanBaoCaoSanXuat', 'ChiTietBaoCaoSanXuat', 'ChiTietLoBaoCaoSanXuat', 'LoHang', 'ChiTietLo', 'NhanVien', 'BoPhan'])
+    assert.equal(objectTypes.get(name), 'BASE TABLE', name);
+  for (const name of ['BaoCaoSanXuat', 'BaoCaoThanhPham', 'ChiTietNhuCauSanXuat', 'NguyenLieuSuDung', 'HoSoKho'])
+    assert.equal(objectTypes.get(name), 'VIEW', name);
+  for (const name of ['BienDongKho', 'ChiTietKetQuaKiemTraQCAC', 'ChiTietPhieuKho', 'ChiTietPhieuKiemKe', 'LoLichKiemTra', 'PhanCongKho', 'ChiTietLoBaoCaoSanXuat', 'TonKho']) {
+    const [[detailFk]] = await pool.execute("SELECT REFERENCED_TABLE_NAME AS target FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=? AND COLUMN_NAME='MaChiTietLo' AND REFERENCED_TABLE_NAME IS NOT NULL", [name]);
+    assert.equal(detailFk?.target, 'ChiTietLo', name);
+  }
+  const [planTables] = await pool.execute("SELECT TABLE_NAME,TABLE_TYPE FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME IN ('ChiTietKeHoachSanXuat','ChiTietNguyenLieuKeHoachSanXuat','ThanhPhamKeHoachTuongThich')");
+  const types = new Map(planTables.map(row => [row.TABLE_NAME, row.TABLE_TYPE]));
+  assert.equal(types.get('ChiTietKeHoachSanXuat'), 'BASE TABLE');
+  assert.equal(types.get('ChiTietNguyenLieuKeHoachSanXuat'), 'VIEW');
+  assert.equal(types.get('ThanhPhamKeHoachTuongThich'), 'VIEW');
+  const [[counts]] = await pool.query("SELECT (SELECT COUNT(*) FROM production_plan_lines) AS all_count,(SELECT COUNT(*) FROM production_plan_outputs) AS output_count,(SELECT COUNT(*) FROM production_plan_materials) AS material_count");
+  assert.equal(Number(counts.all_count), Number(counts.output_count) + Number(counts.material_count));
   for (const table of Object.values(identifiers.tables))
     assert.ok(tables.has(table), "Missing table " + table);
   for (const old of [
@@ -65,7 +82,7 @@ const identifiers = require("../database/adminer/identifiers.json");
   console.log(
     "DOMAIN SCHEMA PASS: " +
       tables.size +
-      " tables, canonical names, source FK, PROCUREMENT type, migration replay and DDL crash recovery preserve IDs/passwords/history.",
+      " SQL objects (" + objects.filter(row => row.TABLE_TYPE === 'BASE TABLE').length + " tables, " + objects.filter(row => row.TABLE_TYPE === 'VIEW').length + " views), unified reports, lot-detail FKs, derived records, canonical names, migration replay preserve IDs/passwords/history.",
   );
 })()
   .catch((error) => {

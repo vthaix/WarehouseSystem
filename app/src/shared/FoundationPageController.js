@@ -27,6 +27,11 @@ class FoundationPageController {
     );
     let result = { data: [], meta: { page: 1, total: 0, total_pages: 0 } };
     const supported =
+      current === "customer-returns" ||
+      ["stocktakes", "stocktake-minutes", "exception-proposals"].includes(
+        current,
+      ) ||
+      current === "tasks" ||
       current === "dashboard" ||
       current === "notifications" ||
       current === "customer-orders" ||
@@ -50,6 +55,7 @@ class FoundationPageController {
       result = await this.runtime.catalog.list(req.user, current, serviceQuery);
     else if (current === "customer-orders")
       result = await this.runtime.orders.list(req.user, serviceQuery);
+    else if(current === "customer-returns")result=await this.runtime.customerReturns.list(req.user,serviceQuery);
     else if (current === "production-plans")
       result = await this.runtime.productionPlans.list(req.user, serviceQuery);
     else if (current === "business-plans")
@@ -72,6 +78,17 @@ class FoundationPageController {
         req.user,
         serviceQuery,
       );
+    else if (current === "tasks")
+      result = await this.runtime.tasks.list(req.user, serviceQuery);
+    else if (current === "stocktakes")
+      result = await this.runtime.stocktakes.list(req.user, serviceQuery);
+    else if (current === "stocktake-minutes")
+      result = await this.runtime.stocktakes.minutesList(
+        req.user,
+        serviceQuery,
+      );
+    else if (current === "exception-proposals")
+      result = await this.runtime.exceptions.list(req.user, serviceQuery);
     else if (current === "warehouse-records")
       result = await this.runtime.warehouseRecords.list(req.user, serviceQuery);
     else if (current.startsWith("reports/"))
@@ -100,6 +117,7 @@ class FoundationPageController {
       title: module?.[1] || "Tổng quan",
       csrf: req.session.csrf,
       canCreate:
+        current !== "warehouse-records" &&
         (P.create[current] || []).some((role) => user.roles.includes(role)) &&
         supported,
       supported,
@@ -149,53 +167,76 @@ class FoundationPageController {
       501,
     );
     const record =
-      req.params.resource === "notifications"
-        ? await this.runtime.notifications.get(req.user, req.params.id)
-        : req.params.resource === "customer-orders"
-          ? await this.runtime.orders.get(req.user, req.params.id)
-          : req.params.resource === "production-plans"
-            ? await this.runtime.productionPlans.get(req.user, req.params.id)
-            : req.params.resource === "business-plans"
-              ? await this.runtime.businessPlans.get(req.user, req.params.id)
-              : req.params.resource === "purchase-orders"
-                ? await this.runtime.purchaseOrders.get(req.user, req.params.id)
-                : req.params.resource === "production-reports"
-                  ? await this.runtime.productionReports.get(
-                      req.user,
-                      req.params.id,
-                    )
-                  : req.params.resource === "finished-reports"
-                    ? await this.runtime.finishedReports.get(
+      req.params.resource === "customer-returns"
+        ? await this.runtime.customerReturns.get(req.user,req.params.id)
+      : req.params.resource === "stocktakes"
+        ? await this.runtime.stocktakes.get(req.user, req.params.id)
+        : req.params.resource === "stocktake-minutes"
+          ? await this.runtime.stocktakes.minuteGet(req.user, req.params.id)
+          : req.params.resource === "exception-proposals"
+            ? await this.runtime.exceptions.get(req.user, req.params.id)
+            : req.params.resource === "notifications"
+              ? await this.runtime.notifications.get(req.user, req.params.id)
+              : req.params.resource === "tasks"
+                ? await this.runtime.tasks.get(req.user, req.params.id)
+                : req.params.resource === "customer-orders"
+                  ? await this.runtime.orders.get(req.user, req.params.id)
+                  : req.params.resource === "production-plans"
+                    ? await this.runtime.productionPlans.get(
                         req.user,
                         req.params.id,
                       )
-                    : req.params.resource === "qc-inspections"
-                      ? await this.runtime.quality.get(req.user, req.params.id)
-                      : req.params.resource === "stock-requests"
-                        ? await this.runtime.stockRequests.get(
+                    : req.params.resource === "business-plans"
+                      ? await this.runtime.businessPlans.get(
+                          req.user,
+                          req.params.id,
+                        )
+                      : req.params.resource === "purchase-orders"
+                        ? await this.runtime.purchaseOrders.get(
                             req.user,
                             req.params.id,
                           )
-                        : req.params.resource === "stock-documents"
-                          ? await this.runtime.warehouseFlow.document(
+                        : req.params.resource === "production-reports"
+                          ? await this.runtime.productionReports.get(
                               req.user,
                               req.params.id,
                             )
-                          : req.params.resource === "warehouse-records"
-                            ? await this.runtime.warehouseRecords.get(
+                          : req.params.resource === "finished-reports"
+                            ? await this.runtime.finishedReports.get(
                                 req.user,
                                 req.params.id,
                               )
-                            : await this.runtime.catalog.get(
-                                req.user,
-                                req.params.resource,
-                                req.params.id,
-                              );
+                            : req.params.resource === "qc-inspections"
+                              ? await this.runtime.quality.get(
+                                  req.user,
+                                  req.params.id,
+                                )
+                              : req.params.resource === "stock-requests"
+                                ? await this.runtime.stockRequests.get(
+                                    req.user,
+                                    req.params.id,
+                                  )
+                                : req.params.resource === "stock-documents"
+                                  ? await this.runtime.warehouseFlow.document(
+                                      req.user,
+                                      req.params.id,
+                                    )
+                                  : req.params.resource === "warehouse-records"
+                                    ? await this.runtime.warehouseRecords.get(
+                                        req.user,
+                                        req.params.id,
+                                      )
+                                    : await this.runtime.catalog.get(
+                                        req.user,
+                                        req.params.resource,
+                                        req.params.id,
+                                      );
     res.render("layouts/main", {
       ...context,
       view: "resources/show",
       record,
       boot: JSON.stringify({
+        storage: "mysql",
         user: context.user,
         csrf: context.csrf,
         current: context.current,

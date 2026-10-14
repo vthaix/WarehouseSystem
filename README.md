@@ -1,23 +1,25 @@
 # WarehouseSystem
 
-Tiến độ theo quy trình domain cập nhật: [DOMAIN_ALIGNMENT.md](app/docs/DOMAIN_ALIGNMENT.md). Database hiện có 54 bảng; đã nối và kiểm thử nguồn mua NVL, vẫn còn phần lô nhiều mặt hàng/kiểm kê/ngoại lệ cần hoàn thiện.
+Ứng dụng quản lý kho và sản xuất bánh đóng gói, Express + EJS + MySQL. Cập nhật kiến trúc ngày 14/10/2026: **5 backend HTTP và 1 web gateway**, mỗi service có entrypoint/Dockerfile và database/tài khoản riêng. Sáu database vẫn nằm trên cùng MySQL 8.4 và còn phụ thuộc SQL xuyên schema.
 
+Chạy từ thư mục repository:
 
-```sh
+```powershell
 docker compose up -d --build --wait
-docker compose --profile dev up -d
 docker compose ps
-docker compose exec app node scripts/show-demo-login.cjs
+docker compose --profile dev up -d adminer
 ```
 
-Mở http://localhost:3000. Một database MySQL `KhoHang` chứa toàn bộ bảng tiếng Việt không dấu; Adminer ở http://localhost:8080 khi bật profile `dev`. Không cần cài Node/MySQL hoặc tạo `.env` để chạy thử. Lần đầu tải image cần Internet. `up` khởi động dịch vụ; `ps` xem trạng thái. [Docker Compose up](https://docs.docker.com/reference/cli/docker/compose/up/), [ps](https://docs.docker.com/reference/cli/docker/compose/ps/).
+Giao diện: http://localhost:3000. Adminer: http://localhost:8080 khi bật profile dev. Backend và MySQL không publish cổng ra host. Không cần cài Node/MySQL riêng để chạy Docker.
 
-Mật khẩu sinh riêng cho mỗi máy, không nằm trong Git. Dữ liệu, session và secret lưu trong Docker volumes, còn sau `docker compose down`. `down -v` xóa cả dữ liệu và secret.
+Tài khoản demo: customer, customer2, planner, purchaser, manager, staff, staff2, qc, stocktaker, workshop, director; mật khẩu mặc định 123456 khi khởi tạo mới. Dữ liệu lưu trong Docker volumes; `docker compose down` giữ dữ liệu. Build lại không reset database hoặc seed đè dữ liệu đang dùng.
 
-**Trạng thái:** Docker/MySQL, auth, RBAC, session, danh mục đọc, thông báo, đơn hàng khách hàng và kế hoạch sản xuất tối thiểu đã hoạt động. Báo cáo sản xuất và các nghiệp vụ kho khác còn trả 501 rõ ràng. Bản demo bộ nhớ giữ các luồng để đối chiếu; chưa hoàn tất toàn bộ SRS.
+- [Kiến trúc và giới hạn hiện tại](app/docs/ARCHITECTURE.md)
+- [CSDL theo service](app/docs/SERVICE_DATABASES.md)
+- [Chạy Docker](app/docs/DOCKER.md)
+- [Tiến độ triển khai](app/docs/IMPLEMENTATION_PROGRESS.md)
+- [Việc còn thiếu](app/docs/IMPLEMENTATION_BACKLOG.md)
+- [Đặc tả nghiệp vụ](app/docs/SRS.md)
+- [Danh mục tài liệu](app/docs/README.md)
 
-- [Hướng dẫn Docker và cấu hình](app/docs/DOCKER.md)
-- [Production, backup và rollback](app/docs/PRODUCTION.md)
-- [Ma trận module → UC → bảng → route → màn hình](app/docs/MODULE_MATRIX.md)
-- [Báo cáo triển khai](app/docs/DOCKER_IMPLEMENTATION.md)
-- [SRS](app/docs/SRS.md)
+Chưa công nhận hoàn thành toàn bộ UC hoặc sẵn sàng production. Runtime legacy còn trong mã để đối chiếu/test; Compose mặc định chạy các service riêng.

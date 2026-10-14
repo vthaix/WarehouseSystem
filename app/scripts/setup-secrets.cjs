@@ -28,7 +28,12 @@ function provision(appDir, mysqlDir, env = process.env) {
   secret(rootFile, env.MYSQL_ROOT_PASSWORD);
   fs.chmodSync(rootFile, 0o444);
   secret(path.join(appDir, "session_secret"), env.SESSION_SECRET, 32);
-  secret(path.join(appDir, "demo_password"), env.DEMO_PASSWORD, 8);
+  secret(path.join(appDir, "internal_secret"), env.INTERNAL_SECRET, 32);
+  for (const service of Object.keys(
+    require("../database/services/ownership.json"),
+  ))
+    secret(path.join(appDir, service + "_db_password"), undefined, 32);
+  secret(path.join(appDir, "demo_password"), env.DEMO_PASSWORD, 6);
 }
 if (require.main === module) {
   try {

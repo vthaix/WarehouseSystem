@@ -2,6 +2,8 @@ const fs = require("node:fs"),
   path = require("node:path"),
   crypto = require("node:crypto");
 async function migrate(pool) {
+  if (process.env.SERVICE_DB_LAYOUT === 'split')
+    throw new Error('Use the dedicated service migration job; legacy migrations cannot run against a service database.');
   const connection = await pool.getConnection();
   let locked = false;
   try {
@@ -34,16 +36,20 @@ async function migrate(pool) {
         [name],
       );
       if (existing.length) {
-        if (existing[0].checksum !== checksum)
+        if (!matchesChecksum(sql, existing[0].checksum))
           throw new Error("Migration đã chạy bị thay đổi: " + name);
         continue;
       }
       // These migrations contain DDL only, no routines or semicolons inside strings.
       for (const statement of sql
-        .split(/;\s*(?:\r?\n|$)/)
+        .split(
+          sql.includes("-- statement-end")
+            ? /-- statement-end\s*/
+            : /;\s*(?:\r?\n|$)/,
+        )
         .map((s) => s.trim())
         .filter(Boolean))
-        await applyStatement(connection, statement, name);
+        await applyStatement(connection, statement.replace(/;\s*$/, ""), name);
       await connection.execute(
         "INSERT INTO schema_migrations (name,checksum) VALUES (?,?)",
         [name, checksum],
@@ -62,10 +68,30 @@ async function status(pool) {
   );
   return rows;
 }
-module.exports = { migrate, status, applyStatement };
+function matchesChecksum(sql, expected) {
+  const lf = sql.replace(/\r\n/g, "\n");
+  return [sql, lf, lf.replace(/\n/g, "\r\n")].some(
+    (value) =>
+      crypto.createHash("sha256").update(value).digest("hex") === expected,
+  );
+}
+module.exports = { migrate, status, applyStatement, matchesChecksum };
 
 // Recover the DDL/ledger crash window for this data-preserving domain migration.
 async function applyStatement(connection, statement, name) {
+  if (name === "011_lot_details.sql" && !/CREATE TRIGGER/.test(statement)) {
+    const [[ready]] = await connection.query(
+      "SELECT COUNT(*) AS total FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND ((TABLE_NAME='LoHang' AND COLUMN_NAME='LoaiLo') OR (TABLE_NAME='ChiTietLo' AND COLUMN_NAME='MaLoHang') OR (TABLE_NAME IN ('BienDongKho','ChiTietKetQuaKiemTraQCAC','ChiTietPhieuKho','ChiTietPhieuKiemKe','LoLichKiemTra','PhanCongKho','ThanhPhamBaoCao','TonKho') AND COLUMN_NAME='MaChiTietLo'))",
+    );
+    if (Number(ready.total) === 10) {
+      const [[invalid]] = await connection.query(
+        "SELECT COUNT(*) AS total FROM ChiTietLo d LEFT JOIN LoHang h ON h.MaBanGhi=d.MaLoHang WHERE h.MaBanGhi IS NULL",
+      );
+      if (Number(invalid.total))
+        throw new Error("Migration lô chưa đối soát được header.");
+      return;
+    }
+  }
   if (name === "005_domain_names_and_purchase_source.sql") {
     const rename = statement.match(/RENAME TABLE\s+([\s\S]+);?$/i);
     if (rename) {
@@ -78,7 +104,15 @@ async function applyStatement(connection, statement, name) {
         "SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE()",
       );
       const tables = new Set(rows.map((row) => row.TABLE_NAME));
-      if (pairs.every((pair) => !tables.has(pair[1]) && tables.has(pair[2])))
+      if (
+        pairs.every(
+          (pair) =>
+            !tables.has(pair[1]) &&
+            (tables.has(pair[2]) ||
+              (pair[2] === "DeXuatXuLyNgoaiLe" &&
+                tables.has("BanDeXuatXuLyNgoaiLe"))),
+        )
+      )
         return;
       if (!pairs.every((pair) => tables.has(pair[1]) && !tables.has(pair[2])))
         throw new Error(

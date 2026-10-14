@@ -23,8 +23,8 @@ async function seedDemo(pool) {
   if (process.env.NODE_ENV === "production")
     throw new Error("Không seed tài khoản demo trong production.");
   const password = process.env.DEMO_PASSWORD;
-  if (!password || password.length < 8)
-    throw new Error("DEMO_PASSWORD phải có ít nhất 8 ký tự.");
+  if (!password || password.length < 6)
+    throw new Error("DEMO_PASSWORD phải có ít nhất 6 ký tự.");
   const memory = new MemoryRepository();
   seed(memory, password);
   const c = await pool.getConnection();
@@ -43,7 +43,7 @@ async function seedDemo(pool) {
         [code, labels[code]],
       );
     await c.execute(
-      "INSERT INTO workshops (code,name,is_active) VALUES ('XUONG-01','Xưởng sản xuất 1',1) ON DUPLICATE KEY UPDATE id = id",
+      "INSERT INTO workshops (code,name,is_active) VALUES ('XUONG-01','Xưởng bánh ngọt đóng gói',1) ON DUPLICATE KEY UPDATE id = id",
     );
     const [[workshop]] = await c.execute(
       "SELECT id FROM workshops WHERE code='XUONG-01'",

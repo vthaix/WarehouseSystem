@@ -1,0 +1,19 @@
+{
+  "identity-service": { "NhatKyHeThong": ["INSERT"] },
+  "business-service": {
+    "LoHang": ["INSERT", "UPDATE", "DELETE"],
+    "ChiTietLo": ["INSERT", "UPDATE", "DELETE"],
+    "ThongBao": ["INSERT", "UPDATE"],
+    "NhatKyHeThong": ["INSERT"],
+    "YeuCauChongLap": ["INSERT", "UPDATE", "DELETE"]
+  },
+  "warehouse-service": {
+    "DonHang": ["UPDATE"],
+    "DonMuaHang": ["UPDATE"],
+    "KeHoachMuaBan": ["UPDATE"],
+    "ThongBao": ["INSERT", "UPDATE"]
+  },
+  "notification-service": {},
+  "reporting-service": {},
+  "web-gateway": {}
+}

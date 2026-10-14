@@ -1,0 +1,17 @@
+module.exports = [
+  require("../warehouse-service/modules/returns"),
+  require("../identity-service/modules/auth"),
+  require("./catalog"),
+  require("../business-service/modules/customer-orders"),
+  require("../business-service/modules/business-plans"),
+  require("../business-service/modules/purchasing"),
+  require("../business-service/modules/production"),
+  require("../warehouse-service/modules/quality"),
+  require("../warehouse-service/modules/stock-requests"),
+  require("../warehouse-service/modules/warehouse"),
+  require("../warehouse-service/modules/stocktakes"),
+  require("../warehouse-service/modules/exceptions"),
+  require("../warehouse-service/modules/tasks"),
+  require("../reporting-service/modules/reporting"),
+  require("../notification-service/modules/notifications"),
+];

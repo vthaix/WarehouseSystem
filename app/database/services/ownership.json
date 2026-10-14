@@ -1,0 +1,100 @@
+{
+  "identity-service": {
+    "suffix": "Identity",
+    "user": "kho_identity",
+    "objects": [
+      "NguoiDung",
+      "VaiTro",
+      "NguoiDungVaiTro",
+      "NguoiDungXuong",
+      "BoPhan",
+      "NhanVien",
+      "LanThuDangNhap"
+    ]
+  },
+  "business-service": {
+    "suffix": "Business",
+    "user": "kho_business",
+    "objects": [
+      "KhachHang",
+      "Xuong",
+      "NhaCungCap",
+      "LoaiHang",
+      "DonViTinh",
+      "MatHang",
+      "DonHang",
+      "ChiTietDonHang",
+      "KeHoachMuaBan",
+      "ChiTietKeHoachMuaBan",
+      "DonMuaHang",
+      "ChiTietDonMuaHang",
+      "KeHoachSanXuat",
+      "ChiTietKeHoachSanXuat",
+      "BanBaoCaoSanXuat",
+      "ChiTietBaoCaoSanXuat",
+      "ChiTietLoBaoCaoSanXuat",
+      "BaoCaoSanXuat",
+      "BaoCaoThanhPham",
+      "ChiTietNhuCauSanXuat",
+      "NguyenLieuSuDung",
+      "ThanhPhamKeHoachTuongThich",
+      "ChiTietNguyenLieuKeHoachSanXuat",
+      "LuuTruBaoCaoThanhPhamTruoc012",
+      "LuuTruNguyenLieuKeHoachTruoc009",
+      "LuuTruNguyenLieuSuDungTruoc012"
+    ]
+  },
+  "warehouse-service": {
+    "suffix": "Warehouse",
+    "user": "kho_warehouse",
+    "objects": [
+      "Kho",
+      "ViTriKho",
+      "LoHang",
+      "ChiTietLo",
+      "KetQuaKiemTraQCAC",
+      "ChiTietKetQuaKiemTraQCAC",
+      "PhieuYeuCauNhapXuat",
+      "ChiTietPhieuYeuCauNhapXuat",
+      "PhieuKho",
+      "ChiTietPhieuKho",
+      "TonKho",
+      "BienDongKho",
+      "DotKiemKe",
+      "PhieuKiemKe",
+      "PhanCongKiemKe",
+      "ChiTietPhieuKiemKe",
+      "BienBanKiemKe",
+      "PhanCongKetLuanKiemKe",
+      "BanDeXuatXuLyNgoaiLe",
+      "KetQuaXuLyNgoaiLe",
+      "PhanBoXuLy",
+      "ChiTietLoTraVe",
+      "ChungTuBuQC",
+      "TaiKiemChatLuong",
+      "CongViec",
+      "PhanCongCongViec",
+      "LoLichKiemTra",
+      "PhanCongLichKiemTra",
+      "PhanCongKho",
+      "YeuCauChongLap",
+      "NhatKyHeThong",
+      "LuuTruBienBanKiemKeTruoc015"
+    ]
+  },
+  "notification-service": {
+    "suffix": "Notification",
+    "user": "kho_notification",
+    "objects": ["ThongBao"]
+  },
+  "reporting-service": {
+    "suffix": "Reporting",
+    "user": "kho_reporting",
+    "objects": ["HoSoKho", "LuuTruHoSoKhoTruoc013"]
+  },
+  "web-gateway": {
+    "suffix": "Gateway",
+    "user": "kho_gateway",
+    "objects": ["PhienDangNhap"]
+  }
+}

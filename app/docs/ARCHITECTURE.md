@@ -1,110 +1,56 @@
-# Express MVC + EJS + MySQL
+# Kiến trúc hiện tại
 
-Toàn bộ ứng dụng nằm trong `app/`. Repository root có README, cấu hình Git và entry Compose/.env.example để clone rồi chạy. Nền tảng SQL mới đặt trong `src/modules/` và `src/shared/`; demo nghiệp vụ cũ được giữ để đối chiếu. Cây thư mục hiện hành và trạng thái nằm trong [DOCKER_IMPLEMENTATION.md](DOCKER_IMPLEMENTATION.md).
+Cập nhật 14/10/2026, đối chiếu working tree, cấu hình Compose và entrypoint thực tế. Đây là kiến trúc đang triển khai; phần độc lập dữ liệu hoàn toàn vẫn còn phải làm.
 
-```text
-WarehouseSystem/
-├── README.md
-├── .gitignore
-└── app/
-    ├── src/
-    │   ├── config/          # env, session, database, navigation
-    │   ├── models/          # Metadata thực thể; chưa dùng ORM
-    │   ├── views/
-    │   │   ├── layouts/main.ejs
-    │   │   ├── partials/    # header, sidebar, footer
-    │   │   ├── auth/
-    │   │   ├── dashboard/
-    │   │   ├── products/    # index, create, edit, form
-    │   │   ├── warehouses/
-    │   │   ├── inventory/
-    │   │   ├── stock-in/
-    │   │   ├── stock-out/
-    │   │   ├── resources/   # Bảng và chi tiết dùng chung
-    │   │   └── errors/
-    │   ├── controllers/
-    │   │   ├── web/         # Render EJS / redirect
-    │   │   └── api/         # JSON và xuất CSV
-    │   ├── services/
-    │   │   ├── AuthService.js
-    │   │   ├── ProductService.js
-    │   │   ├── InventoryService.js
-    │   │   ├── StockInService.js
-    │   │   ├── StockOutService.js
-    │   │   ├── PageService.js
-    │   │   ├── WarehouseService.js
-    │   │   └── domain/      # Các quy tắc nghiệp vụ đã có
-    │   ├── repositories/   # Memory, seed, repository thực thể
-    │   ├── routes/          # web, api, auth, product, inventory
-    │   ├── middlewares/     # auth, role, CSRF, validate, error
-    │   ├── validators/
-    │   ├── utils/           # response, pagination
-    │   ├── app.js           # Ghép ứng dụng
-    │   └── server.js        # Nạp .env và listen
-    ├── public/
-    │   ├── css/main.css
-    │   ├── js/             # app, forms, workflow-forms
-    │   ├── images/
-    │   └── uploads/         # Chưa có tính năng upload
-    ├── database/
-    │   ├── migrations/     # Chờ chốt schema
-    │   └── seeders/         # Chờ chốt schema
-    ├── tests/
-    │   ├── unit/
-    │   ├── integration/
-    │   └── helpers/
-    ├── e2e/                # Luồng nghiệp vụ + EJS khi tắt JS
-    ├── scripts/            # Chạy, kiểm thử, kiểm tra cú pháp
-    ├── artifacts/          # Ảnh kiểm thử
-    ├── docs/
-    ├── .env.example
-    ├── .gitignore
-    ├── package.json
-    ├── package-lock.json
-    └── README.md
-```
+## Service và quyền sở hữu
 
-`.env`, `.runtime` và `node_modules` là dữ liệu cục bộ, được Git bỏ qua. `.runtime` chứa Node portable đã chuẩn bị cho workspace này. Không đưa mật khẩu thật vào repository.
+| Process / Compose | Database mặc định | Trách nhiệm |
+| --- | --- | --- |
+| identity-service | KhoHang_Identity | Đăng nhập, người dùng, vai trò, phạm vi xưởng, hồ sơ nhân viên |
+| business-service | KhoHang_Business | Danh mục hàng/NCC, khách hàng, đơn hàng, kế hoạch, mua hàng, sản xuất và báo cáo sản xuất |
+| warehouse-service | KhoHang_Warehouse | Kho/vị trí, lô, QC, yêu cầu/phiếu kho, tồn/giữ chỗ, kiểm kê, ngoại lệ, công việc, hàng trả |
+| notification-service | KhoHang_Notification | Danh sách thông báo và trạng thái đọc |
+| reporting-service | KhoHang_Reporting | Hồ sơ và truy vấn báo cáo tổng hợp; chưa có projection riêng |
+| web-gateway / app | KhoHang_Gateway | EJS, assets, session, CSRF, chuyển API và gọi backend |
 
-## Luồng request
+Tám boundary logic nằm trong `src/boundaries`. Catalog, Sales, Production, Procurement cùng business-service; Warehouse & Quality cùng warehouse-service. Boundary không tương đương một process/container.
+
+## Luồng xử lý
 
 ```mermaid
-flowchart TD
-  A[Browser: GET /products] --> B[product.routes.js]
-  B --> C[Web controller]
-  C --> D[PageService / ProductService]
-  D --> E[Repository]
-  E --> F[Memory demo hiện tại]
-  E -. Adapter nghiệp vụ cần bổ sung .-> G[MySQL]
-  D --> C
-  C --> H[EJS layout + view + partials]
-  H --> A
-  A --> I[JSON API cho thao tác tương tác]
-  I --> J[API controller]
-  J --> D
+flowchart LR
+  Browser[Trình duyệt] --> Gateway[web-gateway: EJS / API]
+  Gateway --> Identity[identity-service]
+  Gateway --> Business[business-service]
+  Gateway --> Warehouse[warehouse-service]
+  Gateway --> Notification[notification-service]
+  Gateway --> Reporting[reporting-service]
+  Identity --> DB[(MySQL 8.4: sáu database)]
+  Business --> DB
+  Warehouse --> DB
+  Notification --> DB
+  Reporting --> DB
+  Gateway --> DB
 ```
 
-`app.js` không chứa các handler nghiệp vụ. Web controller nhận request, gọi service và `res.render`; API controller gọi service rồi trả JSON theo envelope có request ID. Service giữ quyền, trạng thái, giới hạn nguồn, tính toán thập phân, version, chống lặp và transaction. Repository giữ truy cập dữ liệu.
+Mỗi service có `src/services/<service>/index.js`, `Dockerfile`, `compose.js` và module thuộc owner. Controller/route → service nghiệp vụ → SQL/repository vẫn áp dụng bên trong từng service; giao diện EJS chỉ do gateway phục vụ.
 
-Đăng nhập, dashboard, danh sách/chi tiết và form tạo/sửa mặt hàng hoạt động khi tắt JavaScript. Các nghiệp vụ nhiều dòng như QC, phân công nhân viên và ghi phiếu dùng JavaScript để tăng tương tác, chung một Express server và session. Không có frontend riêng. URL cũ được giữ; `/products` và `/inventory` được bổ sung.
+Gateway chọn owner theo `src/services/shared/contracts.js`; SSR dùng HTTP clients. Backend nhận request nội bộ có chữ ký HMAC ràng buộc audience/path/body/time/nonce, kiểm allowlist và lấy lại actor/quyền/session version từ Identity. Không tin vai trò truyền từ browser. Mutation không tự retry; timeout cần đối soát kết quả bằng chứng từ/idempotency key.
 
-EJS escape dữ liệu bằng `<%=`. Chỉ include các template cố định từ server; không nhận tên template từ query người dùng. Boot data nằm trong thuộc tính HTML được escape. Web POST và JSON mutation đều kiểm tra CSRF. Form mặt hàng dùng version và khóa idempotency; thành công redirect 303 để tránh gửi lại khi tải trang.
+## CSDL và giới hạn
 
-## Trạng thái MySQL
+Sáu database và tài khoản đã tách, bảng vật lý thuộc một owner. View tương thích, FK, JOIN, transaction và một số quyền ghi xuyên schema vẫn tồn tại. Vì vậy các database phải cùng MySQL server hiện tại; container riêng chưa đồng nghĩa độc lập triển khai dữ liệu.
 
-Pool mysql2 ở config/database.js; bootstrap SQL chọn src/shared/create-mysql-app.js khi STORAGE_DRIVER=mysql. Các module auth/catalog/notifications dùng repository SQL với binding; DECIMAL/BIGINT giữ dạng chuỗi. SQL session, migration và seed đã được kiểm tra trên MySQL 8.4 thật bằng Docker.
+Business còn ghi đăng ký lô/thông báo qua SQL; Reporting đọc dữ liệu nguồn trực tiếp; audit/idempotency dùng chung tạm thời. Chưa có broker, outbox/inbox, projections, source claims hoặc saga. Chi tiết quyền/migration: [SERVICE_DATABASES.md](SERVICE_DATABASES.md).
 
-Theo yêu cầu Docker mới, migration foundation đã có và mysql được hỗ trợ. Hai chế độ tách biệt: SQL không trộn dữ liệu memory, nghiệp vụ chưa chuyển trả 501. Các transaction kho/sản xuất đồng bộ của demo cần chuyển sang SQL bất đồng bộ với khóa hàng và replay/audit bền vững trước nghiệm thu.
+Runtime legacy `src/server.js` và `start:legacy` còn để đối chiếu/test, không phải entrypoint Compose. `src/modules` cũ đã được chuyển sang `src/services/<owner>/modules`. Các helper và adapter dùng chung chưa được loại bỏ.
 
-Không tạo các file CSS/JS riêng rỗng cho từng màn hình: dùng stylesheet và form dùng chung. `stock_documents` là chứng từ nhập/xuất phân biệt bởi `type`, `items` là mặt hàng theo tài liệu, nên không tạo bảng trùng `products`, `stock_in`, `stock_out`.
+## Bước tiếp theo
 
-## Kiểm tra
+1. Tách truy vấn/ghi xuyên owner thành hợp đồng API rõ ràng, giữ invariant nghiệp vụ.
+2. Thêm outbox/inbox và xử lý sự kiện idempotent cho thông báo, đăng ký lô và dữ liệu tổng hợp.
+3. Thiết kế claims/compensation cho nhu cầu, giữ chỗ và các thao tác liên service.
+4. Thay FK/view xuyên schema và thử các database trên server riêng.
+5. Nghiệm thu lỗi mạng, restart, cạnh tranh, migration/backup/restore và production.
 
-```powershell
-cd app
-npm test
-npm run check
-npm run test:browser
-```
-
-Kiểm thử HTTP/MVC kiểm tra dữ liệu đã có trong HTML, escape nội dung, form POST, quyền truy cập, session, CSRF, version và chống gửi lặp. Kiểm thử trình duyệt chạy đầy đủ luồng SRS và thêm một lượt tắt JavaScript cho các form EJS.
+Tiến độ nghiệp vụ: [IMPLEMENTATION_PROGRESS.md](IMPLEMENTATION_PROGRESS.md). Kế hoạch chuyển tiếp: [MICROSERVICE_MIGRATION.md](MICROSERVICE_MIGRATION.md).

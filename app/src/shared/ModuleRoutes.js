@@ -3,9 +3,9 @@ const C = require("../services/domain/core");
 const P = require("../services/domain/policy");
 const role = require("../middlewares/role.middleware");
 const { ok } = require("../utils/response");
-const registry = require("../modules/registry");
+const registry = require("../services/shared/registry");
 const reportRoles = {
-  "reports/inventory": ["DIRECTOR"],
+  "reports/inventory": ["DIRECTOR", "WAREHOUSE_MANAGER", "WORKSHOP_OWNER"],
   "reports/stock-documents": ["DIRECTOR", "WORKSHOP_OWNER"],
   "reports/stocktakes": ["DIRECTOR"],
 };
@@ -20,7 +20,130 @@ function pending(req, res, next) {
 }
 module.exports = (runtime) => {
   const router = express.Router(),
-    catalog = require("../modules/catalog/ApiController")(runtime.catalog);
+    catalog = require("../services/shared/catalog/ApiController")(runtime.catalog);
+  const sourceImports = new (require('./SourceImportService'))(runtime);
+  router.get('/source-imports/purchase-report-options',async(req,res)=>ok(req,res,await sourceImports.purchaseReports(req.user)));
+  router.get('/source-imports/:target',async(req,res)=>ok(req,res,await sourceImports.preview(req.user,req.params.target,req.query)));
+  router.get('/customer-return-deliveries',role(['WAREHOUSE_MANAGER']),async(req,res)=>ok(req,res,await runtime.customerReturns.deliveries(req.user,req.query)));
+  router.get('/customer-returns',role(P.read['customer-returns']),async(req,res)=>{const r=await runtime.customerReturns.list(req.user,req.query);ok(req,res,r.data,200,r.meta);});
+  router.get('/customer-returns/:id',role(P.read['customer-returns']),async(req,res)=>ok(req,res,await runtime.customerReturns.get(req.user,req.params.id)));
+  router.post('/customer-returns',role(P.create['customer-returns']),async(req,res)=>ok(req,res,await runtime.customerReturns.create(req.user,req.body,req.request_id),201));
+  for(const action of ['receive','cancel'])router.post('/customer-returns/:id/'+action,role(action==='receive'?['WAREHOUSE_STAFF']:['WAREHOUSE_MANAGER']),async(req,res)=>ok(req,res,await runtime.customerReturns.action(req.user,req.params.id,req.body,action,req.request_id)));
+  router.get(
+    "/lot-headers",
+    role(["WAREHOUSE_MANAGER", "QC_INSPECTOR", "DIRECTOR"]),
+    async (req, res) => {
+      C.fields(req.query, ["page", "per_page"]);
+      const paginate = require("../utils/pagination");
+      const { page, per_page, offset } = paginate(req.query);
+      const [[count]] = await runtime.pool.query(
+        "SELECT COUNT(*) AS total FROM lot_headers",
+      );
+      const [rows] = await runtime.pool.execute(
+        "SELECT * FROM lot_headers ORDER BY id DESC LIMIT ? OFFSET ?",
+        [String(per_page), String(offset)],
+      );
+      ok(
+        req,
+        res,
+        rows.map((r) => ({ ...r, id: String(r.id) })),
+        200,
+        { page, per_page, total: Number(count.total) },
+      );
+    },
+  );
+  router.get(
+    "/lot-headers/:id",
+    role(["WAREHOUSE_MANAGER", "QC_INSPECTOR", "DIRECTOR"]),
+    async (req, res) => {
+      C.fail(
+        !/^[1-9]\d*$/.test(req.params.id),
+        "NOT_FOUND",
+        "Không có lô.",
+        404,
+      );
+      const [rows] = await runtime.pool.execute(
+        "SELECT * FROM lot_headers WHERE id=?",
+        [req.params.id],
+      );
+      C.fail(!rows.length, "NOT_FOUND", "Không có lô.", 404);
+      const [details] = await runtime.pool.execute(
+        "SELECT d.*,i.name AS item_name FROM lots d JOIN items i ON i.id=d.item_id WHERE d.lot_header_id=? ORDER BY d.id",
+        [req.params.id],
+      );
+      ok(req, res, {
+        ...rows[0],
+        id: String(rows[0].id),
+        details: details.map((r) => ({
+          ...r,
+          id: String(r.id),
+          lot_header_id: String(r.lot_header_id),
+        })),
+      });
+    },
+  );
+  router.get("/tasks", role(P.read.tasks), async (req, res) => {
+    const result = await runtime.tasks.list(req.user, req.query);
+    ok(req, res, result.data, 200, result.meta);
+  });
+  router.get("/tasks/:id", role(P.read.tasks), async (req, res) =>
+    ok(req, res, await runtime.tasks.get(req.user, req.params.id)),
+  );
+  router.post("/tasks", role(["DIRECTOR"]), async (req, res) =>
+    ok(
+      req,
+      res,
+      await runtime.tasks.create(req.user, req.body, req.request_id),
+      201,
+    ),
+  );
+  router.patch("/tasks/:id", role(["DIRECTOR"]), async (req, res) =>
+    ok(
+      req,
+      res,
+      await runtime.tasks.update(
+        req.user,
+        req.params.id,
+        req.body,
+        req.request_id,
+      ),
+    ),
+  );
+  router.delete("/tasks/:id", role(["DIRECTOR"]), async (req, res) =>
+    ok(
+      req,
+      res,
+      await runtime.tasks.remove(
+        req.user,
+        req.params.id,
+        req.body,
+        req.request_id,
+      ),
+    ),
+  );
+  router.post("/tasks/:id/progress", role(P.read.tasks), async (req, res) =>
+    ok(
+      req,
+      res,
+      await runtime.tasks.progress(
+        req.user,
+        req.params.id,
+        req.body,
+        req.request_id,
+      ),
+    ),
+  );
+  router.get(
+    "/catalog-data",
+    role(["WAREHOUSE_MANAGER", "WORKSHOP_OWNER"]),
+    async (req, res) => {
+      const query={...req.query},resource=query.resource||"inventory";delete query.resource;
+      C.fail(!["inventory","items","categories","warehouses","warehouse-locations","lots"].includes(resource),"VALIDATION_ERROR","Loại dữ liệu tra cứu không hợp lệ.");
+      if(resource!=="inventory")C.fields(query,["page","per_page","q","kind","sort"]);
+      const result = resource==="inventory" ? await runtime.reports.inventory(req.user, query) : await runtime.catalog.list(req.user,resource,query);
+      ok(req, res, result.data, 200, result.meta);
+    },
+  );
   router.get("/modules", (req, res) =>
     ok(
       req,
@@ -38,6 +161,28 @@ module.exports = (runtime) => {
   );
   router.get("/sample-items", catalog.samples);
   router.get("/lookup/:resource", async (req, res) => {
+    if(['quarantine-lines','stock-qc-lines'].includes(req.params.resource)) {
+      P.role(req.user,['WAREHOUSE_MANAGER','DIRECTOR']);
+      const bucket=req.params.resource==='stock-qc-lines'?'AVAILABLE':'QUARANTINE';
+      const [rows]=await runtime.pool.execute("SELECT q.id,q.lot_id,q.passed_quantity,q.failed_quantity,b.location_id,b.quantity,CONCAT(l.code,' · ',i.name,' · vị trí ',b.location_id,' · tồn ',b.quantity) AS name FROM qc_inspection_lines q JOIN qc_inspections qc ON qc.id=q.qc_inspection_id JOIN lots l ON l.id=q.lot_id JOIN lot_headers h ON h.id=l.lot_header_id JOIN items i ON i.id=l.item_id JOIN inventory_balances b ON b.lot_id=l.id WHERE qc.status='RECORDED' AND (h.return_direction IS NULL OR h.return_direction<>'KHACH_HANG' OR h.return_status='POSTED') AND b.quality_bucket=? AND b.quantity>0"+(bucket==='AVAILABLE'?" AND (h.return_direction IS NULL OR h.return_direction<>'KHACH_HANG')":"")+" ORDER BY q.id DESC,b.location_id LIMIT 500",[bucket]);
+      return ok(req,res,rows.map(r=>({...r,id:String(r.id)+'-'+String(r.location_id),qc_inspection_line_id:String(r.id),lot_id:String(r.lot_id),location_id:String(r.location_id)})));
+    }
+    if(req.params.resource === 'workshops') {
+      P.role(req.user,['PLANNER','WORKSHOP_OWNER']);
+      const [rows]=await runtime.pool.query('SELECT id,name FROM workshops WHERE is_active=1 ORDER BY id');
+      return ok(req,res,rows.filter(r=>req.user.roles.includes('PLANNER')||req.user.workshop_ids.includes(String(r.id))).map(r=>({...r,id:String(r.id)})));
+    }
+    if (req.params.resource === "qc-failed-lines") {
+      P.role(req.user, ["WAREHOUSE_MANAGER", "QC_INSPECTOR", "DIRECTOR"]);
+      const [rows] = await runtime.pool.query(
+        "SELECT q.id,q.lot_id,(q.failed_quantity-COALESCE((SELECT SUM(p.quantity) FROM exception_proposals p WHERE p.qc_inspection_line_id=q.id AND p.type='QC_FAILURE' AND p.action IN ('SCRAP','RETURN_SUPPLIER') AND p.status='APPLIED'),0)) AS failed_quantity,CONCAT(l.code,' - ',i.name) AS name FROM qc_inspection_lines q JOIN lots l ON l.id=q.lot_id JOIN items i ON i.id=l.item_id WHERE q.failed_quantity>0 AND NOT EXISTS(SELECT 1 FROM returned_lot_lines r WHERE r.original_lot_detail_id=q.lot_id) AND NOT EXISTS(SELECT 1 FROM exception_proposals p WHERE p.qc_inspection_line_id=q.id AND (p.status IN ('PENDING_APPROVAL','APPROVED') OR (p.type<>'QC_FAILURE' AND p.status<>'REJECTED'))) HAVING failed_quantity>0 ORDER BY q.id DESC LIMIT 100",
+      );
+      return ok(
+        req,
+        res,
+        rows.map((r) => ({ ...r, id: String(r.id), lot_id: String(r.lot_id) })),
+      );
+    }
     if (req.params.resource === "customer-orders") {
       P.role(req.user, ["PLANNER"]);
       const result = await runtime.orders.list(req.user, { per_page: 100 });
@@ -98,6 +243,21 @@ module.exports = (runtime) => {
           ...row,
           id: String(row.id),
           item_id: String(row.item_id),
+        })),
+      );
+    }
+    if (req.params.resource === "purchase-order-lines") {
+      P.role(req.user, ["WAREHOUSE_MANAGER"]);
+      const [rows] = await runtime.pool.query(
+        "SELECT l.*,CONCAT(p.code,' / ',i.name) AS name FROM purchase_order_lines l JOIN purchase_orders p ON p.id=l.purchase_order_id JOIN items i ON i.id=l.item_id WHERE p.status IN ('PENDING','PARTIALLY_RECEIVED') ORDER BY l.id DESC LIMIT 100",
+      );
+      return ok(
+        req,
+        res,
+        rows.map((r) => ({
+          ...r,
+          id: String(r.id),
+          item_id: String(r.item_id),
         })),
       );
     }
@@ -206,13 +366,29 @@ module.exports = (runtime) => {
         rows.map((row) => ({ ...row, id: String(row.id) })),
       );
     }
+    if (req.params.resource === "finished-reports") {
+      P.role(req.user, P.read["finished-reports"]);
+      const result = await runtime.finishedReports.list(req.user, {
+        status: "SUBMITTED",
+        per_page: 100,
+      });
+      const reports = await Promise.all(
+        result.data.map((row) => runtime.finishedReports.get(req.user, row.id)),
+      );
+      return ok(req, res, reports);
+    }
     if (req.params.resource === "production-reports") {
       P.role(req.user, P.read["production-reports"]);
       const result = await runtime.productionReports.list(req.user, {
         status: "SUBMITTED",
         per_page: 100,
       });
-      return ok(req, res, result.data);
+      const reports = await Promise.all(
+        result.data.map((row) =>
+          runtime.productionReports.get(req.user, row.id),
+        ),
+      );
+      return ok(req, res, reports.filter(r=>r.report_purpose==='NHU_CAU'));
     }
     if (req.params.resource === "stock-requests") {
       P.role(req.user, ["PLANNER", "WAREHOUSE_MANAGER"]);
@@ -585,7 +761,12 @@ module.exports = (runtime) => {
     );
   router.post("/stocktakes", role(["DIRECTOR"]), async (req, res, next) => {
     if (req.body?.campaign_type !== "QUALITY_CHECK")
-      return pending(req, res, next);
+      return ok(
+        req,
+        res,
+        await runtime.stocktakes.create(req.user, req.body, req.request_id),
+        201,
+      );
     const result = await runtime.qualityCampaigns.create(
       req.user,
       req.body,
@@ -594,45 +775,241 @@ module.exports = (runtime) => {
     res.set("Location", `/api/v1/quality-campaigns/${result.id}`);
     ok(req, res, result, 201);
   });
+  router.post(
+    "/qc-inspections/:id/correct",
+    role(["QC_INSPECTOR"]),
+    async (req, res) =>
+      ok(
+        req,
+        res,
+        await runtime.quality.correct(
+          req.user,
+          req.params.id,
+          req.body,
+          req.request_id,
+        ),
+      ),
+  );
+  router.post(
+    "/tasks/:id/cancelAllocation",
+    role(["WAREHOUSE_MANAGER"]),
+    async (req, res) =>
+      ok(
+        req,
+        res,
+        await runtime.warehouseFlow.cancelAllocation(
+          req.user,
+          req.params.id,
+          req.body,
+          req.request_id,
+        ),
+      ),
+  );
   router.get(
     "/stocktakes",
-    role(["DIRECTOR", "WAREHOUSE_MANAGER", "QC_INSPECTOR"]),
+    role(["DIRECTOR", "WAREHOUSE_MANAGER", "QC_INSPECTOR", "STOCKTAKER"]),
     async (req, res) => {
-      const result = await runtime.qualityCampaigns.list(req.user, req.query);
+      const result = await runtime.stocktakes.list(req.user, req.query);
       ok(req, res, result.data, 200, result.meta);
     },
   );
   router.get(
     "/stocktakes/:id",
-    role(["DIRECTOR", "WAREHOUSE_MANAGER", "QC_INSPECTOR"]),
+    role(["DIRECTOR", "WAREHOUSE_MANAGER", "QC_INSPECTOR", "STOCKTAKER"]),
     async (req, res) =>
-      ok(req, res, await runtime.qualityCampaigns.get(req.user, req.params.id)),
+      ok(req, res, await runtime.stocktakes.get(req.user, req.params.id)),
   );
-  router.post("/stocktakes/:id/start", role(["DIRECTOR"]), async (req, res) =>
+  for (const action of ["start", "close"])
+    router.post(
+      "/stocktakes/:id/" + action,
+      role(["DIRECTOR"]),
+      async (req, res) => {
+        const row = await runtime.stocktakes.get(req.user, req.params.id),
+          service =
+            row.campaign_type === "QUALITY_CHECK"
+              ? runtime.qualityCampaigns
+              : runtime.stocktakes;
+        ok(
+          req,
+          res,
+          await service.action(
+            req.user,
+            req.params.id,
+            req.body,
+            action,
+            req.request_id,
+          ),
+        );
+      },
+    );
+  router.get(
+    "/stocktake-minutes",
+    role(P.read["stocktake-minutes"]),
+    async (req, res) => {
+      const r = await runtime.stocktakes.minutesList(req.user, req.query);
+      ok(req, res, r.data, 200, r.meta);
+    },
+  );
+  router.get(
+    "/stocktake-minutes/:id",
+    role(P.read["stocktake-minutes"]),
+    async (req, res) =>
+      ok(req, res, await runtime.stocktakes.minuteGet(req.user, req.params.id)),
+  );
+  router.post("/stocktake-minutes", role(P.create["stocktake-minutes"]), async (req, res) =>
     ok(
       req,
       res,
-      await runtime.qualityCampaigns.action(
+      await runtime.stocktakes.minuteWrite(
         req.user,
-        req.params.id,
+        null,
         req.body,
-        "start",
+        "create",
         req.request_id,
       ),
+      201,
     ),
   );
-  router.post("/stocktakes/:id/close", role(["DIRECTOR"]), async (req, res) =>
-    ok(
-      req,
-      res,
-      await runtime.qualityCampaigns.action(
-        req.user,
-        req.params.id,
-        req.body,
-        "close",
-        req.request_id,
+  router.patch(
+    "/stocktake-minutes/:id",
+    role(P.editable["stocktake-minutes"]),
+    async (req, res) =>
+      ok(
+        req,
+        res,
+        await runtime.stocktakes.minuteWrite(
+          req.user,
+          req.params.id,
+          req.body,
+          "edit",
+          req.request_id,
+        ),
       ),
-    ),
+  );
+  router.post(
+    "/stocktake-minutes/:id/submit",
+    role(P.editable["stocktake-minutes"]),
+    async (req, res) =>
+      ok(
+        req,
+        res,
+        await runtime.stocktakes.minuteWrite(
+          req.user,
+          req.params.id,
+          req.body,
+          "submit",
+          req.request_id,
+        ),
+      ),
+  );
+  router.get(
+    "/exception-proposals",
+    role(P.read["exception-proposals"]),
+    async (req, res) => {
+      const r = await runtime.exceptions.list(req.user, req.query);
+      ok(req, res, r.data, 200, r.meta);
+    },
+  );
+  router.get(
+    "/exception-proposals/:id",
+    role(P.read["exception-proposals"]),
+    async (req, res) =>
+      ok(req, res, await runtime.exceptions.get(req.user, req.params.id)),
+  );
+  router.post(
+    "/exception-proposals",
+    role(P.create["exception-proposals"]),
+    async (req, res) =>
+      ok(
+        req,
+        res,
+        await runtime.exceptions.create(req.user, req.body, req.request_id),
+        201,
+      ),
+  );
+  router.post(
+    "/exception-proposals/:id/review",
+    role(["DIRECTOR"]),
+    async (req, res) =>
+      ok(
+        req,
+        res,
+        await runtime.exceptions.review(
+          req.user,
+          req.params.id,
+          req.body,
+          req.request_id,
+        ),
+      ),
+  );
+  router.post(
+    "/exception-proposals/:id/apply",
+    role(["WAREHOUSE_MANAGER"]),
+    async (req, res) =>
+      ok(
+        req,
+        res,
+        await runtime.exceptions.apply(
+          req.user,
+          req.params.id,
+          req.body,
+          req.request_id,
+        ),
+      ),
+  );
+  router.post("/exception-proposals/:id/reinspect", role(["QC_INSPECTOR"]), async (req,res) =>
+    ok(req,res,await runtime.exceptions.reinspect(req.user,req.params.id,req.body,req.request_id)));
+  router.get(
+    "/stocktake-differences",
+    role(["WAREHOUSE_MANAGER", "DIRECTOR"]),
+    async (req, res) => {
+      const r = await runtime.stocktakes.differences(req.user, req.query);
+      ok(req, res, r.data, 200, r.meta);
+    },
+  );
+  router.get(
+    "/stocktakes/:id/warehouses/:warehouse/lines",
+    role(["STOCKTAKER"]),
+    async (req, res) =>
+      ok(
+        req,
+        res,
+        await runtime.stocktakes.lines(
+          req.user,
+          req.params.id,
+          req.params.warehouse,
+        ),
+      ),
+  );
+  router.patch(
+    "/stocktakes/:id/warehouses/:warehouse/counts",
+    role(["STOCKTAKER"]),
+    async (req, res) =>
+      ok(
+        req,
+        res,
+        await runtime.stocktakes.counts(
+          req.user,
+          req.params.id,
+          req.params.warehouse,
+          req.body,
+        ),
+      ),
+  );
+  router.post(
+    "/stocktakes/:id/warehouses/:warehouse/complete",
+    role(["STOCKTAKER"]),
+    async (req, res) =>
+      ok(
+        req,
+        res,
+        await runtime.stocktakes.complete(
+          req.user,
+          req.params.id,
+          req.params.warehouse,
+          req.body,
+        ),
+      ),
   );
   router.get(
     "/qc-inspections",
@@ -838,6 +1215,7 @@ module.exports = (runtime) => {
       if (
         [
           "auth",
+          "customer-returns",
           "customer-orders",
           "production-plans",
           "business-plans",
@@ -848,7 +1226,10 @@ module.exports = (runtime) => {
           "stock-requests",
           "stock-documents",
           "warehouse-records",
+          "stocktake-minutes",
+          "exception-proposals",
           "stocktakes",
+          "tasks",
         ].includes(resource) ||
         resource.startsWith("reports/")
       )
@@ -1008,27 +1389,12 @@ module.exports = (runtime) => {
       if (resource.startsWith("reports/"))
         router.get("/" + resource + "/export", role(roles), pending);
     }
-  router.get("/catalog-data", role(["WAREHOUSE_MANAGER"]), pending);
-  router.post("/tasks/:id/postTask", role(["WAREHOUSE_STAFF"]), pending);
-  router.get(
-    "/stocktakes/:id/warehouses/:warehouse/lines",
-    role(["STOCKTAKER"]),
-    pending,
-  );
-  router.patch(
-    "/stocktakes/:id/warehouses/:warehouse/counts",
-    role(["STOCKTAKER"]),
-    pending,
-  );
-  router.post(
-    "/stocktakes/:id/warehouses/:warehouse/complete",
-    role(["STOCKTAKER"]),
-    pending,
-  );
-  router.get(
-    "/stocktake-differences",
-    role(["WAREHOUSE_MANAGER", "DIRECTOR"]),
-    pending,
-  );
+  router.post('/tasks/:id/postTask',role(['WAREHOUSE_STAFF']),async(req,res)=>{
+    C.fail(!/^[1-9]\d*$/.test(req.params.id),'NOT_FOUND','Không có công việc.',404);
+    C.fail(req.body.task_id!==undefined && String(req.body.task_id)!==req.params.id,'VALIDATION_ERROR','Công việc trong URL và phiếu không khớp.');
+    const result=await runtime.warehouseFlow.post(req.user,{...req.body,task_id:req.params.id},req.get('Idempotency-Key'),req.request_id);
+    res.set('Location','/api/v1/stock-documents/'+result.id);
+    ok(req,res,result,201);
+  });
   return router;
 };

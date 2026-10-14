@@ -1,0 +1,23 @@
+const {chromium}=require('@playwright/test'),fs=require('node:fs'),assert=require('node:assert/strict');
+const base=process.env.APP_URL||'http://127.0.0.1:3000';
+const executablePath=process.env.BROWSER_PATH||['C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe','C:/Program Files/Google/Chrome/Application/chrome.exe'].find(p=>fs.existsSync(p));
+(async()=>{const browser=await chromium.launch({headless:true,...(executablePath?{executablePath}:{})});try{
+ const page=await browser.newPage(),errors=[],writes=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto(base+'/login');await page.locator('#username').fill('manager');await page.locator('#password').fill(process.env.DEMO_PASSWORD||'123456');await page.locator('#login-form button').click();await page.waitForURL('**/dashboard');
+ const image_path='/images/categories/11111111-1111-4111-8111-111111111111.png';
+ const dataURL=await page.evaluate(()=>{const canvas=document.createElement('canvas');canvas.width=20;canvas.height=20;canvas.getContext('2d').fillRect(0,0,20,20);return canvas.toDataURL('image/png');});
+ const buffer=Buffer.from(dataURL.split(',')[1],'base64');
+ await page.route('**/api/v1/category-images',r=>{const data=r.request().postDataJSON();assert.match(data.data_url,/^data:image\/png;base64,/);return r.fulfill({status:201,json:{data:{image_path}}});});
+ await page.route('**/api/v1/categories',r=>{if(r.request().method()==='POST'){writes.push(r.request().postDataJSON());return r.fulfill({status:201,json:{data:{id:'999999'}}});}return r.fulfill({json:{data:[],meta:{total:0}}});});
+ await page.route('**/api/v1/categories/999999',r=>{if(r.request().method()==='PATCH'){writes.push(r.request().postDataJSON());return r.fulfill({json:{data:{id:'999999'}}});}return r.fulfill({json:{data:{id:'999999',code:'IMG',name:'Image category',image_path,is_active:1}}});});
+ await page.route('**/images/categories/*.png',r=>r.fulfill({contentType:'image/png',body:buffer}));
+ await page.goto(base+'/catalog/categories?module=categories');await page.locator('#create').click();
+ await page.locator('#f-code').fill('IMG');await page.locator('#f-name').fill('Danh mục có ảnh');
+ await page.locator('#category-image-file').setInputFiles({name:'category.png',mimeType:'image/png',buffer});
+ await page.locator('#category-image-preview:not([hidden])').waitFor();
+ await page.locator('#data-form [type=submit]').click();await page.waitForFunction(()=>!document.querySelector('#modal').open);
+ assert.equal(writes[0].image_path,image_path);
+ await page.evaluate(()=>editForm({id:'999999'}));await page.locator('#category-image-remove').click();await page.locator('#data-form [type=submit]').click();await page.waitForFunction(()=>!document.querySelector('#modal').open);
+ assert.equal(writes[1].image_path,null);assert.deepEqual(errors,[]);
+ console.log('CATEGORY IMAGE BROWSER PASS: select/preview/upload payload, edit existing image and remove; writes mocked');
+}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

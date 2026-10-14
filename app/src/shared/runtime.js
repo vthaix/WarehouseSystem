@@ -19,28 +19,12 @@ async function createRuntime() {
   await require("../../database/seeders/foundation").seedRoles(pool);
   if (process.env.SEED_DEMO === "true")
     await require("../../database/seeders/foundation").seedDemo(pool);
-  const UserRepository = require("../modules/auth/UserRepository"),
-    users = new UserRepository(pool);
-  const auth = new (require("../modules/auth/AuthService"))(users, pool);
-  const catalog = new (require("../modules/catalog/CatalogService"))(
-    new (require("../modules/catalog/CatalogRepository"))(pool),
+  await pool.query(
+    "INSERT IGNORE INTO NhanVien (MaNguoiDung,MaNhanVien) SELECT DISTINCT u.id,CONCAT('NV-',u.id) FROM users u JOIN user_roles ur ON ur.user_id=u.id JOIN roles r ON r.id=ur.role_id WHERE r.code<>'CUSTOMER'",
   );
-  const catalogWrite = new (require("../modules/catalog/CatalogWriteService"))(pool, catalog.repository);
-  const orders = new (require("../modules/customer-orders/OrderService"))(pool);
-  const productionPlans = new (require("../modules/production/ProductionPlanService"))(pool);
-  const businessPlans = new (require("../modules/business-plans/BusinessPlanService"))(pool);
-  const purchaseOrders = new (require("../modules/purchasing/PurchaseOrderService"))(pool);
-  const productionReports = new (require("../modules/production/ProductionReportService"))(pool);
-  const finishedReports = new (require("../modules/production/FinishedReportService"))(pool);
-  const reports = new (require("../modules/reporting/ReportService"))(pool);
-  const qualityCampaigns = new (require("../modules/quality/QualityCampaignService"))(pool);
-  const quality = new (require("../modules/quality/QualityService"))(pool);
-  const stockRequests = new (require("../modules/stock-requests/StockRequestService"))(pool);
-  const warehouseFlow = new (require("../modules/warehouse/WarehouseFlowService"))(pool, stockRequests);
-  const warehouseRecords = new (require("../modules/warehouse/WarehouseRecordService"))(pool);
-  const notifications =
-    new (require("../modules/notifications/NotificationService"))(pool);
-  const store = new (require("./MySqlSessionStore"))(pool);
+  const composition = require("../boundaries")(pool);
+  const services = require("../boundaries/legacy-adapter")(composition);
+  const { store } = services;
   await store.prune();
   const cleanup = setInterval(
     () =>
@@ -54,24 +38,7 @@ async function createRuntime() {
   cleanup.unref();
   return {
     pool,
-    users,
-    auth,
-    catalog,
-    catalogWrite,
-    orders,
-    productionPlans,
-    businessPlans,
-    purchaseOrders,
-    productionReports,
-    finishedReports,
-    reports,
-    qualityCampaigns,
-    quality,
-    stockRequests,
-    warehouseFlow,
-    warehouseRecords,
-    notifications,
-    store,
+    ...services,
     stop: () => clearInterval(cleanup),
   };
 }

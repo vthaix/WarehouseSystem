@@ -11,7 +11,7 @@ const AuthService = require("./services/AuthService");
 const { sessionUser } = require("./middlewares/auth.middleware");
 function createApp(options = {}) {
   if (options.runtime)
-    return require("./shared/create-mysql-app")(options.runtime);
+    return require("./services/web-gateway/compose")(options.runtime);
   const app = express(),
     repo = options.repo || new MemoryRepository(),
     password = options.password || process.env.DEMO_PASSWORD;

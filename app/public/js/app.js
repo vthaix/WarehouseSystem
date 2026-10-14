@@ -10,278 +10,8 @@ let user,
   reportAsOf;
 const pageSize = 20;
 const isMysql = JSON.parse(app.dataset.boot || "{}").storage === "mysql";
-const labels = {
-  CUSTOMER_ACCEPTED: "Đã tiếp nhận",
-  ORDER_PENDING_REVIEW: "Chờ phê duyệt",
-  ORDER_SUBMITTED: "Chờ tiếp nhận",
-  QUALITY_CHECK: "Kiểm tra chất lượng",
-  COUNT: "Kiểm đếm tồn kho",
-  PROCUREMENT: "Bổ sung NVL",
-  CLOSED_WITH_RETURNS: "Đã nhận, có trả NCC",
-  CUSTOMER: "Khách hàng",
-  PLANNER: "Lập kế hoạch",
-  PURCHASER: "Mua hàng",
-  WAREHOUSE_MANAGER: "Quản lý kho",
-  WAREHOUSE_STAFF: "Nhân viên kho",
-  QC_INSPECTOR: "QC/AC",
-  STOCKTAKER: "Ban kiểm kê",
-  WORKSHOP_OWNER: "Chủ xưởng",
-  DIRECTOR: "Giám đốc",
-  SUBMITTED: "Đã gửi",
-  RECEIVED: "Đã tiếp nhận",
-  APPROVED: "Đã duyệt",
-  REJECTED: "Bị từ chối",
-  IN_PROGRESS: "Đang thực hiện",
-  COMPLETED: "Hoàn thành",
-  PENDING_APPROVAL: "Chờ duyệt",
-  PENDING: "Chờ xử lý",
-  PARTIALLY_FULFILLED: "Xử lý một phần",
-  FULFILLED: "Đã xử lý đủ",
-  PARTIALLY_RECEIVED: "Nhận một phần",
-  POSTED: "Đã ghi sổ",
-  PLANNED: "Đã lên lịch",
-  COUNTING: "Đang kiểm đếm",
-  CLOSED: "Đã đóng",
-  CANCELLED: "Đã hủy",
-  VOID: "Đã hủy",
-  DRAFT: "Bản nháp",
-  APPLIED: "Đã áp dụng",
-  AVAILABLE: "Khả dụng",
-  QUARANTINE: "Cách ly",
-  PASSED: "Đạt",
-  PARTIAL: "Đạt một phần",
-  FAILED: "Không đạt",
-  IN: "Nhập",
-  OUT: "Xuất",
-  PURCHASE: "Mua",
-  SALE: "Bán",
-  MATERIAL: "Nguyên liệu",
-  FINISHED_PRODUCT: "Thành phẩm",
-};
-const modules = [
-  [
-    "customer-orders",
-    "Đơn hàng",
-    "◫",
-    ["CUSTOMER", "PLANNER", "DIRECTOR"],
-    ["CUSTOMER"],
-    "/customer/orders",
-    "Tiếp nhận và theo dõi đơn đặt hàng.",
-  ],
-  [
-    "business-plans",
-    "Kế hoạch mua / bán",
-    "▤",
-    ["PLANNER", "DIRECTOR", "PURCHASER", "WORKSHOP_OWNER", "WAREHOUSE_STAFF"],
-    ["PLANNER"],
-    "/plans",
-    "Điều phối nhu cầu mua và giao hàng.",
-  ],
-  [
-    "purchase-orders",
-    "Đơn mua hàng",
-    "▧",
-    ["PURCHASER", "WORKSHOP_OWNER", "WAREHOUSE_STAFF", "QC_INSPECTOR"],
-    ["PURCHASER"],
-    "/purchases",
-    "Tạo đơn mua từ kế hoạch đã duyệt.",
-  ],
-  [
-    "categories",
-    "Danh mục",
-    "▦",
-    ["WAREHOUSE_MANAGER"],
-    ["WAREHOUSE_MANAGER"],
-    "/catalog/categories",
-    "Phân nhóm nguyên liệu và thành phẩm.",
-  ],
-  [
-    "items",
-    "Mặt hàng",
-    "◇",
-    ["WAREHOUSE_MANAGER"],
-    ["WAREHOUSE_MANAGER"],
-    "/catalog/data",
-    "Nguyên liệu, thành phẩm và hàng mẫu.",
-  ],
-  [
-    "warehouses",
-    "Kho hàng",
-    "⌂",
-    ["WAREHOUSE_MANAGER"],
-    ["WAREHOUSE_MANAGER"],
-    "/catalog/data",
-    "Thông tin các kho trong hệ thống.",
-  ],
-  [
-    "warehouse-locations",
-    "Vị trí lưu kho",
-    "⊞",
-    ["WAREHOUSE_MANAGER"],
-    ["WAREHOUSE_MANAGER"],
-    "/catalog/data",
-    "Quản lý kệ và ô lưu trữ.",
-  ],
-  [
-    "suppliers",
-    "Nhà cung cấp",
-    "◎",
-    ["WAREHOUSE_MANAGER"],
-    ["WAREHOUSE_MANAGER"],
-    "/catalog/data",
-    "Thông tin đối tác cung ứng.",
-  ],
-  [
-    "lots",
-    "Lô hàng",
-    "▥",
-    ["WAREHOUSE_MANAGER"],
-    ["WAREHOUSE_MANAGER"],
-    "/catalog/data",
-    "Theo dõi nguồn, hạn dùng và QC.",
-  ],
-  [
-    "stock-requests",
-    "Yêu cầu nhập / xuất",
-    "⇄",
-    ["WORKSHOP_OWNER", "WAREHOUSE_STAFF", "WAREHOUSE_MANAGER", "PLANNER"],
-    ["WORKSHOP_OWNER"],
-    "/workshop/requests",
-    "Lập yêu cầu theo chứng từ nguồn.",
-  ],
-  [
-    "stock-documents",
-    "Phiếu nhập / xuất",
-    "⇥",
-    ["WAREHOUSE_MANAGER", "WAREHOUSE_STAFF", "DIRECTOR", "WORKSHOP_OWNER"],
-    [],
-    "/warehouse/documents",
-    "Tra cứu chứng từ đã ghi sổ.",
-  ],
-  [
-    "qc-inspections",
-    "Kiểm tra QC / AC",
-    "✓",
-    ["QC_INSPECTOR", "DIRECTOR", "WORKSHOP_OWNER"],
-    ["QC_INSPECTOR"],
-    "/quality/inspections",
-    "Số đạt và lỗi trước khi nhập kho.",
-  ],
-  [
-    "production-plans",
-    "Kế hoạch sản xuất",
-    "⚒",
-    ["PLANNER", "DIRECTOR", "WORKSHOP_OWNER", "WAREHOUSE_STAFF"],
-    ["PLANNER"],
-    "/production/plans",
-    "Kế hoạch thành phẩm và nguyên liệu.",
-  ],
-  [
-    "production-reports",
-    "Báo cáo sản xuất",
-    "▱",
-    ["WORKSHOP_OWNER", "PLANNER"],
-    ["WORKSHOP_OWNER"],
-    "/production/reports",
-    "Nguyên liệu hiện có và nhu cầu.",
-  ],
-  [
-    "finished-reports",
-    "Báo cáo thành phẩm",
-    "▣",
-    ["WORKSHOP_OWNER", "DIRECTOR"],
-    ["WORKSHOP_OWNER"],
-    "/production/finished-reports",
-    "Sản lượng và lô hoàn thành.",
-  ],
-  [
-    "stocktakes",
-    "Kiểm kê kho",
-    "≡",
-    ["DIRECTOR", "STOCKTAKER", "WAREHOUSE_MANAGER", "QC_INSPECTOR"],
-    ["DIRECTOR"],
-    "/stocktakes",
-    "Chốt snapshot và kiểm đếm từng kho.",
-  ],
-  [
-    "stocktake-minutes",
-    "Biên bản kiểm kê",
-    "▨",
-    ["STOCKTAKER", "DIRECTOR"],
-    ["STOCKTAKER"],
-    "/stocktake-minutes",
-    "Tổng hợp số đếm và gửi biên bản.",
-  ],
-  [
-    "exception-proposals",
-    "Xử lý ngoại lệ",
-    "△",
-    ["DIRECTOR", "WAREHOUSE_MANAGER", "QC_INSPECTOR"],
-    ["WAREHOUSE_MANAGER"],
-    "/approvals/exceptions",
-    "Đề xuất điều chỉnh chênh lệch kiểm kê.",
-  ],
-  [
-    "tasks",
-    "Công việc",
-    "▢",
-    [
-      "DIRECTOR",
-      "WAREHOUSE_MANAGER",
-      "WAREHOUSE_STAFF",
-      "QC_INSPECTOR",
-      "STOCKTAKER",
-    ],
-    ["DIRECTOR"],
-    "/tasks",
-    "Phân công và kiểm soát lịch nhân viên.",
-  ],
-  [
-    "reports/inventory",
-    "Báo cáo tồn kho",
-    "◴",
-    ["DIRECTOR"],
-    [],
-    "/reports/inventory",
-    "Tồn kho tại một mốc thời gian.",
-  ],
-  [
-    "reports/stock-documents",
-    "Báo cáo nhập / xuất",
-    "↗",
-    ["DIRECTOR", "WORKSHOP_OWNER"],
-    [],
-    "/reports/stock-documents",
-    "Đối chiếu phiếu theo kho và ngày.",
-  ],
-  [
-    "reports/stocktakes",
-    "Báo cáo kiểm kê",
-    "▥",
-    ["DIRECTOR"],
-    [],
-    "/reports/stocktakes",
-    "Snapshot, thực tế và chênh lệch.",
-  ],
-  [
-    "warehouse-records",
-    "Hồ sơ kho tổng hợp",
-    "▨",
-    ["WAREHOUSE_MANAGER", "DIRECTOR", "WORKSHOP_OWNER"],
-    ["WAREHOUSE_MANAGER"],
-    "/warehouse/records",
-    "Tổng hợp phiếu kho từ các nhân viên.",
-  ],
-  [
-    "notifications",
-    "Thông báo",
-    "♧",
-    ["*"],
-    [],
-    "/notifications",
-    "Thông tin nghiệp vụ dành cho bạn.",
-  ],
-];
+const labels = warehouseNavigation.labels;
+const modules = warehouseNavigation.modules;
 const has = (roles) =>
     roles.includes("*") || user.roles.some((r) => roles.includes(r)),
   available = () => modules.filter((m) => has(m[3])),
@@ -354,7 +84,7 @@ function errorHTML(e) {
 }
 function login(preserve = false) {
   if (!preserve)
-    app.innerHTML = `<div class="login"><section class="login-art"><div class="brand"><span class="brand-icon">▦</span><span>warehouse<small>VẬN HÀNH KHO HÀNG</small></span></div><div><div class="eyebrow">MỌI NGHIỆP VỤ, MỘT NƠI</div><h1>Kho hàng rõ ràng.<br>Vận hành liền mạch.</h1><p>Kết nối đơn hàng, mua hàng, sản xuất và kiểm kê trong một không gian làm việc.</p></div><small>Warehouse System · Phiên bản phát triển</small></section><section class="login-form"><div class="login-box"><div class="eyebrow">CHÀO MỪNG TRỞ LẠI</div><h1>Đăng nhập hệ thống</h1><p class="subtitle">Sử dụng tài khoản được cấp cho bộ phận của bạn.</p><div id="login-error"></div><form id="login-form"><label for="username">Tên đăng nhập</label><input id="username" name="username" autocomplete="username" required maxlength="80" placeholder="Ví dụ: manager"><label for="password">Mật khẩu</label><input id="password" name="password" type="password" autocomplete="current-password" required maxlength="128"><button class="button primary" type="submit">Đăng nhập →</button></form><div class="hint">Tài khoản mẫu: <code>customer</code>, <code>planner</code>, <code>purchaser</code>, <code>manager</code>, <code>staff</code>, <code>qc</code>, <code>stocktaker</code>, <code>workshop</code>, <code>director</code>.<br>Mật khẩu lấy từ DEMO_PASSWORD đã đặt khi chạy máy chủ.</div></div></section></div>`;
+    app.innerHTML = `<div class="login"><section class="login-art"><div class="brand"><span class="brand-icon">✿</span><span>sweet bakery<small>XƯỞNG BÁNH ĐÓNG GÓI</small></span></div><div><div class="eyebrow">TỪ MẺ BÁNH ĐẾN TỪNG GÓI HÀNG</div><h1>Mẻ bánh ngọt ngào.<br>Vận hành chỉn chu.</h1><p>Từ nguyên liệu đến từng gói bánh quy, bánh bông lan — quản lý sản xuất, chất lượng và giao hàng trong một không gian.</p></div><small>Sweet Bakery · Phiên bản phát triển</small></section><section class="login-form"><div class="login-box"><div class="eyebrow">CHÀO MỪNG TRỞ LẠI</div><h1>Đăng nhập hệ thống</h1><p class="subtitle">Sử dụng tài khoản được cấp cho bộ phận của bạn.</p><div id="login-error"></div><form id="login-form"><label for="username">Tên đăng nhập</label><input id="username" name="username" autocomplete="username" required maxlength="80" placeholder="Ví dụ: manager"><label for="password">Mật khẩu</label><input id="password" name="password" type="password" autocomplete="current-password" required maxlength="128"><button class="button primary" type="submit">Đăng nhập →</button></form><div class="hint">Tài khoản mẫu: <code>customer</code>, <code>planner</code>, <code>purchaser</code>, <code>manager</code>, <code>staff</code>, <code>qc</code>, <code>stocktaker</code>, <code>workshop</code>, <code>director</code>.<br>Mật khẩu lấy từ DEMO_PASSWORD đã đặt khi chạy máy chủ.</div></div></section></div>`;
   document.querySelector("#login-form").onsubmit = async (e) => {
     e.preventDefault();
     const btn = e.target.querySelector("button");
@@ -380,7 +110,7 @@ function login(preserve = false) {
 }
 function shell(preserve = false) {
   if (!preserve)
-    app.innerHTML = `<div class="layout"><aside class="sidebar"><a href="/dashboard" class="brand" data-nav="dashboard"><span class="brand-icon">▦</span><span>warehouse<small>VẬN HÀNH KHO HÀNG</small></span></a><div class="nav-label">KHÔNG GIAN LÀM VIỆC</div><nav><a class="nav-link ${current === "dashboard" ? "active" : ""}" href="/dashboard" data-nav="dashboard"><span class="nav-icon">⊞</span>Tổng quan</a>${available()
+    app.innerHTML = `<div class="layout"><aside class="sidebar"><a href="/dashboard" class="brand" data-nav="dashboard"><span class="brand-icon">✿</span><span>sweet bakery<small>XƯỞNG BÁNH ĐÓNG GÓI</small></span></a><div class="nav-label">KHÔNG GIAN LÀM VIỆC</div><nav><a class="nav-link ${current === "dashboard" ? "active" : ""}" href="/dashboard" data-nav="dashboard"><span class="nav-icon">⊞</span>Tổng quan</a>${available()
       .map(
         (m) =>
           `<a class="nav-link ${current === m[0] ? "active" : ""}" href="${m[5]}?module=${m[0]}" data-nav="${m[0]}"><span class="nav-icon">${m[2]}</span>${m[1]}</a>`,
@@ -418,7 +148,7 @@ function navigate(n) {
 }
 
 function heading(title, sub, action = "") {
-  return `<div class="heading"><div><div class="eyebrow">WAREHOUSE / VẬN HÀNH</div><h1>${esc(title)}</h1><div class="subtitle">${esc(sub)}</div></div>${action}</div>`;
+  return `<div class="heading"><div><div class="eyebrow">SWEET BAKERY / VẬN HÀNH</div><h1>${esc(title)}</h1><div class="subtitle">${esc(sub)}</div></div>${action}</div>`;
 }
 async function render() {
   const content = document.querySelector("#content");
@@ -426,9 +156,9 @@ async function render() {
     content.innerHTML =
       heading(
         "Không gian làm việc",
-        "Các chức năng và thông báo dành cho vai trò của bạn.",
+        "Theo dõi nguyên liệu, những mẻ bánh và đơn hàng theo vai trò của bạn.",
       ) +
-      `<div class="intro"><div><div class="eyebrow">SẴN SÀNG CHO NGÀY LÀM VIỆC</div><h2>Xin chào, ${esc(user.full_name)}.</h2><p>Chọn một nghiệp vụ bên dưới để bắt đầu. Các thao tác phê duyệt và ghi sổ được kiểm tra theo quyền và trạng thái chứng từ.</p></div><div class="intro-mark">▦</div></div><div class="cards">${available()
+      `<div class="intro"><div><div class="eyebrow">SẴN SÀNG CHO NGÀY LÀM VIỆC</div><h2>Xin chào, ${esc(user.full_name)}.</h2><p>Chọn một nghiệp vụ bên dưới để bắt đầu. Các thao tác phê duyệt và ghi sổ được kiểm tra theo quyền và trạng thái chứng từ.</p></div><div class="intro-mark" aria-hidden="true">✿</div></div><div class="cards">${available()
         .filter((m) => m[0] !== "notifications")
         .map(
           (m) =>
@@ -436,7 +166,7 @@ async function render() {
         )
         .join(
           "",
-        )}</div><div class="panel"><div class="panel-title"><h2>Thông báo gần đây</h2><button class="button small" data-go="notifications">Xem tất cả →</button></div><div id="recent" class="loading">Đang tải thông báo…</div></div><div class="footer"><span>Warehouse System</span><span>Asia/Ho_Chi_Minh · Tiếng Việt</span></div>`;
+        )}</div><div class="panel"><div class="panel-title"><h2>Thông báo gần đây</h2><button class="button small" data-go="notifications">Xem tất cả →</button></div><div id="recent" class="loading">Đang tải thông báo…</div></div><div class="footer"><span>Sweet Bakery</span><span>Asia/Ho_Chi_Minh · Tiếng Việt</span></div>`;
     content.querySelectorAll("[data-go]").forEach(
       (el) =>
         (el.onclick = (e) => {
@@ -554,6 +284,9 @@ async function loadTable() {
   }
 }
 function columnsFor(n) {
+  if(n==='categories')return [['image_path','Ảnh'],['code','Mã'],['name','Tên'],['is_active','Hoạt động']];
+  if(n==='production-reports')return [['code','Mã báo cáo'],['production_plan_code','Kế hoạch'],['report_purpose','Mục đích'],['progress_percentage','Tiến độ (%)'],['status','Trạng thái']];
+  if(n === "customer-returns")return [["code","Mã hàng trả"],["return_warehouse_id","Kho nhận"],["return_receiver_id","Nhân viên nhận"],["status","Trạng thái"],["created_at","Ngày lập"]];
   if (n === "items")
     return [
       ["code", "Mã hàng"],
@@ -648,7 +381,7 @@ function detail(r) {
         ([k, v]) =>
           `<div><dt>${esc(fieldLabel(k))}</dt><dd>${k === "status" ? statusBadge(v) : esc(format(v))}</dd></div>`,
       )
-      .join("")}</dl>${["lines", "outputs", "materials", "allocations"]
+      .join("")}</dl>${["lines", "outputs", "materials", "allocations", "decision_history", "reinspections"]
       .filter((k) => r[k])
       .map(
         (k) =>
@@ -656,7 +389,7 @@ function detail(r) {
       )
       .join(
         "",
-      )}${r.warehouses ? `<div class="form-section"><h3>Phạm vi kiểm kê</h3>${r.warehouses.map((w) => `<div class="notification"><span>Kho ${esc(w.warehouse_id)} · ${badge(w.status)} · ${w.lines.filter((l) => l.actual_quantity !== null).length}/${w.lines.length} dòng đã đếm</span>${has(["STOCKTAKER"]) && w.assignee_ids.includes(user.id) ? `<button class="button small" data-count="${w.warehouse_id}">Mở bảng đếm</button>` : ""}</div>`).join("")}</div>` : ""}<div class="form-actions">${(r.actions || []).map((a) => `<button class="button ${["review", "post"].includes(a) ? "primary" : ""}" data-action="${a}">${{ edit: "Sửa", delete: "Hủy / Xóa", receive: "Tiếp nhận", review: "Phê duyệt", submit: "Gửi", start: "Bắt đầu kiểm kê", close: "Đóng đợt", post: "Ghi phiếu", progress: "Cập nhật tiến độ", dispatch: "Phân công kho", cancel: "Hủy kế hoạch", postTask: "Ghi phần hàng được giao" }[a]}</button>`).join("")}${current === "notifications" && !r.read_at ? '<button class="button" id="mark-read">Đánh dấu đã đọc</button>' : ""}</div>`,
+      )}${r.warehouses ? `<div class="form-section"><h3>Phạm vi kiểm kê</h3>${r.warehouses.map((w) => `<div class="notification"><span>Kho ${esc(w.warehouse_id)} · ${badge(w.status)} · ${w.lines.filter((l) => l.actual_quantity !== null).length}/${w.lines.length} dòng đã đếm</span>${has(["STOCKTAKER"]) && w.assignee_ids.includes(user.id) ? `<button class="button small" data-count="${w.warehouse_id}">Mở bảng đếm</button>` : ""}</div>`).join("")}</div>` : ""}<div class="form-actions">${(r.actions || []).map((a) => `<button class="button ${["review", "post"].includes(a) ? "primary" : ""}" data-action="${a}">${{ receiveReturn: "Nhận vào khu cách ly", cancelReturn: "Hủy hàng trả chưa nhận", reinspect: "Tái kiểm chất lượng", correct: "Chứng từ bù QC", apply: "Thực hiện", cancelAllocation: "Giải phóng phân công", edit: "Sửa", delete: "Hủy / Xóa", receive: "Tiếp nhận", review: "Phê duyệt", submit: "Gửi", start: "Bắt đầu kiểm kê", close: "Đóng đợt", post: "Ghi phiếu", progress: "Cập nhật tiến độ", dispatch: "Phân công kho", cancel: "Hủy kế hoạch", postTask: "Ghi phần hàng được giao" }[a]}</button>`).join("")}${current === "notifications" && !r.read_at ? '<button class="button" id="mark-read">Đánh dấu đã đọc</button>' : ""}</div>`,
   );
   modalBody
     .querySelectorAll("[data-action]")
@@ -704,97 +437,7 @@ function tableData(rows) {
   );
   return `<div class="table-wrap"><table><thead><tr>${keys.map((k) => `<th>${esc(fieldLabel(k))}</th>`).join("")}</tr></thead><tbody>${rows.map((r) => `<tr>${keys.map((k) => `<td>${esc(format(r[k]))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
 }
-const fieldNames = {
-  campaign_type: "Loại đợt",
-  quality_kind: "Loại hàng QC",
-  campaign_id: "Lịch QC được giao",
-  location: "Địa điểm",
-  lot_ids: "Các lô cần kiểm tra",
-  source_request_id: "Yêu cầu bổ sung NVL",
-  production_report_id: "Báo cáo nhu cầu NVL",
-  manager_id: "Quản lý kho phụ trách",
-  task_id: "Công việc được giao",
-  stock_request_id: "Yêu cầu kho",
-  task_type: "Loại công việc",
-  returned_supplier_quantity: "Lượng trả NCC",
-  shortage_quantity: "Lượng thiếu",
-  type: "Loại",
-  decision: "Quyết định",
-  difference: "Dòng chênh lệch",
-  code: "Mã",
-  name: "Tên",
-  title: "Tên công việc",
-  description: "Mô tả",
-  note: "Ghi chú",
-  status: "Trạng thái",
-  version: "Phiên bản",
-  item_id: "Mặt hàng",
-  item_name: "Tên hàng",
-  unit: "Đơn vị",
-  quantity: "Số lượng",
-  unit_price: "Đơn giá",
-  fulfilled_quantity: "Đã xử lý",
-  remaining_quantity: "Còn lại",
-  delivery_address: "Địa chỉ giao hàng",
-  latest_delivery_date: "Hạn giao hàng",
-  planned_date: "Ngày kế hoạch",
-  expected_delivery_date: "Ngày dự kiến nhận",
-  delivery_terms: "Điều khoản giao",
-  supplier_id: "Nhà cung cấp",
-  customer_id: "Khách hàng",
-  customer_order_id: "Đơn khách hàng",
-  business_plan_id: "Kế hoạch mua / bán",
-  purchase_order_id: "Đơn mua",
-  production_plan_id: "Kế hoạch sản xuất",
-  warehouse_id: "Kho",
-  workshop_id: "Xưởng",
-  category_id: "Danh mục",
-  unit_id: "Đơn vị",
-  kind: "Loại mặt hàng",
-  reference_price: "Giá tham khảo",
-  is_sample: "Hàng mẫu",
-  is_published: "Đã công bố",
-  is_active: "Đang hoạt động",
-  received_quantity: "Lượng nhận",
-  purchase_order_line_id: "Dòng đơn mua",
-  manufactured_date: "Ngày sản xuất",
-  expiry_date: "Hạn dùng",
-  requested_date: "Ngày yêu cầu",
-  purpose: "Mục đích",
-  inspected_at: "Thời gian kiểm tra",
-  lot_id: "Lô",
-  inspected_quantity: "Số kiểm",
-  passed_quantity: "Số đạt",
-  failed_quantity: "Số lỗi",
-  issue: "Mô tả lỗi",
-  start_date: "Bắt đầu",
-  end_date: "Kết thúc",
-  start_at: "Bắt đầu",
-  end_at: "Kết thúc",
-  assignee_ids: "Người thực hiện",
-  priority: "Ưu tiên",
-  remarks: "Nhận xét biên bản",
-  stocktake_id: "Đợt kiểm kê",
-  stocktake_line_id: "Dòng chênh lệch",
-  reason: "Lý do",
-  resolution_note: "Phương án xử lý",
-  available_quantity: "Hiện có tại xưởng",
-  required_quantity: "Nhu cầu",
-  used_quantity: "Đã sử dụng",
-  completed_date: "Ngày hoàn thành",
-  lot_code: "Mã lô",
-  lines: "Chi tiết hàng",
-  outputs: "Thành phẩm",
-  materials: "Nguyên vật liệu",
-  system_quantity: "Snapshot",
-  actual_quantity: "Thực tế",
-  created_at: "Ngày tạo",
-  posted_at: "Ngày ghi sổ",
-  quoted_total: "Tổng báo giá",
-  total_amount: "Tổng tiền",
-  quality_bucket: "Nhóm chất lượng",
-  location_id: "Vị trí",
-};
+const fieldNames = warehouseNavigation.fieldNames;
 function fieldLabel(k) {
   return fieldNames[k] || k;
 }

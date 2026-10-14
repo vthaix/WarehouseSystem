@@ -4,6 +4,136 @@ const originalCreateForm = createForm,
 createForm = async function () {
   try {
     const f = inputField;
+    if(isMysql && current === "customer-returns") {
+      const deliveries=(await api("customer-return-deliveries")).data;
+      if(!deliveries.length){toast("Chưa có dòng phiếu giao còn lượng được trả.");return;}
+      const warehouses=await options("warehouses"),locations=await options("warehouse-locations"),users=await options("users");
+      const editor=lineEditor("Dòng phiếu giao khách",deliveries.map(d=>({...d,name:d.delivery_code+" · "+d.item_name+" · Đã giao "+d.quantity+", đã đề nghị trả "+d.returned_quantity})),"lines",["quantity"]);
+      openModal("Ghi nhận hàng khách trả",formWrap(f("warehouse_id","select",true,warehouses)+f("receiver_id","select",true,users.filter(u=>u.roles.includes("WAREHOUSE_STAFF")))+f("return_location_id","select",true,[])+f("reason","textarea")+'<div class="span2 notice">Nhận vào nhóm cách ly để QC kiểm tra. Giữ nguyên lịch sử giao hàng, không tự giao bù hoặc hoàn tiền.</div>'+editor.html));
+      editor.mount();
+      const sync=()=>{const warehouse=document.querySelector("#f-warehouse_id").value;document.querySelector("#f-return_location_id").innerHTML=locations.filter(l=>String(l.warehouse_id)===warehouse).map(l=>'<option value="'+esc(l.id)+'">'+esc(l.name||l.code)+'</option>').join("");};
+      document.querySelector("#f-warehouse_id").onchange=sync;sync();
+      bindForm(d=>({warehouse_id:d.warehouse_id,receiver_id:d.receiver_id,reason:d.reason,lines:readLines().map(l=>({original_stock_document_line_id:l.item_id,quantity:l.quantity,location_id:d.return_location_id}))}),current);return;
+    }
+    if (isMysql && current === "stocktake-minutes") {
+      const listed=(await api("stocktakes?per_page=100")).data.filter(s=>s.campaign_type==="COUNT");
+      const scopes=await Promise.all(listed.map(s=>api("stocktakes/"+s.id).then(r=>r.data)));
+      const candidates=scopes.filter(s=>s.warehouses.some(w=>w.status==="COMPLETED" && w.conclusion_status==="DRAFT" && w.remarks===null));
+      if(!candidates.length){toast("Chưa có kho được phân công đã đếm xong và cần lập kết luận.");return;}
+      openModal("Lập kết luận kiểm kê",formWrap(
+        f("stocktake_id","select",true,candidates.map(s=>({id:s.id,name:s.code})))+
+        f("warehouse_id","select",true,[])+f("remarks","textarea")));
+      const sync=()=>{
+        const s=candidates.find(s=>s.id===document.querySelector("#f-stocktake_id").value);
+        document.querySelector("#f-warehouse_id").innerHTML=s.warehouses.filter(w=>w.status==="COMPLETED" && w.conclusion_status==="DRAFT" && w.remarks===null).map(w=>'<option value="'+esc(w.warehouse_id)+'">Kho '+esc(w.warehouse_id)+'</option>').join("");
+      };
+      document.querySelector("#f-stocktake_id").onchange=sync;sync();bindForm(d=>d,current);return;
+    }
+    if (isMysql && current === "exception-proposals") {
+      const differences = user.roles.includes("WAREHOUSE_MANAGER")
+          ? (await api("stocktake-differences")).data
+          : [],
+        failed = await options("qc-failed-lines"),
+        quarantine = user.roles.includes('WAREHOUSE_MANAGER') ? (await api('lookup/quarantine-lines')).data : [],
+        stocked = user.roles.includes('WAREHOUSE_MANAGER') ? (await api('lookup/stock-qc-lines')).data : [];
+      openModal(
+        "Lập đề xuất xử lý",
+        formWrap(
+          f(
+            "type",
+            "select",
+            true,
+            user.roles.includes("WAREHOUSE_MANAGER")
+              ? ["STOCKTAKE_DIFFERENCE", "QC_FAILURE", "QUARANTINE_DISPOSITION", "STOCK_QC_CORRECTION"]
+              : ["QC_FAILURE"],
+          ) + '<div class="span2" id="proposal-fields"></div>',
+        ),
+      );
+      const sync = () => {
+        if(['QUARANTINE_DISPOSITION','STOCK_QC_CORRECTION'].includes(document.querySelector('#f-type').value)) {
+          const correction=document.querySelector('#f-type').value==='STOCK_QC_CORRECTION';
+          document.querySelector('#proposal-fields').innerHTML='<div class="form-grid">'+
+            f('quarantine_source','select',true,correction?stocked:quarantine)+f('action','select',true,correction?['QUARANTINE']:[{id:'RELEASE',name:'Giải phóng phần đạt'},{id:'SCRAP',name:'Loại bỏ phần lỗi'},{id:'RETURN_SUPPLIER',name:'Trả NCC (hàng có nguồn mua)'}])+
+            f('quantity','number')+f('reason','textarea')+f('resolution_note','textarea')+
+            '<p class="span2">Giám đốc duyệt, QC xác nhận khi điều chỉnh hàng đã nhập, quản lý thực hiện. Phải giải phóng phân công trước khi cách ly lượng đang giữ chỗ. Không tự giao bù hoặc hoàn tiền.</p></div>';
+          return;
+        }
+        const qc = document.querySelector("#f-type").value === "QC_FAILURE";
+        document.querySelector("#proposal-fields").innerHTML =
+          '<div class="form-grid">' +
+          (qc
+            ? f("qc_inspection_line_id", "select", true, failed) +
+              f("action", "select", true, ["SCRAP", "RELEASE"]) +
+              f("quantity", "number")
+            : f(
+                "stocktake_line_id",
+                "select",
+                true,
+                differences.map((r) => ({
+                  id: r.id,
+                  name: `${r.warehouse_id} · ${r.system_quantity} → ${r.actual_quantity}`,
+                })),
+              )) +
+          f("reason", "textarea") +
+          f("resolution_note", "textarea") +
+          "</div>";
+      };
+      document.querySelector("#f-type").onchange = sync;
+      sync();
+      bindForm((d) => {
+        if(['QUARANTINE_DISPOSITION','STOCK_QC_CORRECTION'].includes(d.type)) {
+          const source=(d.type==='STOCK_QC_CORRECTION'?stocked:quarantine).find(r=>r.id===d.quarantine_source);
+          if(!source) throw Error('Chọn dòng hàng cách ly.');
+          return {quarantine:true,qc_inspection_line_id:source.qc_inspection_line_id,action:d.action,quantity:d.quantity,
+            reason:d.reason,resolution_note:d.resolution_note,allocations:[{location_id:source.location_id,quantity:d.quantity}]};
+        }
+        delete d.type;
+        if (d.stocktake_line_id) {
+          const r = differences.find((r) => r.id === d.stocktake_line_id);
+          return {
+            ...d,
+            stocktake_id: r.stocktake_id,
+            warehouse_id: r.warehouse_id,
+          };
+        }
+        return d;
+      }, current);
+      return;
+    }
+    if (isMysql && current === "lots") {
+      const optionsLines = await options("purchase-order-lines");
+      const editor = lineEditor(
+        "Các dòng hàng thực nhận",
+        optionsLines,
+        "lines",
+        ["quantity"],
+      );
+      openModal(
+        "Nhận lô nhiều mặt hàng",
+        formWrap(
+          f("code") +
+            f("manufactured_date", "date", false) +
+            f("expiry_date", "date", false) +
+            editor.html,
+        ),
+      );
+      editor.mount();
+      bindForm(
+        (d) => ({
+          code: d.code,
+          lines: readLines().map((l) => ({
+            purchase_order_line_id: l.item_id,
+            received_quantity: l.quantity,
+            ...(d.manufactured_date
+              ? { manufactured_date: d.manufactured_date }
+              : {}),
+            ...(d.expiry_date ? { expiry_date: d.expiry_date } : {}),
+          })),
+        }),
+        "lots",
+      );
+      return;
+    }
     if (current === "stocktakes") {
       const warehouses = await options("warehouses"),
         users = await options("users"),
@@ -52,7 +182,7 @@ createForm = async function () {
                 "select",
                 true,
                 users.filter((u) => u.roles.includes("STOCKTAKER")),
-              )) +
+              ) + f("conclusion_assignee_ids","select",false,[{id:"",name:"Ban kiểm kê lập kết luận"},...users.filter(u=>u.roles.includes("QC_INSPECTOR"))])) +
           f("note", "textarea", false) +
           "</div>";
         if (qc)
@@ -88,6 +218,7 @@ createForm = async function () {
                   {
                     warehouse_id: d.warehouse_id,
                     assignee_ids: [d.assignee_ids],
+                    ...(isMysql ? {conclusion_assignee_ids: d.conclusion_assignee_ids ? [d.conclusion_assignee_ids] : []} : {}),
                   },
                 ],
               }),
@@ -184,7 +315,10 @@ createForm = async function () {
         ),
         purchases = await options("purchase-orders"),
         plans = await options("business-plans"),
-        production = await options("production-plans");
+        production = await options("production-plans"),
+        finished = (await options("finished-reports")).filter(
+          (r) => r.status === "SUBMITTED",
+        );
       openModal(
         "Lập yêu cầu theo nguồn",
         formWrap(
@@ -222,11 +356,24 @@ createForm = async function () {
           MATERIAL_PURCHASE: "production_report_id",
           PURCHASE_RECEIPT: "purchase_order_id",
           SALE_ISSUE: "business_plan_id",
-          PRODUCTION_ISSUE: "production_plan_id",
-          PRODUCTION_RECEIPT: "production_plan_id",
+          PRODUCTION_ISSUE: isMysql
+            ? "production_report_id"
+            : "production_plan_id",
+          PRODUCTION_RECEIPT: isMysql
+            ? "production_report_id"
+            : "production_plan_id",
         })[purpose];
       const sync = () => {
         const purpose = document.querySelector("#f-purpose").value;
+        if (isMysql)
+          document.querySelector("#f-production_report_id").innerHTML = (
+            purpose === "PRODUCTION_RECEIPT" ? finished : reports
+          )
+            .map(
+              (r) =>
+                `<option value="${esc(r.id)}">${esc(r.name || r.code)}</option>`,
+            )
+            .join("");
         for (const k of [
           "production_report_id",
           "purchase_order_id",
@@ -254,7 +401,10 @@ createForm = async function () {
               new FormData(document.querySelector("#data-form")),
             ),
             name = {
-              production_report_id: "production-reports",
+              production_report_id:
+                d.purpose === "PRODUCTION_RECEIPT"
+                  ? "finished-reports"
+                  : "production-reports",
               purchase_order_id: "purchase-orders",
               business_plan_id: "business-plans",
               production_plan_id: "production-plans",
@@ -274,6 +424,18 @@ createForm = async function () {
               ...l,
               quantity: l.required_quantity || l.quantity,
             }));
+          if (isMysql && d.purpose === "PRODUCTION_RECEIPT") {
+            const grouped = new Map();
+            for (const l of lines) {
+              const previous = grouped.get(l.item_id);
+              if (previous)
+                previous.quantity = String(
+                  Number(previous.quantity) + Number(l.quantity),
+                );
+              else grouped.set(l.item_id, { ...l });
+            }
+            lines = [...grouped.values()];
+          }
           if (!lines.length)
             throw new Error("Nguồn chưa có lượng hàng cần yêu cầu.");
           const items = await options("items");
@@ -293,7 +455,14 @@ createForm = async function () {
           document.querySelector("#form-error").innerHTML = errorHTML(e);
         }
       };
-      bindForm((d) => { const body = { ...d, lines: readLines() }; if (body.purpose === "MATERIAL_PURCHASE") { delete body.warehouse_id; delete body.manager_id; } return body; }, current);
+      bindForm((d) => {
+        const body = { ...d, lines: readLines() };
+        if (body.purpose === "MATERIAL_PURCHASE") {
+          if(!isMysql)delete body.warehouse_id;
+          delete body.manager_id;
+        }
+        return body;
+      }, current);
       return;
     }
     if (current === "production-reports") {
@@ -302,10 +471,12 @@ createForm = async function () {
         ),
         items = (await options("items")).filter((i) => i.kind === "MATERIAL"),
         e = lineEditor(
-          "Ước lượng NVL và lượng hiện có tại xưởng",
+          "Nhu cầu NVL thực tế — tồn khả dụng do hệ thống tính",
           items,
           "lines",
-          ["available_quantity", "required_quantity"],
+          isMysql
+            ? ["required_quantity"]
+            : ["available_quantity", "required_quantity"],
         );
       openModal(
         "Báo cáo nhu cầu NVL",
@@ -339,7 +510,13 @@ createForm = async function () {
     }
     await originalCreateForm();
     if (current === "business-plans" && document.querySelector("#data-form")) {
-      const reports = isMysql ? (await options("production-reports")).filter(r => r.status === "SUBMITTED") : [];
+      const production = isMysql ? await options("production-plans") : [];
+      const finishedReports = isMysql ? await options("finished-reports") : [];
+      const reports = isMysql
+        ? (await options("production-reports")).filter(
+            (r) => r.status === "SUBMITTED",
+          )
+        : [];
       const requests = (await options("stock-requests")).filter(
         (r) =>
           r.purpose === "MATERIAL_PURCHASE" &&
@@ -348,13 +525,24 @@ createForm = async function () {
       const grid = document.querySelector("#data-form .form-grid");
       grid.insertAdjacentHTML(
         "afterbegin",
-        (isMysql ? f("production_report_id", "select", false, [{ id: "", name: "Chọn báo cáo nhu cầu thực tế" }, ...reports]) : "") +
         (isMysql
-          ? f("production_plan_id", "select", false, [
-              { id: "", name: "Chọn kế hoạch sản xuất nguồn" },
-              ...production,
+          ? f("finished_report_id", "select", false, [
+              { id: "", name: "Chọn báo cáo thành phẩm nguồn" },
+              ...finishedReports,
             ])
           : "") +
+          (isMysql
+            ? f("production_report_id", "select", false, [
+                { id: "", name: "Chọn báo cáo nhu cầu thực tế" },
+                ...reports,
+              ])
+            : "") +
+          (isMysql
+            ? f("production_plan_id", "select", false, [
+                { id: "", name: "Chọn kế hoạch sản xuất nguồn" },
+                ...production,
+              ])
+            : "") +
           f("source_request_id", "select", false, [
             { id: "", name: "Chọn yêu cầu bổ sung NVL" },
             ...requests,
@@ -366,34 +554,102 @@ createForm = async function () {
         el.parentElement.hidden = el.disabled;
         const plan = document.querySelector("#f-production_plan_id");
         if (plan) {
-          plan.disabled = el.disabled;
-          plan.parentElement.hidden = el.disabled;
+          plan.disabled = true;
+          plan.parentElement.hidden = true;
           plan.required = false;
         }
         const report = document.querySelector("#f-production_report_id");
-        if (report) { report.disabled = el.disabled; report.parentElement.hidden = el.disabled; report.required = !el.disabled && !el.value; }
+        const finished = document.querySelector("#f-finished_report_id");
+        if (finished) {
+          finished.disabled = !el.disabled;
+          finished.parentElement.hidden = !el.disabled;
+          finished.required = el.disabled;
+        }
+        if (report) {
+          report.disabled = el.disabled;
+          report.parentElement.hidden = el.disabled;
+          report.required = !el.disabled && !el.value;
+        }
       };
       document.querySelector("#f-type").addEventListener("change", sync);
       sync();
-      if (isMysql) document.querySelector("#f-production_report_id").onchange = () => {
-        const report = reports.find(r => r.id === document.querySelector("#f-production_report_id").value);
-        document.querySelector("#f-source_request_id").value = "";
-        if (report) {
-          document.querySelector("#f-production_plan_id").value = report.production_plan_id;
+      if (isMysql)
+        document.querySelector("#f-finished_report_id").onchange = () => {
+          const report = finishedReports.find(
+            (r) =>
+              r.id === document.querySelector("#f-finished_report_id").value,
+          );
+          if (!report) return;
+          const grouped = new Map();
+          const quantity = (value) => {
+            const [whole, fraction = ""] = String(value).split(".");
+            return BigInt(whole) * 1000n + BigInt(fraction.padEnd(3, "0"));
+          };
+          for (const output of report.outputs) {
+            const previous = grouped.get(output.item_id);
+            if (previous) {
+              const total =
+                quantity(previous.quantity) + quantity(output.quantity);
+              previous.quantity =
+                String(total / 1000n) +
+                "." +
+                String(total % 1000n).padStart(3, "0");
+            } else grouped.set(output.item_id, { ...output, unit_price: "0" });
+          }
           document.querySelector("#lines-rows").innerHTML = "";
-          const lines = report.lines.filter(l => Number(l.shortage_quantity) > 0).map(l => ({ ...l, quantity: l.shortage_quantity, unit_price: "0" }));
-          lineEditor("NVL thiếu thực tế", lines.map(l => ({id:l.item_id,name:l.item_name || l.item_id})), "lines", ["quantity","unit_price"], lines).mount();
-        }
-        sync();
-      };
+          const lines = [...grouped.values()];
+          lineEditor(
+            "Thành phẩm theo báo cáo",
+            lines.map((l) => ({
+              id: l.item_id,
+              name: l.item_name || l.item_id,
+            })),
+            "lines",
+            ["quantity", "unit_price"],
+            lines,
+          ).mount();
+        };
+      if (isMysql)
+        document.querySelector("#f-production_report_id").onchange = () => {
+          const report = reports.find(
+            (r) =>
+              r.id === document.querySelector("#f-production_report_id").value,
+          );
+          document.querySelector("#f-source_request_id").value = "";
+          if (report) {
+            document.querySelector("#f-production_plan_id").value =
+              report.production_plan_id;
+            document.querySelector("#lines-rows").innerHTML = "";
+            const lines = report.lines
+              .filter((l) => Number(l.shortage_quantity) > 0)
+              .map((l) => ({
+                ...l,
+                quantity: l.shortage_quantity,
+                unit_price: "0",
+              }));
+            lineEditor(
+              "NVL thiếu thực tế",
+              lines.map((l) => ({
+                id: l.item_id,
+                name: l.item_name || l.item_id,
+              })),
+              "lines",
+              ["quantity", "unit_price"],
+              lines,
+            ).mount();
+          }
+          sync();
+        };
       document.querySelector("#f-source_request_id").onchange = () => {
         const req = requests.find(
           (r) => r.id === document.querySelector("#f-source_request_id").value,
         );
         sync();
         if (req) {
-          if (isMysql)
+          if (isMysql) {
             document.querySelector("#f-production_plan_id").value = "";
+            document.querySelector("#f-production_report_id").value = "";
+          }
           document.querySelector("#lines-rows").innerHTML = "";
           const e = lineEditor(
             "NVL cần mua",
@@ -405,36 +661,10 @@ createForm = async function () {
           e.mount();
         }
       };
-      if (isMysql)
-        document.querySelector("#f-production_plan_id").onchange = () => {
-          const plan = production.find(
-            (p) =>
-              p.id === document.querySelector("#f-production_plan_id").value,
-          );
-          document.querySelector("#f-source_request_id").value = "";
-          sync();
-          if (plan) {
-            document.querySelector("#lines-rows").innerHTML = "";
-            const e = lineEditor(
-              "NVL theo kế hoạch sản xuất",
-              plan.materials.map((l) => ({
-                id: l.item_id,
-                name: l.item_name || l.item_id,
-              })),
-              "lines",
-              ["quantity", "unit_price"],
-              plan.materials.map((l) => ({
-                item_id: l.item_id,
-                quantity: l.required_quantity,
-                unit_price: "0",
-              })),
-            );
-            e.mount();
-          }
-        };
       bindForm((d) => {
         const b = { ...d, lines: readLines() };
         if (b.type === "PURCHASE") {
+          delete b.finished_report_id;
           delete b.customer_id;
           delete b.customer_order_id;
           if (!b.source_request_id) delete b.source_request_id;
@@ -454,6 +684,100 @@ createForm = async function () {
   }
 };
 actionForm = async function (r, action) {
+  if (isMysql && action === "correct") {
+    openModal(
+      "Chứng từ bù QC",
+      formWrap(
+        inputField(
+          "lot_id",
+          "select",
+          true,
+          r.lines.map((l) => ({ id: l.lot_id, name: l.lot_code })),
+        ) +
+          inputField("passed_quantity", "number") +
+          inputField("failed_quantity", "number") +
+          inputField("issue", "textarea", false) +
+          inputField("reason", "textarea"),
+      ),
+    );
+    bindForm(
+      (d) => ({
+        version: r.version,
+        reason: d.reason,
+        lines: [
+          {
+            lot_id: d.lot_id,
+            passed_quantity: d.passed_quantity,
+            failed_quantity: d.failed_quantity,
+            issue: d.issue,
+          },
+        ],
+      }),
+      "qc-inspections/" + r.id + "/correct",
+      "POST",
+    );
+    return;
+  }
+  if (isMysql && action === "cancelAllocation") {
+    openModal(
+      "Giải phóng phân công",
+      formWrap(
+        '<div class="span2 notice">Giải phóng phần chưa ghi phiếu của công việc này?</div>',
+      ),
+    );
+    bindForm(
+      () => ({ version: r.version }),
+      "tasks/" + r.id + "/cancelAllocation",
+      "POST",
+    );
+    return;
+  }
+  if(isMysql && ["receiveReturn","cancelReturn"].includes(action)){
+    const receive=action==="receiveReturn";
+    openModal(receive?"Nhận hàng trả vào cách ly":"Hủy hàng trả chưa nhận",formWrap('<div class="span2 notice">'+(receive?"Xác nhận đã nhận đúng lượng ghi trên các dòng trả? Hệ thống tạo phiếu nhập cách ly; QC kiểm tra sau khi nhận.":"Hủy đề nghị trả chưa nhận và giải phóng lượng được trả trên phiếu giao gốc?")+'</div>'));
+    bindForm(()=>({version:r.version}),"customer-returns/"+r.id+"/"+(receive?"receive":"cancel"),"POST");return;
+  }
+  if (isMysql && action === "apply") {
+    openModal(
+      "Thực hiện phương án đã duyệt",
+      formWrap(
+        '<div class="span2 notice">Ghi nhận thực hiện và cập nhật tồn theo phương án đã được duyệt?</div>',
+      ),
+    );
+    bindForm(
+      () => ({ version: r.version }),
+      "exception-proposals/" + r.id + "/apply",
+      "POST",
+    );
+    return;
+  }
+  if (isMysql && action === "reinspect") {
+    openModal("Tái kiểm hàng lỗi", formWrap(
+      '<div class="span2 notice">Kiểm tra toàn bộ lượng được duyệt: '+esc(r.quantity)+'. Kết quả kiểm không tự thay đổi tồn kho.</div>'+
+      inputField("result","select",true,[{id:"PASSED",name:"Đạt chất lượng"},{id:"FAILED",name:"Không đạt"}])+
+      inputField("note","textarea")));
+    bindForm(d=>({...d,version:r.version}),"exception-proposals/"+r.id+"/reinspect","POST");
+    return;
+  }
+  if (isMysql && current === "tasks" && action === "progress") {
+    openModal(
+      "Cập nhật công việc",
+      formWrap(
+        inputField(
+          "status",
+          "select",
+          true,
+          r.status === "PLANNED" ? ["IN_PROGRESS"] : ["COMPLETED"],
+        ),
+      ),
+    );
+    bindForm(
+      (d) => ({ ...d, version: r.version }),
+      "tasks/" + r.id + "/progress",
+      "POST",
+    );
+    return;
+  }
   if (action === "dispatch") return dispatchForm(r);
   if (action === "postTask") {
     try {
@@ -507,8 +831,8 @@ detail = function (r) {
       modal.close();
       navigate("production-plans");
       await createForm();
-      document.querySelector("#f-customer_order_id")?.value &&
-        (document.querySelector("#f-customer_order_id").value = r.id);
+      const source = document.querySelector("#f-customer_order_id");
+      if (source) { source.value = r.id; if (source.onchange) await source.onchange(); }
     };
     modalBody.querySelector(".form-actions").append(btn);
   }

@@ -15,7 +15,7 @@ COPY --chown=node:node scripts ./scripts
 RUN mkdir -p /var/lib/warehouse-app-secrets /var/lib/warehouse-mysql-secrets && chown node:node /var/lib/warehouse-app-secrets /var/lib/warehouse-mysql-secrets
 USER node
 EXPOSE 3000
-CMD ["node", "src/server.js"]
+CMD ["node", "src/services/web-gateway/index.js"]
 
 FROM runtime AS test
 USER root
