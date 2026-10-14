@@ -42,7 +42,17 @@ module.exports = function createMysqlApp(runtime) {
     "Production yêu cầu cookie Secure và HTTPS.",
     500,
   );
-  app.use(helmet());
+  app.use(
+    helmet({
+      strictTransportSecurity: process.env.NODE_ENV === "production",
+      contentSecurityPolicy: {
+        directives: {
+          "upgrade-insecure-requests":
+            process.env.NODE_ENV === "production" ? [] : null,
+        },
+      },
+    }),
+  );
   app.use((req, res, next) => {
     req.request_id = crypto.randomUUID();
     res.set("X-Request-Id", req.request_id);

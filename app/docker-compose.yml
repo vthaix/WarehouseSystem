@@ -61,7 +61,7 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-}
       SESSION_SECRET: ${SESSION_SECRET:-}
       INTERNAL_SECRET: ${INTERNAL_SECRET:-}
-      DEMO_PASSWORD: ${DEMO_PASSWORD:-123456}
+      DEMO_PASSWORD: ${DEMO_PASSWORD:-}
     volumes:
       - app_secrets:/var/lib/warehouse-app-secrets
       - mysql_secrets:/var/lib/warehouse-mysql-secrets

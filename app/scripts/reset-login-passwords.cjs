@@ -17,6 +17,7 @@ async function main() {
         "UPDATE users SET password_hash=?,failed_login_count=0,session_version=session_version+1,version=version+1 WHERE id=?",
         [hashPassword(password), user.id],
       );
+    await connection.query("DELETE FROM login_attempts");
     const [rows] = await connection.query("SELECT password_hash FROM users");
     if (!rows.every((row) => verifyPassword(password, row.password_hash)))
       throw new Error("Kiểm tra mật khẩu thất bại.");

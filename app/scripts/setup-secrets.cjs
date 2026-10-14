@@ -33,7 +33,12 @@ function provision(appDir, mysqlDir, env = process.env) {
     require("../database/services/ownership.json"),
   ))
     secret(path.join(appDir, service + "_db_password"), undefined, 32);
-  secret(path.join(appDir, "demo_password"), env.DEMO_PASSWORD, 6);
+  const demoPasswordFile = path.join(appDir, "demo_password");
+  secret(
+    demoPasswordFile,
+    env.DEMO_PASSWORD || (fs.existsSync(demoPasswordFile) ? undefined : "123456"),
+    6,
+  );
 }
 if (require.main === module) {
   try {

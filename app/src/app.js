@@ -35,7 +35,17 @@ function createApp(options = {}) {
   app.disable("x-powered-by");
   app.set("view engine", "ejs");
   app.set("views", path.join(__dirname, "views"));
-  app.use(helmet());
+  app.use(
+    helmet({
+      strictTransportSecurity: process.env.NODE_ENV === "production",
+      contentSecurityPolicy: {
+        directives: {
+          "upgrade-insecure-requests":
+            process.env.NODE_ENV === "production" ? [] : null,
+        },
+      },
+    }),
+  );
   app.use((req, res, next) => {
     req.request_id = crypto.randomUUID();
     res.set("X-Request-Id", req.request_id);
