@@ -7,6 +7,10 @@ Cập nhật 14/10/2026. Toàn bộ đặc tả và tài liệu kiến trúc/v�
 | Kiến trúc đang chạy và giới hạn | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | Owner, database, tài khoản, migration | [SERVICE_DATABASES.md](SERVICE_DATABASES.md), [DATABASE.md](DATABASE.md) |
 | Chạy và nâng cấp Docker | [DOCKER.md](DOCKER.md) |
+| Tài khoản mẫu, mật khẩu và quyền | [DEMO_ACCOUNTS.md](DEMO_ACCOUNTS.md) |
+| Test case theo đặc tả UC | [TEST_CASES.md](TEST_CASES.md) |
+| Phiếu chấm 10 module nghiệp vụ | [PHIEU_CHAM.md](PHIEU_CHAM.md) |
+| Kết quả kiểm thử và ma trận thực thi | [TEST_RESULTS.md](TEST_RESULTS.md), [TEST_EXECUTION_MATRIX.md](TEST_EXECUTION_MATRIX.md) |
 | Triển khai tiếp / production | [IMPLEMENTATION.md](IMPLEMENTATION.md), [PRODUCTION.md](PRODUCTION.md) |
 | Chuyển tiếp sang độc lập dữ liệu | [MICROSERVICE_MIGRATION.md](MICROSERVICE_MIGRATION.md) |
 | Prompt bàn giao | [MICROSERVICE_HANDOFF_PROMPT.md](MICROSERVICE_HANDOFF_PROMPT.md) |

@@ -104,7 +104,10 @@ const assert = require("node:assert/strict");
       .fill(date + `T${String(Number(hour) + 1).padStart(2, "0")}:00`);
     await page.locator("#f-location").fill("Khu kiểm tra " + kind);
     await save();
-    return app.locals.repo.all("stocktakes").at(-1);
+    const campaign = app.locals.repo.all("stocktakes").at(-1);
+    await action("start");
+    await save();
+    return campaign;
   };
   try {
     await page.goto(base + "/login");

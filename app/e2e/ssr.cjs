@@ -31,7 +31,7 @@ const assert = require("node:assert/strict");
     await page.locator("#login-form button").click();
     await page.waitForURL("**/dashboard");
     assert.ok(
-      await page.getByRole("heading", { name: "Không gian làm việc" }).count(),
+      await page.getByRole("heading", { name: "Tổng quan vận hành" }).count(),
     );
     await page.goto(base + "/products/create");
     await page.locator("#code").fill("SSR-BROWSER");
