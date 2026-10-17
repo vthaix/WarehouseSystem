@@ -1,5 +1,7 @@
 node_modules/
 .env
+deploy.env
+deploy.env
 .runtime/
 coverage/
 *.log

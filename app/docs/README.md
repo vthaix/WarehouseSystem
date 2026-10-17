@@ -10,6 +10,11 @@ Cập nhật 14/10/2026. Toàn bộ đặc tả và tài liệu kiến trúc/v�
 | Tài khoản mẫu, mật khẩu và quyền | [DEMO_ACCOUNTS.md](DEMO_ACCOUNTS.md) |
 | Test case theo đặc tả UC | [TEST_CASES.md](TEST_CASES.md) |
 | Phiếu chấm 10 module nghiệp vụ | [PHIEU_CHAM.md](PHIEU_CHAM.md) |
+| Luồng kiểm tra hệ thống thực tế | [LUONG_KIEM_TRA_THUC_TE.md](LUONG_KIEM_TRA_THUC_TE.md) |
+| Dữ liệu test khi clone máy mới | [DU_LIEU_TEST_MAY_MOI.md](DU_LIEU_TEST_MAY_MOI.md) |
+| Bộ chứng từ test riêng từng UC và thư mục ảnh | [DEMO_FIXTURES.md](DEMO_FIXTURES.md) |
+| Vị trí cấu hình CSDL và chuyển lên host | [CAU_HINH_CSDL_HOST.md](CAU_HINH_CSDL_HOST.md) |
+| Kế thừa actor và UC | [ACTOR_UC_GENERALIZATION.md](ACTOR_UC_GENERALIZATION.md), [PlantUML](ACTOR_UC_GENERALIZATION.puml) |
 | Kết quả kiểm thử và ma trận thực thi | [TEST_RESULTS.md](TEST_RESULTS.md), [TEST_EXECUTION_MATRIX.md](TEST_EXECUTION_MATRIX.md) |
 | Triển khai tiếp / production | [IMPLEMENTATION.md](IMPLEMENTATION.md), [PRODUCTION.md](PRODUCTION.md) |
 | Chuyển tiếp sang độc lập dữ liệu | [MICROSERVICE_MIGRATION.md](MICROSERVICE_MIGRATION.md) |

@@ -9,6 +9,7 @@ Từ thư mục app: `npm test`, `npm run check`. `npm start` chỉ chạy gatew
 - [Danh mục tài liệu](docs/README.md)
 - [Kiến trúc](docs/ARCHITECTURE.md)
 - [Chạy Docker](docs/DOCKER.md)
+- [Dữ liệu mẫu để test trên máy mới](docs/DU_LIEU_TEST_MAY_MOI.md)
 - [CSDL theo owner](docs/SERVICE_DATABASES.md)
 - [Tiến độ](docs/IMPLEMENTATION_PROGRESS.md)
 

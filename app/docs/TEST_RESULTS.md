@@ -4,6 +4,8 @@ Ngày chạy: 14/10/2026. Bộ ca thiết kế: [TEST_CASES.md](TEST_CASES.md). 
 
 ## Kết quả đợt chạy
 
+Bổ sung ngày 17/10/2026: đã dựng và xác minh 36 nhóm chứng từ mẫu trên CSDL hiện có và một project Docker có volume mới. Kiểm tra lặp lại giữ nguyên số dòng các bảng Business/Warehouse. Bộ nghiệm thu split MySQL và 51 test tự động chạy lại đạt. Đã sửa lỗi khóa lịch TaskService trên tài khoản Warehouse chỉ có SELECT đối với Identity; không mở quyền UPDATE lên tài khoản người dùng. Chi tiết [DEMO_FIXTURES.md](DEMO_FIXTURES.md). Kết quả này không thay thế nghiệm thu từng ca trong 233 ca thiết kế bên dưới.
+
 Đã chạy toàn bộ nhóm kiểm thử tự động có trong project: unit/HTTP, cú pháp, đồng bộ project, nghiệm thu MySQL microservice và các bộ trình duyệt. Hệ thống microservice vượt qua các bộ nghiệm thu hiện có. Bộ trình duyệt backend bộ nhớ cũ vẫn thất bại ở form tạo hồ sơ kho tổng hợp. Không kết luận 233 ca trong đặc tả đều Pass: các script hiện có chưa tương ứng đầy đủ từng thao tác và từng nhánh của 233 ca.
 
 | Bộ kiểm thử | Kết quả thực tế | Phạm vi / giới hạn |

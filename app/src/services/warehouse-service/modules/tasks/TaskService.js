@@ -9,6 +9,7 @@ class TaskService {
   }
   async transaction(work) {
     const c = await this.pool.getConnection();
+    c.taskScheduleLocks = [];
     try {
       await c.beginTransaction();
       const result = await work(c);
@@ -18,7 +19,13 @@ class TaskService {
       await c.rollback();
       throw e;
     } finally {
-      c.release();
+      try {
+        for (const key of c.taskScheduleLocks) {
+          await c.query("SELECT RELEASE_LOCK(?)", [key]);
+        }
+      } finally {
+        c.release();
+      }
     }
   }
   async list(user, query = {}) {
@@ -152,10 +159,33 @@ class TaskService {
     const ids = b.assignee_ids
       .map(String)
       .sort((a, b) => (BigInt(a) < BigInt(b) ? -1 : 1));
+    // Identity rows are read-only to this service. Serialize assignments locally
+    // without requiring UPDATE permission on the Identity database.
+    const [[schema]] = await c.query("SELECT DATABASE() AS schedule_database");
+    for (const id of ids) {
+      const key =
+        "task:" +
+        crypto
+          .createHash("sha256")
+          .update(schema.schedule_database + ":" + id)
+          .digest("hex")
+          .slice(0, 56);
+      if (c.taskScheduleLocks.includes(key)) continue;
+      const [[lock]] = await c.query("SELECT GET_LOCK(?,10) AS acquired", [
+        key,
+      ]);
+      C.fail(
+        Number(lock.acquired) !== 1,
+        "SCHEDULE_CONFLICT",
+        "Lịch đang được cập nhật. Vui lòng thử lại.",
+        409,
+      );
+      c.taskScheduleLocks.push(key);
+    }
     const [users] = await c.execute(
       "SELECT id FROM users WHERE status='ACTIVE' AND EXISTS(SELECT 1 FROM user_roles ur JOIN roles r ON r.id=ur.role_id WHERE ur.user_id=users.id AND r.code<>'CUSTOMER') AND id IN (" +
         ids.map(() => "?").join(",") +
-        ") ORDER BY id FOR UPDATE",
+        ") ORDER BY id",
       ids,
     );
     C.fail(

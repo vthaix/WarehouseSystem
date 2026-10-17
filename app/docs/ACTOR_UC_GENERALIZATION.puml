@@ -1,0 +1,45 @@
+@startuml
+left to right direction
+actor "Nhân sự kho" as Kho <<abstract>>
+actor "Quản lý kho" as QL
+actor "Nhân viên kho" as NV
+actor "Nhân viên kiểm tra" as KT <<abstract>>
+actor "Ban kiểm kê" as KK
+actor "Bộ phận QC/AC" as QC
+Kho <|-- QL
+Kho <|-- NV
+KT <|-- KK
+KT <|-- QC
+rectangle "WarehouseSystem" {
+  usecase "UC-08\nQuản lý nhập kho" as U08
+  usecase "UC-09\nQuản lý xuất kho" as U09
+  usecase "UC-06/07 và các UC con\nQuản lý danh mục/dữ liệu" as DM
+  usecase "UC-16\nXử lý chênh lệch" as U16
+  usecase "UC-18/22\nXem tồn / Tra cứu dữ liệu" as TraCuu
+  usecase "UC-10\nNhập kho" as U10
+  usecase "UC-11\nXuất kho" as U11
+  usecase "UC-11.01\nXuất NVL" as U1101
+  usecase "UC-11.02\nXuất thành phẩm" as U1102
+  usecase "UC-TQ-01\nThực hiện kiểm tra hàng hóa" as UCheck <<abstract>>
+  usecase "UC-12.1\nThêm kết quả kiểm tra QC/AC" as U121
+  usecase "UC-15\nThực hiện kiểm kê" as U15
+  usecase "UC-12/12.2/12.3\nQuản lý / sửa / xóa kết quả QC" as QLQC
+  usecase "UC-28\nLập biên bản kiểm kê" as U28
+}
+Kho -- U08
+Kho -- U09
+QL -- DM
+QL -- U16
+QL -- TraCuu
+NV -- U10
+NV -- U11
+U11 <|-- U1101
+U11 <|-- U1102
+KT -- UCheck
+KT -- U28
+QC -- U121
+QC -- QLQC
+KK -- U15
+UCheck <|-- U121
+UCheck <|-- U15
+@enduml

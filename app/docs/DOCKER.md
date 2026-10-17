@@ -12,6 +12,8 @@ Lần sau bật lại: `docker compose up -d`. Khi thay code/image: thêm `--bui
 
 Chuỗi bootstrap: setup → MySQL healthy → migrate nguồn legacy → split-databases → backend → gateway. Setup/migrate/split-databases là job một lần, exit 0 là bình thường. Runtime không tự chạy DDL.
 
+Development mặc định chạy thêm service khởi tạo demo-fixtures sau gateway healthy để dựng 36 bộ chứng từ cho test UC độc lập. Chỉ healthy khi đã dựng xong; `--wait` chờ cả bước này. Tiến trình sau đó chờ nhẹ, không ghi thêm. Chi tiết và ảnh: [DEMO_FIXTURES.md](DEMO_FIXTURES.md). Bỏ qua khởi tạo khi NODE_ENV=production hoặc SEED_DEMO=false; chạy lại không reset fixture đã tạo.
+
 Giao diện http://localhost:3000. Gateway có tên Compose `app`; năm backend và MySQL chỉ trong network nội bộ.
 
 ## Adminer

@@ -4,6 +4,8 @@ Cập nhật ngày 14/10/2026. Đăng nhập tại http://localhost:3000.
 
 ## Danh sách tài khoản mẫu
 
+Dữ liệu test riêng từng UC (36 bộ chứng từ, gồm đơn chờ tiếp nhận) và nơi upload ảnh: [DEMO_FIXTURES.md](DEMO_FIXTURES.md).
+
 | Tài khoản | Mật khẩu mẫu | Vai trò | Mã vai trò |
 | --- | --- | --- | --- |
 | `customer` | `123456` | Khách hàng | `CUSTOMER` |
@@ -19,6 +21,15 @@ Cập nhật ngày 14/10/2026. Đăng nhập tại http://localhost:3000.
 | `director` | `123456` | Ban giám đốc | `DIRECTOR` |
 
 Đây là tài khoản mẫu của môi trường phát triển. Mật khẩu được băm trong CSDL; không lưu chuỗi `123456` trực tiếp trong cột mật khẩu. Nếu đã đổi mật khẩu hoặc cấu hình `DEMO_PASSWORD` khác khi khởi tạo, dùng mật khẩu đã thiết lập. Seed không ghi đè mật khẩu tài khoản đã tồn tại.
+
+## Actor tổng quát hóa trên sơ đồ UC
+
+| Actor cha | Actor con kế thừa | Tài khoản hiện tại |
+| --- | --- | --- |
+| **Nhân sự kho** | Quản lý kho; Nhân viên kho | `manager`; `staff`, `staff2` |
+| **Nhân viên kiểm tra** | Ban kiểm kê; Bộ phận QC/AC | `stocktaker`; `qc` |
+
+Giữ nguyên bốn actor con và quyền chuyên biệt. Actor cha dùng trong mô hình UML, không phải tài khoản hoặc role mới. Sơ đồ và UC dùng chung xem [ACTOR_UC_GENERALIZATION.md](ACTOR_UC_GENERALIZATION.md).
 
 ## Quyền nghiệp vụ chính
 

@@ -227,6 +227,32 @@ services:
       reporting-service:
         condition: service_healthy
     networks: [backend, frontend]
+  demo-fixtures:
+    image: warehouse-system-app:${APP_IMAGE_TAG:-local}
+    user: "0:0"
+    command: ["node", "scripts/seed-demo-workflows.cjs", "--serve"]
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      SEED_DEMO: ${SEED_DEMO:-true}
+      DB_NAME: ${DB_NAME:-KhoHang}
+      DB_HOST: mysql
+      DEMO_API_URL: http://app:3000
+      DEMO_PASSWORD_FILE: /run/warehouse-app-secrets/demo_password
+    volumes:
+      - app_secrets:/run/warehouse-app-secrets:ro
+      - mysql_secrets:/run/warehouse-mysql-secrets:ro
+      - database_backups:/var/backups/warehouse
+    depends_on:
+      app:
+        condition: service_healthy
+    networks: [backend]
+    restart: "no"
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('node:fs').accessSync('/tmp/warehouse-demo-ready')"]
+      interval: 2s
+      timeout: 2s
+      start_period: 120s
+      retries: 30
   adminer:
     image: adminer:5
     profiles: [dev]
