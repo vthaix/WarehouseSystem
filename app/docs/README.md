@@ -1,5 +1,7 @@
 # Danh mục tài liệu hiện hành
 
+Bản Domain Model cũ đã khôi phục nguyên nội dung, gồm sơ đồ lớp: [DOMAIN_MODEL_RECOVERY.md](DOMAIN_MODEL_RECOVERY.md).
+
 Cập nhật 14/10/2026. Toàn bộ đặc tả và tài liệu kiến trúc/vận hành đã hợp nhất theo runtime hiện hành; báo cáo kiểm chứng trong DOCS_SYNC.md. SRS/UC/domain/API/UI đã hợp nhất thành bản hiện hành; bản trước hợp nhất ở archive/before-full-sync-20261014, bản vận hành cũ ở archive/pre-microservice-doc-sync-20261014, chỉ để truy vết, không dùng làm hướng dẫn chạy.
 
 | Nội dung | Tài liệu |
