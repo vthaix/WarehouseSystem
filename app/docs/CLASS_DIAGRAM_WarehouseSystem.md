@@ -70,7 +70,6 @@ Kiểu `String` cho mã, `Decimal` cho số lượng/tiền, `Date` và `DateTim
 
 UC liên quan: UC-01.
 
-
 ```mermaid
 classDiagram
     direction TB
@@ -120,7 +119,6 @@ classDiagram
 ### 2. Đơn hàng khách hàng
 
 UC liên quan: UC-02, UC-03, UC-03.1, UC-29, UC-31.
-
 
 ```mermaid
 classDiagram
