@@ -1,7 +1,5 @@
 # Class diagram hệ thống quản lý kho
 
-Bản thiết kế lớp được tổng hợp từ hai tài liệu anh cung cấp. Sequence của Nguyễn Tiến Dũng và Vũ Uyên Thy lấy từ **BaoCaoGK_WarehouseTeam.docx**; sequence của Trần Văn Thái, Trương Bảo Huy, Trần Quốc Tuấn và Trần Như Ý lấy từ **Tuan6_WarehouseTeam_sequence_method_activation(1).docx**. Thuộc tính nền lấy từ các hình domain trong BaoCaoGK, bổ sung thông tin được sequence và đặc tả sử dụng.
-
 ## Cách đọc và phạm vi
 
 - `boundary`: giao diện, kiểm tra định dạng input, nhận thao tác, hiển thị dữ liệu và thông báo.
