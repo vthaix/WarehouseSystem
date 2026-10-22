@@ -4,8 +4,8 @@ Hợp nhất 14/10/2026. Những lựa chọn dưới đã được chủ dự �
 
 | Mã | Quy tắc hiện hành |
 | --- | --- |
-| BR-01 | Khách đặt đơn; planner tiếp nhận trên DonHang. Chỉ sửa trước duyệt. Giám đốc duyệt đơn và KHSX liên quan trong một transaction. |
-| BR-02 | KHSX gồm dòng thành phẩm/NVL chung ChiTietKeHoachSanXuat. NVL nhập lượng gốc, cộng 10% đúng một lần, làm tròn lên 3 chữ số thập phân; không có BOM tự động. |
+| BR-01 | Khách đặt đơn; planner tiếp nhận trên DonHang. Chỉ sửa trước duyệt. Giám đốc duyệt từng KHSX; duyệt thành công tự cập nhật đơn nguồn sang APPROVED trong cùng transaction. Không duyệt trực tiếp đơn, không tự duyệt các KHSX khác. |
+| BR-02 | Cập nhật 22/10: KHSX tính NVL gốc theo công thức cấu hình × lượng bánh, cộng gộp NVL chung; vẫn cho nhập tay. Cộng 10% đúng một lần, làm tròn lên 3 chữ số. Lưu vào chi tiết hiện có; công thức hiện là mẫu minh họa. |
 | BR-03 | Một báo cáo nhu cầu hiệu lực/KHSX. Nguồn đã gửi/đã sử dụng bất biến; tồn/thiếu lấy hệ thống, không tự khai tồn. |
 | BR-04 | Kế hoạch MUA lấy báo cáo SAN_XUAT mục đích NHU_CAU; kế hoạch BAN lấy tổng kết THANH_PHAM. Không dùng tiến độ/sự cố làm nguồn nhu cầu. |
 | BR-05 | Đơn mua PLAN/REPORT/MANUAL. PLAN tối đa một đơn/kế hoạch; REPORT và kế hoạch MUA cùng chia sẻ hạn mức thiếu, không đếm đơn PLAN thêm lần nữa. MANUAL không tự đáp ứng báo cáo. |
@@ -13,7 +13,7 @@ Hợp nhất 14/10/2026. Những lựa chọn dưới đã được chủ dự �
 | BR-07 | Ngoại lệ: lập → giám đốc duyệt/từ chối → quản lý áp dụng riêng; người lập không tự duyệt. Điều chỉnh hàng đã nhập cần xác nhận QC và chứng từ bù, giữ phiếu gốc. |
 | BR-08 | Yêu cầu NVL PLAN hoặc REPORT; tổng yêu cầu/cấp đối chiếu cùng KHSX. Nếu đã có báo cáo nhu cầu gửi, PLAN không vượt nhu cầu thực tế. Yêu cầu không có bước duyệt riêng. |
 | BR-09 | Quản lý phân công tạo giữ chỗ, không TTL. Khả dụng là lượng AVAILABLE hợp lệ trừ phần giữ chưa xuất; hủy chỉ giải phóng phần chưa ghi. Không xuất hàng cách ly/hết hạn hoặc tồn âm. |
-| BR-10 | UC-34 khi chưa hoàn tất: TIEN_DO/SU_CO/NHU_CAU, BGĐ luôn nhận, thêm planner tùy chọn. UC-35 chỉ tổng kết khi xác nhận hoàn tất toàn bộ; sản lượng là thực tế, không ép bằng dự kiến. |
+| BR-10 | UC-34 khi chưa hoàn tất: BGĐ luôn nhận; NHU_CAU còn thiếu tự gửi planner, tiến độ/sự cố thêm planner tùy chọn. Hỗ trợ ảnh mô tả và chụp bảng đối chiếu. UC-35 chỉ tổng kết khi hoàn tất toàn bộ, sản lượng là thực tế. |
 | BR-11 | Kiểm kê khóa từng kho, snapshot và đếm theo dòng lô/vị trí/bucket; trống khác 0. Kết luận từng kho, mọi chênh lệch qua giám đốc duyệt, quản lý áp dụng rồi đóng đợt. |
 | BR-12 | Phiếu đã ghi, biến động và lịch sử duyệt không ghi đè. Hàng khách trả theo dòng giao gốc, nhận đúng một lần vào cách ly; chưa tự giao bù/hoàn tiền. Trả NCC chưa tự tạo mua bù. |
 
@@ -28,6 +28,6 @@ Hợp nhất 14/10/2026. Những lựa chọn dưới đã được chủ dự �
 
 ## Giới hạn cần đối chiếu theo phiếu chấm
 
-Chưa tự áp dụng chính sách thay thế/bổ sung báo cáo nguồn đã dùng, BOM tự động, lịch giao riêng, thanh toán/bồi thường/hoàn tiền, giao bù/mua bù tự động. Không gọi chúng là lỗi chưa triển khai của quy tắc đã chốt.
+Chưa tự áp dụng chính sách thay thế/bổ sung báo cáo nguồn đã dùng, giao diện CRUD/versioning công thức, lịch giao riêng, thanh toán/bồi thường/hoàn tiền, giao bù/mua bù tự động. Tính định lượng từ công thức cấu hình đã bổ sung ngày 22/10; xem [LUONG_DAT_HANG_TIEN_SAN_XUAT.md](LUONG_DAT_HANG_TIEN_SAN_XUAT.md).
 
 Ngày giao đang dùng latest_delivery_date; nếu phiếu chấm yêu cầu lịch giao khác thì thiết kế trường/quy trình riêng. Database độc lập theo server cần hợp đồng/events thay SQL xuyên schema, không chỉ bỏ FK.

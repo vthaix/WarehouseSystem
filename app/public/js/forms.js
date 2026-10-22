@@ -1,4 +1,8 @@
+function numericInputValue(value) {
+  return String(value ?? "").replace(/(\.\d*?[1-9])0+$|\.0+$/, "$1");
+}
 function inputField(k, type = "text", required = true, opts = [], value = "") {
+  if (type === "number") value = numericInputValue(value);
   return `<div class="field"><label for="f-${k}">${esc(fieldLabel(k))}${required ? " *" : ""}</label>${type === "select" ? `<select id="f-${k}" name="${k}" ${required ? "required" : ""}>${opts.map((o) => `<option value="${esc(o.id ?? o)}" ${String(o.id ?? o) === String(value) ? "selected" : ""}>${esc(o.name || labels[o] || o)}</option>`).join("")}</select>` : type === "textarea" ? `<textarea id="f-${k}" name="${k}" rows="3" ${required ? "required" : ""}>${esc(value)}</textarea>` : `<input id="f-${k}" name="${k}" type="${type}" ${required ? "required" : ""} ${type === "number" ? 'min="0" step="0.001"' : ""} value="${esc(value)}">`}</div>`;
 }
 async function options(resource) {
@@ -50,7 +54,7 @@ function lineEditor(
         const row = document.createElement("div");
         row.className = "line-row";
         row.dataset.section = section;
-        row.innerHTML = `<div><label>Mặt hàng *</label><select data-key="item_id" aria-label="Mặt hàng">${items.map((i) => `<option value="${i.id}" ${r.item_id === i.id ? "selected" : ""}>${esc(i.name || i.item_name)}</option>`).join("")}</select></div>${fields.map((k) => `<div><label>${esc(fieldLabel(k))}${k === "expiry_date" ? "" : " *"}</label><input aria-label="${esc(fieldLabel(k))}" data-key="${k}" type="${k.includes("date") ? "date" : k === "lot_code" ? "text" : "number"}" value="${esc(r[k] ?? (k === "unit_price" ? "0" : k.includes("quantity") ? "1" : ""))}" ${k === "unit_price" ? 'min="0" step="0.0001"' : k.includes("quantity") ? 'min="0" step="0.001"' : ""} ${k === "expiry_date" ? "" : "required"}></div>`).join("")}<button class="button small danger" type="button" aria-label="Xóa dòng">✕</button>`;
+        row.innerHTML = `<div><label>Mặt hàng *</label><select data-key="item_id" aria-label="Mặt hàng">${items.map((i) => `<option value="${i.id}" ${r.item_id === i.id ? "selected" : ""}>${esc((i.name || i.item_name) + ((i.unit || i.unit_name) ? " · " + (i.unit || i.unit_name) : ""))}</option>`).join("")}</select></div>${fields.map((k) => `<div><label>${esc(fieldLabel(k))}${k === "expiry_date" ? "" : " *"}</label><input aria-label="${esc(fieldLabel(k))}" data-key="${k}" type="${k.includes("date") ? "date" : k === "lot_code" ? "text" : "number"}" value="${esc(numericInputValue(r[k] ?? (k === "unit_price" ? "0" : k.includes("quantity") ? "1" : "")))}" ${k === "unit_price" ? 'min="0" step="0.0001"' : k.includes("quantity") ? 'min="0" step="0.001"' : ""} ${k === "expiry_date" ? "" : "required"}></div>`).join("")}<button class="button small danger" type="button" aria-label="Xóa dòng">✕</button>`;
         row.querySelector("button").onclick = () => {
           row.remove();
           retryKey = crypto.randomUUID();
@@ -85,7 +89,7 @@ async function createForm() {
       builder = (d) => d;
     const f = inputField;
     if (current === "customer-orders") {
-      const items = (await api("sample-items")).data;
+      const items = (await api("sample-items?per_page=100")).data;
       if (!items.length) throw new Error("Chưa có thành phẩm mẫu để đặt hàng.");
       const e = lineEditor("Hàng mẫu cần đặt", items);
       editors.push(e);
@@ -505,7 +509,9 @@ async function actionForm(r, action) {
   const f = inputField;
   if (action === "review")
     html =
-      '<div class="span2 notice">Phê duyệt sẽ khóa nội dung chứng từ. Từ chối cần nhập lý do.</div>' +
+      (current === "production-plans"
+        ? '<div class="span2 notice">Duyệt kế hoạch này sẽ tự cập nhật đơn hàng liên quan thành đã phê duyệt. Từ chối cần lý do và trả kế hoạch về chỉnh sửa.</div>'
+        : '<div class="span2 notice">Phê duyệt sẽ khóa nội dung chứng từ. Từ chối cần nhập lý do.</div>') +
       f("decision", "select", true, [
         { id: "APPROVE", name: "Phê duyệt" },
         { id: "REJECT", name: "Từ chối" },
@@ -764,7 +770,7 @@ async function editForm(r) {
         ),
       });
     } else if (current === "customer-orders") {
-      const items = (await api("sample-items")).data;
+      const items = (await api("sample-items?per_page=100")).data;
       const e = lineEditor(
         "Chi tiết đơn hàng",
         items,

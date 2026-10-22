@@ -11,7 +11,7 @@ const warehouseNavigation = {
     "RETURN_SUPPLIER": "Trả nhà cung cấp",
     "QUARANTINE_DISPOSITION": "Xử lý hàng cách ly",
     "STOCK_QC_CORRECTION": "Điều chỉnh QC hàng đã nhập",
-    "CUSTOMER_ACCEPTED": "Đã tiếp nhận",
+    "CUSTOMER_ACCEPTED": "Đã phê duyệt",
     "ORDER_PENDING_REVIEW": "Chờ phê duyệt",
     "ORDER_SUBMITTED": "Chờ tiếp nhận",
     "QUALITY_CHECK": "Kiểm tra chất lượng",
@@ -429,6 +429,9 @@ const warehouseNavigation = {
     ]
   ],
   "fieldNames": {
+    "material_source": "Nguồn định lượng NVL",
+    "customer_order_status": "Trạng thái đơn nguồn",
+    "customer_note": "Ghi chú khách hàng",
     "image_path": "Ảnh danh mục",
     "quarantine_source": "Hàng / vị trí xử lý",
     "result": "Kết luận tái kiểm",

@@ -4,6 +4,8 @@ Hợp nhất 14/10/2026. Mô hình nghiệp vụ và bảng vật lý không ph�
 
 ## Owner
 
+Cập nhật 22/10/2026: KHSX hỗ trợ định lượng tính từ công thức cấu hình theo mã bánh và số lượng, lưu vào ChiTietKeHoachSanXuat hiện có. Chủ xưởng đối chiếu định lượng đã lưu với tồn khả dụng từ chi tiết KHSX; UC-34 lưu liên kết ảnh trong ghi chú, file nằm ở volume ảnh và đọc theo quyền báo cáo. Không tạo bảng/cột mới cho đợt này; xem [LUONG_DAT_HANG_TIEN_SAN_XUAT.md](LUONG_DAT_HANG_TIEN_SAN_XUAT.md). Các bản domain cũ đã khôi phục giữ nguyên.
+
 Identity giữ người dùng/vai trò/phạm vi; Business giữ khách/xưởng/danh mục hàng, đơn, kế hoạch, mua và báo cáo SX; Warehouse giữ kho/lô/QC/yêu cầu/phiếu/tồn/kiểm kê/ngoại lệ/công việc; Notification giữ thông báo; Reporting giữ view/hồ sơ đọc; Gateway giữ session. Sáu database vẫn cùng MySQL và còn FK/view/transaction xuyên schema.
 
 ## Quan hệ chính
@@ -43,7 +45,7 @@ Sơ đồ thể hiện quan hệ nghiệp vụ chính; FK và NULL thực tế �
 
 ## Nguồn và điều kiện
 
-1. Khách đặt đơn; planner tiếp nhận và lập KHSX cho xưởng. BGĐ duyệt đơn/kế hoạch liên quan.
+1. Khách đặt đơn; planner tiếp nhận và lập KHSX cho xưởng. BGĐ duyệt KHSX; đơn hàng liên quan tự chuyển sang đã phê duyệt.
 2. Chủ xưởng tra cứu tồn khả dụng. Khi đang sản xuất, có thể gửi tiến độ/sự cố cho BGĐ; nếu có nhu cầu NVL thì gửi báo cáo NHU_CAU và chọn thêm planner.
 3. Mua bổ sung theo kế hoạch MUA đã duyệt hoặc nhập đơn REPORT/MANUAL. Nhận hàng tạo lô/dòng lô, QC; phần đạt lập yêu cầu nhập, quản lý phân công, nhân viên ghi phiếu. QC không tự tạo tồn.
 4. Xuất NVL lấy KHSX PLAN hoặc báo cáo NHU_CAU REPORT; kiểm nhu cầu cộng dồn, giữ chỗ và lô thực xuất.

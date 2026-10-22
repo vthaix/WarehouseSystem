@@ -90,9 +90,12 @@ async function run(script) {
       ...(splitSource ? [] : ["domain-schema-smoke"]),
       "tasks-smoke",
       "stocktake-smoke",
+      "order-smoke",
       "production-smoke",
       "commerce-smoke",
       ...(splitSource ? ['partial-receipt-smoke','category-images-smoke'] : []),
+      ...(splitSource ? ['preproduction-smoke'] : []),
+      ...(splitSource ? ['reset-tools-smoke'] : []),
     ])
       await run("scripts/" + script + ".cjs");
     console.log(

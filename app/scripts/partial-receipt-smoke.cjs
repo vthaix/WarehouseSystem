@@ -105,9 +105,9 @@ const ok = (r, s = 200) => {
     const live = ok(await director.call("customer-orders/" + order.id));
     ok(
       await director.call(
-        "customer-orders/" + order.id + "/review",
+        "production-plans/" + plan.id + "/review",
         "POST",
-        { version: live.version, decision: "APPROVE" },
+        { version: plan.version, decision: "APPROVE" },
         crypto.randomUUID(),
       ),
     );

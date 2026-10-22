@@ -3,7 +3,7 @@ const labels = {
   TIEN_DO:'Tiến độ',SU_CO:'Sự cố',NHU_CAU:'Thiếu / nhu cầu NVL',
   RELEASE: "Giải phóng / tái kiểm để sử dụng lại", SCRAP: "Tiêu hủy", RETURN_SUPPLIER: "Trả nhà cung cấp",
   QUARANTINE_DISPOSITION: 'Xử lý hàng cách ly', STOCK_QC_CORRECTION: 'Điều chỉnh QC hàng đã nhập',
-  CUSTOMER_ACCEPTED: "Đã tiếp nhận",
+  CUSTOMER_ACCEPTED: "Đã phê duyệt",
   ORDER_PENDING_REVIEW: "Chờ phê duyệt",
   ORDER_SUBMITTED: "Chờ tiếp nhận",
   QUALITY_CHECK: "Kiểm tra chất lượng",
@@ -361,6 +361,8 @@ function columnsFor(n) {
   ];
 }
 const fieldNames = {
+  material_source:'Nguồn định lượng NVL',
+  customer_order_status:'Trạng thái đơn nguồn',customer_note:'Ghi chú khách hàng',
   image_path:'Ảnh danh mục',
   quarantine_source: "Hàng / vị trí xử lý", result: "Kết luận tái kiểm",
   original_stock_document_line_id: "Dòng phiếu giao gốc", returned_lot_detail_id: "Dòng lô nhận trả", return_receiver_id: "Nhân viên nhận", return_warehouse_id: "Kho nhận", return_location_id: "Vị trí cách ly", return_header_id: "Lô trả", return_line_id: "Dòng trả", receiver_id: "Nhân viên nhận",

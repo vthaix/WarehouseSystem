@@ -49,6 +49,8 @@ function client() {
     planId,
     replayKey,
     rejectedId,
+    rejectedPlanId,
+    siblingPlanId,
     rejectKey;
   try {
     const customer = client(),
@@ -130,28 +132,31 @@ function client() {
     assert.equal(planPage.status, 200);
     replayKey = crypto.randomUUID();
     const approved = await director.call(
-      `/api/v1/customer-orders/${orderId}/review`,
+      `/api/v1/production-plans/${planId}/review`,
       "POST",
-      { version: received.data.version, decision: "APPROVE", reason: "" },
+      { version: plan.data.version, decision: "APPROVE", reason: "" },
       replayKey,
     );
     assert.equal(approved.status, 200, JSON.stringify(approved));
     assert.equal(approved.data.status, "APPROVED");
     const replay = await director.call(
-      `/api/v1/customer-orders/${orderId}/review`,
+      `/api/v1/production-plans/${planId}/review`,
       "POST",
-      { version: received.data.version, decision: "APPROVE", reason: "" },
+      { version: plan.data.version, decision: "APPROVE", reason: "" },
       replayKey,
     );
     assert.equal(replay.status, 200, JSON.stringify(replay));
     assert.equal(replay.data.version, approved.data.version);
     const finalPlan = await planner.call(`/api/v1/production-plans/${planId}`);
     assert.equal(finalPlan.data.status, "APPROVED");
+    const finalOrder = await customer.call(`/api/v1/customer-orders/${orderId}`);
+    assert.equal(finalOrder.data.status, "APPROVED");
+    assert.ok(!finalOrder.data.actions.includes("review"));
     assert.equal((await customer.call(`/api/v1/customer-orders/${orderId}/review`, "POST", {}, crypto.randomUUID())).status, 403);
     const second = await customer.call("/api/v1/customer-orders", "POST", {
       delivery_address: "Địa chỉ thử nghiệm 2",
       latest_delivery_date: delivery,
-      lines: [{ item_id: item.id, quantity: "1.000" }],
+      lines: [{ item_id: item.id, quantity: "2.000" }],
     });
     assert.equal(second.status, 201, JSON.stringify(second));
     rejectedId = second.data.id;
@@ -159,25 +164,44 @@ function client() {
       version: second.data.version,
     });
     assert.equal(secondReceived.status, 200, JSON.stringify(secondReceived));
+    const secondPlan = await planner.call("/api/v1/production-plans", "POST", {
+      customer_order_id: rejectedId, workshop_id: "1", start_date: delivery, end_date: delivery,
+      outputs: [{ item_id: item.id, quantity: "1.000" }], materials: [],
+    });
+    assert.equal(secondPlan.status, 201, JSON.stringify(secondPlan));
+    rejectedPlanId = secondPlan.data.id;
+    const siblingPlan = await planner.call("/api/v1/production-plans", "POST", {
+      customer_order_id: rejectedId, workshop_id: "1", start_date: delivery, end_date: delivery,
+      outputs: [{ item_id: item.id, quantity: "1.000" }], materials: [],
+    });
+    assert.equal(siblingPlan.status, 201, JSON.stringify(siblingPlan));
+    siblingPlanId = siblingPlan.data.id;
     rejectKey = crypto.randomUUID();
-    const rejected = await director.call(`/api/v1/customer-orders/${rejectedId}/review`, "POST", {
-      version: secondReceived.data.version,
+    const rejected = await director.call(`/api/v1/production-plans/${rejectedPlanId}/review`, "POST", {
+      version: secondPlan.data.version,
       decision: "REJECT",
       reason: "Không đáp ứng thời hạn giao.",
     }, rejectKey);
     assert.equal(rejected.status, 200, JSON.stringify(rejected));
-    assert.equal(rejected.data.status, "REJECTED");
-    assert.equal(rejected.data.rejection_reason, "Không đáp ứng thời hạn giao.");
+    assert.equal(rejected.data.status, "DRAFT");
+    assert.equal(rejected.data.version, secondPlan.data.version + 1);
+    assert.equal((await customer.call(`/api/v1/customer-orders/${rejectedId}`)).data.status, "RECEIVED");
+    const acceptedRevision = await director.call(`/api/v1/production-plans/${rejectedPlanId}/review`, "POST", {
+      version: rejected.data.version, decision: "APPROVE",
+    }, crypto.randomUUID());
+    assert.equal(acceptedRevision.status, 200, JSON.stringify(acceptedRevision));
+    assert.equal((await customer.call(`/api/v1/customer-orders/${rejectedId}`)).data.status, "APPROVED");
+    assert.equal((await planner.call(`/api/v1/production-plans/${siblingPlanId}`)).data.status, "DRAFT");
     console.log("ORDER PASS: create, ownership, stale version, edit, receive, plan, approve, reject, replay, RBAC.");
   } finally {
     if (orderId) {
       const connection = await pool.getConnection();
       try {
         await connection.beginTransaction();
-        if (planId) {
-          await connection.execute("DELETE FROM production_plan_materials WHERE production_plan_id=?", [planId]);
-          await connection.execute("DELETE FROM production_plan_outputs WHERE production_plan_id=?", [planId]);
-          await connection.execute("DELETE FROM production_plans WHERE id=?", [planId]);
+        for (const id of [planId, rejectedPlanId, siblingPlanId].filter(Boolean)) {
+          await connection.execute("DELETE FROM production_plan_materials WHERE production_plan_id=?", [id]);
+          await connection.execute("DELETE FROM production_plan_outputs WHERE production_plan_id=?", [id]);
+          await connection.execute("DELETE FROM production_plans WHERE id=?", [id]);
         }
         for (const id of [orderId, rejectedId].filter(Boolean)) {
           await connection.execute("DELETE FROM customer_order_lines WHERE customer_order_id=?", [id]);
@@ -186,9 +210,9 @@ function client() {
         await connection.execute("DELETE FROM notifications WHERE resource_type IN ('customer-orders','production-plans') AND resource_id IN (?,?,?)", [orderId, rejectedId || 0, planId || 0]);
         await connection.execute("DELETE FROM audit_logs WHERE resource_type IN ('customer-orders','production-plans') AND resource_id IN (?,?,?)", [orderId, rejectedId || 0, planId || 0]);
         if (replayKey)
-          await connection.execute("DELETE FROM idempotency_records WHERE operation='customer-order-review' AND idempotency_key=?", [replayKey]);
+          await connection.execute("DELETE FROM idempotency_records WHERE operation='production-plan-review' AND idempotency_key=?", [replayKey]);
         if (rejectKey)
-          await connection.execute("DELETE FROM idempotency_records WHERE operation='customer-order-review' AND idempotency_key=?", [rejectKey]);
+          await connection.execute("DELETE FROM idempotency_records WHERE operation='production-plan-review' AND idempotency_key=?", [rejectKey]);
         await connection.commit();
       } catch (error) {
         await connection.rollback();

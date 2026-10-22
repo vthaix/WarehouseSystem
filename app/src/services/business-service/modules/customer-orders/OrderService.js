@@ -57,8 +57,7 @@ class OrderService {
       result.actions.push("edit");
     if (user.roles.includes("PLANNER") && result.status === "SUBMITTED")
       result.actions.push("receive");
-    if (user.roles.includes("DIRECTOR") && result.status === "RECEIVED")
-      result.actions.push("review");
+
     delete result.customer_user_id;
     return result;
   }
@@ -317,75 +316,13 @@ class OrderService {
         [user.id, id],
       );
       await this.audit(connection, user, id, "RECEIVE", { status: "SUBMITTED" }, { status: "RECEIVED" }, requestId);
-      await this.notifyRole(connection, "DIRECTOR", id, `Đơn hàng ${order.code} chờ phê duyệt`, `order-${id}-received`);
     });
     return this.get(user, id);
   }
 
   async review(user, id, body, key, requestId) {
     P.role(user, ["DIRECTOR"]);
-    C.fields(body, ["version", "decision", "reason"]);
-    C.fail(!Number.isInteger(body.version) || !["APPROVE", "REJECT"].includes(body.decision), "VALIDATION_ERROR", "Quyết định không hợp lệ.");
-    if (body.decision === "REJECT") C.text(body.reason, "reason", 2000);
-    else if (body.reason !== undefined) C.text(body.reason, "reason", 2000, false);
-    C.fail(typeof key !== "string" || key.length < 8 || key.length > 100, "VALIDATION_ERROR", "Cần Idempotency-Key hợp lệ.");
-    const hash = crypto.createHash("sha256").update(JSON.stringify({ id: String(id), ...body })).digest("hex");
-    return this.transaction(async (connection) => {
-      await connection.execute(
-        "INSERT INTO idempotency_records (user_id,operation,idempotency_key,request_hash,response_status,response_body,expires_at) VALUES (?,'customer-order-review',?,?,0,'{}',DATE_ADD(UTC_TIMESTAMP(6), INTERVAL 1 DAY)) ON DUPLICATE KEY UPDATE id=id",
-        [user.id, key, hash],
-      );
-      const [[record]] = await connection.execute(
-        "SELECT * FROM idempotency_records WHERE user_id=? AND operation='customer-order-review' AND idempotency_key=? FOR UPDATE",
-        [user.id, key],
-      );
-      C.fail(record.request_hash !== hash, "IDEMPOTENCY_CONFLICT", "Khóa yêu cầu đã dùng cho nội dung khác.", 409);
-      if (record.response_status === 200)
-        return typeof record.response_body === "string" ? JSON.parse(record.response_body) : record.response_body;
-      const order = await this.load(connection, user, id, true);
-      C.version(order, body.version);
-      C.state(order, ["RECEIVED"]);
-      if (body.decision === "APPROVE") {
-        const [plans] = await connection.execute(
-          "SELECT id FROM production_plans WHERE customer_order_id=? AND status='DRAFT' FOR UPDATE",
-          [id],
-        );
-        C.fail(!plans.length, "INVALID_STATE", "Cần lập kế hoạch sản xuất nháp trước khi duyệt đơn.", 409);
-        const [limits] = await connection.execute(
-          "SELECT l.item_id,l.quantity FROM customer_order_lines l WHERE l.customer_order_id=?",
-          [id],
-        );
-        const remaining = new Map(limits.map((line) => [String(line.item_id), C.qty(String(line.quantity))]));
-        const [outputs] = await connection.execute(
-          "SELECT po.item_id,po.quantity FROM production_plan_outputs po JOIN production_plans p ON p.id=po.production_plan_id WHERE p.customer_order_id=? AND p.status IN ('DRAFT','APPROVED','IN_PROGRESS','COMPLETED')",
-          [id],
-        );
-        for (const output of outputs) {
-          const item = String(output.item_id);
-          const rest = (remaining.get(item) || 0n) - C.qty(String(output.quantity));
-          C.fail(rest < 0n, "SOURCE_LIMIT_EXCEEDED", "Kế hoạch sản xuất vượt số lượng đơn hàng.");
-          remaining.set(item, rest);
-        }
-        await connection.execute(
-          "UPDATE production_plans SET status='APPROVED',version=version+1 WHERE customer_order_id=? AND status='DRAFT'",
-          [id],
-        );
-      }
-      const status = body.decision === "APPROVE" ? "APPROVED" : "REJECTED";
-      await connection.execute(
-        "UPDATE customer_orders SET status=?,reviewed_by=?,reviewed_at=UTC_TIMESTAMP(6),rejection_reason=?,version=version+1 WHERE id=?",
-        [status, user.id, body.decision === "REJECT" ? body.reason.trim() : null, id],
-      );
-      await this.audit(connection, user, id, "REVIEW", { status: "RECEIVED" }, { status, reason: body.reason || null }, requestId);
-      await this.notifyUser(connection, order.customer_user_id, id, `Đơn hàng ${order.code}: ${status === "APPROVED" ? "đã tiếp nhận" : "bị từ chối"}`, `order-${id}-review-${status}`);
-      await this.notifyRole(connection, "PLANNER", id, `Đơn hàng ${order.code}: ${status}`, `order-${id}-planner-${status}`);
-      const result = await this.detail(connection, user, id);
-      await connection.execute(
-        "UPDATE idempotency_records SET response_status=200,response_body=? WHERE id=?",
-        [JSON.stringify(result), record.id],
-      );
-      return result;
-    });
+    C.fail(true, "PLAN_REVIEW_REQUIRED", "Vui lòng phê duyệt kế hoạch sản xuất. Đơn hàng tự cập nhật sau khi kế hoạch được duyệt.", 409);
   }
 }
 

@@ -2135,7 +2135,7 @@ Dependency trong bảng tương đương `Controller ..> Entity` trong UML. Bả
 |UC-03|UIQuanLyDonHangKhachHang|ControllerDonHang|DonHang, ChiTietDonHang, MatHang, KhachHang|BaoCaoGK: image89.jpg|
 |UC-03.1|UISuaDonHangKhachHang|ControllerDonHang|DonHang, ChiTietDonHang|BaoCaoGK: image90.jpg|
 |UC-29|UITiepNhanDonHang|ControllerDonHang|DonHang, ChiTietDonHang, MatHang, KhachHang|Tuan6: image20.png, image29.png|
-|UC-31|UIPheDuyetDonHang|ControllerDonHang|DonHang, ChiTietDonHang, KeHoachSanXuat, ChiTietKeHoachSanXuat, Xuong|Tuan6: image21.png, image27.png|
+|UC-31|UIPheDuyetKeHoachSanXuat|ControllerKeHoachSanXuat|KeHoachSanXuat, ChiTietKeHoachSanXuat, DonHang, ChiTietDonHang, Xuong|Duyệt KHSX, tự cập nhật đơn nguồn; tham chiếu ảnh cũ: Tuan6 image21.png, image27.png|
 |UC-06|UIQuanLyDanhMucKho|ControllerDanhMucKho|LoaiHang, MatHang|Tuan6: image19.png|
 |UC-06.1|UIThemDanhMucKho|ControllerDanhMucKho|LoaiHang|Tuan6: image34.png|
 |UC-06.2|UIXoaDanhMucKho|ControllerDanhMucKho|LoaiHang, MatHang|Tuan6: image37.png|

@@ -11,6 +11,10 @@ function collect() {
   const authRouter=require('../src/routes/auth.routes')({});
   routes.unshift(...authRouter.stack.filter(l=>l.route).flatMap(l=>Object.keys(l.route.methods).map(method=>({method:method.toUpperCase(),path:'/auth'+l.route.path,owner:'web-gateway / identity-service',pending:false}))));
   const imageRouter=require('../src/shared/CategoryImageRoutes')();
+  const productionImages=require('../src/shared/ProductionReportImageRoutes')({});
+  const testReset=require('../src/shared/TestResetRoutes')().router;
+  routes.push(...testReset.stack.filter(l=>l.route).flatMap(l=>Object.keys(l.route.methods).map(method=>({method:method.toUpperCase(),path:l.route.path.slice('/api/v1'.length),owner:'web-gateway / development test-reset utility',pending:false}))));
+  routes.push(...productionImages.stack.filter(l=>l.route).flatMap(l=>Object.keys(l.route.methods).map(method=>({method:method.toUpperCase(),path:l.route.path.slice('/api/v1'.length),owner:'web-gateway',pending:false}))));
   routes.push(...imageRouter.stack.filter(l=>l.route&&l.route.path.startsWith('/api/v1')).flatMap(l=>Object.keys(l.route.methods).map(method=>({method:method.toUpperCase(),path:l.route.path.slice('/api/v1'.length),owner:'web-gateway',pending:false}))));
   const services=Object.entries(ownership).map(([name,entry])=>{
     const sql=fs.readFileSync(path.join(root,'database/services/schemas',name,'001_schema.sql'),'utf8');

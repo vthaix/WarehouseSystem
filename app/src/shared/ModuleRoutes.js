@@ -486,6 +486,8 @@ module.exports = (runtime) => {
       ok(req, res, result.data, 200, result.meta);
     },
   );
+  router.get('/production-plans/:id/material-comparison',role(['WORKSHOP_OWNER','PLANNER','DIRECTOR']),async(req,res)=>ok(req,res,await runtime.productionPlans.materialComparison(req.user,req.params.id)));
+  router.post('/production-plans/recipe-estimate',role(['PLANNER']),async(req,res)=>{C.fields(req.body,['outputs']);ok(req,res,await require('./production-recipes').fromDatabase(runtime.pool,req.body.outputs));});
   router.get(
     "/production-plans/:id",
     role(P.read["production-plans"]),

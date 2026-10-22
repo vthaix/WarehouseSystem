@@ -73,7 +73,7 @@ Các nội dung ngoài nguồn như ảnh danh mục và mua thủ công đượ
 | UC-25 | Quản lý công việc | 4 |
 | UC-25.1 | Chỉnh sửa công việc | 7 |
 | UC-25.2 | Xóa công việc | 3 |
-| UC-31 | Phê duyệt đơn hàng | 4 |
+| UC-31 | Phê duyệt kế hoạch sản xuất | 4 |
 | UC-14 | Xem/Quản lý đơn hàng mua | 2 |
 | UC-23 | Yêu cầu nhập/xuất | 6 |
 | UC-24 | Quản lý yêu cầu nhập xuất | 6 |
@@ -120,7 +120,7 @@ Các nội dung ngoài nguồn như ảnh danh mục và mua thủ công đượ
 | Ưu tiên | P1 |
 | Dữ liệu / điều kiện riêng | Dùng bộ dữ liệu TEST ở mục 2; đưa chứng từ vào đúng trạng thái mô tả trong tên ca và tiền điều kiện UC. |
 | Thao tác | 1. Chọn chức năng Xem đơn hàng<br>3. Chọn một đơn hàng cần tiếp nhận (DonHang)<br>5. Chọn Tiếp nhận đơn hàng (DonHang) |
-| Kết quả mong đợi | 2. Hiển thị danh sách các đơn hàng chưa được tiếp nhận (DonHang)<br>4. Hiển thị thông tin chi tiết đơn hàng (DonHang, ChiTietDonHang, MatHang, KhachHang)<br>Hậu điều kiện: Đơn hàng được tiếp nhận và chuyển sang trạng thái đã tiếp nhận, chờ Ban giám đốc phê duyệt (UC-31 Phê duyệt đơn hàng) |
+| Kết quả mong đợi | 2. Hiển thị danh sách các đơn hàng chưa được tiếp nhận (DonHang)<br>4. Hiển thị thông tin chi tiết đơn hàng (DonHang, ChiTietDonHang, MatHang, KhachHang)<br>Hậu điều kiện: Đơn hàng được tiếp nhận và chuyển sang trạng thái đã tiếp nhận, chờ Ban giám đốc phê duyệt (UC-31 Phê duyệt kế hoạch sản xuất) |
 | Trạng thái | Not Run |
 
 ### TC-29-02 — 2.1 Nếu không có đơn hàng nào
@@ -1172,11 +1172,10 @@ Các nội dung ngoài nguồn như ảnh danh mục và mua thủ công đượ
 | Kết quả mong đợi | 1. Hệ thống thông báo công việc đang được tiến hành, không thể xoá (CongViec)<br>2. Kết thúc UC |
 | Trạng thái | Not Run |
 
-## UC-31 — Phê duyệt đơn hàng
+## UC-31 — Phê duyệt kế hoạch sản xuất
 
-- Actor: Ban giám đốc. Tài khoản: director.
-- Tiền điều kiện chung: Ban giám đốc đã đăng nhập thành công vào hệ thống.
-- Với ca ngoại lệ, thay đúng điều kiện đang kiểm thử; giữ các điều kiện khác hợp lệ.
+- Actor: Ban giám đốc (`director`). KHSX nháp gắn đơn đã tiếp nhận.
+- Dùng CSDL acceptance riêng; không sinh đơn vào dữ liệu đang test thủ công.
 
 ### TC-31-01 — Luồng cơ bản
 
@@ -1184,44 +1183,39 @@ Các nội dung ngoài nguồn như ảnh danh mục và mua thủ công đượ
 | --- | --- |
 | Tham chiếu | UC-31 / Luồng cơ bản |
 | Ưu tiên | P1 |
-| Dữ liệu / điều kiện riêng | Dùng bộ dữ liệu TEST ở mục 2; đưa chứng từ vào đúng trạng thái mô tả trong tên ca và tiền điều kiện UC. |
-| Thao tác | 1. Chọn chức năng Phê duyệt đơn hàng<br>3. Chọn một đơn hàng để xem chi tiết (DonHang)<br>5. Chọn Phê duyệt (DonHang) |
-| Kết quả mong đợi | 2. Hiển thị danh sách đơn hàng đang chờ phê duyệt (DonHang)<br>4. Hiển thị đơn hàng, kế hoạch sản xuất và xưởng liên quan. (DonHang, ChiTietDonHang, MatHang, KeHoachSanXuat, ChiTietKeHoachSanXuat, Xuong)<br>6. Cập nhật đơn hàng và kế hoạch sản xuất liên quan thành Đã duyệt; thông báo cho Bộ phận lập kế hoạch. (DonHang, KeHoachSanXuat)<br>Hậu điều kiện: Đơn hàng được phê duyệt hoặc từ chối và trạng thái đơn hàng được cập nhật |
+| Thao tác | Tạo hai KHSX hợp lệ cùng đơn. Giám đốc mở KHSX thứ nhất và duyệt theo version kế hoạch. |
+| Kết quả mong đợi | Chỉ KHSX thứ nhất APPROVED; đơn nguồn tự APPROVED; KHSX thứ hai vẫn DRAFT. Có thông báo khách/xưởng/planner và lịch sử. Đơn không có nút duyệt; API duyệt đơn cũ bị chặn. |
 | Trạng thái | Not Run |
 
-### TC-31-02 — 5.1 Từ chối đơn hàng
+### TC-31-02 — 5.1 Từ chối kế hoạch sản xuất
 
 | Trường | Nội dung |
 | --- | --- |
-| Tham chiếu | UC-31 / Thay thế / 5.1 Từ chối đơn hàng |
+| Tham chiếu | UC-31 / Thay thế / 5.1 Từ chối kế hoạch sản xuất |
 | Ưu tiên | P1 |
-| Dữ liệu / điều kiện riêng | Dùng bộ dữ liệu TEST ở mục 2; đưa chứng từ vào đúng trạng thái mô tả trong tên ca và tiền điều kiện UC. |
-| Thao tác | Thực hiện các bước luồng cơ bản đến điểm rẽ nhánh 5.1.<br>Thiết lập điều kiện riêng ở trên.<br>1. Ban giám đốc chọn Từ chối và nhập lý do (DonHang)<br>2. Cập nhật đơn hàng và kế hoạch sản xuất liên quan thành Từ chối, lưu lý do; thông báo cho khách hàng và Bộ phận lập kế hoạch. (DonHang, KeHoachSanXuat, KhachHang)<br>3. Quay lại bước 1 |
-| Kết quả mong đợi | 1. Ban giám đốc chọn Từ chối và nhập lý do (DonHang)<br>2. Cập nhật đơn hàng và kế hoạch sản xuất liên quan thành Từ chối, lưu lý do; thông báo cho khách hàng và Bộ phận lập kế hoạch. (DonHang, KeHoachSanXuat, KhachHang)<br>3. Quay lại bước 1 |
+| Thao tác | Chọn từ chối, kiểm tra thiếu lý do bị chặn; nhập lý do và gửi. Planner sửa rồi trình lại. |
+| Kết quả mong đợi | KHSX vẫn DRAFT, version tăng, lý do lưu lịch sử, planner nhận thông báo. Đơn giữ RECEIVED và các KHSX khác không đổi. Duyệt bản sửa cập nhật đúng KHSX và đơn nguồn. |
 | Trạng thái | Not Run |
 
-### TC-31-03 — 2.1 Danh sách đơn hàng chờ phê duyệt rỗng
+### TC-31-03 — 2.1 Danh sách kế hoạch chờ phê duyệt rỗng
 
 | Trường | Nội dung |
 | --- | --- |
-| Tham chiếu | UC-31 / Ngoại lệ / 2.1 Danh sách đơn hàng chờ phê duyệt rỗng |
-| Ưu tiên | P1 |
-| Dữ liệu / điều kiện riêng | Tạo phạm vi không có bản ghi hoặc dùng mã TEST-NOT-FOUND; không xóa dữ liệu thật. |
-| Thao tác | Thực hiện các bước luồng cơ bản đến điểm rẽ nhánh 2.1.<br>Thiết lập điều kiện riêng ở trên.<br>1. Hệ thống hiển thị danh sách rỗng / thông báo không có đơn hàng nào cần phê duyệt.  (DonHang)<br>2. Kết thúc UC. |
-| Kết quả mong đợi | 1. Hệ thống hiển thị danh sách rỗng / thông báo không có đơn hàng nào cần phê duyệt.  (DonHang)<br>2. Kết thúc UC. |
+| Tham chiếu | UC-31 / Ngoại lệ / 2.1 Danh sách kế hoạch chờ phê duyệt rỗng |
+| Ưu tiên | P2 |
+| Thao tác | Lọc trạng thái DRAFT khi không có kế hoạch phù hợp. |
+| Kết quả mong đợi | Danh sách rỗng hợp lệ, không mutation. |
 | Trạng thái | Not Run |
 
-### TC-31-04 — 4.1 Đơn hàng không còn ở trạng thái chờ phê duyệt (đã được xử lý bởi người khác)
+### TC-31-04 — 4.1 Kế hoạch không còn ở trạng thái chờ phê duyệt hoặc version cũ
 
 | Trường | Nội dung |
 | --- | --- |
-| Tham chiếu | UC-31 / Ngoại lệ / 4.1 Đơn hàng không còn ở trạng thái chờ phê duyệt (đã được xử lý bởi người khác) |
+| Tham chiếu | UC-31 / Ngoại lệ / 4.1 Kế hoạch không còn ở trạng thái chờ phê duyệt hoặc version cũ |
 | Ưu tiên | P1 |
-| Dữ liệu / điều kiện riêng | Mở cùng chứng từ ở hai phiên; phiên A xử lý trước, phiên B giữ màn hình cũ. |
-| Thao tác | Thực hiện các bước luồng cơ bản đến điểm rẽ nhánh 4.1.<br>Thiết lập điều kiện riêng ở trên.<br>1. Hệ thống thông báo đơn hàng không còn hiệu lực để phê duyệt (DonHang)<br>2. Quay lại bước 1 |
-| Kết quả mong đợi | 1. Hệ thống thông báo đơn hàng không còn hiệu lực để phê duyệt (DonHang)<br>2. Quay lại bước 1 |
+| Thao tác | Duyệt bằng version cũ hoặc kế hoạch đã duyệt; gửi lại cùng key/nội dung; thử actor không phải director. |
+| Kết quả mong đợi | Chặn stale/state/quyền, không cập nhật đơn ngoài transaction. Replay đúng key trả kết quả đã lưu, không lặp thông báo hay tăng version lần hai. |
 | Trạng thái | Not Run |
-
 ## UC-14 — Xem/Quản lý đơn hàng mua
 
 - Actor: Bộ phận mua hàng. Tài khoản: purchaser.
@@ -2536,7 +2530,7 @@ Các nội dung ngoài nguồn như ảnh danh mục và mua thủ công đượ
 | Ưu tiên | P1 |
 | Dữ liệu / điều kiện riêng | Dùng bộ dữ liệu TEST ở mục 2; đưa chứng từ vào đúng trạng thái mô tả trong tên ca và tiền điều kiện UC. |
 | Thao tác | 1. Chọn Sửa đơn hàng (DonHang)<br>3. Nhập thông tin muốn chỉnh sửa (số lượng, mô tả) (DonHang, ChiTietDonHang)<br>4. Chọn xác nhận |
-| Kết quả mong đợi | 2. Hiển thị form với thông tin hiện tại của đơn hàng (DonHang, ChiTietDonHang)<br>5. Kiểm tra thông tin mới (DonHang, ChiTietDonHang)<br>6. Cập nhật đơn hàng lên hệ thống với trạng thái chờ phê duyệt (DonHang, ChiTietDonHang)<br>7. Thông báo đơn hàng đã được cập nhật và cần chờ phê duyệt (DonHang, ChiTietDonHang)<br>Hậu điều kiện: Thông tin đơn hàng khách hàng được cập nhật chính xác trong hệ thống với trạng thái chờ phê duyệt (Ban giám đốc thực hiện UC-31 Phê duyệt đơn hàng) |
+| Kết quả mong đợi | 2. Hiển thị form với thông tin hiện tại của đơn hàng (DonHang, ChiTietDonHang)<br>5. Kiểm tra thông tin mới (DonHang, ChiTietDonHang)<br>6. Cập nhật đơn hàng lên hệ thống với trạng thái chờ phê duyệt (DonHang, ChiTietDonHang)<br>7. Thông báo đơn hàng đã được cập nhật và cần chờ phê duyệt (DonHang, ChiTietDonHang)<br>Hậu điều kiện: Thông tin đơn hàng khách hàng được cập nhật chính xác trong hệ thống với trạng thái chờ phê duyệt (Ban giám đốc thực hiện UC-31 Phê duyệt kế hoạch sản xuất) |
 | Trạng thái | Not Run |
 
 ### TC-03-1-02 — 2.1 Khách hàng chọn Quay lại
@@ -2883,14 +2877,14 @@ Các nội dung ngoài nguồn như ảnh danh mục và mua thủ công đượ
 | Kết quả mong đợi | Chặn tham chiếu không đúng loại/không trùng nguồn; không tạo đơn mua. |
 | Trạng thái | Not Run |
 
-### TC-BS-20 — Duyệt đơn và KHSX đồng bộ
+### TC-BS-20 — Duyệt KHSX và tự cập nhật đơn đồng bộ
 
 | Trường | Nội dung |
 | --- | --- |
 | Tham chiếu | UC-31; ca bổ sung từ quy tắc/điều kiện và rủi ro nghiệp vụ |
 | Ưu tiên | P0 |
 | Dữ liệu / tiền điều kiện | Đơn và KHSX liên quan chờ duyệt. |
-| Thao tác | director duyệt; mô phỏng lỗi khi cập nhật KHSX trong môi trường test. |
+| Thao tác | director duyệt KHSX theo version kế hoạch; mô phỏng lỗi khi tự cập nhật đơn nguồn trong môi trường test. |
 | Kết quả mong đợi | Thành công: cả hai duyệt; lỗi: cả hai giữ trạng thái cũ, không duyệt một nửa. |
 | Trạng thái | Not Run |
 

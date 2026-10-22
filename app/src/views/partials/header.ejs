@@ -12,6 +12,7 @@
     <a class="button small" href="/notifications" data-nav="notifications" aria-label="Thông báo">♧</a>
     <span class="avatar"><%= user.full_name.slice(0,1) %></span>
     <div class="profile-text"><%= user.full_name %><small><%= user.roles.map(r=>labels[r]).join(', ') %></small></div>
+    <% if(typeof testResetEnabled !== 'undefined' && testResetEnabled){ %><button class="button small danger" id="reset-test-data" type="button">Xóa dữ liệu test</button><% } %>
     <form action="/logout" method="post"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="button small" id="logout">Đăng xuất</button></form>
   </div>
 </header>

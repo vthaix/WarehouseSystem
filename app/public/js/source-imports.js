@@ -141,11 +141,52 @@
               field("workshop_id", "select", true, workshops) +
               field("start_date", "date") +
               field("end_date", "date") +
+              field("material_source", "select", true, [
+                { id: "RECIPE", name: "Tự tính NVL theo công thức bánh" },
+                { id: "MANUAL", name: "Nhập định lượng gốc thủ công" },
+              ]) +
               '<div class="span2" id="import-info"></div><div class="span2" id="import-outputs"></div>' +
-              mat.html,
+              '<div class="span2" id="manual-recipe">' +
+              mat.html +
+              '</div><div class="span2"><button type="button" class="button" id="recipe-estimate">Xem NVL theo công thức</button><div id="recipe-result"></div></div>',
           ),
         );
         mat.mount();
+        const syncRecipe = () => {
+          const manual = value("material_source") === "MANUAL";
+          document.querySelector("#manual-recipe").hidden = !manual;
+          document
+            .querySelectorAll(
+              "#manual-recipe input,#manual-recipe select,#manual-recipe button",
+            )
+            .forEach((e) => (e.disabled = !manual));
+        };
+        document.querySelector("#f-material_source").onchange = syncRecipe;
+        syncRecipe();
+        document.querySelector("#recipe-estimate").onclick = async () => {
+          try {
+            const r = (
+              await api("production-plans/recipe-estimate", "POST", {
+                outputs: readLines("outputs"),
+              })
+            ).data;
+            document.querySelector("#recipe-result").innerHTML =
+              "<p>" +
+              esc(r.description) +
+              "</p><pre>" +
+              esc(
+                r.formulas
+                  .map(
+                    (l) =>
+                      `${l.product_name}: ${l.output_quantity} × ${l.per_unit_quantity} ${l.unit} ${l.item_name}`,
+                  )
+                  .join("\n"),
+              ) +
+              "</pre><p>Lưu kế hoạch sẽ cộng dự phòng 10% một lần vào tổng lượng gốc.</p>";
+          } catch (e) {
+            document.querySelector("#recipe-result").textContent = e.message;
+          }
+        };
         const load = importer(
           async (fresh) => {
             if (!value("customer_order_id")) return;
@@ -153,7 +194,17 @@
               source_id: value("customer_order_id"),
             });
             if (!fresh()) return;
-            document.querySelector("#import-info").innerHTML = notice(r);
+            document.querySelector("#import-info").innerHTML =
+              notice(r) +
+              "<dl><dt>Khách hàng</dt><dd>" +
+              esc(r.customer_name || "") +
+              "</dd><dt>Địa chỉ giao</dt><dd>" +
+              esc(r.delivery_address || "") +
+              "</dd><dt>Ngày muốn nhận</dt><dd>" +
+              esc(r.latest_delivery_date || "") +
+              "</dd><dt>Ghi chú khách hàng</dt><dd>" +
+              esc(r.customer_note || "") +
+              "</dd></dl>";
             rowsAt(
               "import-outputs",
               "Thành phẩm còn cần sản xuất",
@@ -170,7 +221,10 @@
           (d) => ({
             ...d,
             outputs: readLines("outputs"),
-            materials: readLines("materials"),
+            materials:
+              d.material_source === "RECIPE"
+                ? undefined
+                : readLines("materials"),
           }),
           target,
         );

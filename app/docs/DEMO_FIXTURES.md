@@ -4,10 +4,14 @@ Cập nhật 17/10/2026. Script `scripts/seed-demo-workflows.cjs` dựng **36 b�
 
 ## Cách khởi tạo trên máy mới
 
+Hiệu chỉnh đơn vị bánh mẫu: `TP-001`…`TP-005` là gói; `TP-DEMO-01` và `TP-DEMO-03` là hộp; `TP-DEMO-02` là gói. Job demo chỉ sửa nhãn đơn vị `cái` bị gán sai của các mã này, không quy đổi lượng và không thay đơn vị người dùng đã chỉnh sang loại khác. Phần tạo chứng từ vẫn giữ checkpoint như trước.
+
+Bổ sung 22/10/2026: job demo tạo ba mặt hàng đang công bố để khách thử UC-02: `TP-DEMO-01` bánh quy bơ hộp 200g (45.000đ), `TP-DEMO-02` bánh bông lan đóng gói 120g (22.000đ), `TP-DEMO-03` bánh quy cacao hộp 200g (49.000đ). Mở **Đặt hàng** trên menu khách hàng hoặc `/customer/orders/create`. Các mặt hàng được tạo qua API, có checkpoint chống tạo lại; không ghi đè dữ liệu đã chỉnh sửa. Công thức trong `src/config/production-recipes.json` chỉ minh họa phục vụ kiểm thử kế hoạch SX, cần xác nhận định lượng thực tế trước sử dụng chính thức.
+
 Tại thư mục gốc:
 
 ```powershell
-docker compose up -d --build --wait
+$env:SEED_WORKFLOWS="true"
 docker compose logs --tail=60 demo-fixtures
 ```
 
@@ -16,10 +20,10 @@ docker compose logs --tail=60 demo-fixtures
 Nếu cần chạy job bằng tay khi ứng dụng đã sẵn sàng:
 
 ```powershell
-docker compose run --rm --no-deps -T demo-fixtures node scripts/seed-demo-workflows.cjs
+docker compose run --rm --no-deps -T -e SEED_DEMO=true demo-fixtures node scripts/seed-demo-workflows.cjs
 ```
 
-Khởi tạo mặc định bật cùng SEED_DEMO trong development. Nếu SEED_DEMO=false hoặc NODE_ENV=production thì bỏ qua và vẫn báo ready. Sau khi tạo thành công, chạy lại giữ nguyên dữ liệu đã test, không reset trạng thái hoặc tạo lại bản đã xóa. Checkpoint nằm trong volume database_backups, theo định danh lần khởi tạo CSDL.
+Từ 22/10/2026, chứng từ mẫu mặc định TẮT (`SEED_WORKFLOWS=false`) để test từ đầu. Chỉ bật `SEED_WORKFLOWS=true` khi chủ động cần 36 bộ chứng từ. `SEED_DEMO` của migrate vẫn dùng cho tài khoản/danh mục nền. Nếu SEED_DEMO=false hoặc NODE_ENV=production thì bỏ qua và vẫn báo ready. Sau khi tạo thành công, chạy lại giữ nguyên dữ liệu đã test, không reset trạng thái hoặc tạo lại bản đã xóa. Checkpoint nằm trong volume database_backups, theo định danh lần khởi tạo CSDL.
 
 ## Chọn bộ dữ liệu theo UC
 
@@ -31,7 +35,7 @@ Khởi tạo mặc định bật cùng SEED_DEMO trong development. Nếu SEED_D
 | DON-CHO | UC-29 tiếp nhận; UC-03/03.1 xem/sửa đơn | planner/customer; đơn SUBMITTED, chưa tiếp nhận |
 | DON-CHO-2 | Bản dự phòng để thử tiếp nhận/sửa riêng | planner/customer; đơn SUBMITTED độc lập |
 | TAO-KHSX | Nhánh lập KHSX của UC-04 | planner; đơn RECEIVED, chưa có KHSX, còn lượng để import |
-| DUYET-DON | UC-31 duyệt/từ chối đơn và KHSX | director; đã tiếp nhận, có KHSX chưa duyệt |
+| DUYET-DON | UC-31 duyệt/từ chối KHSX; đơn tự cập nhật khi duyệt | director; đã tiếp nhận, có KHSX chưa duyệt |
 | BAO-CAO-SX | UC-34 báo tiến độ/sự cố/nhu cầu | workshop; KHSX đã duyệt, chưa có báo cáo |
 | MUA-NGUON | UC-04 lập MUA từ báo cáo thiếu | planner; báo cáo nhu cầu đã gửi, chưa lập kế hoạch mua |
 | DUYET-MUA | UC-05/05.1/05.2/32 | planner/director; kế hoạch MUA PENDING_APPROVAL, chưa có đơn mua |
@@ -69,7 +73,7 @@ UC-02 đặt hàng và các nhánh Thêm dùng dữ liệu danh mục sẵn có,
 Xem chính xác ID/mã các bản đã tạo trên máy đang chạy:
 
 ```powershell
-docker compose run --rm --no-deps -T demo-fixtures node scripts/seed-demo-workflows.cjs --list
+docker compose run --rm --no-deps -T -e SEED_DEMO=true demo-fixtures node scripts/seed-demo-workflows.cjs --list
 ```
 
 Các kho kiểm kê là kho riêng DEMO-KK-…; những đợt đang mở khóa kho đó, không khóa kho DEMO-KHO đang dùng nhập/xuất. Các công việc/lịch QC được xếp vào các khoảng riêng để không trùng nhau. Ngày demo được chốt khi dựng lần đầu; không tự đổi ngày hoặc trạng thái trên chứng từ bạn đã dùng khi khởi động lại.

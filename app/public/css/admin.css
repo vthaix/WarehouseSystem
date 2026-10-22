@@ -100,3 +100,4 @@ dialog::backdrop{background:#20273555;backdrop-filter:blur(3px)}
   .login-art{border-right:0;border-bottom:1px solid var(--line)}.login-form{padding:28px 22px}.login-art h1{font-size:31px}
 }
 @media(prefers-reduced-motion:reduce){.card{transition:none}.card:hover{transform:none}}
+@media(max-width:767px){.topbar:has(#reset-test-data){height:auto;flex-wrap:wrap}.topbar:has(#reset-test-data) .profile{width:100%;justify-content:flex-end}}

@@ -15,7 +15,6 @@ Danh sách trích từ C.fields trong service/helper. Đây là các field đư�
 | src/services/business-service/modules/customer-orders/OrderService.js | create | body | delivery_address, latest_delivery_date, note, lines |
 | src/services/business-service/modules/customer-orders/OrderService.js | update | body | version, delivery_address, latest_delivery_date, note, lines, quantity_change_acknowledged |
 | src/services/business-service/modules/customer-orders/OrderService.js | receive | body | version |
-| src/services/business-service/modules/customer-orders/OrderService.js | review | body | version, decision, reason |
 | src/services/business-service/modules/production/FinishedReportService.js | list | query | page, per_page, q, status, sort |
 | src/services/business-service/modules/production/FinishedReportService.js | validate | output | item_id, lot_code, quantity, manufactured_date, expiry_date |
 | src/services/business-service/modules/production/FinishedReportService.js | validate | line | item_id, used_quantity |
@@ -24,7 +23,7 @@ Danh sách trích từ C.fields trong service/helper. Đây là các field đư�
 | src/services/business-service/modules/production/FinishedReportService.js | submit | body | version |
 | src/services/business-service/modules/production/ProductionPlanService.js | list | query | page, per_page, q, status, sort |
 | src/services/business-service/modules/production/ProductionPlanService.js | validateLines | line | item_id |
-| src/services/business-service/modules/production/ProductionPlanService.js | create | body | customer_order_id, workshop_id, start_date, end_date, outputs, materials, note |
+| src/services/business-service/modules/production/ProductionPlanService.js | create | body | customer_order_id, workshop_id, start_date, end_date, outputs, materials, material_source, note |
 | src/services/business-service/modules/production/ProductionPlanService.js | cancel | body | version |
 | src/services/business-service/modules/production/ProductionPlanService.js | update | body | version, workshop_id, start_date, end_date, outputs, materials, note |
 | src/services/business-service/modules/production/ProductionPlanService.js | review | body | version, decision, reason |
@@ -139,4 +138,7 @@ Danh sách trích từ C.fields trong service/helper. Đây là các field đư�
 | src/services/warehouse-service/modules/warehouse/WarehouseRecordService.js | create | body | stock_request_id, note |
 | src/shared/ModuleRoutes.js | helper | req.query | page, per_page |
 | src/shared/ModuleRoutes.js | helper | query | page, per_page, q, kind, sort |
+| src/shared/ModuleRoutes.js | helper | req.body | outputs |
+| src/shared/production-recipes.js | helper | output | item_id, quantity |
 | src/shared/SourceImportService.js | preview | body | source_id, purpose, production_source_mode, workshop_id, warehouse_id |
+| src/shared/TestResetRoutes.js | helper | req.body | confirmation |

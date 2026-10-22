@@ -1,6 +1,6 @@
 # Dữ liệu test khi clone trên máy mới
 
-Máy mới không cần bản SQL trong backups để bắt đầu kiểm tra. Docker mặc định bật `SEED_DEMO=true`: job migrate tạo dữ liệu nền, job split chuyển vào các database service, sau đó job demo-fixtures dựng chứng từ qua API khi ứng dụng đã sẵn sàng. Danh sách 36 bộ theo trạng thái xem [DEMO_FIXTURES.md](DEMO_FIXTURES.md).
+Máy mới không cần bản SQL trong backups để bắt đầu kiểm tra. Docker mặc định bật `SEED_DEMO=true`: job migrate tạo dữ liệu nền, job split chuyển vào các database service, sau đó job demo-fixtures chỉ dựng chứng từ qua API nếu đặt SEED_WORKFLOWS=true; mặc định tắt để test từ đầu. Danh sách 36 bộ theo trạng thái xem [DEMO_FIXTURES.md](DEMO_FIXTURES.md).
 
 ## Cách chạy
 
@@ -34,7 +34,7 @@ Mật khẩu có thể khác nếu người khởi tạo đã ghi đè DEMO_PASS
 2. planner tiếp nhận, tạo kế hoạch; director duyệt.
 3. Thực hiện các bước mua/QC/nhập/xuất/sản xuất/kiểm kê theo [LUONG_KIEM_TRA_THUC_TE.md](LUONG_KIEM_TRA_THUC_TE.md).
 
-**Có chứng từ mẫu để thử từng UC độc lập:** đơn chờ tiếp nhận, kế hoạch chờ duyệt, QC, yêu cầu nhập/xuất đã phân công, báo cáo thành phẩm, phiếu đã ghi sổ và các giai đoạn kiểm kê. Tồn được tạo qua phiếu nhập thật, không gán số dư trực tiếp. Đợi log `DEMO WORKFLOWS READY` của demo-fixtures trước khi kiểm tra; xem bảng nhãn/UC ở DEMO_FIXTURES.md.
+**Nếu bật SEED_WORKFLOWS=true, có chứng từ mẫu để thử từng UC độc lập:** đơn chờ tiếp nhận, kế hoạch chờ duyệt, QC, yêu cầu nhập/xuất đã phân công, báo cáo thành phẩm, phiếu đã ghi sổ và các giai đoạn kiểm kê. Tồn được tạo qua phiếu nhập thật, không gán số dư trực tiếp. Đợi log `DEMO WORKFLOWS READY` của demo-fixtures trước khi kiểm tra; xem bảng nhãn/UC ở DEMO_FIXTURES.md.
 
 Nếu muốn máy khác mở lên thấy chính các chứng từ/tồn hiện có của máy nguồn, cần chuyển bản backup sáu database và ảnh riêng. Đó là lựa chọn khác với khởi tạo bộ dữ liệu mẫu; không import đè bản backup vào CSDL đã seed khi chưa có quy trình restore tương ứng.
 

@@ -16,7 +16,10 @@ class ProductionPlanService {
     if (user.roles.includes("DIRECTOR") || user.roles.includes("PLANNER"))
       return true;
     if (user.roles.includes("WORKSHOP_OWNER"))
-      return user.workshop_ids.includes(String(plan.workshop_id));
+      return (
+        ["APPROVED", "IN_PROGRESS", "COMPLETED"].includes(plan.status) &&
+        user.workshop_ids.includes(String(plan.workshop_id))
+      );
     return false;
   }
 
@@ -29,6 +32,7 @@ class ProductionPlanService {
       created_by: String(row.created_by),
       start_date: asDate(row.start_date),
       end_date: asDate(row.end_date),
+      latest_delivery_date: asDate(row.latest_delivery_date),
       actions:
         user.roles.includes("PLANNER") && row.status === "DRAFT"
           ? ["edit", "cancel"]
@@ -54,6 +58,7 @@ class ProductionPlanService {
             ")",
         );
         params.push(...user.workshop_ids);
+        where.push("p.status IN ('APPROVED','IN_PROGRESS','COMPLETED')");
       }
     }
     if (query.q) {
@@ -108,7 +113,7 @@ class ProductionPlanService {
     P.role(user, P.read["production-plans"]);
     C.fail(!isId(id), "NOT_FOUND", "Không tìm thấy kế hoạch.", 404);
     const [rows] = await connection.execute(
-      "SELECT p.*,o.code AS customer_order_code,w.name AS workshop_name FROM production_plans p JOIN customer_orders o ON o.id=p.customer_order_id JOIN workshops w ON w.id=p.workshop_id WHERE p.id=?",
+      "SELECT p.*,o.code AS customer_order_code,o.delivery_address,o.latest_delivery_date,o.note AS customer_note,o.status AS customer_order_status,c.name AS customer_name,w.name AS workshop_name FROM production_plans p JOIN customer_orders o ON o.id=p.customer_order_id JOIN customers c ON c.id=o.customer_id JOIN workshops w ON w.id=p.workshop_id WHERE p.id=?",
       [id],
     );
     C.fail(
@@ -125,8 +130,16 @@ class ProductionPlanService {
       "SELECT pm.*,i.name AS item_name,i.code AS item_code FROM production_plan_materials pm JOIN items i ON i.id=pm.item_id WHERE pm.production_plan_id=? ORDER BY pm.id",
       [id],
     );
+    const [orderLines] = await connection.execute(
+      "SELECT l.item_id,i.code AS item_code,i.name AS item_name,l.quantity,l.unit_price,l.note FROM customer_order_lines l JOIN items i ON i.id=l.item_id WHERE l.customer_order_id=? ORDER BY l.id",
+      [rows[0].customer_order_id],
+    );
     return {
       ...this.present(user, rows[0]),
+      order_lines: orderLines.map((l) => ({
+        ...l,
+        item_id: String(l.item_id),
+      })),
       outputs: outputs.map((row) => ({
         ...row,
         id: String(row.id),
@@ -152,6 +165,79 @@ class ProductionPlanService {
         })),
       ],
     };
+  }
+
+  async materialComparison(user, id) {
+    P.role(user, ["WORKSHOP_OWNER", "PLANNER", "DIRECTOR"]);
+    const c = await this.pool.getConnection();
+    try {
+      await c.beginTransaction();
+      const plan = await this.get(user, id, c);
+      C.state(plan, ["APPROVED", "IN_PROGRESS"]);
+      C.fail(
+        !plan.materials.length,
+        "PLAN_MATERIALS_MISSING",
+        "Kế hoạch chưa có định lượng NVL để đối chiếu; không thể kết luận đủ NVL.",
+        409,
+      );
+      const available = plan.materials.length
+        ? await require("../../../../shared/available-stock")(
+            c,
+            plan.materials.map((l) => l.item_id),
+          )
+        : new Map();
+      let recipe = null,
+        recipe_warning = null;
+      try {
+        recipe =
+          await require("../../../../shared/production-recipes").fromDatabase(
+            c,
+            plan.outputs.map((l) => ({
+              item_id: l.item_id,
+              quantity: l.quantity,
+            })),
+          );
+      } catch (e) {
+        if (e.code !== "RECIPE_MISSING") throw e;
+        recipe_warning = e.message;
+      }
+      const [units] = await c.query(
+        "SELECT i.id,u.name AS unit_name FROM items i JOIN units u ON u.id=i.unit_id",
+      );
+      const unitMap = new Map(units.map((r) => [String(r.id), r.unit_name]));
+      const lines = plan.materials.map((l) => {
+        const required = C.qty(l.required_quantity),
+          stock = available.get(l.item_id) || 0n;
+        return {
+          ...l,
+          unit: unitMap.get(l.item_id),
+          available_quantity: C.decimal(stock),
+          shortage_quantity: C.decimal(
+            required > stock ? required - stock : 0n,
+          ),
+        };
+      });
+      await c.commit();
+      return {
+        production_plan_id: plan.id,
+        production_plan_code: plan.code,
+        workshop_id: plan.workshop_id,
+        workshop_name: plan.workshop_name,
+        checked_at: new Date().toISOString(),
+        outputs: plan.outputs,
+        lines,
+        has_shortage: lines.some((l) => C.qty(l.shortage_quantity, false) > 0n),
+        recipe,
+        recipe_warning,
+        notice:
+          "Nhu cầu lấy định lượng đã lưu trong KHSX, gồm dự phòng 10% một lần. Tồn khả dụng loại trừ giữ chỗ/hàng không đủ điều kiện; đây không phải kiểm kê vật lý.",
+      };
+    } catch (e) {
+      await c.rollback();
+      throw e;
+    } finally {
+      c.release();
+    }
   }
 
   async validateLines(connection, lines, kind, quantityField) {
@@ -181,7 +267,12 @@ class ProductionPlanService {
       [...seen],
     );
     const byId = new Map(items.map((item) => [String(item.id), item]));
-    const available=kind==='MATERIAL'?await require('../../../../shared/available-stock')(connection,[...seen]):new Map();
+    const available =
+      kind === "MATERIAL"
+        ? await require("../../../../shared/available-stock")(connection, [
+            ...seen,
+          ])
+        : new Map();
     return lines.map((line) => {
       const item = byId.get(String(line.item_id));
       C.fail(
@@ -195,7 +286,18 @@ class ProductionPlanService {
         [quantityField]: C.decimal(
           kind === "MATERIAL" ? (base * 110n + 99n) / 100n : base,
         ),
-        ...(kind === "MATERIAL" ? { base_quantity: C.decimal(base),estimated_shortage_quantity:C.decimal((base*110n+99n)/100n>(available.get(String(line.item_id))||0n)?(base*110n+99n)/100n-(available.get(String(line.item_id))||0n):0n) } : {}),
+        ...(kind === "MATERIAL"
+          ? {
+              base_quantity: C.decimal(base),
+              estimated_shortage_quantity: C.decimal(
+                (base * 110n + 99n) / 100n >
+                  (available.get(String(line.item_id)) || 0n)
+                  ? (base * 110n + 99n) / 100n -
+                      (available.get(String(line.item_id)) || 0n)
+                  : 0n,
+              ),
+            }
+          : {}),
       };
     });
   }
@@ -209,6 +311,7 @@ class ProductionPlanService {
       "end_date",
       "outputs",
       "materials",
+      "material_source",
       "note",
     ]);
     C.fail(
@@ -250,9 +353,24 @@ class ProductionPlanService {
         "FINISHED_PRODUCT",
         "quantity",
       );
+      C.fail(
+        body.material_source &&
+          !["RECIPE", "MANUAL"].includes(body.material_source),
+        "VALIDATION_ERROR",
+        "Nguồn định lượng không hợp lệ.",
+      );
+      const automatic =
+        body.material_source === "RECIPE" ||
+        (body.material_source === undefined && body.materials === undefined);
+      const recipe = automatic
+        ? await require("../../../../shared/production-recipes").fromDatabase(
+            connection,
+            outputs,
+          )
+        : null;
       const materials = await this.validateLines(
         connection,
-        body.materials || [],
+        automatic ? recipe.materials : body.materials || [],
         "MATERIAL",
         "required_quantity",
       );
@@ -302,7 +420,13 @@ class ProductionPlanService {
       for (const line of materials)
         await connection.execute(
           "INSERT INTO production_plan_materials (production_plan_id,item_id,required_quantity,base_quantity,estimated_shortage_quantity,reserve_rate,detail_kind) VALUES (?,?,?,?,?,10,'NGUYEN_VAT_LIEU')",
-          [id, line.item_id, line.required_quantity, line.base_quantity,line.estimated_shortage_quantity],
+          [
+            id,
+            line.item_id,
+            line.required_quantity,
+            line.base_quantity,
+            line.estimated_shortage_quantity,
+          ],
         );
       await connection.execute(
         "INSERT INTO audit_logs (actor_id,resource_type,resource_id,action,after_data,request_id) VALUES (?,'production-plans',?,'CREATE',?,?)",
@@ -314,13 +438,12 @@ class ProductionPlanService {
         ],
       );
       await connection.execute(
-        "INSERT INTO notifications (user_id,subject,body,resource_type,resource_id,business_key) SELECT wu.user_id,?,?, 'production-plans',?,? FROM workshop_users wu JOIN user_roles ur ON ur.user_id=wu.user_id JOIN roles r ON r.id=ur.role_id WHERE wu.workshop_id=? AND r.code='WORKSHOP_OWNER' ON DUPLICATE KEY UPDATE id=notifications.id",
+        "INSERT INTO notifications (user_id,subject,body,resource_type,resource_id,business_key) SELECT u.id,?,?, 'production-plans',?,? FROM users u JOIN user_roles ur ON ur.user_id=u.id JOIN roles r ON r.id=ur.role_id WHERE u.status='ACTIVE' AND r.code='DIRECTOR' ON DUPLICATE KEY UPDATE id=notifications.id",
         [
-          `Kế hoạch sản xuất mới ${code}`,
-          `Kế hoạch sản xuất mới ${code}`,
+          `KHSX ${code} chờ phê duyệt`,
+          `Xem đơn hàng và xưởng của kế hoạch ${code} để phê duyệt tại UC-31.`,
           id,
-          `plan-${id}-created`,
-          body.workshop_id,
+          `plan-${id}-pending-review`,
         ],
       );
       await connection.commit();
@@ -509,7 +632,13 @@ class ProductionPlanService {
         for (const line of materials)
           await connection.execute(
             "INSERT INTO production_plan_materials (production_plan_id,item_id,required_quantity,base_quantity,estimated_shortage_quantity,reserve_rate,detail_kind) VALUES (?,?,?,?,?,10,'NGUYEN_VAT_LIEU')",
-            [id, line.item_id, line.required_quantity, line.base_quantity,line.estimated_shortage_quantity],
+            [
+              id,
+              line.item_id,
+              line.required_quantity,
+              line.base_quantity,
+              line.estimated_shortage_quantity,
+            ],
           );
       }
       await connection.execute(
@@ -553,6 +682,7 @@ class ProductionPlanService {
       "Quyết định không hợp lệ.",
     );
     if (body.decision === "REJECT") C.text(body.reason, "reason", 2000);
+    else if (body.reason !== undefined) C.text(body.reason, "reason", 2000, false);
     C.fail(
       typeof key !== "string" || key.length < 8 || key.length > 100,
       "VALIDATION_ERROR",
@@ -604,9 +734,9 @@ class ProductionPlanService {
       if (body.decision === "APPROVE") {
         C.fail(
           !orders.length ||
-            !["APPROVED", "IN_PROGRESS"].includes(orders[0].status),
+            !["RECEIVED", "APPROVED", "IN_PROGRESS"].includes(orders[0].status),
           "INVALID_STATE",
-          "Đơn hàng chưa được duyệt.",
+          "Đơn hàng chưa tiếp nhận hoặc không còn được lập kế hoạch sản xuất.",
           409,
         );
         const [orderLines] = await connection.execute(
@@ -638,7 +768,41 @@ class ProductionPlanService {
           "UPDATE production_plans SET status='APPROVED',version=version+1 WHERE id=?",
           [id],
         );
+        if (orders[0].status === "RECEIVED") {
+          await connection.execute(
+            "UPDATE customer_orders SET status='APPROVED',reviewed_by=?,reviewed_at=UTC_TIMESTAMP(6),rejection_reason=NULL,version=version+1 WHERE id=?",
+            [user.id, plan.customer_order_id],
+          );
+          await connection.execute(
+            "INSERT INTO audit_logs (actor_id,resource_type,resource_id,action,before_data,after_data,request_id) VALUES (?,'customer-orders',?,'PLAN_APPROVED',?,?,?)",
+            [user.id, plan.customer_order_id, JSON.stringify({status: "RECEIVED"}),
+              JSON.stringify({status: "APPROVED", production_plan_id: String(id)}), requestId],
+          );
+          await connection.execute(
+            "INSERT INTO notifications (user_id,subject,body,resource_type,resource_id,business_key) SELECT c.user_id,?,?, 'customer-orders',?,? FROM customers c WHERE c.id=? ON DUPLICATE KEY UPDATE id=notifications.id",
+            [`Đơn hàng ${orders[0].code}: đã phê duyệt`, `Kế hoạch sản xuất ${plan.code} đã được duyệt.`,
+              plan.customer_order_id, `order-${plan.customer_order_id}-review-APPROVED`, orders[0].customer_id],
+          );
+        }
+        await connection.execute(
+          "INSERT INTO notifications (user_id,subject,body,resource_type,resource_id,business_key) SELECT wu.user_id,?,?, 'production-plans',?,? FROM workshop_users wu JOIN user_roles ur ON ur.user_id=wu.user_id JOIN roles r ON r.id=ur.role_id WHERE wu.workshop_id=? AND r.code='WORKSHOP_OWNER' ON DUPLICATE KEY UPDATE id=notifications.id",
+          [
+            `KHSX ${plan.code} đã duyệt`,
+            `Kiểm tra NVL cho KHSX ${plan.code}.`,
+            id,
+            `plan-${id}-approved`,
+            plan.workshop_id,
+          ],
+        );
+      } else {
+        // Return this plan for revision; do not reject its customer order or sibling plans.
+        await connection.execute("UPDATE production_plans SET version=version+1 WHERE id=?", [id]);
       }
+      await connection.execute(
+        "INSERT INTO notifications (user_id,subject,body,resource_type,resource_id,business_key) VALUES (?,?,?,'production-plans',?,?) ON DUPLICATE KEY UPDATE id=notifications.id",
+        [plan.created_by, `KHSX ${plan.code}: ${body.decision === 'APPROVE' ? 'đã duyệt' : 'cần chỉnh sửa'}`,
+          body.reason || 'Kế hoạch đã được phê duyệt.', id, `plan-${id}-review-${plan.version}-${body.decision}`],
+      );
       await connection.execute(
         "INSERT INTO audit_logs (actor_id,resource_type,resource_id,action,before_data,after_data,request_id) VALUES (?,'production-plans',?,'REVIEW',?,?,?)",
         [

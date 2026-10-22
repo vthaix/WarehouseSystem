@@ -35,6 +35,8 @@ Sinh bằng `node scripts/sync-project-docs.cjs`. Tiền tố `/api/v1`; quyền
 | POST | `/customer-orders/:id/receive` | business-service | Có handler |
 | POST | `/customer-orders/:id/review` | business-service | Có handler |
 | GET | `/production-plans` | business-service | Có handler |
+| GET | `/production-plans/:id/material-comparison` | business-service | Có handler |
+| POST | `/production-plans/recipe-estimate` | business-service | Có handler |
 | GET | `/production-plans/:id` | business-service | Có handler |
 | POST | `/production-plans` | business-service | Có handler |
 | POST | `/production-plans/:id/cancel` | business-service | Có handler |
@@ -144,4 +146,7 @@ Sinh bằng `node scripts/sync-project-docs.cjs`. Tiền tố `/api/v1`; quyền
 | GET | `/notifications/:id` | notification-service | Có handler |
 | PATCH | `/notifications/:id/read` | notification-service | Có handler |
 | POST | `/tasks/:id/postTask` | warehouse-service | Có handler |
+| POST | `/test-data/reset` | web-gateway / development test-reset utility | Có handler |
+| POST | `/production-report-images` | web-gateway | Có handler |
+| GET | `/production-reports/:id/images/:file` | web-gateway | Có handler |
 | POST | `/category-images` | web-gateway | Có handler |

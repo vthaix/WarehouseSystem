@@ -264,6 +264,31 @@ async function main() {
     );
     const wh = stock.warehouse.id,
       loc = stock.location.id;
+    await db.query("INSERT INTO units (code,name) VALUES ('GOI','gói') ON DUPLICATE KEY UPDATE id=id");
+    const [saleUnits] = await db.query("SELECT id,code FROM units WHERE code IN ('HOP','GOI')");
+    const saleUnitIds = Object.fromEntries(saleUnits.map(u => [u.code, String(u.id)]));
+    const [packagedCakes] = await db.query("SELECT id,code,unit_id FROM items WHERE code IN ('TP-001','TP-002','TP-003','TP-004','TP-005')");
+    for (const item of packagedCakes) {
+      if (String(item.unit_id) === saleUnitIds.GOI) continue;
+      await db.query("UPDATE items SET unit_id=?,version=version+1 WHERE id=? AND unit_id IN (SELECT id FROM units WHERE name='cái')",
+        [saleUnitIds.GOI, item.id]);
+    }
+    for (const [code, name, price] of [
+      ["TP-DEMO-01", "Bánh quy bơ hộp 200g", "45000.0000"],
+      ["TP-DEMO-02", "Bánh bông lan đóng gói 120g", "22000.0000"],
+      ["TP-DEMO-03", "Bánh quy cacao hộp 200g", "49000.0000"],
+    ]) {
+      const unitId = saleUnitIds[code === "TP-DEMO-02" ? "GOI" : "HOP"];
+      const created = await op("customer-shop:" + code, "manager", "items", {
+        code, name, category_id: stock.category.id, unit_id: unitId,
+        kind: "FINISHED_PRODUCT", reference_price: price,
+        is_sample: true, is_published: true, is_active: true,
+      });
+      const currentItem = await get("manager", "items/" + created.id);
+      if (String(currentItem.unit_id) !== unitId)
+        await db.query("UPDATE items SET unit_id=?,version=version+1 WHERE id=? AND unit_id IN (SELECT id FROM units WHERE name='cái')",
+          [unitId, created.id]);
+    }
     async function production(name, stage = "APPROVED") {
       let order = await op(name + ":order", "customer", "customer-orders", {
         delivery_address: note(name) + " Cửa hàng bánh thử nghiệm",
@@ -289,12 +314,13 @@ async function main() {
         materials: [{ item_id: mat, required_quantity: "1000.000" }],
       });
       if (stage === "PENDING") return { order, plan };
-      order = await op(
+      plan = await op(
         name + ":approve",
         "director",
-        `customer-orders/${order.id}/review`,
-        { version: order.version, decision: "APPROVE" },
+        `production-plans/${plan.id}/review`,
+        { version: plan.version, decision: "APPROVE" },
       );
+      order = await get("planner", `customer-orders/${order.id}`);
       plan = await get("planner", `production-plans/${plan.id}`);
       return { order, plan };
     }

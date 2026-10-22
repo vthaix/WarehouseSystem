@@ -2,6 +2,8 @@
 
 Ứng dụng nằm trong app/. Root chỉ giữ README, cấu hình Compose include và cấu hình repository. Không có frontend độc lập: gateway render EJS.
 
+Development có tiện ích quản trị tạm `test-reset` chạy `scripts/reset-tools-server.cjs` bằng image gateway, chỉ nối mạng backend và giữ secrets quản trị riêng. Gateway dùng `TestResetRoutes.js`, nút trong header và `public/js/reset-tools.js`. Không thêm database/domain owner; vẫn sáu service/schema nghiệp vụ hiện hành. Tắt bằng `ENABLE_TEST_RESET=false`, production tự tắt. Xem [RESET_DU_LIEU_TEST.md](RESET_DU_LIEU_TEST.md).
+
 ```text
 WarehouseSystem/
   docker-compose.yml

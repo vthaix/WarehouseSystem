@@ -368,7 +368,7 @@ Danh sách rỗng vẫn trả kết quả hợp lệ. Sai dữ liệu, sai ngu�
 
 Danh sách rỗng vẫn trả kết quả hợp lệ. Sai dữ liệu, sai nguồn/quyền, version cũ, trạng thái không hợp lệ, nguồn hết hạn mức hoặc kho khóa phải bị chặn. Không tự đổi nguồn, tạo số liệu giả hoặc retry mutation khi chưa đối soát kết quả. Chi tiết điều kiện tương ứng trong SRS, API và service owner.
 
-## UC-31 Phê duyệt đơn hàng
+## UC-31 Phê duyệt kế hoạch sản xuất
 
 **Actor chính:** Ban giám đốc
 
@@ -377,7 +377,7 @@ Danh sách rỗng vẫn trả kết quả hợp lệ. Sai dữ liệu, sai ngu�
 ### Luồng cơ bản
 
 1. Truy cập đơn thuộc phạm vi của actor; khách chỉ đọc/sửa đơn của mình.
-2. BGĐ xem KHSX liên quan và duyệt/từ chối theo version; duyệt đơn và KHSX cùng transaction.
+2. BGĐ chọn KHSX và duyệt/từ chối theo version của kế hoạch; chỉ KHSX được chọn được duyệt; đơn nguồn tự cập nhật APPROVED trong cùng transaction.
 3. Lưu/đọc kết quả server, giữ lịch sử và phạm vi khách hàng.
 
 **Hậu điều kiện:** đọc trả dữ liệu trong phạm vi; ghi thành công cập nhật version/trạng thái và lịch sử theo service. Hủy form không tạo mutation; hủy chứng từ tuân thủ trạng thái/nguồn.
@@ -768,7 +768,7 @@ Danh sách rỗng vẫn trả kết quả hợp lệ. Sai dữ liệu, sai ngu�
 
 1. Chọn KHSX chưa hoàn tất của xưởng và TIEN_DO/SU_CO/NHU_CAU.
 2. Tiến độ/sự cố nhập mô tả, tiến độ tùy chọn; không bắt dòng NVL. NHU_CAU lấy dự kiến và sửa lượng cần, tồn/thiếu tính hệ thống.
-3. Lưu nháp hoặc gửi; BGĐ luôn nhận, thêm planner tùy chọn. Một nguồn NHU_CAU hiệu lực/KHSX; không dùng tiến độ/sự cố làm nguồn mua/cấp.
+3. Lưu nháp hoặc gửi; BGĐ luôn nhận. Cập nhật 22/10: NHU_CAU còn thiếu tự gửi thêm planner khi gửi; tiến độ/sự cố thêm planner tùy chọn. Có thể dán ảnh/chụp bảng đối chiếu vào mô tả. Một nguồn NHU_CAU hiệu lực/KHSX; không dùng tiến độ/sự cố làm nguồn mua/cấp. Luồng công thức, đối chiếu từ UC-22 và nguồn đơn của UC-04: [LUONG_DAT_HANG_TIEN_SAN_XUAT.md](LUONG_DAT_HANG_TIEN_SAN_XUAT.md).
 
 **Hậu điều kiện:** đọc trả dữ liệu trong phạm vi; ghi thành công cập nhật version/trạng thái và lịch sử theo service. Hủy form không tạo mutation; hủy chứng từ tuân thủ trạng thái/nguồn.
 

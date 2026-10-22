@@ -618,6 +618,7 @@ class BusinessPlanService {
           requestId,
         ],
       );
+      await connection.execute("INSERT INTO notifications (user_id,subject,body,resource_type,resource_id,business_key) SELECT u.id,?,?, 'business-plans',?,? FROM users u JOIN user_roles ur ON ur.user_id=u.id JOIN roles r ON r.id=ur.role_id WHERE u.status='ACTIVE' AND r.code='DIRECTOR' ON DUPLICATE KEY UPDATE id=notifications.id",[`Kế hoạch ${code} chờ phê duyệt`,`Xem kế hoạch ${code} tại UC-32.`,created.insertId,`business-plan-${created.insertId}-pending-review`]);
       return created.insertId;
     });
     return this.get(user, id);
@@ -764,6 +765,7 @@ class BusinessPlanService {
         await this.validatePurchaseSource(connection, source, lines, id, true);
       }
       const status = body.decision === "APPROVE" ? "APPROVED" : "REJECTED";
+      if(status==='APPROVED'&&plan.type==='PURCHASE')await connection.execute("INSERT INTO notifications (user_id,subject,body,resource_type,resource_id,business_key) SELECT u.id,?,?, 'business-plans',?,? FROM users u JOIN user_roles ur ON ur.user_id=u.id JOIN roles r ON r.id=ur.role_id WHERE u.status='ACTIVE' AND r.code='PURCHASER' ON DUPLICATE KEY UPDATE id=notifications.id",[`Kế hoạch mua ${plan.code} đã duyệt`,`Lập đơn mua NVL theo kế hoạch ${plan.code}.`,id,`buy-plan-${id}-approved`]);
       await connection.execute(
         "UPDATE business_plans SET status=?,reviewed_by=?,reviewed_at=UTC_TIMESTAMP(6),rejection_reason=?,version=version+1 WHERE id=?",
         [

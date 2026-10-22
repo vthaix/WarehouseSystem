@@ -4,6 +4,16 @@ Ngày chạy: 14/10/2026. Bộ ca thiết kế: [TEST_CASES.md](TEST_CASES.md). 
 
 ## Kết quả đợt chạy
 
+Nút xóa dữ liệu test ngày 22/10/2026: 55/55 Node test đạt, gồm kiểm tra mọi vai trò, CSRF, xác nhận, cờ tắt/production và chờ/chặn yêu cầu khi xóa. Split MySQL acceptance đạt với `reset-tools-smoke`: chữ ký nội bộ, backup sáu schema, dọn 46 bảng, giữ danh mục/tài khoản và replay không xóa dữ liệu mới. Browser `e2e/reset-data.cjs` đạt trên 11 tài khoản; thao tác xóa được mock, không dọn CSDL test tay.
+
+UC-31 cập nhật 22/10/2026: 54/54 Node test và full split MySQL acceptance đạt. Bổ sung `order-smoke` vào acceptance: chặn API duyệt đơn trực tiếp, duyệt KHSX tự cập nhật đơn, replay không tăng version lần hai, từ chối trả kế hoạch nháp và giữ đơn RECEIVED, duyệt bản sửa không duyệt KHSX khác cùng đơn. Các test SQL chạy trên schema acceptance riêng, không sinh chứng từ vào CSDL test tay đã dọn sạch.
+
+Sửa lỗi lưu/sửa ngày 22/10/2026: bỏ trường giao diện `module` khỏi query tải lại API, giữ nguyên kiểm tra trường hợp lệ ở backend. Browser `e2e/customer-order.cjs` đạt với tạo đơn thật, sửa thành 100 hộp (ô nhập hiện `100`), lưu và tải lại danh sách HTTP 200, đọc lại CSDL qua API vẫn 100; kiểm tra đơn vị ba bánh mới là hộp/gói/hộp. Job demo sửa nhãn đơn vị cũ `cái` của các mã bánh mẫu xác định sẵn, không quy đổi số lượng tồn/chứng từ và không cho API đổi đơn vị tùy ý.
+
+Bổ sung UC-02 ngày 22/10/2026: `node e2e/customer-order.cjs` đạt trên stack Docker thật, không mock API. Kiểm tra menu/trang đặt hàng, ba bánh mẫu đã công bố, chặn chọn rỗng, đặt hai mặt hàng với ghi chú, tổng giá 156.000đ từ server, trạng thái SUBMITTED, planner đọc được đơn và trang đặt hàng trả 403 với planner. Script tạo một đơn có nhãn `[TEST UC-02]`, giữ lại để thử tiếp nhận thủ công.
+
+Bổ sung ngày 22/10/2026: 54/54 test Node đạt; bộ split MySQL acceptance đạt với preproduction-smoke mới (đơn nhiều hàng, định lượng công thức + dự phòng một lần, quyền KHSX, thông báo sau duyệt, đối chiếu tồn, ảnh riêng tư, tự gửi báo cáo thiếu NVL cho planner và thông báo kế hoạch mua đã duyệt). Browser preproduction và source-imports đạt; phần ghi browser được mock, ghi thật kiểm trong SQL acceptance. Đây là kiểm chứng luồng đặt hàng/tiền sản xuất theo cập nhật mới, không phải đánh dấu toàn bộ 233 ca đã Pass.
+
 Bổ sung ngày 17/10/2026: đã dựng và xác minh 36 nhóm chứng từ mẫu trên CSDL hiện có và một project Docker có volume mới. Kiểm tra lặp lại giữ nguyên số dòng các bảng Business/Warehouse. Bộ nghiệm thu split MySQL và 51 test tự động chạy lại đạt. Đã sửa lỗi khóa lịch TaskService trên tài khoản Warehouse chỉ có SELECT đối với Identity; không mở quyền UPDATE lên tài khoản người dùng. Chi tiết [DEMO_FIXTURES.md](DEMO_FIXTURES.md). Kết quả này không thay thế nghiệm thu từng ca trong 233 ca thiết kế bên dưới.
 
 Đã chạy toàn bộ nhóm kiểm thử tự động có trong project: unit/HTTP, cú pháp, đồng bộ project, nghiệm thu MySQL microservice và các bộ trình duyệt. Hệ thống microservice vượt qua các bộ nghiệm thu hiện có. Bộ trình duyệt backend bộ nhớ cũ vẫn thất bại ở form tạo hồ sơ kho tổng hợp. Không kết luận 233 ca trong đặc tả đều Pass: các script hiện có chưa tương ứng đầy đủ từng thao tác và từng nhánh của 233 ca.

@@ -7,7 +7,7 @@
 ## Nghiệp vụ đã có code và nghiệm thu ở các đợt trước
 
 - Auth/session/CSRF/RBAC/scope và thông báo.
-- Đơn khách, tiếp nhận, kế hoạch SX, duyệt đơn/kế hoạch; NVL dự phòng 10% một lần.
+- Đơn khách, tiếp nhận, kế hoạch SX, duyệt KHSX và tự cập nhật đơn; NVL dự phòng 10% một lần.
 - Báo cáo tiến độ/sự cố/nhu cầu, tổng kết thành phẩm; loại báo cáo chung bảng.
 - Kế hoạch MUA/BAN, đơn mua nguồn PLAN/REPORT/MANUAL, import nguồn và kiểm hạn mức.
 - Lô/QC, giữ chỗ/phân công, phiếu nhập/xuất và biến động tồn; kiểm điều kiện giao thành phẩm.

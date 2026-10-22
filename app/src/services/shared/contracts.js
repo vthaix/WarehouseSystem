@@ -11,7 +11,7 @@ const specs = {
   },
   productionPlans: {
     owner: "business-service",
-    methods: ["list", "get", "create", "update", "cancel", "review"],
+    methods: ["list", "get", "create", "update", "cancel", "review", "materialComparison"],
   },
   productionReports: {
     owner: "business-service",

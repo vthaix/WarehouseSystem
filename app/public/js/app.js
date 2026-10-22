@@ -229,6 +229,8 @@ async function render() {
 function filterParams() {
   const f = document.querySelector("#filters"),
     p = new URLSearchParams(f ? new FormData(f) : {});
+  // This hidden field selects an SSR screen, not an API filter.
+  p.delete("module");
   for (const [k, v] of [...p]) if (!v) p.delete(k);
   if (p.get("as_of"))
     p.set("as_of", new Date(p.get("as_of") + "+07:00").toISOString());

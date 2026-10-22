@@ -222,6 +222,10 @@ class ProductionReportService {
         404,
       );
       C.state(plans[0], ["APPROVED", "IN_PROGRESS"]);
+      require("../../../../config/production-report-images").validate(
+        user,
+        body.note,
+      );
       const [existing] = await connection.execute(
         "SELECT id FROM production_reports WHERE production_plan_id=? AND report_purpose='NHU_CAU' LIMIT 1",
         [body.production_plan_id],
@@ -320,6 +324,11 @@ class ProductionReportService {
       const report = rows[0];
       C.version(report, body.version);
       C.state(report, ["DRAFT"]);
+      require("../../../../config/production-report-images").validate(
+        user,
+        body.note ?? report.note,
+        report.note,
+      );
       this.validateMetadata(
         report.report_purpose,
         body.note ?? report.note,
@@ -426,6 +435,14 @@ class ProductionReportService {
             lines.map((line) => String(line.item_id)),
           )
         : new Map();
+      const sendToPlanner =
+        Boolean(report.send_to_planner) ||
+        (report.report_purpose === "NHU_CAU" &&
+          lines.some(
+            (line) =>
+              C.qty(String(line.required_quantity)) >
+              (available.get(String(line.item_id)) || 0n),
+          ));
       for (const line of lines)
         await connection.execute(
           "UPDATE production_report_lines SET available_quantity=? WHERE production_report_id=? AND item_id=?",
@@ -436,8 +453,8 @@ class ProductionReportService {
           ],
         );
       await connection.execute(
-        "UPDATE production_reports SET status='SUBMITTED',submitted_at=UTC_TIMESTAMP(6),version=version+1 WHERE id=?",
-        [id],
+        "UPDATE production_reports SET status='SUBMITTED',send_to_planner=?,submitted_at=UTC_TIMESTAMP(6),version=version+1 WHERE id=?",
+        [sendToPlanner, id],
       );
       await connection.execute(
         "UPDATE production_plans SET status='IN_PROGRESS',version=version+1 WHERE id=? AND status='APPROVED'",
@@ -460,7 +477,7 @@ class ProductionReportService {
           `Báo cáo sản xuất ${report.code} đã gửi`,
           id,
           `report-${id}-submitted`,
-          Boolean(report.send_to_planner),
+          sendToPlanner,
         ],
       );
       await connection.commit();

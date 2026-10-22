@@ -118,9 +118,9 @@ function client() {
     await director.login("director");
     orderReviewKey = crypto.randomUUID();
     const orderApproved = await director.call(
-      `/api/v1/customer-orders/${customerOrderId}/review`,
+      `/api/v1/production-plans/${productionPlanId}/review`,
       "POST",
-      { version: received.data.version, decision: "APPROVE" },
+      { version: production.data.version, decision: "APPROVE" },
       orderReviewKey,
     );
     assert.equal(orderApproved.status, 200, JSON.stringify(orderApproved));
@@ -607,7 +607,7 @@ function client() {
       }
       if (orderReviewKey)
         await pool.execute(
-          "DELETE FROM idempotency_records WHERE operation='customer-order-review' AND idempotency_key=?",
+          "DELETE FROM idempotency_records WHERE operation='production-plan-review' AND idempotency_key=?",
           [orderReviewKey],
         );
       if (reviewKey)

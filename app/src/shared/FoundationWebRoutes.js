@@ -19,13 +19,21 @@ module.exports = (runtime) => {
     res.redirect(req.user ? "/dashboard" : "/login"),
   );
   router.get("/dashboard", requireWebAuth, (req, res) => pages.page(req, res));
+  router.get("/customer/orders/create", requireWebAuth,
+    require("../middlewares/role.middleware")(["CUSTOMER"]), async (req, res) => {
+      const context = await pages.context(req, "customer-orders");
+      const result = await runtime.catalog.sampleItems(req.user, { per_page: 100 });
+      res.render("layouts/main", { ...context, title: "Đặt hàng", activePage: "customer-order-create", view: "customer/order",
+        products: result.data, boot: JSON.stringify({ storage: "mysql", user: context.user,
+          csrf: context.csrf, current: "customer-orders", form: true }) });
+    });
   router.get("/records/:resource/:id", requireWebAuth, (req, res) =>
     pages.show(req, res),
   );
   const aliases = {
     "/products": "items",
     "/orders/intake": "customer-orders",
-    "/approvals/orders": "customer-orders",
+    "/approvals/orders": "production-plans",
     "/approvals/plans": "business-plans",
     "/catalog/search": "items",
     "/warehouse/receive": "stock-requests",

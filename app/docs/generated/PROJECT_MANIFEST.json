@@ -2974,6 +2974,18 @@
     },
     {
       "method": "GET",
+      "path": "/production-plans/:id/material-comparison",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/production-plans/recipe-estimate",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
       "path": "/production-plans/:id",
       "owner": "business-service",
       "pending": false
@@ -3624,6 +3636,24 @@
       "method": "POST",
       "path": "/tasks/:id/postTask",
       "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/test-data/reset",
+      "owner": "web-gateway / development test-reset utility",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/production-report-images",
+      "owner": "web-gateway",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/production-reports/:id/images/:file",
+      "owner": "web-gateway",
       "pending": false
     },
     {

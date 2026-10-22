@@ -57,6 +57,11 @@ class SourceImportService {
       return {
         source_code: order.code,
         customer_order_id: String(id),
+        customer_name:order.customer_name,
+        delivery_address:order.delivery_address,
+        latest_delivery_date:order.latest_delivery_date,
+        customer_note:order.note,
+        order_lines:order.lines,
         outputs: positive(
           order.lines.map((l) => ({
             item_id: String(l.item_id),

@@ -212,10 +212,14 @@ services:
       DEMO_PASSWORD_FILE: /run/warehouse-app-secrets/demo_password
       SEED_DEMO: ${SEED_DEMO:-true}
       COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      ENABLE_TEST_RESET: ${ENABLE_TEST_RESET:-true}
+      TEST_RESET_URL: http://test-reset:3000
       TRUST_PROXY: ${TRUST_PROXY:-0}
     ports:
       - "${APP_BIND_ADDRESS:-127.0.0.1}:${APP_PORT:-3000}:3000"
     depends_on:
+      test-reset:
+        condition: service_healthy
       identity-service:
         condition: service_healthy
       business-service:
@@ -227,13 +231,37 @@ services:
       reporting-service:
         condition: service_healthy
     networks: [backend, frontend]
+  test-reset:
+    image: warehouse-system-app:${APP_IMAGE_TAG:-local}
+    user: "0:0"
+    command: ["node", "scripts/reset-tools-server.cjs"]
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      ENABLE_TEST_RESET: ${ENABLE_TEST_RESET:-true}
+      DB_NAME: ${DB_NAME:-KhoHang}
+      DB_HOST: mysql
+      INTERNAL_SECRET_FILE: /run/warehouse-app-secrets/internal_secret
+    volumes:
+      - app_secrets:/run/warehouse-app-secrets:ro
+      - mysql_secrets:/run/warehouse-mysql-secrets:ro
+      - database_backups:/var/backups/warehouse
+    depends_on:
+      split-databases:
+        condition: service_completed_successfully
+    networks: [backend]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
   demo-fixtures:
     image: warehouse-system-app:${APP_IMAGE_TAG:-local}
     user: "0:0"
     command: ["node", "scripts/seed-demo-workflows.cjs", "--serve"]
     environment:
       NODE_ENV: ${NODE_ENV:-development}
-      SEED_DEMO: ${SEED_DEMO:-true}
+      SEED_DEMO: ${SEED_WORKFLOWS:-false}
       DB_NAME: ${DB_NAME:-KhoHang}
       DB_HOST: mysql
       DEMO_API_URL: http://app:3000

@@ -1,7 +1,7 @@
 (() => {
   const previousCreate = createForm,
     previousAction = actionForm;
-  async function form(record) {
+  async function form(record, initial) {
     const plans = (await options("production-plans")).filter((p) =>
       ["APPROVED", "IN_PROGRESS"].includes(p.status),
     );
@@ -26,7 +26,8 @@
               { id: "SU_CO", name: "Báo cáo sự cố" },
               { id: "NHU_CAU", name: "Báo cáo thiếu / nhu cầu NVL" },
             ],
-            record?.report_purpose || "TIEN_DO",
+            record?.report_purpose ||
+              (initial?.has_shortage ? "NHU_CAU" : "TIEN_DO"),
           ) +
           inputField(
             "progress_percentage",
@@ -35,7 +36,20 @@
             [],
             record?.progress_percentage ?? "",
           ) +
-          inputField("note", "textarea", true, [], record?.note || "") +
+          inputField(
+            "note",
+            "textarea",
+            true,
+            [],
+            record?.note ||
+              (initial
+                ? "Đối chiếu NVL kế hoạch " +
+                  initial.production_plan_code +
+                  (initial.has_shortage
+                    ? ": còn thiếu NVL."
+                    : ": đủ NVL theo thời điểm đối chiếu.")
+                : ""),
+          ) +
           inputField(
             "send_to_planner",
             "select",
@@ -44,15 +58,25 @@
               { id: "false", name: "Chỉ gửi Ban giám đốc" },
               { id: "true", name: "Gửi Ban giám đốc và Bộ phận lập kế hoạch" },
             ],
-            String(record?.send_to_planner ?? false),
+            String(record?.send_to_planner ?? initial?.has_shortage ?? false),
           ) +
-          '<div class="span2 notice">Ban giám đốc luôn nhận khi gửi báo cáo. Sự cố/tiến độ không bắt nhập NVL. Báo cáo thành phẩm được lập riêng khi hoàn tất toàn bộ.</div><div class="span2" id="report-materials"></div>',
+          '<div class="span2 notice">Ban giám đốc luôn nhận khi gửi báo cáo. Báo cáo nhu cầu còn thiếu NVL sẽ tự gửi thêm Bộ phận lập kế hoạch. Sự cố/tiến độ không bắt nhập NVL. Báo cáo thành phẩm được lập riêng khi hoàn tất toàn bộ.</div><div class="span2" id="report-materials"></div>',
       ),
     );
     const progress = document.querySelector("#f-progress_percentage");
+    document.querySelector('label[for="f-note"]').textContent =
+      "Mô tả / ghi chú *";
     progress.step = "0.01";
     progress.max = "99.99";
     if (record) document.querySelector("#f-report_purpose").disabled = true;
+    if (initial)
+      document.querySelector("#f-production_plan_id").value =
+        initial.production_plan_id;
+    const attached = window.attachProductionReportImages?.(
+      document.querySelector("#f-note"),
+      record,
+      initial,
+    );
     let seq = 0;
     const sync = async () => {
       const token = ++seq,
@@ -89,22 +113,25 @@
     if (!record)
       document.querySelector("#f-production_plan_id").onchange = sync;
     bindForm(
-      (d) => ({
-        ...(record
-          ? { version: record.version }
-          : {
-              production_plan_id: d.production_plan_id,
-              report_purpose: d.report_purpose,
-            }),
-        note: d.note,
-        send_to_planner: d.send_to_planner === "true",
-        ...(d.progress_percentage !== ""
-          ? { progress_percentage: d.progress_percentage }
-          : {}),
-        ...(document.querySelector("#f-report_purpose").value === "NHU_CAU"
-          ? { lines: readLines() }
-          : {}),
-      }),
+      async (d) => {
+        await attached?.ready();
+        return {
+          ...(record
+            ? { version: record.version }
+            : {
+                production_plan_id: d.production_plan_id,
+                report_purpose: d.report_purpose,
+              }),
+          note: document.querySelector("#f-note").value,
+          send_to_planner: d.send_to_planner === "true",
+          ...(d.progress_percentage !== ""
+            ? { progress_percentage: d.progress_percentage }
+            : {}),
+          ...(document.querySelector("#f-report_purpose").value === "NHU_CAU"
+            ? { lines: readLines() }
+            : {}),
+        };
+      },
       record ? "production-reports/" + record.id : "production-reports",
       record ? "PATCH" : "POST",
     );
@@ -132,4 +159,24 @@
     }
     return previousAction(r, action);
   };
+  window.openProductionReportFromComparison = async (data) => {
+    if (current === "production-reports") return form(null, data);
+    sessionStorage.setItem(
+      "production-comparison-draft",
+      JSON.stringify({ actor: user.id, data }),
+    );
+    navigate("production-reports");
+  };
+  window.addEventListener("DOMContentLoaded", async () => {
+    if (!isMysql || !user || current !== "production-reports") return;
+    const stored = sessionStorage.getItem("production-comparison-draft");
+    if (!stored) return;
+    sessionStorage.removeItem("production-comparison-draft");
+    try {
+      const draft = JSON.parse(stored);
+      if (String(draft.actor) === String(user.id)) await form(null, draft.data);
+    } catch (e) {
+      toast(e.message);
+    }
+  });
 })();

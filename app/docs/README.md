@@ -9,10 +9,12 @@ Cập nhật 14/10/2026. Toàn bộ đặc tả và tài liệu kiến trúc/v�
 | Kiến trúc đang chạy và giới hạn | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | Owner, database, tài khoản, migration | [SERVICE_DATABASES.md](SERVICE_DATABASES.md), [DATABASE.md](DATABASE.md) |
 | Chạy và nâng cấp Docker | [DOCKER.md](DOCKER.md) |
+| Nút xóa dữ liệu nghiệp vụ để test lại | [RESET_DU_LIEU_TEST.md](RESET_DU_LIEU_TEST.md) |
 | Tài khoản mẫu, mật khẩu và quyền | [DEMO_ACCOUNTS.md](DEMO_ACCOUNTS.md) |
 | Test case theo đặc tả UC | [TEST_CASES.md](TEST_CASES.md) |
 | Phiếu chấm 10 module nghiệp vụ | [PHIEU_CHAM.md](PHIEU_CHAM.md) |
 | Luồng kiểm tra hệ thống thực tế | [LUONG_KIEM_TRA_THUC_TE.md](LUONG_KIEM_TRA_THUC_TE.md) |
+| Đặt hàng, công thức NVL, đối chiếu tồn và ảnh báo cáo | [LUONG_DAT_HANG_TIEN_SAN_XUAT.md](LUONG_DAT_HANG_TIEN_SAN_XUAT.md) |
 | Dữ liệu test khi clone máy mới | [DU_LIEU_TEST_MAY_MOI.md](DU_LIEU_TEST_MAY_MOI.md) |
 | Bộ chứng từ test riêng từng UC và thư mục ảnh | [DEMO_FIXTURES.md](DEMO_FIXTURES.md) |
 | Vị trí cấu hình CSDL và chuyển lên host | [CAU_HINH_CSDL_HOST.md](CAU_HINH_CSDL_HOST.md) |

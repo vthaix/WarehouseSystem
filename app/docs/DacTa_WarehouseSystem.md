@@ -26,7 +26,7 @@ Tài liệu gồm 50 đặc tả use case, giữ nguyên nội dung nghiệp v�
 - [UC-25 Quản lý công việc](#uc-25)
 - [UC-25.1 Chỉnh sửa công việc](#uc-25-1)
 - [UC-25.2 Xóa công việc](#uc-25-2)
-- [UC-31 Phê duyệt đơn hàng](#uc-31)
+- [UC-31 Phê duyệt kế hoạch sản xuất](#uc-31)
 - [UC-14 Xem/Quản lý đơn hàng mua](#uc-14)
 - [UC-23 Yêu cầu nhập/xuất](#uc-23)
 - [UC-24 Quản lý yêu cầu nhập xuất](#uc-24)
@@ -63,7 +63,7 @@ Tài liệu gồm 50 đặc tả use case, giữ nguyên nội dung nghiệp v�
 
 **Tiền điều kiện:** Bộ phận lập kế hoạch đăng nhập thành công vào hệ thống và có đơn hàng trong trạng thái chờ tiếp nhận
 
-**Hậu điều kiện:** Đơn hàng được tiếp nhận và chuyển sang trạng thái đã tiếp nhận, chờ Ban giám đốc phê duyệt (UC-31 Phê duyệt đơn hàng)
+**Hậu điều kiện:** Đơn hàng được tiếp nhận và chuyển sang trạng thái đã tiếp nhận, chờ Ban giám đốc phê duyệt (UC-31 Phê duyệt kế hoạch sản xuất)
 
 **Actor chính:** Bộ phận lập kế hoạch
 
@@ -962,48 +962,43 @@ Tài liệu gồm 50 đặc tả use case, giữ nguyên nội dung nghiệp v�
 
 <a id="uc-31"></a>
 
-## UC-31 Phê duyệt đơn hàng
+## UC-31 Phê duyệt kế hoạch sản xuất
 
-**Tiền điều kiện:** Ban giám đốc đã đăng nhập thành công vào hệ thống
+**Tiền điều kiện:** Ban giám đốc đăng nhập; KHSX nháp gắn đơn đã tiếp nhận; xưởng và chi tiết hợp lệ.
 
-**Hậu điều kiện:** Đơn hàng được phê duyệt hoặc từ chối và trạng thái đơn hàng được cập nhật
+**Hậu điều kiện:** KHSX được chọn được duyệt; đơn nguồn tự cập nhật đã duyệt trong cùng transaction. Không duyệt các kế hoạch khác. Nếu từ chối, KHSX giữ nháp để planner sửa, đơn nguồn không bị từ chối.
 
 **Actor chính:** Ban giám đốc
 
-**Actor phụ:** Không
+**Actor phụ:** Bộ phận lập kế hoạch, Chủ xưởng, Khách hàng
 
 ### Luồng cơ bản
 
 | Ban giám đốc | Hệ thống |
 | --- | --- |
-| 1. Chọn chức năng Phê duyệt đơn hàng | 2. Hiển thị danh sách đơn hàng đang chờ phê duyệt (DonHang) |
-| 3. Chọn một đơn hàng để xem chi tiết (DonHang) | 4. Hiển thị đơn hàng, kế hoạch sản xuất và xưởng liên quan. (DonHang, ChiTietDonHang, MatHang, KeHoachSanXuat, ChiTietKeHoachSanXuat, Xuong) |
-| 5. Chọn Phê duyệt (DonHang) | 6. Cập nhật đơn hàng và kế hoạch sản xuất liên quan thành Đã duyệt; thông báo cho Bộ phận lập kế hoạch. (DonHang, KeHoachSanXuat) |
+| 1. Chọn Phê duyệt kế hoạch sản xuất | 2. Hiển thị KHSX chờ duyệt (KeHoachSanXuat) |
+| 3. Chọn KHSX | 4. Hiển thị kế hoạch, đơn nguồn, mặt hàng, số lượng, NVL và xưởng (KeHoachSanXuat, ChiTietKeHoachSanXuat, DonHang, ChiTietDonHang, MatHang, Xuong) |
+| 5. Chọn Phê duyệt | 6. Kiểm tra version/hạn mức, duyệt đúng KHSX; tự cập nhật đơn nguồn từ đã tiếp nhận sang đã duyệt; lưu lịch sử và thông báo planner, xưởng, khách hàng (KeHoachSanXuat, DonHang) |
 
 ### Luồng thay thế
 
-#### 5.1 Từ chối đơn hàng
+#### 5.1 Từ chối kế hoạch sản xuất
 
-1\. Ban giám đốc chọn Từ chối và nhập lý do (DonHang)
-
-2\. Cập nhật đơn hàng và kế hoạch sản xuất liên quan thành Từ chối, lưu lý do; thông báo cho khách hàng và Bộ phận lập kế hoạch. (DonHang, KeHoachSanXuat, KhachHang)
-
-3\. Quay lại bước 1
+1. Giám đốc nhập lý do và từ chối KHSX.
+2. Lưu quyết định/lý do, tăng version, giữ KHSX nháp và thông báo planner để chỉnh sửa. Không từ chối đơn hay sửa KHSX khác.
+3. Planner sửa kế hoạch và trình lại.
 
 ### Luồng ngoại lệ
 
-#### 2.1 Danh sách đơn hàng chờ phê duyệt rỗng
+#### 2.1 Danh sách kế hoạch chờ phê duyệt rỗng
 
-1\. Hệ thống hiển thị danh sách rỗng / thông báo không có đơn hàng nào cần phê duyệt.  (DonHang)
+1. Hiển thị danh sách rỗng, không tạo mutation.
+2. Kết thúc UC.
 
-2\. Kết thúc UC.
+#### 4.1 Kế hoạch không còn ở trạng thái chờ phê duyệt hoặc version cũ
 
-#### 4.1 Đơn hàng không còn ở trạng thái chờ phê duyệt (đã được xử lý bởi người khác)
-
-1\. Hệ thống thông báo đơn hàng không còn hiệu lực để phê duyệt (DonHang)
-
-2\. Quay lại bước 1
-
+1. Chặn thao tác, không cập nhật đơn/phiếu liên quan; yêu cầu tải lại.
+2. Quay lại bước 1. Gửi lại đúng Idempotency-Key/nội dung trả kết quả cũ, không duyệt hai lần.
 
 <a id="uc-14"></a>
 
@@ -2190,7 +2185,7 @@ Xử lý trong UC-11.01 và UC-11.02
 
 **Tiền điều kiện:** Khách hàng đăng nhập thành công vào hệ thống
 
-**Hậu điều kiện:** Thông tin đơn hàng khách hàng được cập nhật chính xác trong hệ thống với trạng thái chờ phê duyệt (Ban giám đốc thực hiện UC-31 Phê duyệt đơn hàng)
+**Hậu điều kiện:** Thông tin đơn hàng khách hàng được cập nhật chính xác trong hệ thống với trạng thái chờ phê duyệt (Ban giám đốc thực hiện UC-31 Phê duyệt kế hoạch sản xuất)
 
 **Actor chính:** Khách hàng
 

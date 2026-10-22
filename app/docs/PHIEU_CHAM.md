@@ -102,7 +102,7 @@ Nội dung kiểm tra:
 - [ ] Tiếp nhận đúng đơn; cập nhật trạng thái và không tiếp nhận trùng.
 - [ ] Khi lập kế hoạch sản xuất, tự điền thông tin từ đơn nguồn; chọn xưởng và kiểm tra liên kết đơn–kế hoạch–xưởng.
 - [ ] Xác định NVL dự kiến và dự phòng theo quy tắc thống nhất; không cộng dự phòng lặp lại.
-- [ ] Ban giám đốc xem, duyệt hoặc từ chối đơn và kế hoạch sản xuất liên quan; trạng thái cập nhật đồng bộ.
+- [ ] Ban giám đốc duyệt từng KHSX; đơn liên quan tự cập nhật đã duyệt. Từ chối trả KHSX về chỉnh sửa, không từ chối đơn hay tự duyệt kế hoạch khác.
 - [ ] Xử lý danh sách rỗng, thiếu xưởng/nguồn, chứng từ đã được người khác xử lý và người dùng sai quyền.
 
 **Điểm:** ........ / 10

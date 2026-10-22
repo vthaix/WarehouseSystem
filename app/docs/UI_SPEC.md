@@ -12,6 +12,12 @@ Danh sách module/route/vai trò hiện hành nằm ở [generated/PROJECT_MANIF
 
 ## Màn hình và thao tác chính
 
+Development có nút tạm **Xóa dữ liệu test** cạnh Đăng xuất cho mọi actor. Hộp thoại nêu phạm vi toàn hệ thống, danh mục giữ lại, yêu cầu nhập `XOA DU LIEU TEST`, có Hủy và khóa nút khi đang chạy. Thành công hiển thị backup và Đăng nhập lại. Trên điện thoại nhóm nút xuống hàng để tránh tràn. Tắt bằng `ENABLE_TEST_RESET=false`; production không hiện nút và endpoint bị chặn. Chi tiết [RESET_DU_LIEU_TEST.md](RESET_DU_LIEU_TEST.md).
+
+UC-31 thực hiện tại **Kế hoạch sản xuất**, chọn đúng KHSX → **Phê duyệt**. Form gửi version của KHSX; không chuyển sang API duyệt đơn. Đơn hàng không có nút duyệt; khách tự thấy trạng thái đã phê duyệt sau khi giám đốc duyệt KHSX nguồn. Từ chối KHSX có lý do, trả planner chỉnh sửa và giữ đơn ở trạng thái hiện tại.
+
+UC-02 có trang riêng `/customer/orders/create`, mở từ mục **Đặt hàng** trên sidebar hoặc nút **Đặt hàng** trong danh sách đơn của khách. Hiển thị thành phẩm mẫu đang công bố/hoạt động, giá và đơn vị; chọn nhiều loại, số lượng, ghi chú từng loại, địa chỉ, ngày nhận và ghi chú chung. Tổng tiền trên trang là dự kiến; server lấy lại giá khi gửi. Gửi thành công mở chi tiết đơn chờ tiếp nhận. Chỉ CUSTOMER truy cập trang; UC-03 vẫn dùng `/customer/orders`.
+
 | Nhóm | Dữ liệu / thao tác |
 | --- | --- |
 | Đăng nhập/dashboard | Login theo session/CSRF, menu đúng actor, đăng xuất; không tự chọn vai trò để vượt quyền |
@@ -23,7 +29,7 @@ Danh sách module/route/vai trò hiện hành nằm ở [generated/PROJECT_MANIF
 | QC | Lịch/phân công, kiểm từng dòng lô, đạt+lỗi=kiểm; bù/tái kiểm có lịch sử |
 | Kiểm kê/kết luận | Snapshot theo kho, đếm phân biệt trống/0, hoàn tất/gửi kết luận từng kho, chênh lệch và đóng |
 | Ngoại lệ | Nguồn/lượng/vị trí/phương án; giám đốc duyệt, QC xác nhận khi cần, quản lý thực hiện |
-| Báo cáo SX | TIEN_DO/SU_CO/NHU_CAU khi chưa xong; BGĐ mặc định, planner tùy chọn; chỉ nhu cầu có bảng NVL |
+| Báo cáo SX | TIEN_DO/SU_CO/NHU_CAU khi chưa xong; BGĐ mặc định, còn thiếu NVL tự gửi planner; hỗ trợ dán ảnh/chụp đối chiếu; chỉ nhu cầu có bảng NVL |
 | Tổng kết TP | Xác nhận xong toàn bộ, lấy lô từng đợt đã có; ghi lượng thực/NVL dùng và gửi |
 | Hàng khách trả | Dòng giao gốc, kho/vị trí/người nhận, nhận cách ly một lần; chưa tự hoàn tiền/giao bù |
 | Tra cứu/báo cáo | Tồn/hồ sơ/kiểm kê theo quyền/bộ lọc, export trong giới hạn, không tạo entity hồ sơ mới |

@@ -10,6 +10,12 @@ Không trả hash mật khẩu. Sai quyền/scope bị chặn kể cả UI có n
 
 ## Danh mục API và owner
 
+Development-only POST `/test-data/reset`: mọi tài khoản đã đăng nhập, CSRF, header `Idempotency-Key` UUID và body `{ "confirmation": "XOA DU LIEU TEST" }`. Chỉ bật khi `ENABLE_TEST_RESET=true` và `NODE_ENV=development`. Xóa nghiệp vụ toàn hệ thống, giữ danh mục/tài khoản; trả đường dẫn backup, số bảng đã dọn và yêu cầu đăng nhập lại. Gateway gọi tiện ích nội bộ riêng, không cấp quyền SQL root cho gateway. Chi tiết [RESET_DU_LIEU_TEST.md](RESET_DU_LIEU_TEST.md).
+
+UC-31: POST `/production-plans/:id/review` nhận `version` của KHSX, `decision=APPROVE|REJECT`, `reason` bắt buộc khi từ chối và header `Idempotency-Key`. Chỉ DIRECTOR. APPROVE duyệt đúng một KHSX và tự cập nhật đơn RECEIVED sang APPROVED trong cùng transaction; các KHSX khác không đổi. REJECT giữ DRAFT, tăng version, lưu lý do và thông báo planner để sửa; không từ chối đơn nguồn. API cũ `/customer-orders/:id/review` bị chặn 409 `PLAN_REVIEW_REQUIRED` (sai vai trò vẫn 403).
+
+Cập nhật 22/10/2026: thêm POST `/production-plans/recipe-estimate`, GET `/production-plans/:id/material-comparison`, POST `/production-report-images`, GET `/production-reports/:id/images/:file`. KHSX nhận `material_source=RECIPE|MANUAL`; ảnh báo cáo là liên kết trong note, không nhận HTML. Hợp đồng và giới hạn: [LUONG_DAT_HANG_TIEN_SAN_XUAT.md](LUONG_DAT_HANG_TIEN_SAN_XUAT.md).
+
 Danh sách method/path sinh từ Express router: [generated/API_ROUTES.md](generated/API_ROUTES.md). Lookup/source-imports chọn owner theo resource/target; bảng owner mặc định cho path biến không thay kiểm quyền. Các resource danh mục kho/lô thuộc Warehouse; hàng/loại hàng/NCC thuộc Business; báo cáo tổng hợp thuộc Reporting.
 
 Whitelist request/query/dòng con trích từ code: [generated/API_CONTRACT_FIELDS.md](generated/API_CONTRACT_FIELDS.md). Policy read/create/edit và module owner: [generated/PROJECT_MANIFEST.json](generated/PROJECT_MANIFEST.json). Fields được liệt kê không đồng nghĩa tất cả bắt buộc; validation tại method là nguồn chuẩn.
@@ -20,7 +26,7 @@ ID là chuỗi số nguyên dương. Lượng là decimal string, tối đa 3 ch
 
 Response thành công dùng data, meta khi phân trang và request_id theo helper. Lỗi có code/message/fields; thông thường validation 422, chưa đăng nhập 401, không quyền 403, không tồn tại 404, xung đột version/trạng thái/nguồn 409. Mã cụ thể giữ code hiện hữu, không đổi IN_USE thành RESOURCE_IN_USE chỉ theo tài liệu cũ.
 
-Có version thì mutation phải gửi bản hiện hành. Idempotency-Key chỉ bắt buộc tại endpoint có cơ chế này (duyệt đơn/điều phối/ghi phiếu theo implementation), không yêu cầu blanket cho mọi POST. Nhập TP MANUAL dùng receipt_key trong body. Timeout không tự retry; đối soát resource và gửi cùng key/payload khi endpoint hỗ trợ.
+Có version thì mutation phải gửi bản hiện hành. Idempotency-Key chỉ bắt buộc tại endpoint có cơ chế này (duyệt kế hoạch/điều phối/ghi phiếu theo implementation), không yêu cầu blanket cho mọi POST. Nhập TP MANUAL dùng receipt_key trong body. Timeout không tự retry; đối soát resource và gửi cùng key/payload khi endpoint hỗ trợ.
 
 ## Nguồn nghiệp vụ
 

@@ -11,6 +11,9 @@ const { csrf } = require("../middlewares/csrf.middleware");
 const C = require("../services/domain/core");
 module.exports = function createMysqlApp(runtime) {
   const app = express();
+  const testReset = require('./TestResetRoutes')();
+  app.locals.testResetEnabled = require('../config/reset-tools').enabled();
+  app.use(testReset.gate);
   app.disable("x-powered-by");
   app.set("view engine", "ejs");
   app.set("views", path.resolve(__dirname, "../views"));
@@ -89,11 +92,13 @@ module.exports = function createMysqlApp(runtime) {
       res.status(503).json({ status: "not_ready" });
     }
   });
-  app.use(express.json({ limit: "256kb",type:req=>req.path!=='/api/v1/category-images'&&Boolean(req.is('application/json')) }));
+  app.use(express.json({ limit: "256kb",type:req=>!['/api/v1/category-images','/api/v1/production-report-images'].includes(req.path)&&Boolean(req.is('application/json')) }));
   app.use(express.urlencoded({ extended: false, limit: "256kb" }));
   app.use(session(require("../config/session")(runtime.store)));
   app.use(sessionUser(runtime.users));
+  app.use(testReset.router);
   app.use(require('./CategoryImageRoutes')());
+  app.use(require('./ProductionReportImageRoutes')(runtime));
   app.use("/api/v1/auth", require("../routes/auth.routes")(runtime.auth));
   app.use("/api/v1", csrf, requireApiAuth, runtime.remote ? require('../services/shared/api-proxy')(runtime) : require("./ModuleRoutes")(runtime));
   app.use("/api", (_req, res, next) =>

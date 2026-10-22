@@ -93,9 +93,9 @@ Tổng 233 ca: 36 Blocked theo thiết kế và 197 Not Run ở cấp ca đầy 
 | TC-25-2-02 | 3.1 Nếu giám đốc chọn Huỷ | UC-25.2 / Thay thế / 3.1 Nếu giám đốc chọn Huỷ | Not Run | Chưa xác nhận toàn bộ ca; không quy đổi kết quả suite thành Pass |
 | TC-25-2-03 | 4.1 Nếu công việc hiện đang được diễn ra | UC-25.2 / Ngoại lệ / 4.1 Nếu công việc hiện đang được diễn ra | Not Run | Chưa xác nhận toàn bộ ca; không quy đổi kết quả suite thành Pass |
 | TC-31-01 | Luồng cơ bản | UC-31 / Luồng cơ bản | Not Run | Chưa xác nhận toàn bộ ca; không quy đổi kết quả suite thành Pass |
-| TC-31-02 | 5.1 Từ chối đơn hàng | UC-31 / Thay thế / 5.1 Từ chối đơn hàng | Not Run | Chưa xác nhận toàn bộ ca; không quy đổi kết quả suite thành Pass |
-| TC-31-03 | 2.1 Danh sách đơn hàng chờ phê duyệt rỗng | UC-31 / Ngoại lệ / 2.1 Danh sách đơn hàng chờ phê duyệt rỗng | Not Run | Chưa xác nhận toàn bộ ca; không quy đổi kết quả suite thành Pass |
-| TC-31-04 | 4.1 Đơn hàng không còn ở trạng thái chờ phê duyệt (đã được xử lý bởi người khác) | UC-31 / Ngoại lệ / 4.1 Đơn hàng không còn ở trạng thái chờ phê duyệt (đã được xử lý bởi người khác) | Not Run | Chưa xác nhận toàn bộ ca; không quy đổi kết quả suite thành Pass |
+| TC-31-02 | 5.1 Từ chối kế hoạch sản xuất | UC-31 / Thay thế / 5.1 Từ chối kế hoạch sản xuất | Not Run | Chưa xác nhận toàn bộ ca; không quy đổi kết quả suite thành Pass |
+| TC-31-03 | 2.1 Danh sách kế hoạch chờ phê duyệt rỗng | UC-31 / Ngoại lệ / 2.1 Danh sách kế hoạch chờ phê duyệt rỗng | Not Run | Chưa xác nhận toàn bộ ca; không quy đổi kết quả suite thành Pass |
+| TC-31-04 | 4.1 Kế hoạch không còn ở trạng thái chờ phê duyệt hoặc version cũ | UC-31 / Ngoại lệ / 4.1 Kế hoạch không còn ở trạng thái chờ phê duyệt hoặc version cũ | Not Run | Chưa xác nhận toàn bộ ca; không quy đổi kết quả suite thành Pass |
 | TC-14-01 | Luồng cơ bản | UC-14 / Luồng cơ bản | Not Run | Chưa xác nhận toàn bộ ca; không quy đổi kết quả suite thành Pass |
 | TC-14-02 | 2.1 Không có đơn hàng trong hệ thống | UC-14 / Ngoại lệ / 2.1 Không có đơn hàng trong hệ thống | Not Run | Chưa xác nhận toàn bộ ca; không quy đổi kết quả suite thành Pass |
 | TC-23-01 | Luồng cơ bản | UC-23 / Luồng cơ bản | Not Run | Chưa xác nhận toàn bộ ca; không quy đổi kết quả suite thành Pass |
@@ -231,7 +231,7 @@ Tổng 233 ca: 36 Blocked theo thiết kế và 197 Not Run ở cấp ca đầy 
 | TC-BS-17 | Đối chiếu tổng phân bổ lô | UC-35; ca bổ sung từ quy tắc/điều kiện và rủi ro nghiệp vụ | Not Run | Chưa xác nhận toàn bộ ca; không quy đổi kết quả suite thành Pass |
 | TC-BS-18 | Dự phòng NVL một lần | UC-04; ca bổ sung từ quy tắc/điều kiện và rủi ro nghiệp vụ | Blocked | Chưa chốt kỳ vọng; xem mục 3 TEST_CASES.md |
 | TC-BS-19 | Sai loại và sai báo cáo nguồn | UC-04, UC-27; ca bổ sung từ quy tắc/điều kiện và rủi ro nghiệp vụ | Not Run | Chưa xác nhận toàn bộ ca; không quy đổi kết quả suite thành Pass |
-| TC-BS-20 | Duyệt đơn và KHSX đồng bộ | UC-31; ca bổ sung từ quy tắc/điều kiện và rủi ro nghiệp vụ | Not Run | Chưa xác nhận toàn bộ ca; không quy đổi kết quả suite thành Pass |
+| TC-BS-20 | Duyệt KHSX và tự cập nhật đơn đồng bộ | UC-31; ca bổ sung từ quy tắc/điều kiện và rủi ro nghiệp vụ | Not Run | Chưa xác nhận toàn bộ ca; không quy đổi kết quả suite thành Pass |
 | TC-BS-21 | Chênh lệch thiếu/đủ/thừa | UC-15, UC-28; ca bổ sung từ quy tắc/điều kiện và rủi ro nghiệp vụ | Not Run | Chưa xác nhận toàn bộ ca; không quy đổi kết quả suite thành Pass |
 | TC-BS-22 | Phân công khu vực | UC-15; ca bổ sung từ quy tắc/điều kiện và rủi ro nghiệp vụ | Not Run | Chưa xác nhận toàn bộ ca; không quy đổi kết quả suite thành Pass |
 | TC-BS-23 | File xuất khớp bộ lọc | UC-18, UC-19, UC-20, UC-21; ca bổ sung từ quy tắc/điều kiện và rủi ro nghiệp vụ | Blocked | Chưa chốt kỳ vọng; xem mục 3 TEST_CASES.md |

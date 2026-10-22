@@ -4,14 +4,14 @@ Bản hiện hành hợp nhất ngày 14/10/2026, theo các yêu cầu/đồng �
 
 ## Phạm vi
 
-Quản lý kho và sản xuất bánh ngọt đóng gói: đơn hàng, kế hoạch, mua NVL, sản xuất, QC, nhập/xuất, kiểm kê, công việc và ngoại lệ. Quản lý nhân viên/bộ phận ngoài phạm vi giao diện nghiệp vụ; dữ liệu người dùng/vai trò/phân công vẫn cần để xác thực. Không có thanh toán, hoàn tiền, vận chuyển, BOM tự động hoặc tự mua/giao bù.
+Quản lý kho và sản xuất bánh ngọt đóng gói: đơn hàng, kế hoạch, mua NVL, sản xuất, QC, nhập/xuất, kiểm kê, công việc và ngoại lệ. Quản lý nhân viên/bộ phận ngoài phạm vi giao diện nghiệp vụ; dữ liệu người dùng/vai trò/phân công vẫn cần để xác thực. Không có thanh toán, hoàn tiền, vận chuyển hoặc tự mua/giao bù. Cập nhật 22/10/2026: tự tính định lượng từ công thức cấu hình, đối chiếu tồn theo KHSX và ảnh báo cáo; chi tiết [LUONG_DAT_HANG_TIEN_SAN_XUAT.md](LUONG_DAT_HANG_TIEN_SAN_XUAT.md).
 
 Express + EJS, năm backend HTTP và web-gateway; sáu database/tài khoản MySQL cùng server. Còn FK/JOIN/view/transaction xuyên schema. Chi tiết kỹ thuật: [ARCHITECTURE.md](ARCHITECTURE.md), [STRUCTURE.md](STRUCTURE.md), [SERVICE_DATABASES.md](SERVICE_DATABASES.md).
 
 ## Quy trình hiện hành
 
-1. Khách đặt đơn; planner tiếp nhận và lập KHSX cho xưởng. BGĐ duyệt đơn/kế hoạch liên quan.
-2. Chủ xưởng tra cứu tồn khả dụng. Khi đang sản xuất, có thể gửi tiến độ/sự cố cho BGĐ; nếu có nhu cầu NVL thì gửi báo cáo NHU_CAU và chọn thêm planner.
+1. Khách đặt đơn; planner tiếp nhận và lập KHSX cho xưởng. BGĐ duyệt KHSX; đơn hàng liên quan tự chuyển sang đã phê duyệt.
+2. Chủ xưởng mở KHSX đã duyệt để đối chiếu NVL với tồn khả dụng. Khi đang sản xuất, có thể gửi tiến độ/sự cố cho BGĐ; báo cáo NHU_CAU còn thiếu NVL tự gửi thêm planner. Có thể chụp bảng đối chiếu hoặc dán ảnh vào mô tả báo cáo.
 3. Mua bổ sung theo kế hoạch MUA đã duyệt hoặc nhập đơn REPORT/MANUAL. Nhận hàng tạo lô/dòng lô, QC; phần đạt lập yêu cầu nhập, quản lý phân công, nhân viên ghi phiếu. QC không tự tạo tồn.
 4. Xuất NVL lấy KHSX PLAN hoặc báo cáo NHU_CAU REPORT; kiểm nhu cầu cộng dồn, giữ chỗ và lô thực xuất.
 5. Thành phẩm hoàn thành phần nào, chủ xưởng nhập tay yêu cầu phần đó theo KHSX; một đầu lô/KHSX, dòng lô riêng từng đợt. QC đạt mới nhập. Không cần báo cáo tổng kết trước khi nhập từng đợt.
@@ -23,8 +23,8 @@ Express + EJS, năm backend HTTP và web-gateway; sáu database/tài khoản MyS
 
 | Mã | Quy tắc hiện hành |
 | --- | --- |
-| BR-01 | Khách đặt đơn; planner tiếp nhận trên DonHang. Chỉ sửa trước duyệt. Giám đốc duyệt đơn và KHSX liên quan trong một transaction. |
-| BR-02 | KHSX gồm dòng thành phẩm/NVL chung ChiTietKeHoachSanXuat. NVL nhập lượng gốc, cộng 10% đúng một lần, làm tròn lên 3 chữ số thập phân; không có BOM tự động. |
+| BR-01 | Khách đặt đơn; planner tiếp nhận trên DonHang. Chỉ sửa trước duyệt. Giám đốc duyệt từng KHSX; duyệt thành công tự cập nhật đơn nguồn sang APPROVED trong cùng transaction. Không duyệt trực tiếp đơn, không tự duyệt các KHSX khác. |
+| BR-02 | KHSX gồm dòng thành phẩm/NVL chung ChiTietKeHoachSanXuat. NVL gốc tính theo công thức cấu hình × lượng từng bánh rồi cộng gộp, hoặc nhập tay; cộng 10% đúng một lần, làm tròn lên 3 chữ số thập phân. Công thức minh họa cần xác nhận trước dùng chính thức. |
 | BR-03 | Một báo cáo nhu cầu hiệu lực/KHSX. Nguồn đã gửi/đã sử dụng bất biến; tồn/thiếu lấy hệ thống, không tự khai tồn. |
 | BR-04 | Kế hoạch MUA lấy báo cáo SAN_XUAT mục đích NHU_CAU; kế hoạch BAN lấy tổng kết THANH_PHAM. Không dùng tiến độ/sự cố làm nguồn nhu cầu. |
 | BR-05 | Đơn mua PLAN/REPORT/MANUAL. PLAN tối đa một đơn/kế hoạch; REPORT và kế hoạch MUA cùng chia sẻ hạn mức thiếu, không đếm đơn PLAN thêm lần nữa. MANUAL không tự đáp ứng báo cáo. |
@@ -32,7 +32,7 @@ Express + EJS, năm backend HTTP và web-gateway; sáu database/tài khoản MyS
 | BR-07 | Ngoại lệ: lập → giám đốc duyệt/từ chối → quản lý áp dụng riêng; người lập không tự duyệt. Điều chỉnh hàng đã nhập cần xác nhận QC và chứng từ bù, giữ phiếu gốc. |
 | BR-08 | Yêu cầu NVL PLAN hoặc REPORT; tổng yêu cầu/cấp đối chiếu cùng KHSX. Nếu đã có báo cáo nhu cầu gửi, PLAN không vượt nhu cầu thực tế. Yêu cầu không có bước duyệt riêng. |
 | BR-09 | Quản lý phân công tạo giữ chỗ, không TTL. Khả dụng là lượng AVAILABLE hợp lệ trừ phần giữ chưa xuất; hủy chỉ giải phóng phần chưa ghi. Không xuất hàng cách ly/hết hạn hoặc tồn âm. |
-| BR-10 | UC-34 khi chưa hoàn tất: TIEN_DO/SU_CO/NHU_CAU, BGĐ luôn nhận, thêm planner tùy chọn. UC-35 chỉ tổng kết khi xác nhận hoàn tất toàn bộ; sản lượng là thực tế, không ép bằng dự kiến. |
+| BR-10 | UC-34 khi chưa hoàn tất: TIEN_DO/SU_CO/NHU_CAU, BGĐ luôn nhận; NHU_CAU còn thiếu tự gửi thêm planner, tiến độ/sự cố tùy chọn thêm planner. Có thể dán ảnh/chụp đối chiếu vào mô tả. UC-35 chỉ tổng kết khi xác nhận hoàn tất toàn bộ; sản lượng là thực tế, không ép bằng dự kiến. |
 | BR-11 | Kiểm kê khóa từng kho, snapshot và đếm theo dòng lô/vị trí/bucket; trống khác 0. Kết luận từng kho, mọi chênh lệch qua giám đốc duyệt, quản lý áp dụng rồi đóng đợt. |
 | BR-12 | Phiếu đã ghi, biến động và lịch sử duyệt không ghi đè. Hàng khách trả theo dòng giao gốc, nhận đúng một lần vào cách ly; chưa tự giao bù/hoàn tiền. Trả NCC chưa tự tạo mua bù. |
 
@@ -40,7 +40,7 @@ Express + EJS, năm backend HTTP và web-gateway; sáu database/tài khoản MyS
 
 | Yêu cầu | UC | Chức năng | Vai trò | Module | Màn hình |
 | --- | --- | --- | --- | --- | --- |
-| FR-29 | UC-29 | Tiếp nhận đơn hàng | PLANNER | CustomerOrder | UI-04 / UI-05 |
+| FR-29 | UC-29 | Tiếp nhận đơn hàng | PLANNER | ProductionPlan | UI-04 / UI-05 |
 | FR-06 | UC-06 | Quản lý danh mục kho | WAREHOUSE_MANAGER | Catalog | UI-10 |
 | FR-06.1 | UC-06.1 | Thêm danh mục kho | WAREHOUSE_MANAGER | Catalog | UI-10 |
 | FR-06.2 | UC-06.2 | Xóa danh mục kho | WAREHOUSE_MANAGER | Catalog | UI-10 |
@@ -60,7 +60,7 @@ Express + EJS, năm backend HTTP và web-gateway; sáu database/tài khoản MyS
 | FR-25 | UC-25 | Quản lý công việc | DIRECTOR | Task | UI-27 |
 | FR-25.1 | UC-25.1 | Chỉnh sửa công việc | DIRECTOR | Task | UI-27 |
 | FR-25.2 | UC-25.2 | Xóa công việc | DIRECTOR | Task | UI-27 |
-| FR-31 | UC-31 | Phê duyệt đơn hàng | DIRECTOR | CustomerOrder | UI-04 / UI-05 |
+| FR-31 | UC-31 | Phê duyệt kế hoạch sản xuất | DIRECTOR | ProductionPlan | UI-04 / UI-05 |
 | FR-14 | UC-14 | Xem/Quản lý đơn hàng mua | PURCHASER | Purchasing | UI-08 / UI-09 |
 | FR-23 | UC-23 | Yêu cầu nhập/xuất | WORKSHOP_OWNER | StockRequest | UI-16 / UI-17 |
 | FR-24 | UC-24 | Quản lý yêu cầu nhập xuất | WORKSHOP_OWNER | StockRequest | UI-16 / UI-17 |
