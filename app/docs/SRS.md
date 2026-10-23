@@ -12,10 +12,10 @@ Express + EJS, năm backend HTTP và web-gateway; sáu database/tài khoản MyS
 
 1. Khách đặt đơn; planner tiếp nhận và lập KHSX cho xưởng. BGĐ duyệt KHSX; đơn hàng liên quan tự chuyển sang đã phê duyệt.
 2. Chủ xưởng mở KHSX đã duyệt để đối chiếu NVL với tồn khả dụng. Khi đang sản xuất, có thể gửi tiến độ/sự cố cho BGĐ; báo cáo NHU_CAU còn thiếu NVL tự gửi thêm planner. Có thể chụp bảng đối chiếu hoặc dán ảnh vào mô tả báo cáo.
-3. Mua bổ sung theo kế hoạch MUA đã duyệt hoặc nhập đơn REPORT/MANUAL. Nhận hàng tạo lô/dòng lô, QC; phần đạt lập yêu cầu nhập, quản lý phân công, nhân viên ghi phiếu. QC không tự tạo tồn.
+3. Mua bổ sung từ MUA đã duyệt hoặc tự nhập MANUAL, chọn NCC theo từng NVL. Nhận hàng tạo lô/dòng lô, QC; phần đạt lập yêu cầu nhập, quản lý phân công, nhân viên ghi phiếu. QC không tự tạo tồn.
 4. Xuất NVL lấy KHSX PLAN hoặc báo cáo NHU_CAU REPORT; kiểm nhu cầu cộng dồn, giữ chỗ và lô thực xuất.
-5. Thành phẩm hoàn thành phần nào, chủ xưởng nhập tay yêu cầu phần đó theo KHSX; một đầu lô/KHSX, dòng lô riêng từng đợt. QC đạt mới nhập. Không cần báo cáo tổng kết trước khi nhập từng đợt.
-6. Hoàn tất toàn bộ mới lập UC-35, lấy lại các dòng lô từng phần đã có. Không tạo lô hoặc nhập lần hai; sản lượng thực tế có thể khác dự kiến, NVL dùng không vượt đã cấp. Gửi tổng kết đánh dấu KHSX COMPLETED.
+5. Thành phẩm hoàn thành phần nào, chủ xưởng lập báo cáo thành phẩm UC-35 cho phần đó; mỗi báo cáo tạo một phần trong cùng đầu lô/KHSX, có các dòng lô riêng. Báo cáo tiến độ UC-34 không tạo phần lô. Giám đốc lập Công việc, chọn loại kiểm tra thành phẩm → lô → phần theo báo cáo đã gửi → nhân viên. QC đạt mới lập yêu cầu và phiếu nhập phần đạt.
+6. Có thể lập nhiều báo cáo thành phẩm cho KHSX; mỗi báo cáo chỉ ghi lượng phần mới. Phần thường giữ KHSX IN_PROGRESS; chỉ báo cáo phần cuối có xác nhận hoàn tất mới chuyển COMPLETED. Không tạo phiếu/tồn kho trùng; NVL dùng cộng dồn không vượt đã cấp. Chi tiết [CONG_VIEC_KIEM_TRA_LO.md](CONG_VIEC_KIEM_TRA_LO.md).
 7. Planner lập BAN từ tổng kết, BGĐ duyệt. Xuất bán khi đã hoàn tất SX, đến ngày giao, còn thành phẩm QC đạt khả dụng; ghi lượng giao và trạng thái đơn. Hiện code dùng latest_delivery_date làm điều kiện ngày giao, chưa có lịch giao riêng.
 8. Kiểm kê, công việc, kết luận, ngoại lệ và hàng trả vận hành theo quyền/phân công. Hàng cách ly chỉ giải phóng/loại bỏ/trả NCC sau phê duyệt; bù QC không sửa lịch sử phiếu.
 
@@ -26,8 +26,8 @@ Express + EJS, năm backend HTTP và web-gateway; sáu database/tài khoản MyS
 | BR-01 | Khách đặt đơn; planner tiếp nhận trên DonHang. Chỉ sửa trước duyệt. Giám đốc duyệt từng KHSX; duyệt thành công tự cập nhật đơn nguồn sang APPROVED trong cùng transaction. Không duyệt trực tiếp đơn, không tự duyệt các KHSX khác. |
 | BR-02 | KHSX gồm dòng thành phẩm/NVL chung ChiTietKeHoachSanXuat. NVL gốc tính theo công thức cấu hình × lượng từng bánh rồi cộng gộp, hoặc nhập tay; cộng 10% đúng một lần, làm tròn lên 3 chữ số thập phân. Công thức minh họa cần xác nhận trước dùng chính thức. |
 | BR-03 | Một báo cáo nhu cầu hiệu lực/KHSX. Nguồn đã gửi/đã sử dụng bất biến; tồn/thiếu lấy hệ thống, không tự khai tồn. |
-| BR-04 | Kế hoạch MUA lấy báo cáo SAN_XUAT mục đích NHU_CAU; kế hoạch BAN lấy tổng kết THANH_PHAM. Không dùng tiến độ/sự cố làm nguồn nhu cầu. |
-| BR-05 | Đơn mua PLAN/REPORT/MANUAL. PLAN tối đa một đơn/kế hoạch; REPORT và kế hoạch MUA cùng chia sẻ hạn mức thiếu, không đếm đơn PLAN thêm lần nữa. MANUAL không tự đáp ứng báo cáo. |
+| BR-04 | Planner lập kế hoạch MUA bằng nhập tay hoặc import báo cáo SAN_XUAT mục đích NHU_CAU đã gửi cho planner; kế hoạch BAN lấy tổng kết THANH_PHAM. Không dùng tiến độ/sự cố làm nguồn nhu cầu. |
+| BR-05 | Đơn mua mới chỉ PLAN/MANUAL; PLAN tối đa một đơn/kế hoạch, ngày nhận lấy từ MUA đã duyệt. Planner không chọn NCC; purchaser chọn NCC riêng từng NVL. REPORT lịch sử giữ nguyên, không tạo mới. MANUAL không tự đáp ứng báo cáo. |
 | BR-06 | LoHang là đầu lô, ChiTietLo là dòng hàng. QC kiểm toàn bộ mỗi dòng, kiểm=đạt+lỗi; chỉ phần đạt được nhập AVAILABLE. Lỗi NVL trước nhập ghi trả NCC theo kết luận. |
 | BR-07 | Ngoại lệ: lập → giám đốc duyệt/từ chối → quản lý áp dụng riêng; người lập không tự duyệt. Điều chỉnh hàng đã nhập cần xác nhận QC và chứng từ bù, giữ phiếu gốc. |
 | BR-08 | Yêu cầu NVL PLAN hoặc REPORT; tổng yêu cầu/cấp đối chiếu cùng KHSX. Nếu đã có báo cáo nhu cầu gửi, PLAN không vượt nhu cầu thực tế. Yêu cầu không có bước duyệt riêng. |
@@ -35,12 +35,13 @@ Express + EJS, năm backend HTTP và web-gateway; sáu database/tài khoản MyS
 | BR-10 | UC-34 khi chưa hoàn tất: TIEN_DO/SU_CO/NHU_CAU, BGĐ luôn nhận; NHU_CAU còn thiếu tự gửi thêm planner, tiến độ/sự cố tùy chọn thêm planner. Có thể dán ảnh/chụp đối chiếu vào mô tả. UC-35 chỉ tổng kết khi xác nhận hoàn tất toàn bộ; sản lượng là thực tế, không ép bằng dự kiến. |
 | BR-11 | Kiểm kê khóa từng kho, snapshot và đếm theo dòng lô/vị trí/bucket; trống khác 0. Kết luận từng kho, mọi chênh lệch qua giám đốc duyệt, quản lý áp dụng rồi đóng đợt. |
 | BR-12 | Phiếu đã ghi, biến động và lịch sử duyệt không ghi đè. Hàng khách trả theo dòng giao gốc, nhận đúng một lần vào cách ly; chưa tự giao bù/hoàn tiền. Trả NCC chưa tự tạo mua bù. |
+| BR-13 | Ngày nhập mới không quá khứ theo múi giờ Việt Nam. KHSX: hôm nay ≤ bắt đầu ≤ kết thúc ≤ hạn giao đơn. MUA nhận NVL không vượt kết thúc SX/hạn giao, BAN không vượt hạn giao. Đơn PLAN lấy ngày từ kế hoạch mua, không sửa khác nguồn. Giữ nguyên ngày lịch sử của lô đã ghi khi tổng kết. |
 
 ## Yêu cầu chức năng
 
 | Yêu cầu | UC | Chức năng | Vai trò | Module | Màn hình |
 | --- | --- | --- | --- | --- | --- |
-| FR-29 | UC-29 | Tiếp nhận đơn hàng | PLANNER | ProductionPlan | UI-04 / UI-05 |
+| FR-29 | UC-29 | Tiếp nhận đơn hàng | PLANNER | CustomerOrder | UI-04 / UI-05 |
 | FR-06 | UC-06 | Quản lý danh mục kho | WAREHOUSE_MANAGER | Catalog | UI-10 |
 | FR-06.1 | UC-06.1 | Thêm danh mục kho | WAREHOUSE_MANAGER | Catalog | UI-10 |
 | FR-06.2 | UC-06.2 | Xóa danh mục kho | WAREHOUSE_MANAGER | Catalog | UI-10 |
@@ -115,7 +116,7 @@ Chi tiết 50 mục ở [USE_CASES.md](USE_CASES.md); triển khai/bằng chứn
 | Mã | Kịch bản | Kết quả yêu cầu |
 | --- | --- | --- |
 | AT-01 | Khách A đổi ID sang đơn khách B | Không đọc/sửa được; CSDL giữ nguyên |
-| AT-02 | Hai giám đốc duyệt cùng đơn/version | Một thao tác có hiệu lực, thao tác kia 409 hoặc replay đúng kết quả cùng khóa |
+| AT-02 | Hai giám đốc duyệt cùng KHSX/version | Một thao tác có hiệu lực, thao tác kia 409 hoặc replay đúng kết quả cùng khóa |
 | AT-03 | Hai request xuất mỗi request 7 trong khi tồn 10 | Chỉ một phiếu thành công; tồn cuối 3; không âm |
 | AT-04 | Nhập vượt số lượng QC đạt cộng dồn | 422 hoặc 409 theo nguyên nhân; rollback toàn bộ |
 | AT-05 | Lưu actual_quantity=0 và để dòng khác null | Dòng 0 là đã đếm; dòng null cản hoàn tất kho |
@@ -131,7 +132,7 @@ Chi tiết 50 mục ở [USE_CASES.md](USE_CASES.md); triển khai/bằng chứn
 | AT-15 | Mất mạng khi kiểm kê, phục hồi với version đã thay đổi | Không ghi đè âm thầm; hiện lựa chọn tải mới/nhập lại |
 | AT-16 | Hủy form/xóa rồi bấm Không | Không request mutation hoặc không thay đổi dữ liệu |
 
-Kiểm thêm nhập từng phần chung lô/tổng kết không trùng, nguồn REPORT/MANUAL, hạn mức PLAN/REPORT dùng chung, hết hạn/cách ly, bù QC/đối soát phiếu gốc, phần lỗi xử lý nhiều lần, migration giữ dữ liệu và lỗi mạng liên service. Kết quả test hiện có trong [IMPLEMENTATION_PROGRESS.md](IMPLEMENTATION_PROGRESS.md).
+Kiểm thêm nhập từng phần chung lô/tổng kết không trùng, đơn mua PLAN/MANUAL và REPORT lịch sử, hạn mức báo cáo/kế hoạch dùng chung, hết hạn/cách ly, bù QC/đối soát phiếu gốc, phần lỗi xử lý nhiều lần, migration giữ dữ liệu và lỗi mạng liên service. Kết quả test hiện có trong [IMPLEMENTATION_PROGRESS.md](IMPLEMENTATION_PROGRESS.md).
 
 ## Quyền và nguồn chuẩn
 

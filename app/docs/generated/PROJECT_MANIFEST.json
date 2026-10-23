@@ -9,7 +9,19 @@
     "004_partial_receipts",
     "005_quarantine_disposition",
     "006_stock_qc_correction",
-    "007_category_images"
+    "007_category_images",
+    "008_purchase_line_suppliers",
+    "009_planned_qc_sources",
+    "010_finished_report_parts",
+    "011_inspection_assignment_scope",
+    "012_inspection_minutes",
+    "013_minute_exceptions",
+    "014_stock_request_execution_time",
+    "015_inspection_minute_author",
+    "016_workshop_display_names",
+    "017_admin_accounts",
+    "018_bakery_catalog",
+    "019_workshop_accounts"
   ],
   "services": [
     {
@@ -70,6 +82,10 @@
             {
               "name": "NgayCapNhat",
               "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "DaXoa",
+              "definition": "tinyint(1) NOT NULL DEFAULT '0'"
             }
           ]
         },
@@ -375,6 +391,10 @@
             {
               "name": "DuongDanAnh",
               "definition": "varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL"
+            },
+            {
+              "name": "LoaiDanhMuc",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL"
             }
           ]
         },
@@ -467,6 +487,10 @@
             {
               "name": "NgayCapNhat",
               "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "BangGiaNCC",
+              "definition": "json DEFAULT NULL"
             }
           ]
         },
@@ -720,7 +744,7 @@
             },
             {
               "name": "MaNhaCungCap",
-              "definition": "bigint unsigned NOT NULL"
+              "definition": "bigint unsigned DEFAULT NULL"
             },
             {
               "name": "MaNguoiTao",
@@ -799,6 +823,10 @@
             {
               "name": "NgayCapNhat",
               "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "MaNhaCungCap",
+              "definition": "bigint unsigned DEFAULT NULL"
             }
           ]
         },
@@ -981,6 +1009,10 @@
             {
               "name": "XacNhanHoanTat",
               "definition": "tinyint(1) DEFAULT NULL"
+            },
+            {
+              "name": "KieuThanhPham",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'FINAL'"
             }
           ]
         },
@@ -1564,6 +1596,10 @@
             {
               "name": "LoaiNguonSanXuat",
               "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'REPORT'"
+            },
+            {
+              "name": "ThoiDiemThucHien",
+              "definition": "datetime(6) DEFAULT NULL"
             }
           ]
         },
@@ -1876,6 +1912,74 @@
             {
               "name": "DiaDiem",
               "definition": "varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL"
+            },
+            {
+              "name": "MaKeHoachMuaQC",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaKeHoachSanXuatQC",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "KiemSoLuong",
+              "definition": "tinyint(1) NOT NULL DEFAULT '0'"
+            },
+            {
+              "name": "KiemChatLuong",
+              "definition": "tinyint(1) NOT NULL DEFAULT '1'"
+            },
+            {
+              "name": "BienBanKetLuan",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "BienBanTrangThai",
+              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'DRAFT'"
+            },
+            {
+              "name": "BienBanNguoiLap",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "BienBanNgayGui",
+              "definition": "datetime(6) DEFAULT NULL"
+            },
+            {
+              "name": "BienBanDuLieu",
+              "definition": "json DEFAULT NULL"
+            },
+            {
+              "name": "NgoaiLeMoTa",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "NgoaiLeTrangThai",
+              "definition": "varchar(24) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'NONE'"
+            },
+            {
+              "name": "NgoaiLeCachXuLy",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "NgoaiLeMaXuong",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "NgoaiLeNguoiXuLy",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "NgoaiLeYKienPheDuyet",
+              "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "NgoaiLeNguoiDuyet",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "NguoiLapBienBanDuocChon",
+              "definition": "bigint unsigned DEFAULT NULL"
             }
           ]
         },
@@ -2435,6 +2539,18 @@
             {
               "name": "NgayCapNhat",
               "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "SoLuongDem",
+              "definition": "decimal(18,3) DEFAULT NULL"
+            },
+            {
+              "name": "NguoiDem",
+              "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "ThoiDiemDem",
+              "definition": "datetime(6) DEFAULT NULL"
             }
           ]
         },
@@ -2812,6 +2928,78 @@
     },
     {
       "method": "GET",
+      "path": "/material-price-options",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/material-prices",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/material-prices/:id",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/material-prices/:id",
+      "owner": "business-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/account-options",
+      "owner": "identity-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/accounts",
+      "owner": "identity-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/accounts/:id",
+      "owner": "identity-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/accounts",
+      "owner": "identity-service",
+      "pending": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/accounts/:id",
+      "owner": "identity-service",
+      "pending": false
+    },
+    {
+      "method": "DELETE",
+      "path": "/accounts/:id",
+      "owner": "identity-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/warehouse-lookup",
+      "owner": "reporting-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/stock-request-workflow-sources",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
       "path": "/source-imports/purchase-report-options",
       "owner": "business-service",
       "pending": false
@@ -2867,6 +3055,30 @@
     {
       "method": "GET",
       "path": "/lot-headers/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/function-badges",
+      "owner": "notification-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/inspection-counts",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/inspection-counts/:id",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/tasks/:id/minute-author",
       "owner": "warehouse-service",
       "pending": false
     },
@@ -3167,6 +3379,24 @@
     {
       "method": "GET",
       "path": "/quality-campaigns",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/quality-campaign-sources",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/task-inspection-sources",
+      "owner": "warehouse-service",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/quality-campaigns/:id/bind-lots",
       "owner": "warehouse-service",
       "pending": false
     },
@@ -3665,6 +3895,20 @@
   ],
   "roles": {
     "read": {
+      "material-prices": [
+        "WAREHOUSE_MANAGER",
+        "PURCHASER"
+      ],
+      "accounts": [
+        "ADMIN"
+      ],
+      "warehouse-lookup": [
+        "WAREHOUSE_MANAGER",
+        "WORKSHOP_OWNER"
+      ],
+      "inspection-counts": [
+        "STOCKTAKER"
+      ],
       "customer-returns": [
         "WAREHOUSE_MANAGER",
         "WAREHOUSE_STAFF",
@@ -3743,7 +3987,7 @@
       "exception-proposals": [
         "DIRECTOR",
         "WAREHOUSE_MANAGER",
-        "QC_INSPECTOR"
+        "WORKSHOP_OWNER"
       ],
       "tasks": [
         "DIRECTOR",
@@ -3781,6 +4025,12 @@
       ]
     },
     "create": {
+      "accounts": [
+        "ADMIN"
+      ],
+      "inspection-counts": [
+        "STOCKTAKER"
+      ],
       "customer-returns": [
         "WAREHOUSE_MANAGER"
       ],
@@ -3810,8 +4060,7 @@
         "QC_INSPECTOR"
       ],
       "exception-proposals": [
-        "WAREHOUSE_MANAGER",
-        "QC_INSPECTOR"
+        "WAREHOUSE_MANAGER"
       ],
       "tasks": [
         "DIRECTOR"
@@ -3848,6 +4097,12 @@
       ]
     },
     "editable": {
+      "material-prices": [
+        "WAREHOUSE_MANAGER"
+      ],
+      "accounts": [
+        "ADMIN"
+      ],
       "customer-orders": [
         "CUSTOMER"
       ],
@@ -3899,6 +4154,56 @@
   },
   "screens": [
     [
+      "material-prices",
+      "Đơn giá nguyên vật liệu",
+      "₫",
+      [
+        "WAREHOUSE_MANAGER",
+        "PURCHASER"
+      ],
+      [],
+      "/catalog/material-prices",
+      "Đơn vị tính và đơn giá NVL theo từng nhà cung cấp."
+    ],
+    [
+      "accounts",
+      "Quản lý tài khoản",
+      "♙",
+      [
+        "ADMIN"
+      ],
+      [
+        "ADMIN"
+      ],
+      "/admin/accounts",
+      "Thêm, sửa, xóa tài khoản và phân quyền sử dụng hệ thống."
+    ],
+    [
+      "warehouse-lookup",
+      "Tra cứu kho",
+      "▦",
+      [
+        "WAREHOUSE_MANAGER",
+        "WORKSHOP_OWNER"
+      ],
+      [],
+      "/warehouse/lookup",
+      "Xem sơ đồ vị trí, mặt hàng, lô và lượng tồn khả dụng."
+    ],
+    [
+      "inspection-counts",
+      "Quản lý kiểm kê",
+      "≡",
+      [
+        "STOCKTAKER"
+      ],
+      [
+        "STOCKTAKER"
+      ],
+      "/inspection-counts",
+      "Chọn công việc và ghi số đếm các dòng lô trong một lần."
+    ],
+    [
       "customer-returns",
       "Hàng khách trả",
       "↩",
@@ -3920,8 +4225,7 @@
       "◫",
       [
         "CUSTOMER",
-        "PLANNER",
-        "DIRECTOR"
+        "PLANNER"
       ],
       [
         "CUSTOMER"
@@ -3936,9 +4240,7 @@
       [
         "PLANNER",
         "DIRECTOR",
-        "PURCHASER",
-        "WORKSHOP_OWNER",
-        "WAREHOUSE_STAFF"
+        "PURCHASER"
       ],
       [
         "PLANNER"
@@ -3951,24 +4253,20 @@
       "Đơn mua hàng",
       "▧",
       [
-        "PURCHASER",
-        "WORKSHOP_OWNER",
-        "WAREHOUSE_STAFF",
-        "QC_INSPECTOR"
+        "PURCHASER"
       ],
       [
         "PURCHASER"
       ],
       "/purchases",
-      "Nhập thủ công hoặc lấy dữ liệu từ báo cáo, kế hoạch mua đã duyệt."
+      "Tự nhập hoặc lấy kế hoạch mua NVL đã duyệt; chọn NCC theo từng NVL."
     ],
     [
       "categories",
       "Danh mục",
       "▦",
       [
-        "WAREHOUSE_MANAGER",
-        "WORKSHOP_OWNER"
+        "WAREHOUSE_MANAGER"
       ],
       [
         "WAREHOUSE_MANAGER"
@@ -3981,8 +4279,7 @@
       "Mặt hàng",
       "◇",
       [
-        "WAREHOUSE_MANAGER",
-        "WORKSHOP_OWNER"
+        "WAREHOUSE_MANAGER"
       ],
       [
         "WAREHOUSE_MANAGER"
@@ -3995,8 +4292,7 @@
       "Kho hàng",
       "⌂",
       [
-        "WAREHOUSE_MANAGER",
-        "WORKSHOP_OWNER"
+        "WAREHOUSE_MANAGER"
       ],
       [
         "WAREHOUSE_MANAGER"
@@ -4009,8 +4305,7 @@
       "Vị trí lưu kho",
       "⊞",
       [
-        "WAREHOUSE_MANAGER",
-        "WORKSHOP_OWNER"
+        "WAREHOUSE_MANAGER"
       ],
       [
         "WAREHOUSE_MANAGER"
@@ -4036,8 +4331,7 @@
       "Lô hàng",
       "▥",
       [
-        "WAREHOUSE_MANAGER",
-        "WORKSHOP_OWNER"
+        "WAREHOUSE_MANAGER"
       ],
       [
         "WAREHOUSE_MANAGER"
@@ -4051,9 +4345,8 @@
       "⇄",
       [
         "WORKSHOP_OWNER",
-        "WAREHOUSE_STAFF",
         "WAREHOUSE_MANAGER",
-        "PLANNER"
+        "WAREHOUSE_STAFF"
       ],
       [
         "WORKSHOP_OWNER"
@@ -4080,9 +4373,7 @@
       "Kiểm tra QC / AC",
       "✓",
       [
-        "QC_INSPECTOR",
-        "DIRECTOR",
-        "WORKSHOP_OWNER"
+        "QC_INSPECTOR"
       ],
       [
         "QC_INSPECTOR"
@@ -4097,8 +4388,7 @@
       [
         "PLANNER",
         "DIRECTOR",
-        "WORKSHOP_OWNER",
-        "WAREHOUSE_STAFF"
+        "WORKSHOP_OWNER"
       ],
       [
         "PLANNER"
@@ -4138,19 +4428,16 @@
     ],
     [
       "stocktakes",
-      "Kiểm kê kho",
+      "Lập đợt kiểm kê",
       "≡",
       [
-        "DIRECTOR",
-        "STOCKTAKER",
-        "WAREHOUSE_MANAGER",
-        "QC_INSPECTOR"
+        "DIRECTOR"
       ],
       [
         "DIRECTOR"
       ],
       "/stocktakes",
-      "Chốt snapshot và kiểm đếm từng kho."
+      "Lập đợt, chọn phạm vi và phân công Ban kiểm kê / QC/AC."
     ],
     [
       "stocktake-minutes",
@@ -4175,18 +4462,17 @@
       [
         "DIRECTOR",
         "WAREHOUSE_MANAGER",
-        "QC_INSPECTOR"
+        "WORKSHOP_OWNER"
       ],
       [
-        "WAREHOUSE_MANAGER",
-        "QC_INSPECTOR"
+        "WAREHOUSE_MANAGER"
       ],
       "/approvals/exceptions",
       "Đề xuất điều chỉnh chênh lệch kiểm kê."
     ],
     [
       "tasks",
-      "Công việc",
+      "Quản lý công việc",
       "▢",
       [
         "DIRECTOR",
@@ -4198,11 +4484,9 @@
         "QC_INSPECTOR",
         "STOCKTAKER"
       ],
-      [
-        "DIRECTOR"
-      ],
+      [],
       "/tasks",
-      "Phân công và kiểm soát lịch nhân viên."
+      "Xem, sửa, hủy công việc và theo dõi kết quả thực hiện."
     ],
     [
       "reports/inventory",
@@ -4249,9 +4533,7 @@
         "DIRECTOR",
         "WORKSHOP_OWNER"
       ],
-      [
-        "WAREHOUSE_MANAGER"
-      ],
+      [],
       "/warehouse/records",
       "Tổng hợp phiếu kho từ các nhân viên."
     ],

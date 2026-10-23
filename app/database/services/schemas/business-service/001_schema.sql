@@ -27,7 +27,7 @@ CREATE TABLE `Xuong` (
   `NgayCapNhat` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`MaBanGhi`),
   UNIQUE KEY `DuyNhat_Xuong_1` (`Ma`)
-) ENGINE=InnoDB AUTO_INCREMENT=168 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=171 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `NhaCungCap` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `Ma` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -51,10 +51,11 @@ CREATE TABLE `LoaiHang` (
   `NgayTao` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `NgayCapNhat` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   `DuongDanAnh` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `LoaiDanhMuc` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`MaBanGhi`),
   UNIQUE KEY `DuyNhat_LoaiHang_1` (`Ma`),
   UNIQUE KEY `DuyNhat_LoaiHang_2` (`Ten`)
-) ENGINE=InnoDB AUTO_INCREMENT=311 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=325 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `DonViTinh` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `Ma` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -63,7 +64,7 @@ CREATE TABLE `DonViTinh` (
   `NgayCapNhat` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`MaBanGhi`),
   UNIQUE KEY `DuyNhat_DonViTinh_1` (`Ma`)
-) ENGINE=InnoDB AUTO_INCREMENT=386 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=395 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `MatHang` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaLoaiHang` bigint unsigned NOT NULL,
@@ -80,6 +81,7 @@ CREATE TABLE `MatHang` (
   `PhienBan` int NOT NULL,
   `NgayTao` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `NgayCapNhat` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `BangGiaNCC` json DEFAULT NULL,
   PRIMARY KEY (`MaBanGhi`),
   UNIQUE KEY `DuyNhat_MatHang_1` (`Ma`),
   UNIQUE KEY `DuyNhat_MatHang_2` (`MaLoaiHang`,`Ten`),
@@ -88,7 +90,7 @@ CREATE TABLE `MatHang` (
   CONSTRAINT `KhoaNgoai_MatHang_MaLoaiHang` FOREIGN KEY (`MaLoaiHang`) REFERENCES `LoaiHang` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `MatHang_chk_1` CHECK ((`Loai` in (_utf8mb4'MATERIAL',_utf8mb4'FINISHED_PRODUCT'))),
   CONSTRAINT `MatHang_chk_2` CHECK ((`DonGiaThamKhao` >= 0))
-) ENGINE=InnoDB AUTO_INCREMENT=896 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=933 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `DonHang` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `Ma` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -117,7 +119,7 @@ CREATE TABLE `DonHang` (
   CONSTRAINT `KhoaNgoai_DonHang_MaNguoiTiepNhan` FOREIGN KEY (`MaNguoiTiepNhan`) REFERENCES `KhoHang_Identity`.`NguoiDung` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `DonHang_chk_1` CHECK ((`TrangThai` in (_utf8mb4'SUBMITTED',_utf8mb4'RECEIVED',_utf8mb4'APPROVED',_utf8mb4'REJECTED',_utf8mb4'IN_PROGRESS',_utf8mb4'COMPLETED'))),
   CONSTRAINT `DonHang_chk_2` CHECK ((`TongTienBaoGia` >= 0))
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `ChiTietDonHang` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaDonHang` bigint unsigned NOT NULL,
@@ -134,7 +136,7 @@ CREATE TABLE `ChiTietDonHang` (
   CONSTRAINT `KhoaNgoai_ChiTietDonHang_MaMatHang` FOREIGN KEY (`MaMatHang`) REFERENCES `MatHang` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `ChiTietDonHang_chk_1` CHECK ((`SoLuong` > 0)),
   CONSTRAINT `ChiTietDonHang_chk_2` CHECK ((`DonGia` >= 0))
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `KeHoachMuaBan` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `Ma` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -178,13 +180,13 @@ CREATE TABLE `KeHoachMuaBan` (
   CONSTRAINT `KhoaNgoai_KeHoachKinhDoanh_MaNhaCungCap` FOREIGN KEY (`MaNhaCungCap`) REFERENCES `NhaCungCap` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `KhoaNgoai_KeHoachKinhDoanh_YeuCauNguon` FOREIGN KEY (`MaYeuCauNguon`) REFERENCES `KhoHang_Warehouse`.`PhieuYeuCauNhapXuat` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `KhoaNgoai_KeHoachMuaBan_SanXuat` FOREIGN KEY (`MaKeHoachSanXuat`) REFERENCES `KeHoachSanXuat` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `CK_KeHoach_DoiTac008` CHECK ((((`Kieu` = _utf8mb4'PURCHASE') and (`MaKhachHang` is null) and (`MaDonHang` is null)) or ((`Kieu` = _utf8mb4'SALE') and (`MaNhaCungCap` is null) and (`MaKhachHang` is not null) and (`MaDonHang` is not null)))),
   CONSTRAINT `KeHoachMuaBan_chk_1` CHECK ((((`Kieu` = _utf8mb4'PURCHASE') and (`MaBaoCaoThanhPham` is null)) or ((`Kieu` = _utf8mb4'SALE') and (`MaBaoCaoSanXuat` is null)))),
   CONSTRAINT `KeHoachMuaBan_chk_2` CHECK ((`Kieu` in (_utf8mb4'PURCHASE',_utf8mb4'SALE'))),
   CONSTRAINT `KeHoachMuaBan_chk_3` CHECK ((`TrangThai` in (_utf8mb4'PENDING_APPROVAL',_utf8mb4'APPROVED',_utf8mb4'REJECTED',_utf8mb4'IN_PROGRESS',_utf8mb4'COMPLETED',_utf8mb4'CANCELLED'))),
   CONSTRAINT `KeHoachMuaBan_chk_4` CHECK ((`TongTien` >= 0)),
-  CONSTRAINT `KeHoachMuaBan_chk_5` CHECK ((((`Kieu` = _utf8mb4'PURCHASE') and (`MaNhaCungCap` is not null) and (`MaKhachHang` is null) and (`MaDonHang` is null)) or ((`Kieu` = _utf8mb4'SALE') and (`MaNhaCungCap` is null) and (`MaKhachHang` is not null) and (`MaDonHang` is not null)))),
   CONSTRAINT `KeHoachMuaBan_chk_6` CHECK (((`Kieu` = _utf8mb4'PURCHASE') or ((`MaKeHoachSanXuat` is null) and (`MaYeuCauNguon` is null))))
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `ChiTietKeHoachMuaBan` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaKeHoachKinhDoanh` bigint unsigned NOT NULL,
@@ -200,12 +202,12 @@ CREATE TABLE `ChiTietKeHoachMuaBan` (
   CONSTRAINT `KhoaNgoai_ChiTietKeHoachKinhDoanh_MaMatHang` FOREIGN KEY (`MaMatHang`) REFERENCES `MatHang` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `ChiTietKeHoachMuaBan_chk_1` CHECK ((`SoLuong` > 0)),
   CONSTRAINT `ChiTietKeHoachMuaBan_chk_2` CHECK ((`DonGia` >= 0))
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `DonMuaHang` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `Ma` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
   `MaKeHoachKinhDoanh` bigint unsigned DEFAULT NULL,
-  `MaNhaCungCap` bigint unsigned NOT NULL,
+  `MaNhaCungCap` bigint unsigned DEFAULT NULL,
   `MaNguoiTao` bigint unsigned NOT NULL,
   `NgayGiaoDuKien` date NOT NULL,
   `DieuKhoanGiaoHang` text COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -229,7 +231,7 @@ CREATE TABLE `DonMuaHang` (
   CONSTRAINT `DonMuaHang_chk_1` CHECK ((((`LoaiNguonDonMua` = _utf8mb4'PLAN') and (`MaKeHoachKinhDoanh` is not null)) or ((`LoaiNguonDonMua` = _utf8mb4'REPORT') and (`MaKeHoachKinhDoanh` is null) and (`MaBaoCaoSanXuat` is not null)) or ((`LoaiNguonDonMua` = _utf8mb4'MANUAL') and (`MaKeHoachKinhDoanh` is null) and (`MaBaoCaoSanXuat` is null)))),
   CONSTRAINT `DonMuaHang_chk_2` CHECK ((`TrangThai` in (_utf8mb4'PENDING',_utf8mb4'PARTIALLY_RECEIVED',_utf8mb4'RECEIVED',_utf8mb4'CANCELLED'))),
   CONSTRAINT `DonMuaHang_chk_3` CHECK ((`TongTien` >= 0))
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `ChiTietDonMuaHang` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaDonMuaHang` bigint unsigned NOT NULL,
@@ -239,16 +241,19 @@ CREATE TABLE `ChiTietDonMuaHang` (
   `DonGia` decimal(19,4) NOT NULL,
   `NgayTao` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `NgayCapNhat` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `MaNhaCungCap` bigint unsigned DEFAULT NULL,
   PRIMARY KEY (`MaBanGhi`),
   UNIQUE KEY `DuyNhat_ChiTietDonMuaHang_1` (`MaDonMuaHang`,`MaMatHang`),
   KEY `KhoaNgoai_ChiTietDonMuaHang_MaChiTietKeHoachKinhDoanh` (`MaChiTietKeHoachKinhDoanh`),
   KEY `KhoaNgoai_ChiTietDonMuaHang_MaMatHang` (`MaMatHang`),
+  KEY `FK_ChiTietDonMua_NCC008` (`MaNhaCungCap`),
+  CONSTRAINT `FK_ChiTietDonMua_NCC008` FOREIGN KEY (`MaNhaCungCap`) REFERENCES `NhaCungCap` (`MaBanGhi`),
   CONSTRAINT `KhoaNgoai_ChiTietDonMuaHang_MaChiTietKeHoachKinhDoanh` FOREIGN KEY (`MaChiTietKeHoachKinhDoanh`) REFERENCES `ChiTietKeHoachMuaBan` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `KhoaNgoai_ChiTietDonMuaHang_MaDonMuaHang` FOREIGN KEY (`MaDonMuaHang`) REFERENCES `DonMuaHang` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `KhoaNgoai_ChiTietDonMuaHang_MaMatHang` FOREIGN KEY (`MaMatHang`) REFERENCES `MatHang` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `ChiTietDonMuaHang_chk_1` CHECK ((`SoLuong` > 0)),
   CONSTRAINT `ChiTietDonMuaHang_chk_2` CHECK ((`DonGia` >= 0))
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `KeHoachSanXuat` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `Ma` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -272,7 +277,7 @@ CREATE TABLE `KeHoachSanXuat` (
   CONSTRAINT `KhoaNgoai_KeHoachSanXuat_MaXuong` FOREIGN KEY (`MaXuong`) REFERENCES `Xuong` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `KeHoachSanXuat_chk_1` CHECK ((`NgayKetThuc` >= `NgayBatDau`)),
   CONSTRAINT `KeHoachSanXuat_chk_2` CHECK ((`TrangThai` in (_utf8mb4'DRAFT',_utf8mb4'APPROVED',_utf8mb4'IN_PROGRESS',_utf8mb4'COMPLETED',_utf8mb4'CANCELLED')))
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `ChiTietKeHoachSanXuat` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaKeHoachSanXuat` bigint unsigned NOT NULL,
@@ -294,7 +299,7 @@ CREATE TABLE `ChiTietKeHoachSanXuat` (
   CONSTRAINT `KhoaNgoai_ThanhPhamKeHoach_MaMatHang` FOREIGN KEY (`MaMatHang`) REFERENCES `MatHang` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `ChiTietKeHoachSanXuat_chk_1` CHECK ((((`LoaiChiTiet` = _utf8mb4'THANH_PHAM') and (`SoLuong` is not null) and (`SoLuong` > 0) and (`SoLuongCan` is null) and (`SoLuongConThieu` is null)) or ((`LoaiChiTiet` = _utf8mb4'NGUYEN_VAT_LIEU') and (`SoLuong` is null) and (`SoLuongCan` is not null) and (`SoLuongCan` > 0) and ((`SoLuongConThieu` is null) or ((`SoLuongConThieu` >= 0) and (`SoLuongConThieu` <= `SoLuongCan`)))))),
   CONSTRAINT `ChiTietKeHoachSanXuat_chk_2` CHECK ((`SoLuong` > 0))
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=138 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `BanBaoCaoSanXuat` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `Ma` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -313,6 +318,7 @@ CREATE TABLE `BanBaoCaoSanXuat` (
   `PhanTramTienDo` decimal(5,2) DEFAULT NULL,
   `GuiBoPhanLapKeHoach` tinyint(1) NOT NULL DEFAULT '0',
   `XacNhanHoanTat` tinyint(1) DEFAULT NULL,
+  `KieuThanhPham` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'FINAL',
   PRIMARY KEY (`MaBanGhi`),
   UNIQUE KEY `DuyNhat_BaoCaoSanXuat_1` (`Ma`),
   UNIQUE KEY `MaThanhPhamCu` (`MaThanhPhamCu`),
@@ -324,7 +330,7 @@ CREATE TABLE `BanBaoCaoSanXuat` (
   CONSTRAINT `BanBaoCaoSanXuat_chk_2` CHECK (((`MucDichBaoCao` is null) or (`MucDichBaoCao` in (_utf8mb4'NHU_CAU',_utf8mb4'TIEN_DO',_utf8mb4'SU_CO')))),
   CONSTRAINT `BanBaoCaoSanXuat_chk_3` CHECK (((`PhanTramTienDo` is null) or (`PhanTramTienDo` between 0 and 100))),
   CONSTRAINT `BanBaoCaoSanXuat_chk_4` CHECK ((`TrangThai` in (_utf8mb4'DRAFT',_utf8mb4'SUBMITTED')))
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `ChiTietBaoCaoSanXuat` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaBaoCaoSanXuat` bigint unsigned NOT NULL,
@@ -344,7 +350,7 @@ CREATE TABLE `ChiTietBaoCaoSanXuat` (
   CONSTRAINT `ChiTietBaoCaoSanXuat_chk_1` CHECK ((((`LoaiChiTiet` = _utf8mb4'NHU_CAU') and (`SoLuongCan` is not null) and (`SoLuongCan` > 0) and (`SoLuongHienCo` is not null) and (`SoLuongHienCo` >= 0) and (`SoLuong` is null) and (`SoLuongSuDung` is null)) or ((`LoaiChiTiet` = _utf8mb4'THANH_PHAM') and (`SoLuong` is not null) and (`SoLuong` > 0) and (`SoLuongCan` is null) and (`SoLuongHienCo` is null) and (`SoLuongSuDung` is null)) or ((`LoaiChiTiet` = _utf8mb4'NVL_SU_DUNG') and (`SoLuongSuDung` is not null) and (`SoLuongSuDung` > 0) and (`SoLuongCan` is null) and (`SoLuongHienCo` is null) and (`SoLuong` is null)))),
   CONSTRAINT `ChiTietBaoCaoSanXuat_chk_2` CHECK ((`SoLuongHienCo` >= 0)),
   CONSTRAINT `ChiTietBaoCaoSanXuat_chk_3` CHECK ((`SoLuongCan` > 0))
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `ChiTietLoBaoCaoSanXuat` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaBaoCaoThanhPham` bigint unsigned NOT NULL,
@@ -361,7 +367,7 @@ CREATE TABLE `ChiTietLoBaoCaoSanXuat` (
   CONSTRAINT `FK_ThanhPhamBaoCao_Chung` FOREIGN KEY (`MaBaoCaoThanhPham`) REFERENCES `BanBaoCaoSanXuat` (`MaBanGhi`),
   CONSTRAINT `KhoaNgoai_ThanhPhamBaoCao_MaLoHang` FOREIGN KEY (`MaChiTietLo`) REFERENCES `KhoHang_Warehouse`.`ChiTietLo` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `ChiTietLoBaoCaoSanXuat_chk_1` CHECK ((`SoLuong` > 0))
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `LuuTruBaoCaoThanhPhamTruoc012` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `Ma` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -421,7 +427,7 @@ CREATE TABLE `TrangThaiDichVu` (
   PRIMARY KEY (`Ma`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE ALGORITHM=UNDEFINED  SQL SECURITY INVOKER VIEW `KhoHang_Business`.`BaoCaoSanXuat` AS select `KhoHang_Business`.`BanBaoCaoSanXuat`.`MaBanGhi` AS `MaBanGhi`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`Ma` AS `Ma`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`MaKeHoachSanXuat` AS `MaKeHoachSanXuat`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`MaNguoiTao` AS `MaNguoiTao`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`GhiChu` AS `GhiChu`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`TrangThai` AS `TrangThai`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`NgayGui` AS `NgayGui`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`PhienBan` AS `PhienBan`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`NgayTao` AS `NgayTao`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`NgayCapNhat` AS `NgayCapNhat`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`MucDichBaoCao` AS `MucDichBaoCao`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`PhanTramTienDo` AS `PhanTramTienDo`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`GuiBoPhanLapKeHoach` AS `GuiBoPhanLapKeHoach` from `KhoHang_Business`.`BanBaoCaoSanXuat` where (`KhoHang_Business`.`BanBaoCaoSanXuat`.`LoaiBaoCao` = 'SAN_XUAT') WITH CASCADED CHECK OPTION;
-CREATE ALGORITHM=UNDEFINED  SQL SECURITY INVOKER VIEW `KhoHang_Business`.`BaoCaoThanhPham` AS select `KhoHang_Business`.`BanBaoCaoSanXuat`.`MaBanGhi` AS `MaBanGhi`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`Ma` AS `Ma`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`MaKeHoachSanXuat` AS `MaKeHoachSanXuat`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`MaNguoiTao` AS `MaNguoiTao`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`GhiChu` AS `GhiChu`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`TrangThai` AS `TrangThai`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`NgayGui` AS `NgayGui`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`PhienBan` AS `PhienBan`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`NgayTao` AS `NgayTao`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`NgayCapNhat` AS `NgayCapNhat`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`NgayHoanThanh` AS `NgayHoanThanh`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`LoaiBaoCao` AS `LoaiBaoCao`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`XacNhanHoanTat` AS `XacNhanHoanTat` from `KhoHang_Business`.`BanBaoCaoSanXuat` where (`KhoHang_Business`.`BanBaoCaoSanXuat`.`LoaiBaoCao` = 'THANH_PHAM') WITH CASCADED CHECK OPTION;
+CREATE ALGORITHM=UNDEFINED  SQL SECURITY INVOKER VIEW `KhoHang_Business`.`BaoCaoThanhPham` AS select `KhoHang_Business`.`BanBaoCaoSanXuat`.`MaBanGhi` AS `MaBanGhi`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`Ma` AS `Ma`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`MaKeHoachSanXuat` AS `MaKeHoachSanXuat`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`MaNguoiTao` AS `MaNguoiTao`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`GhiChu` AS `GhiChu`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`TrangThai` AS `TrangThai`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`NgayGui` AS `NgayGui`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`PhienBan` AS `PhienBan`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`NgayTao` AS `NgayTao`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`NgayCapNhat` AS `NgayCapNhat`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`NgayHoanThanh` AS `NgayHoanThanh`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`LoaiBaoCao` AS `LoaiBaoCao`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`XacNhanHoanTat` AS `XacNhanHoanTat`,`KhoHang_Business`.`BanBaoCaoSanXuat`.`KieuThanhPham` AS `KieuThanhPham` from `KhoHang_Business`.`BanBaoCaoSanXuat` where (`KhoHang_Business`.`BanBaoCaoSanXuat`.`LoaiBaoCao` = 'THANH_PHAM') WITH CASCADED CHECK OPTION;
 CREATE ALGORITHM=UNDEFINED  SQL SECURITY INVOKER VIEW `KhoHang_Business`.`ChiTietNhuCauSanXuat` AS select `KhoHang_Business`.`ChiTietBaoCaoSanXuat`.`MaBanGhi` AS `MaBanGhi`,`KhoHang_Business`.`ChiTietBaoCaoSanXuat`.`MaBaoCaoSanXuat` AS `MaBaoCaoSanXuat`,`KhoHang_Business`.`ChiTietBaoCaoSanXuat`.`MaMatHang` AS `MaMatHang`,`KhoHang_Business`.`ChiTietBaoCaoSanXuat`.`SoLuongHienCo` AS `SoLuongHienCo`,`KhoHang_Business`.`ChiTietBaoCaoSanXuat`.`SoLuongCan` AS `SoLuongCan`,`KhoHang_Business`.`ChiTietBaoCaoSanXuat`.`NgayTao` AS `NgayTao`,`KhoHang_Business`.`ChiTietBaoCaoSanXuat`.`NgayCapNhat` AS `NgayCapNhat` from `KhoHang_Business`.`ChiTietBaoCaoSanXuat` where (`KhoHang_Business`.`ChiTietBaoCaoSanXuat`.`LoaiChiTiet` = 'NHU_CAU') WITH CASCADED CHECK OPTION;
 CREATE ALGORITHM=UNDEFINED  SQL SECURITY INVOKER VIEW `KhoHang_Business`.`NguyenLieuSuDung` AS select `KhoHang_Business`.`ChiTietBaoCaoSanXuat`.`MaBanGhi` AS `MaBanGhi`,`KhoHang_Business`.`ChiTietBaoCaoSanXuat`.`MaBaoCaoSanXuat` AS `MaBaoCaoThanhPham`,`KhoHang_Business`.`ChiTietBaoCaoSanXuat`.`MaMatHang` AS `MaMatHang`,`KhoHang_Business`.`ChiTietBaoCaoSanXuat`.`SoLuongSuDung` AS `SoLuongSuDung`,`KhoHang_Business`.`ChiTietBaoCaoSanXuat`.`LoaiChiTiet` AS `LoaiChiTiet`,`KhoHang_Business`.`ChiTietBaoCaoSanXuat`.`NgayTao` AS `NgayTao`,`KhoHang_Business`.`ChiTietBaoCaoSanXuat`.`NgayCapNhat` AS `NgayCapNhat` from `KhoHang_Business`.`ChiTietBaoCaoSanXuat` where (`KhoHang_Business`.`ChiTietBaoCaoSanXuat`.`LoaiChiTiet` = 'NVL_SU_DUNG') WITH CASCADED CHECK OPTION;
 CREATE ALGORITHM=UNDEFINED  SQL SECURITY INVOKER VIEW `KhoHang_Business`.`ThanhPhamKeHoachTuongThich` AS select `KhoHang_Business`.`ChiTietKeHoachSanXuat`.`MaBanGhi` AS `MaBanGhi`,`KhoHang_Business`.`ChiTietKeHoachSanXuat`.`MaKeHoachSanXuat` AS `MaKeHoachSanXuat`,`KhoHang_Business`.`ChiTietKeHoachSanXuat`.`MaMatHang` AS `MaMatHang`,`KhoHang_Business`.`ChiTietKeHoachSanXuat`.`SoLuong` AS `SoLuong`,`KhoHang_Business`.`ChiTietKeHoachSanXuat`.`NgayTao` AS `NgayTao`,`KhoHang_Business`.`ChiTietKeHoachSanXuat`.`NgayCapNhat` AS `NgayCapNhat` from `KhoHang_Business`.`ChiTietKeHoachSanXuat` where (`KhoHang_Business`.`ChiTietKeHoachSanXuat`.`LoaiChiTiet` = 'THANH_PHAM') WITH CASCADED CHECK OPTION;

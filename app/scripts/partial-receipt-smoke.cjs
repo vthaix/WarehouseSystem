@@ -153,6 +153,11 @@ const ok = (r, s = 200) => {
       201,
     );
     assert.equal(third.lots[0].lot_header_id, first.lots[0].lot_header_id);
+    const sourceOptions=ok(await director.call('quality-campaign-sources'));
+    const parts=sourceOptions.lots.filter(l=>[first.lots[0].id,second.lots[0].id,third.lots[0].id].includes(l.id));
+    assert.equal(parts.length,3);assert.equal(new Set(parts.map(l=>l.lot_header_code)).size,1);
+    assert.equal(new Set(parts.map(l=>l.name)).size,3);
+    assert.ok(parts.every(l=>l.expected_date===today));
     const [[before]] = await pool.execute(
       "SELECT COUNT(*) n FROM inventory_balances WHERE lot_id IN (?,?)",
       [first.lots[0].id, second.lots[0].id],

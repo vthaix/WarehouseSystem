@@ -1,5 +1,9 @@
 # Danh mục tài liệu hiện hành
 
+Giao diện theo actor, nhãn tiếng Việt, ngày giờ và sơ đồ kho UC-22: [GIAO_DIEN_THEO_QUYEN_VA_TRA_CUU_KHO.md](GIAO_DIEN_THEO_QUYEN_VA_TRA_CUU_KHO.md).
+
+Luồng kiểm kê, một người lập biên bản chung, xử lý ngoại lệ và số báo mới: [KIEM_KE_BIEN_BAN_VA_HUY_HIEU.md](KIEM_KE_BIEN_BAN_VA_HUY_HIEU.md).
+
 Bản Domain Model cũ đã khôi phục nguyên nội dung, gồm sơ đồ lớp: [DOMAIN_MODEL_RECOVERY.md](DOMAIN_MODEL_RECOVERY.md).
 
 Cập nhật 14/10/2026. Toàn bộ đặc tả và tài liệu kiến trúc/vận hành đã hợp nhất theo runtime hiện hành; báo cáo kiểm chứng trong DOCS_SYNC.md. SRS/UC/domain/API/UI đã hợp nhất thành bản hiện hành; bản trước hợp nhất ở archive/before-full-sync-20261014, bản vận hành cũ ở archive/pre-microservice-doc-sync-20261014, chỉ để truy vết, không dùng làm hướng dẫn chạy.
@@ -12,9 +16,14 @@ Cập nhật 14/10/2026. Toàn bộ đặc tả và tài liệu kiến trúc/v�
 | Nút xóa dữ liệu nghiệp vụ để test lại | [RESET_DU_LIEU_TEST.md](RESET_DU_LIEU_TEST.md) |
 | Tài khoản mẫu, mật khẩu và quyền | [DEMO_ACCOUNTS.md](DEMO_ACCOUNTS.md) |
 | Test case theo đặc tả UC | [TEST_CASES.md](TEST_CASES.md) |
+| Kịch bản nhập liệu QC/AC và Ban kiểm kê | [KICH_BAN_TEST_QCAC_KIEM_KE.md](KICH_BAN_TEST_QCAC_KIEM_KE.md) |
+| Lập đợt kiểm kê, phần lô và quản lý công việc | [CONG_VIEC_KIEM_TRA_LO.md](CONG_VIEC_KIEM_TRA_LO.md) |
+| Chủ xưởng yêu cầu nhập/xuất, phân công và ghi phiếu theo giấy | [YEU_CAU_NHAP_XUAT_CHU_XUONG.md](YEU_CAU_NHAP_XUAT_CHU_XUONG.md) |
+| Ngoại lệ trong biên bản và chủ xưởng phê duyệt | [NGOAI_LE_TRONG_BIEN_BAN.md](NGOAI_LE_TRONG_BIEN_BAN.md) |
 | Phiếu chấm 10 module nghiệp vụ | [PHIEU_CHAM.md](PHIEU_CHAM.md) |
 | Luồng kiểm tra hệ thống thực tế | [LUONG_KIEM_TRA_THUC_TE.md](LUONG_KIEM_TRA_THUC_TE.md) |
 | Đặt hàng, công thức NVL, đối chiếu tồn và ảnh báo cáo | [LUONG_DAT_HANG_TIEN_SAN_XUAT.md](LUONG_DAT_HANG_TIEN_SAN_XUAT.md) |
+| Mua NVL theo NCC từng dòng và giới hạn ngày | [MUA_NVL_VA_RANG_BUOC_NGAY.md](MUA_NVL_VA_RANG_BUOC_NGAY.md) |
 | Dữ liệu test khi clone máy mới | [DU_LIEU_TEST_MAY_MOI.md](DU_LIEU_TEST_MAY_MOI.md) |
 | Bộ chứng từ test riêng từng UC và thư mục ảnh | [DEMO_FIXTURES.md](DEMO_FIXTURES.md) |
 | Vị trí cấu hình CSDL và chuyển lên host | [CAU_HINH_CSDL_HOST.md](CAU_HINH_CSDL_HOST.md) |
@@ -39,3 +48,5 @@ Bản hiện hành không chứa các đặc tả cũ để ghi đè bằng ghi 
 
 Sau thay đổi nguồn: npm run docs:sync, sau đó npm run check:sync. Cấu hình menu browser cũng được sinh từ navigation.js.
 - [Ảnh danh mục và lưu trữ](CATEGORY_IMAGES.md)
+
+C?p nh?t danh m?c b?nh, ??n v?/gi? NVL v? qu?n tr? t?i kho?n: [QUAN_TRI_TAI_KHOAN_VA_DANH_MUC_BANH.md](QUAN_TRI_TAI_KHOAN_VA_DANH_MUC_BANH.md).

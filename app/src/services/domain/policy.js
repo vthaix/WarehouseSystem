@@ -1,5 +1,9 @@
 const { fail } = require("./core");
 const read = {
+  'material-prices':['WAREHOUSE_MANAGER','PURCHASER'],
+  accounts:['ADMIN'],
+  'warehouse-lookup':['WAREHOUSE_MANAGER','WORKSHOP_OWNER'],
+  'inspection-counts':['STOCKTAKER'],
   "customer-returns": ["WAREHOUSE_MANAGER", "WAREHOUSE_STAFF", "QC_INSPECTOR", "DIRECTOR"],
   "customer-orders": ["CUSTOMER", "PLANNER", "DIRECTOR"],
   "business-plans": [
@@ -53,6 +57,8 @@ const read = {
   notifications: ["*"],
 };
 const create = {
+  accounts:['ADMIN'],
+  'inspection-counts':['STOCKTAKER'],
   "customer-returns": ["WAREHOUSE_MANAGER"],
   "customer-orders": ["CUSTOMER"],
   "business-plans": ["PLANNER"],
@@ -78,6 +84,8 @@ const masters = [
 ];
 for (const n of masters) create[n] = ["WAREHOUSE_MANAGER"];
 const editable = {
+  'material-prices':['WAREHOUSE_MANAGER'],
+  accounts:['ADMIN'],
   "customer-orders": ["CUSTOMER"],
   "business-plans": ["PLANNER"],
   "stock-requests": ["WORKSHOP_OWNER"],
@@ -145,7 +153,7 @@ read.tasks = [
 editable.tasks = ["DIRECTOR", "WAREHOUSE_MANAGER"];
 read["warehouse-records"] = ["WAREHOUSE_MANAGER", "DIRECTOR", "WORKSHOP_OWNER"];
 create["warehouse-records"] = ["WAREHOUSE_MANAGER"];
-create["exception-proposals"].push("QC_INSPECTOR");
+read["exception-proposals"]=["DIRECTOR","WAREHOUSE_MANAGER","WORKSHOP_OWNER"];
 actionResources.dispatch = ["stock-requests"];
 actionResources.cancel = ["production-plans"];
 module.exports = {

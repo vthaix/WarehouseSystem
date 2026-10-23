@@ -11,6 +11,7 @@ function seed(repo, password) {
     "WORKSHOP_OWNER",
     "DIRECTOR",
   ];
+  repo.add('users',{username:'admin',full_name:'Quản trị hệ thống',roles:['ADMIN'],workshop_ids:[],password_hash:hashPassword('123456')});
   const names = [
     "Khách hàng",
     "Lập kế hoạch",
@@ -135,5 +136,8 @@ function seed(repo, password) {
     password_hash: hashPassword(password),
   });
   // Opening inventory is empty; every balance must originate from a posted receipt.
+  for (const [username,full_name,role] of require('../config/demo-checkers')) {
+    repo.add('users',{username,full_name,roles:[role],workshop_ids:[],password_hash:hashPassword(password)});
+  }
 }
 module.exports = { seed };

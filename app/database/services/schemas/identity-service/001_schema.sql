@@ -16,12 +16,13 @@ CREATE TABLE `NguoiDung` (
   `PhienBan` int NOT NULL,
   `NgayTao` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `NgayCapNhat` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `DaXoa` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`MaBanGhi`),
   UNIQUE KEY `DuyNhat_NguoiDung_1` (`TenDangNhap`),
   UNIQUE KEY `DuyNhat_NguoiDung_2` (`ThuDienTu`),
   CONSTRAINT `NguoiDung_chk_1` CHECK ((`TrangThai` in (_utf8mb4'ACTIVE',_utf8mb4'LOCKED'))),
   CONSTRAINT `NguoiDung_chk_2` CHECK ((`SoLanDangNhapSai` >= 0))
-) ENGINE=InnoDB AUTO_INCREMENT=739 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=840 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `VaiTro` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `Ma` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -30,7 +31,7 @@ CREATE TABLE `VaiTro` (
   `NgayCapNhat` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`MaBanGhi`),
   UNIQUE KEY `DuyNhat_VaiTro_1` (`Ma`)
-) ENGINE=InnoDB AUTO_INCREMENT=1180 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1181 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `NguoiDungVaiTro` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaNguoiDung` bigint unsigned NOT NULL,
@@ -42,7 +43,7 @@ CREATE TABLE `NguoiDungVaiTro` (
   KEY `KhoaNgoai_NguoiDungVaiTro_MaVaiTro` (`MaVaiTro`),
   CONSTRAINT `KhoaNgoai_NguoiDungVaiTro_MaNguoiDung` FOREIGN KEY (`MaNguoiDung`) REFERENCES `NguoiDung` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `KhoaNgoai_NguoiDungVaiTro_MaVaiTro` FOREIGN KEY (`MaVaiTro`) REFERENCES `VaiTro` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=727 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=828 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `NguoiDungXuong` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaXuong` bigint unsigned NOT NULL,

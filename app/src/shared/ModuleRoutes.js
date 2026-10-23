@@ -22,6 +22,18 @@ module.exports = (runtime) => {
   const router = express.Router(),
     catalog = require("../services/shared/catalog/ApiController")(runtime.catalog);
   const sourceImports = new (require('./SourceImportService'))(runtime);
+  router.get('/material-price-options',role(['WAREHOUSE_MANAGER','PURCHASER']),async(req,res)=>ok(req,res,await runtime.materialCatalog.metadata(req.user)));
+  router.get('/material-prices',role(['WAREHOUSE_MANAGER','PURCHASER']),async(req,res)=>{const r=await runtime.materialCatalog.list(req.user,req.query);ok(req,res,r.data,200,r.meta);});
+  router.get('/material-prices/:id',role(['WAREHOUSE_MANAGER','PURCHASER']),async(req,res)=>ok(req,res,await runtime.materialCatalog.get(req.user,req.params.id)));
+  router.patch('/material-prices/:id',role(['WAREHOUSE_MANAGER']),async(req,res)=>ok(req,res,await runtime.materialCatalog.update(req.user,req.params.id,req.body,req.request_id)));
+  router.get('/account-options',role(['ADMIN']),async(req,res)=>ok(req,res,await runtime.accounts.metadata(req.user)));
+  router.get('/accounts',role(['ADMIN']),async(req,res)=>{const r=await runtime.accounts.list(req.user,req.query);ok(req,res,r.data,200,r.meta);});
+  router.get('/accounts/:id',role(['ADMIN']),async(req,res)=>ok(req,res,await runtime.accounts.get(req.user,req.params.id)));
+  router.post('/accounts',role(['ADMIN']),async(req,res)=>ok(req,res,await runtime.accounts.create(req.user,req.body,req.request_id),201));
+  router.patch('/accounts/:id',role(['ADMIN']),async(req,res)=>ok(req,res,await runtime.accounts.update(req.user,req.params.id,req.body,req.request_id)));
+  router.delete('/accounts/:id',role(['ADMIN']),async(req,res)=>ok(req,res,await runtime.accounts.remove(req.user,req.params.id,req.body,req.request_id)));
+  router.get('/warehouse-lookup',role(['WAREHOUSE_MANAGER','WORKSHOP_OWNER']),async(req,res)=>ok(req,res,await runtime.reports.warehouseLookup(req.user,req.query)));
+  router.get('/stock-request-workflow-sources',role(['WORKSHOP_OWNER']),async(req,res)=>ok(req,res,await runtime.stockRequests.workflowSources(req.user)));
   router.get('/source-imports/purchase-report-options',async(req,res)=>ok(req,res,await sourceImports.purchaseReports(req.user)));
   router.get('/source-imports/:target',async(req,res)=>ok(req,res,await sourceImports.preview(req.user,req.params.target,req.query)));
   router.get('/customer-return-deliveries',role(['WAREHOUSE_MANAGER']),async(req,res)=>ok(req,res,await runtime.customerReturns.deliveries(req.user,req.query)));
@@ -82,6 +94,10 @@ module.exports = (runtime) => {
       });
     },
   );
+  router.get('/function-badges',async(req,res)=>ok(req,res,await runtime.notifications.badges(req.user)));
+  router.get('/inspection-counts',role(['STOCKTAKER']),async(req,res)=>{const r=await runtime.tasks.counts(req.user,req.query);ok(req,res,r.data,200,r.meta);});
+  router.get('/inspection-counts/:id',role(['STOCKTAKER']),async(req,res)=>ok(req,res,await runtime.tasks.get(req.user,req.params.id)));
+  router.post('/tasks/:id/minute-author',role(['DIRECTOR']),async(req,res)=>ok(req,res,await runtime.tasks.setMinuteAuthor(req.user,req.params.id,req.body,req.request_id)));
   router.get("/tasks", role(P.read.tasks), async (req, res) => {
     const result = await runtime.tasks.list(req.user, req.query);
     ok(req, res, result.data, 200, result.meta);
@@ -175,7 +191,7 @@ module.exports = (runtime) => {
     if (req.params.resource === "qc-failed-lines") {
       P.role(req.user, ["WAREHOUSE_MANAGER", "QC_INSPECTOR", "DIRECTOR"]);
       const [rows] = await runtime.pool.query(
-        "SELECT q.id,q.lot_id,(q.failed_quantity-COALESCE((SELECT SUM(p.quantity) FROM exception_proposals p WHERE p.qc_inspection_line_id=q.id AND p.type='QC_FAILURE' AND p.action IN ('SCRAP','RETURN_SUPPLIER') AND p.status='APPLIED'),0)) AS failed_quantity,CONCAT(l.code,' - ',i.name) AS name FROM qc_inspection_lines q JOIN lots l ON l.id=q.lot_id JOIN items i ON i.id=l.item_id WHERE q.failed_quantity>0 AND NOT EXISTS(SELECT 1 FROM returned_lot_lines r WHERE r.original_lot_detail_id=q.lot_id) AND NOT EXISTS(SELECT 1 FROM exception_proposals p WHERE p.qc_inspection_line_id=q.id AND (p.status IN ('PENDING_APPROVAL','APPROVED') OR (p.type<>'QC_FAILURE' AND p.status<>'REJECTED'))) HAVING failed_quantity>0 ORDER BY q.id DESC LIMIT 100",
+        "SELECT q.id,q.lot_id,q.issue,(q.failed_quantity-COALESCE((SELECT SUM(p.quantity) FROM exception_proposals p WHERE p.qc_inspection_line_id=q.id AND p.type='QC_FAILURE' AND p.action IN ('SCRAP','RETURN_SUPPLIER') AND p.status='APPLIED'),0)) AS failed_quantity,CONCAT(l.code,' - ',i.name) AS name FROM qc_inspection_lines q JOIN lots l ON l.id=q.lot_id JOIN items i ON i.id=l.item_id WHERE q.failed_quantity>0 AND NOT EXISTS(SELECT 1 FROM returned_lot_lines r WHERE r.original_lot_detail_id=q.lot_id) AND NOT EXISTS(SELECT 1 FROM exception_proposals p WHERE p.qc_inspection_line_id=q.id AND (p.status IN ('PENDING_APPROVAL','APPROVED') OR (p.type<>'QC_FAILURE' AND p.status<>'REJECTED'))) HAVING failed_quantity>0 ORDER BY q.id DESC LIMIT 100",
       );
       return ok(
         req,
@@ -234,7 +250,7 @@ module.exports = (runtime) => {
         "DIRECTOR",
       ]);
       const [rows] = await runtime.pool.execute(
-        "SELECT l.*,i.kind,i.name AS item_name,i.name AS name FROM lots l JOIN items i ON i.id=l.item_id ORDER BY l.id DESC LIMIT 100",
+        "SELECT l.*,DATE_FORMAT(DATE_ADD(l.created_at,INTERVAL 7 HOUR),'%Y-%m-%d') AS received_date,i.kind,i.name AS item_name,CONCAT(COALESCE(h.code,l.code),' / ',l.code,' / ',i.name,' / ',l.received_quantity) AS name FROM lots l JOIN items i ON i.id=l.item_id LEFT JOIN lot_headers h ON h.id=l.lot_header_id ORDER BY l.id DESC LIMIT 100",
       );
       return ok(
         req,
@@ -729,6 +745,9 @@ module.exports = (runtime) => {
       ok(req, res, result.data, 200, result.meta);
     },
   );
+  router.get('/quality-campaign-sources',role(['DIRECTOR']),async(req,res)=>ok(req,res,await runtime.qualityCampaigns.sources(req.user)));
+  router.get('/task-inspection-sources',role(['DIRECTOR']),async(req,res)=>ok(req,res,await runtime.tasks.inspectionSources(req.user)));
+  router.post('/quality-campaigns/:id/bind-lots',role(['DIRECTOR']),async(req,res)=>ok(req,res,await runtime.qualityCampaigns.bindLots(req.user,req.params.id,req.body,req.request_id)));
   router.get(
     "/quality-campaigns/:id",
     role(["DIRECTOR", "WAREHOUSE_MANAGER", "QC_INSPECTOR"]),
@@ -931,7 +950,7 @@ module.exports = (runtime) => {
   );
   router.post(
     "/exception-proposals/:id/review",
-    role(["DIRECTOR"]),
+    role(["DIRECTOR","WORKSHOP_OWNER"]),
     async (req, res) =>
       ok(
         req,
@@ -971,7 +990,7 @@ module.exports = (runtime) => {
   );
   router.get(
     "/stocktakes/:id/warehouses/:warehouse/lines",
-    role(["STOCKTAKER"]),
+    role(["STOCKTAKER", "QC_INSPECTOR"]),
     async (req, res) =>
       ok(
         req,
@@ -985,7 +1004,7 @@ module.exports = (runtime) => {
   );
   router.patch(
     "/stocktakes/:id/warehouses/:warehouse/counts",
-    role(["STOCKTAKER"]),
+    role(["STOCKTAKER", "QC_INSPECTOR"]),
     async (req, res) =>
       ok(
         req,
@@ -1000,7 +1019,7 @@ module.exports = (runtime) => {
   );
   router.post(
     "/stocktakes/:id/warehouses/:warehouse/complete",
-    role(["STOCKTAKER"]),
+    role(["STOCKTAKER", "QC_INSPECTOR"]),
     async (req, res) =>
       ok(
         req,

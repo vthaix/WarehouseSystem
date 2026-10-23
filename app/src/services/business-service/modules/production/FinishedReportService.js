@@ -23,6 +23,7 @@ class FinishedReportService {
 
   present(user, row) {
     const result = { ...row };
+    result.report_mode=row.KieuThanhPham||'FINAL';delete result.KieuThanhPham;
     result.production_completed=row.production_completed==null?null:Boolean(row.production_completed);
     for (const field of [
       "id",
@@ -116,7 +117,7 @@ class FinishedReportService {
       404,
     );
     const [outputs] = await connection.execute(
-      "SELECT o.*,l.item_id,l.code AS lot_code,l.manufactured_date,l.expiry_date,l.qc_status,i.name AS item_name FROM finished_report_outputs o JOIN lots l ON l.id=o.lot_id JOIN items i ON i.id=l.item_id WHERE o.finished_report_id=? ORDER BY o.id",
+      "SELECT o.*,l.item_id,l.code AS lot_code,l.lot_header_id,h.code AS lot_header_code,l.manufactured_date,l.expiry_date,l.qc_status,i.name AS item_name FROM finished_report_outputs o JOIN lots l ON l.id=o.lot_id JOIN items i ON i.id=l.item_id LEFT JOIN lot_headers h ON h.id=l.lot_header_id WHERE o.finished_report_id=? ORDER BY o.id",
       [id],
     );
     const [materials] = await connection.execute(
@@ -129,6 +130,7 @@ class FinishedReportService {
         ...row,
         id: String(row.id),
         lot_id: String(row.lot_id),
+        lot_header_id:row.lot_header_id?String(row.lot_header_id):null,
         item_id: String(row.item_id),
         manufactured_date: asDate(row.manufactured_date),
         expiry_date: asDate(row.expiry_date),
@@ -141,9 +143,9 @@ class FinishedReportService {
     };
   }
 
-  async validate(connection, plan, outputs, materials, excludedId = null) {
+  async validate(connection, plan, outputs, materials, excludedId = null,partReport=false) {
     const [partialLots]=await connection.execute("SELECT l.* FROM lots l JOIN stock_requests r ON r.id=l.production_receipt_request_id WHERE l.production_plan_id=? AND (r.status<>'CANCELLED' OR EXISTS(SELECT 1 FROM stock_documents d WHERE d.stock_request_id=r.id)) FOR UPDATE",[plan.id]);
-    const partialByCode=new Map(partialLots.map(l=>[l.code,l]));
+    const partialByCode=new Map(partReport?[]:partialLots.map(l=>[l.code,l]));
     C.fail(
       !Array.isArray(outputs) || !outputs.length || outputs.length > 100,
       "VALIDATION_ERROR",
@@ -179,8 +181,8 @@ class FinishedReportService {
       C.qty(output.quantity);
       const partial=partialByCode.get(output.lot_code);
       if(partial)C.fail(String(partial.item_id)!==String(output.item_id)||C.qty(String(partial.received_quantity))!==C.qty(output.quantity)||asDate(partial.manufactured_date)!==output.manufactured_date||(asDate(partial.expiry_date)||null)!==(output.expiry_date||null),'IMMUTABLE_LOT','Dòng lô nhập từng phần phải giữ nguyên mặt hàng, số lượng và ngày.',409);
-      C.date(output.manufactured_date, "manufactured_date");
-      if (output.expiry_date) C.date(output.expiry_date, "expiry_date");
+      C.date(output.manufactured_date, "manufactured_date", !partial);
+      if (output.expiry_date) C.date(output.expiry_date, "expiry_date", !partial);
       C.fail(
         output.expiry_date && output.expiry_date < output.manufactured_date,
         "VALIDATION_ERROR",
@@ -202,7 +204,7 @@ class FinishedReportService {
       "SELECT item_id,quantity FROM production_plan_outputs WHERE production_plan_id=?",
       [plan.id],
     );
-    C.fail(partialLots.some(l=>!codes.has(l.code)),'PARTIAL_LOTS_REQUIRED','Báo cáo tổng kết phải bao gồm mọi dòng lô đã ghi nhận của các đợt nhập.',409);
+    if(!partReport)C.fail(partialLots.some(l=>!codes.has(l.code)),'PARTIAL_LOTS_REQUIRED','Báo cáo tổng kết phải bao gồm mọi dòng lô đã ghi nhận của các đợt nhập.',409);
     const remaining = new Map(
       plannedOutputs.map((line) => [
         String(line.item_id),
@@ -218,6 +220,7 @@ class FinishedReportService {
       const key = String(line.item_id);
       const rest = (remaining.get(key) || 0n) - C.qty(String(line.quantity));
       C.fail(!remaining.has(key),'VALIDATION_ERROR','Thành phẩm không thuộc kế hoạch.');
+      if(partReport)C.fail(rest<0n,'SOURCE_LIMIT_EXCEEDED','Tổng lượng các phần thành phẩm vượt số lượng trong kế hoạch.');
       remaining.set(key, rest);
     }
     const [plannedMaterials] = await connection.execute(
@@ -274,11 +277,16 @@ class FinishedReportService {
     };
   }
 
-  async saveLines(connection, reportId, planId, data) {
+  async saveLines(connection, reportId, planId, data,partReport=false) {
+    let headerId=null;
+    if(partReport){
+      await connection.execute("INSERT INTO lot_headers(code,lot_kind,partial_production_plan_id) VALUES (?,'THANH_PHAM',?) ON DUPLICATE KEY UPDATE id=id",['TP-SX-'+planId,planId]);
+      const [[header]]=await connection.execute('SELECT id FROM lot_headers WHERE partial_production_plan_id=?',[planId]);headerId=header.id;
+    }
     for (const output of data.outputs) {
       let lot={insertId:output.existing_lot_id};
       if(!output.existing_lot_id) [lot] = await connection.execute(
-        "INSERT INTO lots (code,item_id,purchase_order_line_id,production_plan_id,manufactured_date,expiry_date,received_quantity,qc_status,version) VALUES (?,?,NULL,?,?,?,?,'PENDING',1)",
+        "INSERT INTO lots (code,item_id,purchase_order_line_id,production_plan_id,manufactured_date,expiry_date,received_quantity,qc_status,version,lot_header_id) VALUES (?,?,NULL,?,?,?,?,'PENDING',1,?)",
         [
           output.lot_code,
           output.item_id,
@@ -286,6 +294,7 @@ class FinishedReportService {
           output.manufactured_date,
           output.expiry_date,
           output.quantity,
+          headerId,
         ],
       );
       await connection.execute(
@@ -314,6 +323,7 @@ class FinishedReportService {
       "production_plan_id",
       "completed_date",
       "production_completed",
+      "report_mode",
       "note",
       "outputs",
       "materials",
@@ -323,8 +333,10 @@ class FinishedReportService {
       "VALIDATION_ERROR",
       "Kế hoạch sản xuất không hợp lệ.",
     );
-    C.date(body.completed_date, "completed_date");
-    C.fail(body.production_completed!==true,'VALIDATION_ERROR','Chỉ lập báo cáo thành phẩm khi đã hoàn tất toàn bộ sản xuất.');
+    C.date(body.completed_date, "completed_date", true);
+    const partReport=body.report_mode==='PART';
+    C.fail(body.report_mode!==undefined&&!['PART','FINAL'].includes(body.report_mode),'VALIDATION_ERROR','Loại báo cáo thành phẩm không hợp lệ.');
+    C.fail(partReport?typeof body.production_completed!=='boolean':body.production_completed!==true,'VALIDATION_ERROR','Chọn trạng thái hoàn tất của đợt sản xuất.');
     if (body.note !== undefined) C.text(body.note, "note", 5000, false);
     const connection = await this.pool.getConnection();
     let id;
@@ -347,10 +359,11 @@ class FinishedReportService {
         plans[0],
         body.outputs,
         body.materials || [],
+        null,partReport,
       );
       const code =
         "BCTP-" + crypto.randomBytes(8).toString("hex").toUpperCase();
-      const [existingFinal]=await connection.execute('SELECT id FROM finished_reports WHERE production_plan_id=? FOR UPDATE',[plans[0].id]);
+      const [existingFinal]=await connection.execute("SELECT id FROM finished_reports WHERE production_plan_id=? AND (KieuThanhPham='FINAL' OR production_completed=1) FOR UPDATE",[plans[0].id]);
       C.fail(existingFinal.length,'IN_USE','Kế hoạch đã có báo cáo thành phẩm tổng kết; hãy hoàn thiện báo cáo hiện có.',409);
       const [created] = await connection.execute(
         "INSERT INTO finished_reports (code,production_plan_id,created_by,completed_date,note,status,version,report_kind,production_completed) VALUES (?,?,?,?,?,'DRAFT',1,'THANH_PHAM',1)",
@@ -363,7 +376,8 @@ class FinishedReportService {
         ],
       );
       id = created.insertId;
-      await this.saveLines(connection, id, plans[0].id, data);
+      await connection.execute('UPDATE finished_reports SET KieuThanhPham=?,production_completed=? WHERE id=?',[partReport?'PART':'FINAL',body.production_completed,id]);
+      await this.saveLines(connection, id, plans[0].id, data,partReport);
       await connection.execute(
         "INSERT INTO audit_logs (actor_id,resource_type,resource_id,action,after_data,request_id) VALUES (?,'finished-reports',?,'CREATE',?,?)",
         [
@@ -412,8 +426,8 @@ class FinishedReportService {
       "Không có nội dung cần sửa.",
     );
     if (body.completed_date !== undefined)
-      C.date(body.completed_date, "completed_date");
-    C.fail(body.production_completed!==undefined&&body.production_completed!==true,'VALIDATION_ERROR','Báo cáo thành phẩm phải xác nhận hoàn tất sản xuất.');
+      C.date(body.completed_date, "completed_date", true);
+    C.fail(body.production_completed!==undefined&&typeof body.production_completed!=='boolean','VALIDATION_ERROR','Trạng thái hoàn tất không hợp lệ.');
     if (body.note !== undefined) C.text(body.note, "note", 5000, false);
     const connection = await this.pool.getConnection();
     try {
@@ -441,7 +455,8 @@ class FinishedReportService {
       const report = rows[0];
       C.version(report, body.version);
       C.state(report, ["DRAFT"]);
-      if(body.production_completed===true)await connection.execute('UPDATE finished_reports SET production_completed=1 WHERE id=?',[id]);
+      C.fail(report.KieuThanhPham!=='PART'&&body.production_completed===false,'VALIDATION_ERROR','Báo cáo tổng kết cũ phải xác nhận hoàn tất.');
+      if(body.production_completed!==undefined)await connection.execute('UPDATE finished_reports SET production_completed=? WHERE id=?',[body.production_completed,id]);
       if (body.outputs !== undefined || body.materials !== undefined) {
         const current = await this.get(user, id, connection);
         const outputs =
@@ -465,6 +480,7 @@ class FinishedReportService {
           outputs,
           materials,
           id,
+          report.KieuThanhPham==='PART',
         );
         const [lots] = await connection.execute(
           "SELECT l.id,l.qc_status,l.production_receipt_request_id FROM lots l JOIN finished_report_outputs o ON o.lot_id=l.id WHERE o.finished_report_id=? FOR UPDATE",
@@ -490,7 +506,7 @@ class FinishedReportService {
         );
         for (const lot of lots.filter(l=>!l.production_receipt_request_id))
           await connection.execute("DELETE FROM lots WHERE id=?", [lot.id]);
-        await this.saveLines(connection, id, plans[0].id, data);
+        await this.saveLines(connection, id, plans[0].id, data,report.KieuThanhPham==='PART');
       }
       await connection.execute(
         "UPDATE finished_reports SET completed_date=?,note=?,version=version+1 WHERE id=?",
@@ -549,7 +565,11 @@ class FinishedReportService {
       const report = rows[0];
       C.version(report, body.version);
       C.state(report, ["DRAFT"]);
-      C.fail(!report.production_completed,'INVALID_STATE','Cần xác nhận đã hoàn tất toàn bộ sản xuất trước khi gửi.',409);
+      C.fail(report.KieuThanhPham!=='PART'&&!report.production_completed,'INVALID_STATE','Cần xác nhận đã hoàn tất toàn bộ sản xuất trước khi gửi tổng kết.',409);
+      if(report.KieuThanhPham==='PART'&&report.production_completed){
+        const [drafts]=await connection.execute("SELECT id FROM finished_reports WHERE production_plan_id=? AND id<>? AND status='DRAFT' FOR UPDATE",[report.production_plan_id,id]);
+        C.fail(drafts.length,'INVALID_STATE','Còn báo cáo thành phẩm nháp của phần trước; hoàn thiện trước khi xác nhận đợt cuối.',409);
+      }
       const [[count]] = await connection.execute(
         "SELECT COUNT(*) AS total FROM finished_report_outputs WHERE finished_report_id=?",
         [id],
@@ -565,8 +585,8 @@ class FinishedReportService {
         [id],
       );
       await connection.execute(
-        "UPDATE production_plans SET status='COMPLETED',version=version+1 WHERE id=? AND status IN ('APPROVED','IN_PROGRESS')",
-        [report.production_plan_id],
+        "UPDATE production_plans SET status=?,version=version+1 WHERE id=? AND status IN ('APPROVED','IN_PROGRESS')",
+        [report.production_completed?'COMPLETED':'IN_PROGRESS',report.production_plan_id],
       );
       await connection.execute(
         "INSERT INTO audit_logs (actor_id,resource_type,resource_id,action,before_data,after_data,request_id) VALUES (?,'finished-reports',?,'SUBMIT',?,?,?)",

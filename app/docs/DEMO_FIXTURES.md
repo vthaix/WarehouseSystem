@@ -59,7 +59,7 @@ Từ 22/10/2026, chứng từ mẫu mặc định TẮT (`SEED_WORKFLOWS=false`)
 | YC-XUAT-TP | UC-23 yêu cầu xuất TP | workshop; BAN duyệt, SX hoàn tất, đủ tồn và hạn giao là ngày dựng fixture |
 | XUAT-TP | UC-11.02 ghi sổ giao bánh | staff; yêu cầu giao 10 bánh đã phân công, chưa xuất |
 | DA-GIAO | UC-09/19, lịch sử đơn/giao hàng, hàng khách trả | manager/director/workshop; đã giao 10 bánh bằng phiếu xuất thật |
-| CONG-VIEC | UC-25/25.1/25.2 | director; công việc purchaser chưa bắt đầu, có thể thử sửa/xóa đúng điều kiện |
+| CONG-VIEC | UC-25/25.1/25.2 | director; công việc phân công nhân viên Ban kiểm kê và QC/AC chưa bắt đầu, có thể thử sửa/xóa đúng điều kiện |
 | KK-CHO | UC-13/15 xem đợt và bắt đầu | director; kho riêng đã nhập 20 kg, đợt PLANNED |
 | KK-DEM | UC-15 đếm/lưu tạm/hoàn tất | stocktaker; kho riêng đang kiểm kê, snapshot 20 kg, chưa đếm |
 | KK-BIEN-BAN | UC-28 lập biên bản | qc theo phân công; đã đếm 19 kg so với snapshot 20, chưa có biên bản |

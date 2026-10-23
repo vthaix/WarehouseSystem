@@ -26,25 +26,29 @@ const esc = (v) =>
   );
 const badge = (v) =>
   `<span class="badge ${esc(v)}">${esc(labels[v] || v || "—")}</span>`;
-const format = (v) =>
-  v === null
-    ? "Chưa đếm"
-    : v === undefined
-      ? "—"
-      : typeof v === "boolean"
-        ? v
-          ? "Có"
-          : "Không"
-        : /^\-?\d+\.\d+$/.test(String(v))
-          ? new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 4 }).format(
-              Number(v),
-            )
-          : labels[v] || v;
+const format = warehousePresentation.format;
 function toast(s) {
   const t = document.querySelector("#toast");
   t.textContent = s;
   t.style.display = "block";
   setTimeout(() => (t.style.display = "none"), 4000);
+}
+function confirmPlanQuantity(message) {
+  return new Promise(resolve => {
+    const dialog = document.createElement('dialog');
+    dialog.className = 'planning-confirm-dialog';
+    dialog.setAttribute('aria-labelledby', 'planning-confirm-title');
+    dialog.setAttribute('aria-describedby', 'planning-confirm-message');
+    dialog.innerHTML = `<div class="planning-confirm-content"><button type="button" class="planning-confirm-close" aria-label="Đóng thông báo">×</button><div class="planning-confirm-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m10.3 4.3-7.5 13a2 2 0 0 0 1.7 3h15a2 2 0 0 0 1.7-3l-7.5-13a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4m0 3h.01"/></svg></div><span class="planning-confirm-eyebrow">XÁC NHẬN KẾ HOẠCH</span><h2 id="planning-confirm-title">Số lượng vượt mức dự kiến</h2><p id="planning-confirm-message"></p><div class="planning-confirm-note">Nếu tiếp tục, hệ thống sẽ giữ nguyên số lượng bạn đã nhập.</div></div><div class="planning-confirm-actions"><button type="button" class="button" data-confirm-cancel autofocus>Quay lại chỉnh sửa</button><button type="button" class="button primary" data-confirm-accept>Xác nhận tiếp tục</button></div>`;
+    dialog.querySelector('#planning-confirm-message').textContent = message;
+    dialog.querySelector('[data-confirm-cancel]').onclick = () => dialog.close('cancel');
+    dialog.querySelector('.planning-confirm-close').onclick = () => dialog.close('cancel');
+    dialog.querySelector('[data-confirm-accept]').onclick = () => dialog.close('accept');
+    dialog.addEventListener('click', event => { if (event.target === dialog) { const r=dialog.getBoundingClientRect(); if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close('cancel'); } });
+    dialog.addEventListener('close', () => { const accepted=dialog.returnValue==='accept'; dialog.remove(); resolve(accepted); }, {once:true});
+    document.body.append(dialog);
+    dialog.showModal();
+  });
 }
 async function api(path, method = "GET", body, key) {
   const res = await fetch("/api/v1/" + path, {
@@ -60,6 +64,10 @@ async function api(path, method = "GET", body, key) {
   if (res.status === 204) return {};
   const r = await res.json();
   if (!res.ok) {
+    if (r.error?.code === "PLAN_CONFIRMATION_REQUIRED" && body && body.confirm_plan_overage !== true && /^(production-plans|business-plans)(\/|$)/.test(path)) {
+      if (await confirmPlanQuantity(r.error.message)) return api(path,method,{...body,confirm_plan_overage:true},crypto.randomUUID());
+      const cancelled=new Error("Đã hủy lưu. Bạn có thể điều chỉnh số lượng rồi lưu lại."); cancelled.code="CONFIRMATION_CANCELLED"; throw cancelled;
+    }
     const e = new Error(r.error.message);
     Object.assign(e, {
       fields: r.error.fields,
@@ -182,7 +190,7 @@ async function render() {
           ? rows
               .map(
                 (n) =>
-                  `<div class="notification"><strong>${esc(n.title)}</strong><span class="subtitle">${new Date(n.created_at).toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" })}</span></div>`,
+                  `<div class="notification"><strong>${esc(n.title)}</strong><span class="subtitle">${esc(format(n.created_at))}</span></div>`,
               )
               .join("")
           : '<div class="empty">Bạn chưa có thông báo mới.</div>';
@@ -238,6 +246,8 @@ function filterParams() {
     p.set("as_of", reportAsOf);
   p.set("page", page);
   p.set("per_page", pageSize);
+  for(const key of ['kind','category_id']){const v=new URLSearchParams(location.search).get(key);if(v)p.set(key,v);}
+  if(current==='categories'&&!p.get('kind'))p.set('kind','FINISHED_PRODUCT');
   return p;
 }
 async function loadTable() {
@@ -252,7 +262,7 @@ async function loadTable() {
     const cols = columnsFor(current);
     target.className = "";
     target.innerHTML = cached.length
-      ? `<div class="table-wrap"><table><thead><tr>${cols.map((c) => `<th>${c[1]}</th>`).join("")}<th>Thao tác</th></tr></thead><tbody>${cached.map((r, i) => `<tr>${cols.map(([k]) => `<td>${["status", "qc_status"].includes(k) ? (k === "status" ? statusBadge(r[k]) : badge(r[k])) : k === "code" ? `<strong>${esc(r[k])}</strong>` : esc(format(r[k]))}</td>`).join("")}<td><div class="inline-actions"><button class="button small" data-detail="${i}">Chi tiết ↗</button>${(r.actions || []).includes("review") ? `<button class="button small" data-act="review" data-index="${i}">Duyệt</button>` : ""}${(r.actions || []).includes("post") ? `<button class="button small" data-act="post" data-index="${i}">Ghi phiếu</button>` : ""}</div></td></tr>`).join("")}</tbody></table></div>`
+      ? `<div class="table-wrap"><table><thead><tr>${cols.map((c) => `<th>${c[1]}</th>`).join("")}<th>Thao tác</th></tr></thead><tbody>${cached.map((r, i) => `<tr>${cols.map(([k]) => `<td>${["status", "qc_status"].includes(k) ? (k === "status" ? statusBadge(r[k]) : badge(r[k])) : k === "code" ? `<strong>${esc(r[k])}</strong>` : esc(format(r[k],k,r))}</td>`).join("")}<td><div class="inline-actions"><button class="button small" data-detail="${i}">Chi tiết ↗</button>${(r.actions || []).includes("review") ? `<button class="button small" data-act="review" data-index="${i}">Duyệt</button>` : ""}${(r.actions || []).includes("post") ? `<button class="button small" data-act="post" data-index="${i}">Ghi phiếu</button>` : ""}</div></td></tr>`).join("")}</tbody></table></div>`
       : '<div class="empty"><div class="empty-icon">▤</div>Chưa có dữ liệu phù hợp.<br><span class="hint">Tạo chứng từ mới hoặc thay đổi bộ lọc để tiếp tục.</span></div>';
     const meta = result.meta;
     target.innerHTML += `<div class="pagination"><span>${meta.total ?? cached.length} kết quả · Trang ${page}</span><div class="inline-actions"><button class="button small" id="prev" ${page <= 1 ? "disabled" : ""}>← Trước</button><button class="button small" id="next" ${!meta.total_pages || page >= meta.total_pages ? "disabled" : ""}>Sau →</button></div></div>`;
@@ -286,6 +296,15 @@ async function loadTable() {
   }
 }
 function columnsFor(n) {
+  if(n==='material-prices')return [['code','Mã NVL'],['name','Nguyên vật liệu'],['unit','Đơn vị tính'],['reference_price','Giá tham khảo (đ/đơn vị)']];
+  if(n==='accounts')return [['username','Tên đăng nhập'],['full_name','Họ và tên'],['roles','Vai trò'],['status','Trạng thái']];
+  if(n==='production-plans')return [['code','Kế hoạch sản xuất'],['customer_order_code','Đơn khách hàng'],['workshop_name','Xưởng phụ trách'],['start_date','Ngày bắt đầu'],['end_date','Ngày hoàn thành'],['status','Trạng thái']];
+  if(n==='business-plans')return [['code','Kế hoạch'],['type','Loại kế hoạch'],['planned_date','Ngày kế hoạch'],['status','Trạng thái']];
+  if(n==='purchase-orders')return [['code','Đơn mua NVL'],['expected_delivery_date','Ngày dự kiến nhận'],['status','Trạng thái']];
+  if(n==='stock-requests')return [['code','Yêu cầu'],['purpose','Nghiệp vụ'],['requested_at','Ngày giờ thực hiện'],['status','Trạng thái']];
+  if(n==='stock-documents')return [['code','Phiếu kho'],['type','Loại phiếu'],['posted_at','Ngày giờ ghi phiếu'],['status','Trạng thái']];
+  if(n==='inspection-counts')return [['code','Mã công việc'],['title','Công việc'],['start_at','Bắt đầu'],['status','Trạng thái']];
+  if(n==='exception-proposals')return [['code','Mã ngoại lệ'],['type','Nguồn'],['reason','Vấn đề cần xử lý'],['status','Trạng thái']];
   if(n==='categories')return [['image_path','Ảnh'],['code','Mã'],['name','Tên'],['is_active','Hoạt động']];
   if(n==='production-reports')return [['code','Mã báo cáo'],['production_plan_code','Kế hoạch'],['report_purpose','Mục đích'],['progress_percentage','Tiến độ (%)'],['status','Trạng thái']];
   if(n === "customer-returns")return [["code","Mã hàng trả"],["return_warehouse_id","Kho nhận"],["return_receiver_id","Nhân viên nhận"],["status","Trạng thái"],["created_at","Ngày lập"]];
@@ -315,10 +334,10 @@ function columnsFor(n) {
     ];
   if (n === "reports/inventory")
     return [
-      ["warehouse_id", "Kho"],
+      ["warehouse_name", "Kho"],
       ["item_name", "Mặt hàng"],
-      ["lot_id", "Lô"],
-      ["location_id", "Vị trí"],
+      ["lot_code", "Lô"],
+      ["location_code", "Vị trí"],
       ["quality_bucket", "Chất lượng"],
       ["quantity", "Tồn"],
     ];
@@ -326,7 +345,7 @@ function columnsFor(n) {
     return [
       ["warehouse_id", "Kho"],
       ["item_name", "Mặt hàng"],
-      ["system_quantity", "Snapshot"],
+      ["system_quantity", "Số lượng ghi nhận"],
       ["actual_quantity", "Thực tế"],
       ["difference", "Chênh lệch"],
     ];
@@ -347,7 +366,7 @@ function columnsFor(n) {
   if (n === "stocktakes")
     return [
       ["code", "Mã đợt"],
-      ["campaign_type", "Loại đợt"],
+      ["quality_kind", "Nhóm hàng"],
       ["planned_date", "Ngày"],
       ["location", "Địa điểm"],
       ["status", "Trạng thái"],
@@ -369,21 +388,21 @@ function columnsFor(n) {
   ];
 }
 function openModal(title, html) {
-  modalBody.innerHTML = `<div class="dialog-head"><div><div class="eyebrow">WAREHOUSE / CHI TIẾT</div><h2>${esc(title)}</h2></div><button class="button small" id="close-modal" aria-label="Đóng">✕</button></div><div id="form-error"></div>${html}`;
+  modalBody.innerHTML = `<div class="dialog-head"><div><div class="eyebrow">SWEET BAKERY / CHI TIẾT</div><h2>${esc(title)}</h2></div><button class="button small" id="close-modal" aria-label="Đóng">✕</button></div><div id="form-error"></div>${html}`;
   document.querySelector("#close-modal").onclick = () => modal.close();
   if (!modal.open) modal.showModal();
 }
 function detail(r) {
-  const hidden = ["actions", "lines", "outputs", "materials", "warehouses"];
+  const hidden = ["actions", "lines", "outputs", "materials", "warehouses", "campaign_type"];
   openModal(
     r.name || r.title || r.code || "Chi tiết",
     `<dl class="detail-grid">${Object.entries(r)
-      .filter(([k, v]) => !hidden.includes(k) && typeof v !== "object")
+      .filter(([k, v]) => !hidden.includes(k) && fieldNames[k] && (v===null||typeof v !== "object"))
       .map(
         ([k, v]) =>
-          `<div><dt>${esc(fieldLabel(k))}</dt><dd>${k === "status" ? statusBadge(v) : esc(format(v))}</dd></div>`,
+          `<div><dt>${esc(fieldLabel(k))}</dt><dd>${k === "status" ? statusBadge(v) : esc(format(v,k,r))}</dd></div>`,
       )
-      .join("")}</dl>${["lines", "outputs", "materials", "allocations", "decision_history", "reinspections"]
+      .join("")}</dl>${["lines", "outputs", "materials", "allocations", "decision_history", "reinspections", "inspection_lots", "source_lots", "documents", "document_lines"]
       .filter((k) => r[k])
       .map(
         (k) =>
@@ -391,7 +410,7 @@ function detail(r) {
       )
       .join(
         "",
-      )}${r.warehouses ? `<div class="form-section"><h3>Phạm vi kiểm kê</h3>${r.warehouses.map((w) => `<div class="notification"><span>Kho ${esc(w.warehouse_id)} · ${badge(w.status)} · ${w.lines.filter((l) => l.actual_quantity !== null).length}/${w.lines.length} dòng đã đếm</span>${has(["STOCKTAKER"]) && w.assignee_ids.includes(user.id) ? `<button class="button small" data-count="${w.warehouse_id}">Mở bảng đếm</button>` : ""}</div>`).join("")}</div>` : ""}<div class="form-actions">${(r.actions || []).map((a) => `<button class="button ${["review", "post"].includes(a) ? "primary" : ""}" data-action="${a}">${{ receiveReturn: "Nhận vào khu cách ly", cancelReturn: "Hủy hàng trả chưa nhận", reinspect: "Tái kiểm chất lượng", correct: "Chứng từ bù QC", apply: "Thực hiện", cancelAllocation: "Giải phóng phân công", edit: "Sửa", delete: "Hủy / Xóa", receive: "Tiếp nhận", review: "Phê duyệt", submit: "Gửi", start: "Bắt đầu kiểm kê", close: "Đóng đợt", post: "Ghi phiếu", progress: "Cập nhật tiến độ", dispatch: "Phân công kho", cancel: "Hủy kế hoạch", postTask: "Ghi phần hàng được giao" }[a]}</button>`).join("")}${current === "notifications" && !r.read_at ? '<button class="button" id="mark-read">Đánh dấu đã đọc</button>' : ""}</div>`,
+      )}${r.warehouses ? `<div class="form-section"><h3>Phạm vi kiểm kê</h3>${r.warehouses.map((w) => `<div class="notification"><span>Kho ${esc(w.warehouse_id)} · ${badge(w.status)} · ${w.lines.filter((l) => l.actual_quantity !== null).length}/${w.lines.length} dòng đã đếm</span>${has(["STOCKTAKER", "QC_INSPECTOR"]) && w.assignee_ids.includes(user.id) ? `<button class="button small" data-count="${w.warehouse_id}">Mở bảng đếm</button>` : ""}</div>`).join("")}</div>` : ""}<div class="form-actions">${(r.actions || []).map((a) => `<button class="button ${["review", "post"].includes(a) ? "primary" : ""}" data-action="${a}">${{ handleMinuteException: "Xử lý ngoại lệ", reviewMinuteException: "Phê duyệt phương án", recordCount: "Ghi số lượng kiểm đếm", startInspection: "Bắt đầu đợt kiểm kê", bindInspection: "Chọn lô NVL đã nhận", recordInspection: "Ghi kết quả kiểm tra", bindLots: "Chọn phần lô thực tế", receiveReturn: "Nhận vào khu cách ly", cancelReturn: "Hủy hàng trả chưa nhận", reinspect: "Tái kiểm chất lượng", correct: "Chứng từ bù QC", apply: "Thực hiện", cancelAllocation: "Giải phóng phân công", edit: "Sửa", delete: "Hủy / Xóa", receive: "Tiếp nhận", review: "Phê duyệt", submit: "Gửi", start: "Bắt đầu kiểm kê", close: "Đóng đợt", post: "Ghi phiếu", progress: "Cập nhật tiến độ", dispatch: "Phân công kho", cancel: "Hủy kế hoạch", postTask: "Ghi phần hàng được giao" }[a]}</button>`).join("")}${current === "notifications" && !r.read_at ? '<button class="button" id="mark-read">Đánh dấu đã đọc</button>' : ""}</div>`,
   );
   modalBody
     .querySelectorAll("[data-action]")
@@ -435,13 +454,13 @@ async function showDetail(row) {
 function tableData(rows) {
   if (!rows.length) return '<div class="empty">Chưa có dòng dữ liệu.</div>';
   const keys = [...new Set(rows.flatMap((r) => Object.keys(r)))].filter(
-    (k) => k !== "id" && typeof rows[0][k] !== "object",
+    (k) => k !== "id" && fieldNames[k] && typeof rows[0][k] !== "object",
   );
-  return `<div class="table-wrap"><table><thead><tr>${keys.map((k) => `<th>${esc(fieldLabel(k))}</th>`).join("")}</tr></thead><tbody>${rows.map((r) => `<tr>${keys.map((k) => `<td>${esc(format(r[k]))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+  return `<div class="table-wrap"><table><thead><tr>${keys.map((k) => `<th>${esc(fieldLabel(k))}</th>`).join("")}</tr></thead><tbody>${rows.map((r) => `<tr>${keys.map((k) => `<td>${esc(format(r[k],k,r))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
 }
 const fieldNames = warehouseNavigation.fieldNames;
 function fieldLabel(k) {
-  return fieldNames[k] || k;
+  return warehousePresentation.fieldLabel(k);
 }
 window.addEventListener("popstate", () => {
   current =

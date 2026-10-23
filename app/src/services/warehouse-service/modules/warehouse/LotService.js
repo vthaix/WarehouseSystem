@@ -51,7 +51,7 @@ class LotService {
             "expiry_date",
           ]);
           const [[source]] = await connection.execute(
-            "SELECT p.supplier_id FROM purchase_order_lines l JOIN purchase_orders p ON p.id=l.purchase_order_id WHERE l.id=? FOR UPDATE",
+            "SELECT COALESCE(l.supplier_id,p.supplier_id) AS supplier_id FROM purchase_order_lines l JOIN purchase_orders p ON p.id=l.purchase_order_id WHERE l.id=? FOR UPDATE",
             [line.purchase_order_line_id],
           );
           C.fail(
@@ -115,8 +115,8 @@ class LotService {
       );
     C.qty(body.received_quantity);
     if (body.manufactured_date)
-      C.date(body.manufactured_date, "manufactured_date");
-    if (body.expiry_date) C.date(body.expiry_date, "expiry_date");
+      C.date(body.manufactured_date, "manufactured_date", true);
+    if (body.expiry_date) C.date(body.expiry_date, "expiry_date", true);
     C.fail(
       body.expiry_date &&
         body.manufactured_date &&
@@ -199,8 +199,8 @@ class LotService {
       "Không có nội dung cần sửa.",
     );
     if (body.manufactured_date)
-      C.date(body.manufactured_date, "manufactured_date");
-    if (body.expiry_date) C.date(body.expiry_date, "expiry_date");
+      C.date(body.manufactured_date, "manufactured_date", true);
+    if (body.expiry_date) C.date(body.expiry_date, "expiry_date", true);
     await this.transaction(async (connection) => {
       const [rows] = await connection.execute(
         "SELECT * FROM lots WHERE id=? FOR UPDATE",

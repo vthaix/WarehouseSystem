@@ -2,6 +2,7 @@ const { MemoryRepository } = require("../../src/repositories/memory");
 const { seed } = require("../../src/repositories/seed");
 const { labels } = require("../../src/config/navigation");
 const roleCodes = [
+  'ADMIN',
   "CUSTOMER",
   "PLANNER",
   "PURCHASER",
@@ -43,12 +44,13 @@ async function seedDemo(pool) {
         [code, labels[code]],
       );
     await c.execute(
-      "INSERT INTO workshops (code,name,is_active) VALUES ('XUONG-01','Xưởng bánh ngọt đóng gói',1) ON DUPLICATE KEY UPDATE id = id",
+      "INSERT INTO workshops (code,name,is_active) VALUES ('XUONG-01','Xưởng bánh quy Sweet Bakery',1) ON DUPLICATE KEY UPDATE id = id",
     );
     const [[workshop]] = await c.execute(
       "SELECT id FROM workshops WHERE code='XUONG-01'",
     );
     for (const u of memory.all("users")) {
+      const [[existingUser]]=await c.execute('SELECT id FROM users WHERE username=?',[u.username]);
       await c.execute(
         "INSERT INTO users (username,password_hash,full_name,status,failed_login_count,session_version,version) VALUES (?,?,?,'ACTIVE',0,1,1) ON DUPLICATE KEY UPDATE id = id",
         [u.username, u.password_hash, u.full_name],
@@ -57,6 +59,7 @@ async function seedDemo(pool) {
         "SELECT id FROM users WHERE username = ?",
         [u.username],
       );
+      if(!existingUser){
       for (const role of u.roles)
         await c.execute(
           "INSERT INTO user_roles (user_id,role_id) SELECT ?,id FROM roles WHERE code = ? ON DUPLICATE KEY UPDATE id = user_roles.id",
@@ -72,6 +75,7 @@ async function seedDemo(pool) {
           "INSERT INTO workshop_users (workshop_id,user_id) VALUES (?,?) ON DUPLICATE KEY UPDATE id = id",
           [workshop.id, user.id],
         );
+      }
       await c.execute(
         "INSERT INTO notifications (user_id,subject,body,resource_type,resource_id,business_key) VALUES (?, 'Chào mừng đến hệ thống', 'Bạn có thể sử dụng các chức năng theo vai trò được cấp.', 'users', ?, 'foundation-welcome-v1') ON DUPLICATE KEY UPDATE id = id",
         [user.id, user.id],

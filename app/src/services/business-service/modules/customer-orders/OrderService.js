@@ -268,6 +268,8 @@ class OrderService {
       const address = body.delivery_address === undefined ? order.delivery_address : C.text(body.delivery_address, "delivery_address", 500).trim();
       const date = body.latest_delivery_date === undefined ? asDate(order.latest_delivery_date) : C.date(body.latest_delivery_date, "latest_delivery_date", true);
       const note = body.note === undefined ? order.note : C.text(body.note, "note", 5000, false) || null;
+      const [[scheduled]] = await connection.execute("SELECT MAX(end_date) last_end FROM production_plans WHERE customer_order_id=? AND status<>'CANCELLED'", [id]);
+      C.fail(scheduled.last_end && asDate(scheduled.last_end) > date, 'DELIVERY_DEADLINE_EXCEEDED', 'Ngày nhận mới không được trước ngày kết thúc KHSX đã lập.');
       let total = order.quoted_total;
       if (body.lines !== undefined) {
         const current = await this.detail(connection, user, id);

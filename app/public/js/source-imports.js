@@ -3,7 +3,7 @@
   const field = inputField;
   const pick = (name, rows, text) =>
     field(name, "select", true, [{ id: "", name: text }, ...rows]);
-  const today = () => new Date().toLocaleDateString("en-CA");
+  const today = calendarToday;
   const value = (name) => document.querySelector("#f-" + name)?.value || "";
   const notice = (r) =>
     '<div class="notice">' +
@@ -60,70 +60,7 @@
       return previousCreate();
     try {
       const target = current;
-      if (target === "finished-reports") {
-        const plans = (await options("production-plans")).filter((p) =>
-          ["APPROVED", "IN_PROGRESS"].includes(p.status),
-        );
-        const items = await options("items");
-        openModal(
-          "Báo cáo thành phẩm tổng kết",
-          formWrap(
-            pick("production_plan_id", plans, "Chọn kế hoạch sản xuất") +
-              field("completed_date", "date", true, [], today()) +
-              field("note", "textarea", false) +
-              '<div class="span2 field"><label><input id="final-completed" type="checkbox" required> Tôi xác nhận đã hoàn tất toàn bộ sản xuất</label></div><div class="span2" id="final-info"></div><div class="span2" id="final-outputs"></div>' +
-              lineEditor(
-                "NVL thực tế đã dùng",
-                items.filter((i) => i.kind === "MATERIAL"),
-                "materials",
-                ["used_quantity"],
-                [],
-              ).html,
-          ),
-        );
-        const mat = lineEditor(
-          "NVL thực tế đã dùng",
-          items.filter((i) => i.kind === "MATERIAL"),
-          "materials",
-          ["used_quantity"],
-          [],
-        );
-        mat.mount();
-        document.querySelector("#materials-rows").innerHTML = "";
-        const loadFinal = importer(
-          async (fresh) => {
-            if (!value("production_plan_id")) return;
-            const result = await preview("finished-reports", {
-              source_id: value("production_plan_id"),
-            });
-            if (!fresh()) return;
-            document.querySelector("#final-info").innerHTML = notice(result);
-            rowsAt(
-              "final-outputs",
-              "Thành phẩm thực tế",
-              items.filter((i) => i.kind === "FINISHED_PRODUCT"),
-              "outputs",
-              ["quantity", "lot_code", "manufactured_date", "expiry_date"],
-              result.outputs,
-              true,
-            );
-          },
-          ["final-info", "final-outputs"],
-        );
-        document.querySelector("#f-production_plan_id").onchange = loadFinal;
-        bindForm(
-          (d) => ({
-            ...d,
-            production_completed:
-              document.querySelector("#final-completed").checked,
-            outputs: readLines("outputs"),
-            materials: readLines("materials"),
-          }),
-          target,
-        );
-        await loadFinal();
-        return;
-      }
+      if (target === "finished-reports") return createFinishedPartForm();
       if (target === "production-plans") {
         const items = await options("items"),
           orders = await options("customer-orders"),
@@ -194,6 +131,10 @@
               source_id: value("customer_order_id"),
             });
             if (!fresh()) return;
+            const startInput = document.querySelector('#f-start_date'), endInput = document.querySelector('#f-end_date');
+            startInput.max = r.latest_delivery_date;
+            endInput.max = r.latest_delivery_date;
+            startInput.onchange = () => { endInput.min = startInput.value || calendarToday(); };
             document.querySelector("#import-info").innerHTML =
               notice(r) +
               "<dl><dt>Khách hàng</dt><dd>" +
@@ -266,130 +207,47 @@
         return;
       }
       if (target === "purchase-orders") {
-        const items = (await options("items")).filter(
-            (i) => i.kind === "MATERIAL",
-          ),
-          suppliers = await options("suppliers"),
-          plans = (await options("business-plans")).filter(
-            (p) => p.type === "PURCHASE",
-          ),
-          reports = (await api("source-imports/purchase-report-options")).data;
-        openModal(
-          "Đơn mua nguyên vật liệu",
-          formWrap(
-            field("source_mode", "select", true, [
-              {
-                id: "MANUAL",
-                name: "Nhập thủ công (mua dự trữ / nhu cầu khác)",
-              },
-              { id: "REPORT", name: "Lấy từ báo cáo sản xuất" },
-              { id: "PLAN", name: "Lấy từ kế hoạch mua đã duyệt" },
-            ]) +
-              pick("production_report_id", reports, "Chọn báo cáo nhu cầu") +
-              pick("business_plan_id", plans, "Chọn kế hoạch mua") +
-              field("supplier_id", "select", true, suppliers) +
-              field("expected_delivery_date", "date") +
-              field("delivery_terms", "textarea") +
-              '<div class="span2" id="import-info"></div><div class="span2" id="import-lines"></div>',
-          ),
-        );
-        const sync = importer(
-          async (fresh) => {
-            const mode = value("source_mode");
-            for (const key of ["production_report_id", "business_plan_id"]) {
-              const el = document.querySelector("#f-" + key);
-              const on =
-                key ===
-                (mode === "REPORT"
-                  ? "production_report_id"
-                  : mode === "PLAN"
-                    ? "business_plan_id"
-                    : "");
-              el.disabled = !on;
-              el.required = on;
-              el.parentElement.hidden = !on;
-            }
-            document.querySelector("#f-supplier_id").disabled = mode === "PLAN";
-            document.querySelector("#f-supplier_id").parentElement.hidden =
-              mode === "PLAN";
-            if (mode === "MANUAL") {
-              rowsAt(
-                "import-lines",
-                "NVL cần mua",
-                items,
-                "lines",
-                ["quantity", "unit_price"],
-                [],
-                true,
-              );
-              return;
-            }
-            const id = value(
-              mode === "PLAN" ? "business_plan_id" : "production_report_id",
-            );
-            if (!id) return;
-            if (mode === "REPORT") {
-              const r = await preview(target, { source_id: id });
-              if (!fresh()) return;
-              document.querySelector("#import-info").innerHTML = notice(r);
-              rowsAt(
-                "import-lines",
-                "NVL còn thiếu",
-                items,
-                "lines",
-                ["quantity", "unit_price"],
-                r.lines,
-              );
-            } else {
-              const p = (await api("business-plans/" + id)).data;
-              if (!fresh()) return;
-              document.querySelector("#import-info").innerHTML =
-                '<div class="notice">Nhà cung cấp và số lượng theo kế hoạch đã duyệt. Nhập giá mua thực tế.</div>';
-              const opts = p.lines.map((l) => ({
-                id: l.id,
-                name: l.item_name + " · " + l.quantity,
-              }));
-              rowsAt(
-                "import-lines",
-                "Dòng kế hoạch mua",
-                opts,
-                "lines",
-                ["unit_price"],
-                p.lines.map((l) => ({
-                  item_id: l.id,
-                  unit_price: l.unit_price,
-                })),
-              );
-            }
-          },
-          ["import-lines", "import-info"],
-        );
-        for (const key of [
-          "source_mode",
-          "production_report_id",
-          "business_plan_id",
-        ])
-          document.querySelector("#f-" + key).onchange = sync;
-        bindForm(
-          (d) =>
-            d.source_mode === "PLAN"
-              ? {
-                  source_mode: d.source_mode,
-                  business_plan_id: d.business_plan_id,
-                  expected_delivery_date: d.expected_delivery_date,
-                  delivery_terms: d.delivery_terms,
-                  lines: readLines().map((l) => ({
-                    business_plan_line_id: l.item_id,
-                    unit_price: l.unit_price,
-                  })),
-                }
-              : { ...d, lines: readLines() },
-          target,
-        );
-        await sync();
-        return;
-      }
-      if (target === "lots") {
+        const items = (await options('items')).filter(i => i.kind === 'MATERIAL');
+        const suppliers = await options('suppliers');
+        const plans = (await options('business-plans')).filter(p => p.type === 'PURCHASE');
+        openModal('Mua nguyên vật liệu', formWrap(
+          field('source_mode','select',true,[{id:'MANUAL',name:'Tự nhập NVL cần mua'},{id:'PLAN',name:'Lấy từ kế hoạch mua NVL đã duyệt'}]) +
+          pick('business_plan_id',plans,'Chọn kế hoạch mua NVL') + field('expected_delivery_date','date') +
+          field('delivery_terms','textarea') + '<div class="span2" id="import-info"></div><div class="span2" id="import-lines"></div>'
+        ));
+        function mountPurchaseLines(lines, planMode) {
+          document.querySelector('#import-lines').innerHTML = '<h3>NVL cần mua — chọn nhà cung cấp cho từng loại</h3><div id="purchase-lines"></div>' + (planMode ? '' : '<button type="button" class="button small" id="add-purchase-line">＋ Thêm NVL</button>');
+          function add(l = {}) {
+            const row = document.createElement('div'); row.className='form-section'; row.dataset.section='lines';
+            row.innerHTML = '<div class="form-grid"><div class="field"><label>Nguyên vật liệu / đơn vị *</label><select data-key="item_id" aria-label="Nguyên vật liệu" '+(planMode?'disabled':'')+'>'+items.map(i=>'<option value="'+esc(i.id)+'" '+(String(i.id)===String(l.item_id)?'selected':'')+'>'+esc(i.name+' · '+(i.unit || i.unit_name || ''))+'</option>').join('')+'</select></div>' +
+              '<div class="field"><label>Số lượng *</label><input aria-label="Số lượng" data-key="quantity" type="number" min="0.001" step="0.001" required '+(planMode?'readonly':'')+' value="'+esc(numericInputValue(l.quantity || '1'))+'"></div>' +
+              '<div class="field"><label>Nhà cung cấp *</label><select aria-label="Nhà cung cấp" data-key="supplier_id" required><option value="">Chọn NCC cho NVL này</option>'+suppliers.map(s=>'<option value="'+esc(s.id)+'">'+esc(optionLabel(s))+'</option>').join('')+'</select></div>' +
+              '<div class="field"><label>Đơn giá mua *</label><input aria-label="Đơn giá mua" data-key="unit_price" type="number" min="0" step="0.0001" required value="'+esc(numericInputValue(l.unit_price || '0'))+'"></div></div>' +
+              (planMode ? '<input type="hidden" data-key="business_plan_line_id" value="'+esc(l.id)+'">' : '<button class="button small danger" type="button">Xóa dòng</button>');
+            if (!planMode) row.querySelector('button').onclick=()=>{row.remove();retryKey=crypto.randomUUID();};
+            document.querySelector('#purchase-lines').append(row);
+          }
+          lines.forEach(add);
+          if (!planMode) { if (!lines.length) add(); document.querySelector('#add-purchase-line').onclick=()=>add(); }
+        }
+        const sync = importer(async fresh => {
+          const planMode=value('source_mode')==='PLAN', select=document.querySelector('#f-business_plan_id'), date=document.querySelector('#f-expected_delivery_date');
+          select.disabled=!planMode;select.required=planMode;select.parentElement.hidden=!planMode;
+          date.readOnly=planMode;
+          if (!planMode) { mountPurchaseLines([],false); return; }
+          if (!select.value) {date.value='';return;}
+          const p=(await api('business-plans/'+select.value)).data;
+          if(!fresh())return;
+          date.value=p.planned_date;
+          document.querySelector('#import-info').innerHTML='<div class="notice">Số lượng và ngày mong nhận NVL lấy từ kế hoạch '+esc(p.code)+'. Bộ phận mua hàng chọn NCC và giá cho từng dòng.</div>';
+          mountPurchaseLines(p.lines,true);
+        },['import-info','import-lines']);
+        document.querySelector('#f-source_mode').onchange=()=>{document.querySelector('#f-business_plan_id').value='';document.querySelector('#f-expected_delivery_date').value='';return sync();};
+        document.querySelector('#f-business_plan_id').onchange=sync;
+        bindForm(d=>({source_mode:d.source_mode,...(d.source_mode==='PLAN'?{business_plan_id:d.business_plan_id}:{}),expected_delivery_date:d.expected_delivery_date,delivery_terms:d.delivery_terms,
+          lines:readLines().map(l=>d.source_mode==='PLAN'?{business_plan_line_id:l.business_plan_line_id,quantity:l.quantity,supplier_id:l.supplier_id,unit_price:l.unit_price}:l)}),target);
+        await sync();return;
+      }      if (target === "lots") {
         const sourceLines = await options("purchase-order-lines"),
           orders = [
             ...new Map(
@@ -419,15 +277,14 @@
               source_id: value("purchase_order_id"),
             });
             if (!fresh()) return;
-            document.querySelector("#import-info").innerHTML = notice(r);
-            rowsAt(
-              "import-lines",
-              "Lượng thực nhận — điều chỉnh theo hàng giao",
-              r.lines.map((l) => ({ id: l.item_id, name: l.item_name })),
-              "lines",
-              ["quantity"],
-              r.lines,
-            );
+            const suppliers = [...new Map(r.lines.map(l => [l.supplier_id, {id:l.supplier_id,name:l.supplier_name || 'Nhà cung cấp'}])).values()];
+            document.querySelector("#import-info").innerHTML = notice(r) + '<p>Mỗi lô thực nhận thuộc một nhà cung cấp.</p>' + field('receiving_supplier_id','select',true,suppliers);
+            const draw = () => {
+              const lines=r.lines.filter(l=>l.supplier_id===value('receiving_supplier_id'));
+              rowsAt('import-lines','Lượng thực nhận theo NCC — điều chỉnh theo hàng giao',lines.map(l=>({id:l.item_id,name:l.item_name})), 'lines',['quantity'],lines);
+            };
+            document.querySelector('#f-receiving_supplier_id').onchange=draw;
+            draw();
           },
           ["import-lines", "import-info"],
         );

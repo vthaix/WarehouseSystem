@@ -8,6 +8,7 @@ Dữ liệu test riêng từng UC (36 bộ chứng từ, gồm đơn chờ tiế
 
 | Tài khoản | Mật khẩu mẫu | Vai trò | Mã vai trò |
 | --- | --- | --- | --- |
+| `admin` | `123456` | Qu?n tr? h? th?ng | `ADMIN` |
 | `customer` | `123456` | Khách hàng | `CUSTOMER` |
 | `customer2` | `123456` | Khách hàng thứ hai | `CUSTOMER` |
 | `planner` | `123456` | Bộ phận lập kế hoạch | `PLANNER` |
@@ -16,7 +17,11 @@ Dữ liệu test riêng từng UC (36 bộ chứng từ, gồm đơn chờ tiế
 | `staff` | `123456` | Nhân viên kho | `WAREHOUSE_STAFF` |
 | `staff2` | `123456` | Nhân viên kho thứ hai | `WAREHOUSE_STAFF` |
 | `qc` | `123456` | Bộ phận QC/AC | `QC_INSPECTOR` |
+| `qc2` | `123456` | Nguyễn Minh Anh — QC/AC | `QC_INSPECTOR` |
+| `qc3` | `123456` | Trần Ngọc Hà — QC/AC | `QC_INSPECTOR` |
 | `stocktaker` | `123456` | Ban kiểm kê | `STOCKTAKER` |
+| `stocktaker2` | `123456` | Lê Hoàng Nam — Ban kiểm kê | `STOCKTAKER` |
+| `stocktaker3` | `123456` | Phạm Thanh Mai — Ban kiểm kê | `STOCKTAKER` |
 | `workshop` | `123456` | Chủ xưởng | `WORKSHOP_OWNER` |
 | `director` | `123456` | Ban giám đốc | `DIRECTOR` |
 
@@ -84,3 +89,5 @@ Tên database trong bảng dùng tiền tố mặc định `DB_NAME=KhoHang`; n�
 - Phân quyền: `src/services/domain/policy.js`, router và service của từng nghiệp vụ.
 
 Tài khoản này dùng đăng nhập ứng dụng, khác với tài khoản MySQL của từng service. Thông tin tài khoản CSDL xem [SERVICE_DATABASES.md](SERVICE_DATABASES.md).
+
+Danh m?c b?nh, ??n v?/gi? nh? cung c?p v? quy?n qu?n tr?: [QUAN_TRI_TAI_KHOAN_VA_DANH_MUC_BANH.md](QUAN_TRI_TAI_KHOAN_VA_DANH_MUC_BANH.md).

@@ -763,7 +763,7 @@ async function main() {
           description: "Công việc mẫu chưa bắt đầu",
           priority: "NORMAL",
           ...slot("generic-task"),
-          assignee_ids: [ids.purchaser],
+          assignee_ids: [ids.stocktaker, ids.qc],
         });
         return { task };
       },

@@ -1,6 +1,13 @@
 // Generated from src/config/navigation.js by npm run docs:sync.
 const warehouseNavigation = {
   "labels": {
+    "ADMIN": "Quản trị hệ thống",
+    "MINUTE_EXCEPTION": "Ngoại lệ trong biên bản",
+    "OPEN": "Chờ quản lý xử lý",
+    "RESOLVED": "Đã xử lý",
+    "LOT_INSPECTION": "Kiểm tra lô hàng",
+    "PART": "Từng phần",
+    "FINAL": "Tổng kết trước đây",
     "QC_FAILURE": "Hàng QC lỗi",
     "STOCKTAKE_DIFFERENCE": "Chênh lệch kiểm kê",
     "TIEN_DO": "Tiến độ",
@@ -60,6 +67,56 @@ const warehouseNavigation = {
   },
   "modules": [
     [
+      "material-prices",
+      "Đơn giá nguyên vật liệu",
+      "₫",
+      [
+        "WAREHOUSE_MANAGER",
+        "PURCHASER"
+      ],
+      [],
+      "/catalog/material-prices",
+      "Đơn vị tính và đơn giá NVL theo từng nhà cung cấp."
+    ],
+    [
+      "accounts",
+      "Quản lý tài khoản",
+      "♙",
+      [
+        "ADMIN"
+      ],
+      [
+        "ADMIN"
+      ],
+      "/admin/accounts",
+      "Thêm, sửa, xóa tài khoản và phân quyền sử dụng hệ thống."
+    ],
+    [
+      "warehouse-lookup",
+      "Tra cứu kho",
+      "▦",
+      [
+        "WAREHOUSE_MANAGER",
+        "WORKSHOP_OWNER"
+      ],
+      [],
+      "/warehouse/lookup",
+      "Xem sơ đồ vị trí, mặt hàng, lô và lượng tồn khả dụng."
+    ],
+    [
+      "inspection-counts",
+      "Quản lý kiểm kê",
+      "≡",
+      [
+        "STOCKTAKER"
+      ],
+      [
+        "STOCKTAKER"
+      ],
+      "/inspection-counts",
+      "Chọn công việc và ghi số đếm các dòng lô trong một lần."
+    ],
+    [
       "customer-returns",
       "Hàng khách trả",
       "↩",
@@ -81,8 +138,7 @@ const warehouseNavigation = {
       "◫",
       [
         "CUSTOMER",
-        "PLANNER",
-        "DIRECTOR"
+        "PLANNER"
       ],
       [
         "CUSTOMER"
@@ -97,9 +153,7 @@ const warehouseNavigation = {
       [
         "PLANNER",
         "DIRECTOR",
-        "PURCHASER",
-        "WORKSHOP_OWNER",
-        "WAREHOUSE_STAFF"
+        "PURCHASER"
       ],
       [
         "PLANNER"
@@ -112,24 +166,20 @@ const warehouseNavigation = {
       "Đơn mua hàng",
       "▧",
       [
-        "PURCHASER",
-        "WORKSHOP_OWNER",
-        "WAREHOUSE_STAFF",
-        "QC_INSPECTOR"
+        "PURCHASER"
       ],
       [
         "PURCHASER"
       ],
       "/purchases",
-      "Nhập thủ công hoặc lấy dữ liệu từ báo cáo, kế hoạch mua đã duyệt."
+      "Tự nhập hoặc lấy kế hoạch mua NVL đã duyệt; chọn NCC theo từng NVL."
     ],
     [
       "categories",
       "Danh mục",
       "▦",
       [
-        "WAREHOUSE_MANAGER",
-        "WORKSHOP_OWNER"
+        "WAREHOUSE_MANAGER"
       ],
       [
         "WAREHOUSE_MANAGER"
@@ -142,8 +192,7 @@ const warehouseNavigation = {
       "Mặt hàng",
       "◇",
       [
-        "WAREHOUSE_MANAGER",
-        "WORKSHOP_OWNER"
+        "WAREHOUSE_MANAGER"
       ],
       [
         "WAREHOUSE_MANAGER"
@@ -156,8 +205,7 @@ const warehouseNavigation = {
       "Kho hàng",
       "⌂",
       [
-        "WAREHOUSE_MANAGER",
-        "WORKSHOP_OWNER"
+        "WAREHOUSE_MANAGER"
       ],
       [
         "WAREHOUSE_MANAGER"
@@ -170,8 +218,7 @@ const warehouseNavigation = {
       "Vị trí lưu kho",
       "⊞",
       [
-        "WAREHOUSE_MANAGER",
-        "WORKSHOP_OWNER"
+        "WAREHOUSE_MANAGER"
       ],
       [
         "WAREHOUSE_MANAGER"
@@ -197,8 +244,7 @@ const warehouseNavigation = {
       "Lô hàng",
       "▥",
       [
-        "WAREHOUSE_MANAGER",
-        "WORKSHOP_OWNER"
+        "WAREHOUSE_MANAGER"
       ],
       [
         "WAREHOUSE_MANAGER"
@@ -212,9 +258,8 @@ const warehouseNavigation = {
       "⇄",
       [
         "WORKSHOP_OWNER",
-        "WAREHOUSE_STAFF",
         "WAREHOUSE_MANAGER",
-        "PLANNER"
+        "WAREHOUSE_STAFF"
       ],
       [
         "WORKSHOP_OWNER"
@@ -241,9 +286,7 @@ const warehouseNavigation = {
       "Kiểm tra QC / AC",
       "✓",
       [
-        "QC_INSPECTOR",
-        "DIRECTOR",
-        "WORKSHOP_OWNER"
+        "QC_INSPECTOR"
       ],
       [
         "QC_INSPECTOR"
@@ -258,8 +301,7 @@ const warehouseNavigation = {
       [
         "PLANNER",
         "DIRECTOR",
-        "WORKSHOP_OWNER",
-        "WAREHOUSE_STAFF"
+        "WORKSHOP_OWNER"
       ],
       [
         "PLANNER"
@@ -299,19 +341,16 @@ const warehouseNavigation = {
     ],
     [
       "stocktakes",
-      "Kiểm kê kho",
+      "Lập đợt kiểm kê",
       "≡",
       [
-        "DIRECTOR",
-        "STOCKTAKER",
-        "WAREHOUSE_MANAGER",
-        "QC_INSPECTOR"
+        "DIRECTOR"
       ],
       [
         "DIRECTOR"
       ],
       "/stocktakes",
-      "Chốt snapshot và kiểm đếm từng kho."
+      "Lập đợt, chọn phạm vi và phân công Ban kiểm kê / QC/AC."
     ],
     [
       "stocktake-minutes",
@@ -336,18 +375,17 @@ const warehouseNavigation = {
       [
         "DIRECTOR",
         "WAREHOUSE_MANAGER",
-        "QC_INSPECTOR"
+        "WORKSHOP_OWNER"
       ],
       [
-        "WAREHOUSE_MANAGER",
-        "QC_INSPECTOR"
+        "WAREHOUSE_MANAGER"
       ],
       "/approvals/exceptions",
       "Đề xuất điều chỉnh chênh lệch kiểm kê."
     ],
     [
       "tasks",
-      "Công việc",
+      "Quản lý công việc",
       "▢",
       [
         "DIRECTOR",
@@ -359,11 +397,9 @@ const warehouseNavigation = {
         "QC_INSPECTOR",
         "STOCKTAKER"
       ],
-      [
-        "DIRECTOR"
-      ],
+      [],
       "/tasks",
-      "Phân công và kiểm soát lịch nhân viên."
+      "Xem, sửa, hủy công việc và theo dõi kết quả thực hiện."
     ],
     [
       "reports/inventory",
@@ -410,9 +446,7 @@ const warehouseNavigation = {
         "DIRECTOR",
         "WORKSHOP_OWNER"
       ],
-      [
-        "WAREHOUSE_MANAGER"
-      ],
+      [],
       "/warehouse/records",
       "Tổng hợp phiếu kho từ các nhân viên."
     ],
@@ -429,6 +463,36 @@ const warehouseNavigation = {
     ]
   ],
   "fieldNames": {
+    "minute_author_id": "Nhân viên lập biên bản chung",
+    "minute_conclusion": "Kết luận biên bản",
+    "minute_lines": "Kết quả kiểm tra trong biên bản",
+    "requested_at": "Ngày giờ đề nghị thực hiện",
+    "workflow_source_id": "Nguồn yêu cầu",
+    "request_direction": "Thao tác",
+    "sale_plan_id": "Kế hoạch bán cần giao",
+    "source_lots": "Thông tin lô hàng nguồn",
+    "documents": "Các phiếu nhập / xuất",
+    "document_lines": "Chi tiết hàng thực nhập / xuất",
+    "document_code": "Mã phiếu",
+    "exception_mode": "Ngoại lệ",
+    "exception_description": "Mô tả ngoại lệ",
+    "exception_status": "Trạng thái ngoại lệ",
+    "owner_instruction": "Phương án / ý kiến của chủ xưởng",
+    "decision_status": "Kết quả xử lý",
+    "source_kind": "Nguồn biên bản",
+    "source_code": "Mã đợt nguồn",
+    "lot_code": "Mã lô",
+    "difference_quantity": "Chênh lệch số lượng",
+    "counted_quantity": "Số lượng kiểm đếm",
+    "counted_by": "Người kiểm đếm",
+    "counted_at": "Thời điểm kiểm đếm",
+    "KiemSoLuong": "Kiểm số lượng",
+    "KiemChatLuong": "Kiểm chất lượng",
+    "inspection_type": "Nhóm hàng",
+    "inspection_lots": "Các phần / dòng lô được giao",
+    "finished_report_code": "Báo cáo thành phẩm",
+    "lot_header_code": "Lô tổng",
+    "report_mode": "Hình thức báo cáo thành phẩm",
     "material_source": "Nguồn định lượng NVL",
     "customer_order_status": "Trạng thái đơn nguồn",
     "customer_note": "Ghi chú khách hàng",
@@ -537,7 +601,6 @@ const warehouseNavigation = {
     "required_quantity": "Nhu cầu",
     "used_quantity": "Đã sử dụng",
     "completed_date": "Ngày hoàn thành",
-    "lot_code": "Mã lô",
     "lines": "Chi tiết hàng",
     "outputs": "Thành phẩm",
     "materials": "Nguyên vật liệu",

@@ -1,3 +1,4 @@
+const confirmation=require('../../../../shared/planning-confirmation');
 const crypto = require("node:crypto");
 const C = require("../../../domain/core");
 const P = require("../../../domain/policy");
@@ -140,6 +141,7 @@ class ProductionPlanService {
         ...l,
         item_id: String(l.item_id),
       })),
+      finished_report_progress:await require('./finished-report-progress')(connection,id),
       outputs: outputs.map((row) => ({
         ...row,
         id: String(row.id),
@@ -304,7 +306,8 @@ class ProductionPlanService {
 
   async create(user, body, requestId) {
     P.role(user, ["PLANNER"]);
-    C.fields(body, [
+    confirmation.validate(body);
+    C.fields(body, ["confirm_plan_overage",
       "customer_order_id",
       "workshop_id",
       "start_date",
@@ -319,8 +322,8 @@ class ProductionPlanService {
       "VALIDATION_ERROR",
       "Đơn hàng hoặc xưởng không hợp lệ.",
     );
-    C.date(body.start_date, "start_date");
-    C.date(body.end_date, "end_date");
+    C.date(body.start_date, "start_date", true);
+    C.date(body.end_date, "end_date", true);
     C.fail(
       body.end_date < body.start_date,
       "VALIDATION_ERROR",
@@ -342,6 +345,7 @@ class ProductionPlanService {
       );
       C.fail(!order, "NOT_FOUND", "Không tìm thấy đơn hàng.", 404);
       C.state(order, ["RECEIVED", "APPROVED", "IN_PROGRESS"]);
+      require('../../../../shared/planning-dates').window(body.start_date, body.end_date, order.latest_delivery_date);
       const [workshops] = await connection.execute(
         "SELECT id FROM workshops WHERE id=? AND is_active=1",
         [body.workshop_id],
@@ -390,12 +394,9 @@ class ProductionPlanService {
       );
       for (const line of [...allocated, ...outputs]) {
         const key = String(line.item_id);
+        C.fail(!remaining.has(key),'SOURCE_MISMATCH','Mặt hàng không thuộc đơn hàng nguồn.');
         const rest = (remaining.get(key) || 0n) - C.qty(String(line.quantity));
-        C.fail(
-          rest < 0n,
-          "SOURCE_LIMIT_EXCEEDED",
-          "Tổng kế hoạch vượt số lượng đơn hàng.",
-        );
+        confirmation.check(rest < 0n,body.confirm_plan_overage,"Tổng kế hoạch vượt số lượng đơn hàng.");
         remaining.set(key, rest);
       }
       const code = "KSX-" + crypto.randomBytes(8).toString("hex").toUpperCase();
@@ -502,7 +503,8 @@ class ProductionPlanService {
   async update(user, id, body, requestId) {
     P.role(user, ["PLANNER"]);
     C.fail(!isId(id), "NOT_FOUND", "Không tìm thấy kế hoạch.", 404);
-    C.fields(body, [
+    confirmation.validate(body);
+    C.fields(body, ["confirm_plan_overage",
       "version",
       "workshop_id",
       "start_date",
@@ -565,6 +567,7 @@ class ProductionPlanService {
       C.fail(!workshops.length, "VALIDATION_ERROR", "Xưởng không hoạt động.");
       const start = body.start_date || asDate(plan.start_date);
       const end = body.end_date || asDate(plan.end_date);
+      require('../../../../shared/planning-dates').window(start, end, orders[0].latest_delivery_date);
       C.fail(
         end < start,
         "VALIDATION_ERROR",
@@ -605,13 +608,9 @@ class ProductionPlanService {
         );
         for (const line of [...allocated, ...outputs]) {
           const key = String(line.item_id);
-          const rest =
-            (remaining.get(key) || 0n) - C.qty(String(line.quantity));
-          C.fail(
-            rest < 0n,
-            "SOURCE_LIMIT_EXCEEDED",
-            "Tổng kế hoạch vượt số lượng đơn hàng.",
-          );
+          C.fail(!remaining.has(key),'SOURCE_MISMATCH','Mặt hàng không thuộc đơn hàng nguồn.');
+        const rest = (remaining.get(key) || 0n) - C.qty(String(line.quantity));
+          confirmation.check(rest < 0n,body.confirm_plan_overage,"Tổng kế hoạch vượt số lượng đơn hàng.");
           remaining.set(key, rest);
         }
         await connection.execute(
@@ -674,7 +673,8 @@ class ProductionPlanService {
   async review(user, id, body, key, requestId) {
     P.role(user, ["DIRECTOR"]);
     C.fail(!isId(id), "NOT_FOUND", "Không tìm thấy kế hoạch.", 404);
-    C.fields(body, ["version", "decision", "reason"]);
+    confirmation.validate(body);
+    C.fields(body, ["confirm_plan_overage","version", "decision", "reason"]);
     C.fail(
       !Number.isInteger(body.version) ||
         !["APPROVE", "REJECT"].includes(body.decision),
@@ -732,6 +732,8 @@ class ProductionPlanService {
       C.version(plan, body.version);
       C.state(plan, ["DRAFT"]);
       if (body.decision === "APPROVE") {
+        C.fail(!orders.length, 'NOT_FOUND', 'Không tìm thấy đơn nguồn.', 404);
+        require('../../../../shared/planning-dates').window(asDate(plan.start_date), asDate(plan.end_date), orders[0].latest_delivery_date);
         C.fail(
           !orders.length ||
             !["RECEIVED", "APPROVED", "IN_PROGRESS"].includes(orders[0].status),
@@ -755,13 +757,9 @@ class ProductionPlanService {
         );
         for (const line of allocated) {
           const key = String(line.item_id);
-          const rest =
-            (remaining.get(key) || 0n) - C.qty(String(line.quantity));
-          C.fail(
-            rest < 0n,
-            "SOURCE_LIMIT_EXCEEDED",
-            "Kế hoạch vượt số lượng đơn hàng.",
-          );
+          C.fail(!remaining.has(key),'SOURCE_MISMATCH','Mặt hàng không thuộc đơn hàng nguồn.');
+        const rest = (remaining.get(key) || 0n) - C.qty(String(line.quantity));
+          confirmation.check(rest < 0n,body.confirm_plan_overage,"Kế hoạch vượt số lượng đơn hàng.");
           remaining.set(key, rest);
         }
         await connection.execute(
@@ -811,6 +809,7 @@ class ProductionPlanService {
           JSON.stringify({ status: plan.status }),
           JSON.stringify({
             decision: body.decision,
+            confirm_plan_overage: body.confirm_plan_overage===true,
             reason: body.reason || null,
           }),
           requestId,

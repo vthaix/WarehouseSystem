@@ -130,7 +130,7 @@ function client() {
     const remainingOrder=await planner.call('/api/v1/source-imports/production-plans?source_id='+customerOrderId);assert.equal(remainingOrder.status,200);assert.deepEqual(remainingOrder.data.outputs,[]);
     const [[earlyWarehouse]]=await pool.execute('SELECT id FROM warehouses WHERE is_active=1 LIMIT 1');
     const [[earlyManager]]=await pool.execute("SELECT id FROM users WHERE username='manager'");
-    const planOnly=await workshop.call('/api/v1/stock-requests','POST',{purpose:'PRODUCTION_ISSUE',production_source_mode:'PLAN',production_plan_id:productionPlanId,workshop_id:workshopId,warehouse_id:String(earlyWarehouse.id),manager_id:String(earlyManager.id),requested_date:date,lines:[{item_id:String(items[0].id),quantity:'0.250'}]});
+    const planOnly=await workshop.call('/api/v1/stock-requests','POST',{purpose:'PRODUCTION_ISSUE',workflow_source_id:productionPlanId,workshop_id:workshopId,warehouse_id:String(earlyWarehouse.id),manager_id:String(earlyManager.id),requested_date:date,lines:[{item_id:String(items[0].id),quantity:'0.250'}]});
     assert.equal(planOnly.status,201,JSON.stringify(planOnly));planOnlyRequestId=planOnly.data.id;assert.equal(planOnly.data.production_report_id,null);
     const cancelledPlanOnly=await workshop.call('/api/v1/stock-requests/'+planOnlyRequestId,'DELETE',{version:planOnly.data.version});assert.equal(cancelledPlanOnly.status,200,JSON.stringify(cancelledPlanOnly));
     const actualReport = await workshop.call(
@@ -201,6 +201,7 @@ function client() {
     assert.equal(replay.status, 200, JSON.stringify(replay));
     await purchaser.login("purchaser");
     const purchase = await purchaser.call("/api/v1/purchase-orders", "POST", {
+      supplier_id: String(suppliers[0].id),
       business_plan_id: planId,
       expected_delivery_date: date,
       delivery_terms: "Giao tại kho.",
@@ -270,8 +271,8 @@ function client() {
     const [inspectors] = await pool.execute(
       "SELECT id FROM users WHERE username='qc' LIMIT 1",
     );
-    const start = new Date(Date.now() + 86400000).toISOString();
-    const end = new Date(Date.now() + 2 * 86400000).toISOString();
+    const start = date+'T08:00:00+07:00';
+    const end = date+'T09:00:00+07:00';
     const schedule = await director.call("/api/v1/quality-campaigns", "POST", {
       campaign_type: "QUALITY_CHECK",
       quality_kind: "MATERIAL",
@@ -324,18 +325,21 @@ function client() {
     const [managers] = await pool.execute(
       "SELECT id FROM users WHERE username='manager' LIMIT 1",
     );
-    const qcReceipt=await workshop.call('/api/v1/source-imports/stock-requests?purpose=PURCHASE_RECEIPT&source_id='+purchaseId+'&workshop_id='+workshopId+'&warehouse_id='+String(warehouses[0].id));
+    const qcReceipt=await workshop.call('/api/v1/source-imports/stock-requests?workflow_source=true&purpose=PURCHASE_RECEIPT&source_id='+planId+'&workshop_id='+workshopId+'&warehouse_id='+String(warehouses[0].id));
     assert.equal(qcReceipt.status,200,JSON.stringify(qcReceipt));assert.equal(qcReceipt.data.lines[0].quantity,'1.500');assert.equal(qcReceipt.data.lines.length,1);
     const request = await workshop.call("/api/v1/stock-requests", "POST", {
       purpose: "PURCHASE_RECEIPT",
-      purchase_order_id: purchaseId,
+      workflow_source_id: planId,
       workshop_id: workshopId,
       warehouse_id: String(warehouses[0].id),
       manager_id: String(managers[0].id),
       requested_date: date,
+      requested_at:date+'T10:30:00+07:00',
       lines: [{ item_id: String(items[0].id), quantity: "1.500" }],
     });
     assert.equal(request.status, 201, JSON.stringify(request));
+    assert.equal(request.data.requested_at,new Date(date+'T10:30:00+07:00').toISOString());
+    assert.ok(request.data.source_lots.some(l=>l.lot_id===String(lotId)));
     stockRequestId = request.data.id;
     assert.equal(request.data.lines[0].remaining_quantity, "1.500");
     const [locations] = await pool.execute(

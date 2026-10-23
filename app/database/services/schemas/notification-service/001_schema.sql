@@ -18,7 +18,7 @@ CREATE TABLE `ThongBao` (
   UNIQUE KEY `DuyNhat_ThongBao_1` (`MaNguoiDung`,`KhoaThongBao`),
   KEY `ChiMuc_ThongBao_1` (`MaNguoiDung`,`NgayDoc`,`NgayTao`),
   CONSTRAINT `KhoaNgoai_ThongBao_MaNguoiDung` FOREIGN KEY (`MaNguoiDung`) REFERENCES `KhoHang_Identity`.`NguoiDung` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=850 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=976 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `LichSuCSDL` (
   `Ten` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
   `MaBam` char(64) COLLATE utf8mb4_unicode_ci NOT NULL,

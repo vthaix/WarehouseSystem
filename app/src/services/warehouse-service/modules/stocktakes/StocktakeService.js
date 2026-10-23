@@ -174,7 +174,7 @@ class StocktakeService {
       "note",
       "warehouses",
     ]);
-    C.date(b.planned_date, "planned_date");
+    C.date(b.planned_date, "planned_date", true);
     const start = new Date(b.start_at),
       end = new Date(b.end_at);
     C.fail(
@@ -236,7 +236,7 @@ class StocktakeService {
         );
         C.fail(!warehouses.length, "VALIDATION_ERROR", "Kho không hoạt động.");
         const [assigned] = await c.execute(
-          "SELECT DISTINCT u.id FROM users u JOIN user_roles ur ON ur.user_id=u.id JOIN roles r ON r.id=ur.role_id WHERE u.status='ACTIVE' AND r.code='STOCKTAKER' AND u.id IN (" +
+          "SELECT DISTINCT u.id FROM users u JOIN user_roles ur ON ur.user_id=u.id JOIN roles r ON r.id=ur.role_id WHERE u.status='ACTIVE' AND r.code IN ('STOCKTAKER','QC_INSPECTOR') AND u.id IN (" +
             w.assignee_ids.map(() => "?").join(",") +
             ")",
           w.assignee_ids,
@@ -347,7 +347,7 @@ class StocktakeService {
     return this.get(u, s);
   }
   async counts(u, s, w, b) {
-    P.role(u, ["STOCKTAKER"]);
+    P.role(u, ["STOCKTAKER", "QC_INSPECTOR"]);
     C.fields(b, ["lines"]);
     C.fail(
       !Array.isArray(b.lines) || !b.lines.length || b.lines.length > 500,
@@ -398,7 +398,7 @@ class StocktakeService {
     return this.lines(u, s, w);
   }
   async complete(u, s, w, b) {
-    P.role(u, ["STOCKTAKER"]);
+    P.role(u, ["STOCKTAKER", "QC_INSPECTOR"]);
     C.fields(b, ["version"]);
     await this.tx(async (c) => {
       const scope = await this.scope(c, u, s, w, true);
@@ -423,31 +423,7 @@ class StocktakeService {
     return this.lines(u, s, w);
   }
   async minutesList(u, q = {}) {
-    P.role(u, P.read["stocktake-minutes"]);
-    C.fields(q, ["page", "per_page", "q", "sort", "status"]);
-    const p = paginate(q);
-    const where = u.roles.includes("DIRECTOR")
-      ? ""
-      : " AND (EXISTS(SELECT 1 FROM stocktake_assignments a WHERE a.stocktake_warehouse_id=w.id AND a.user_id=?) OR EXISTS(SELECT 1 FROM PhanCongKetLuanKiemKe a WHERE a.MaPhieuKiemKe=w.id AND a.MaNguoiDung=?))";
-    const params = u.roles.includes("DIRECTOR") ? [] : [u.id,u.id];
-    const base =
-      " FROM stocktake_warehouses w WHERE w.remarks IS NOT NULL" + where;
-    const [[n]] = await this.pool.execute(
-      "SELECT COUNT(*) AS total" + base,
-      params,
-    );
-    const [r] = await this.pool.execute(
-      "SELECT w.*" + base + " ORDER BY w.id DESC LIMIT ? OFFSET ?",
-      [...params, String(p.per_page), String(p.offset)],
-    );
-    return {
-      data: r.map((v) => this.minuteDTO(u, v)),
-      meta: {
-        ...p,
-        total: Number(n.total),
-        total_pages: Math.ceil(Number(n.total) / p.per_page),
-      },
-    };
+    return require('./inspection-minutes').list(this,u,q);
   }
   minuteDTO(u, r) {
     return {
@@ -461,6 +437,7 @@ class StocktakeService {
     };
   }
   async minuteGet(u, minute) {
+    if(/^LOT-[1-9]\d*$/.test(String(minute)))return require('./inspection-minutes').get(this,u,String(minute).slice(4));
     P.role(u, P.read["stocktake-minutes"]);
     const [[r]] = await this.pool.execute(
       "SELECT * FROM stocktake_warehouses WHERE id=? AND remarks IS NOT NULL",
@@ -471,6 +448,7 @@ class StocktakeService {
     return this.minuteDTO(u, r);
   }
   async minuteWrite(u, minute, b, action, request) {
+    if(b.inspection_campaign_id!==undefined||/^LOT-[1-9]\d*$/.test(String(minute)))return require('./inspection-minutes').write(this,u,minute?String(minute).slice(4):null,b,action,request);
     P.role(u, ["STOCKTAKER", "QC_INSPECTOR"]);
     C.fields(
       b,

@@ -86,16 +86,18 @@ class WarehouseRecordService {
       404,
     );
     const [documents] = await connection.execute(
-      "SELECT id,code,type,posted_at,posted_by FROM stock_documents WHERE stock_request_id=? ORDER BY posted_at,id",
+      "SELECT id,code,type,posted_at,posted_by,note FROM stock_documents WHERE stock_request_id=? ORDER BY posted_at,id",
       [rows[0].stock_request_id],
     );
     const [lines] = await connection.execute(
       "SELECT r.item_id,i.code AS item_code,i.name AS item_name,r.quantity AS requested_quantity,COALESCE(SUM(d.quantity),0) AS posted_quantity FROM stock_request_lines r JOIN items i ON i.id=r.item_id LEFT JOIN stock_document_lines d ON d.stock_request_line_id=r.id WHERE r.stock_request_id=? GROUP BY r.id ORDER BY r.id",
       [rows[0].stock_request_id],
     );
+    const [documentLines]=await connection.execute('SELECT dl.*,d.code AS document_code,d.type,l.code AS lot_code,h.code AS lot_header_code,i.name AS item_name,u.name AS unit FROM stock_document_lines dl JOIN stock_documents d ON d.id=dl.stock_document_id JOIN lots l ON l.id=dl.lot_id JOIN items i ON i.id=l.item_id JOIN units u ON u.id=i.unit_id LEFT JOIN lot_headers h ON h.id=l.lot_header_id WHERE d.stock_request_id=? ORDER BY d.id,dl.id',[rows[0].stock_request_id]);
     return {
       ...normalize(rows[0]),
       documents: documents.map(normalize),
+      document_lines:documentLines.map(normalize),
       lines: lines.map(normalize),
     };
   }

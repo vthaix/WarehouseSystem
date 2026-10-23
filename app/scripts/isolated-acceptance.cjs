@@ -95,6 +95,8 @@ async function run(script) {
       "commerce-smoke",
       ...(splitSource ? ['partial-receipt-smoke','category-images-smoke'] : []),
       ...(splitSource ? ['preproduction-smoke'] : []),
+      ...(splitSource ? ['finished-parts-task-smoke'] : []),
+      ...(splitSource ? ['accounts-catalog-smoke','planning-confirmation-smoke'] : []),
       ...(splitSource ? ['reset-tools-smoke'] : []),
     ])
       await run("scripts/" + script + ".cjs");

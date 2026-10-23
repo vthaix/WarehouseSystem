@@ -1,9 +1,14 @@
+function calendarToday() { return new Date().toLocaleDateString('en-CA', {timeZone:'Asia/Ho_Chi_Minh'}); }
+function optionLabel(value) {
+  if (value && typeof value === 'object') return [value.code, value.name || value.title || value.full_name].filter(Boolean).join(' · ') || ('#' + value.id);
+  return labels[value] || value;
+}
 function numericInputValue(value) {
   return String(value ?? "").replace(/(\.\d*?[1-9])0+$|\.0+$/, "$1");
 }
 function inputField(k, type = "text", required = true, opts = [], value = "") {
   if (type === "number") value = numericInputValue(value);
-  return `<div class="field"><label for="f-${k}">${esc(fieldLabel(k))}${required ? " *" : ""}</label>${type === "select" ? `<select id="f-${k}" name="${k}" ${required ? "required" : ""}>${opts.map((o) => `<option value="${esc(o.id ?? o)}" ${String(o.id ?? o) === String(value) ? "selected" : ""}>${esc(o.name || labels[o] || o)}</option>`).join("")}</select>` : type === "textarea" ? `<textarea id="f-${k}" name="${k}" rows="3" ${required ? "required" : ""}>${esc(value)}</textarea>` : `<input id="f-${k}" name="${k}" type="${type}" ${required ? "required" : ""} ${type === "number" ? 'min="0" step="0.001"' : ""} value="${esc(value)}">`}</div>`;
+  return `<div class="field"><label for="f-${k}">${esc(fieldLabel(k))}${required ? " *" : ""}</label>${type === "select" ? `<select id="f-${k}" name="${k}" ${required ? "required" : ""}>${opts.map((o) => `<option value="${esc(o.id ?? o)}" ${String(o.id ?? o) === String(value) ? "selected" : ""}>${esc(optionLabel(o))}</option>`).join("")}</select>` : type === "textarea" ? `<textarea id="f-${k}" name="${k}" rows="3" ${required ? "required" : ""}>${esc(value)}</textarea>` : `<input id="f-${k}" name="${k}" type="${type}" ${required ? "required" : ""} ${type === "number" ? 'min="0" step="0.001"' : type === "date" ? 'min="' + calendarToday() + '"' : type === "datetime-local" ? 'min="' + calendarToday() + 'T00:00"' : ""} value="${esc(value)}">`}</div>`;
 }
 async function options(resource) {
   return (await api("lookup/" + resource)).data;
@@ -54,7 +59,7 @@ function lineEditor(
         const row = document.createElement("div");
         row.className = "line-row";
         row.dataset.section = section;
-        row.innerHTML = `<div><label>Mặt hàng *</label><select data-key="item_id" aria-label="Mặt hàng">${items.map((i) => `<option value="${i.id}" ${r.item_id === i.id ? "selected" : ""}>${esc((i.name || i.item_name) + ((i.unit || i.unit_name) ? " · " + (i.unit || i.unit_name) : ""))}</option>`).join("")}</select></div>${fields.map((k) => `<div><label>${esc(fieldLabel(k))}${k === "expiry_date" ? "" : " *"}</label><input aria-label="${esc(fieldLabel(k))}" data-key="${k}" type="${k.includes("date") ? "date" : k === "lot_code" ? "text" : "number"}" value="${esc(numericInputValue(r[k] ?? (k === "unit_price" ? "0" : k.includes("quantity") ? "1" : "")))}" ${k === "unit_price" ? 'min="0" step="0.0001"' : k.includes("quantity") ? 'min="0" step="0.001"' : ""} ${k === "expiry_date" ? "" : "required"}></div>`).join("")}<button class="button small danger" type="button" aria-label="Xóa dòng">✕</button>`;
+        row.innerHTML = `<div><label>Mặt hàng *</label><select data-key="item_id" aria-label="Mặt hàng">${items.map((i) => `<option value="${i.id}" ${r.item_id === i.id ? "selected" : ""}>${esc((i.name || i.item_name) + ((i.unit || i.unit_name) ? " · " + (i.unit || i.unit_name) : ""))}</option>`).join("")}</select></div>${fields.map((k) => `<div><label>${esc(fieldLabel(k))}${k === "expiry_date" ? "" : " *"}</label><input aria-label="${esc(fieldLabel(k))}" data-key="${k}" type="${k.includes("date") ? "date" : k === "lot_code" ? "text" : "number"}" value="${esc(numericInputValue(r[k] ?? (k === "unit_price" ? "0" : k.includes("quantity") ? "1" : "")))}" ${k === "unit_price" ? 'min="0" step="0.0001"' : k.includes("quantity") ? 'min="0" step="0.001"' : ""} ${k.includes("date") ? 'min="' + calendarToday() + '"' : ""} ${k === "expiry_date" ? "" : "required"}></div>`).join("")}<button class="button small danger" type="button" aria-label="Xóa dòng">✕</button>`;
         row.querySelector("button").onclick = () => {
           row.remove();
           retryKey = crypto.randomUUID();
@@ -68,6 +73,42 @@ function lineEditor(
     },
   };
 }
+function employeePicker(users, selected = [], roles = ['STOCKTAKER', 'QC_INSPECTOR']) {
+  return '<div class="span2 employee-picker" data-employees="'+esc(JSON.stringify(users))+'"><select id="f-assignee_ids" multiple hidden aria-hidden="true">' +
+    roles.map((role, index) => '<optgroup label="' + (role === 'STOCKTAKER' ? 'Ban kiểm kê' : 'QC/AC') + '">' +
+      users.filter(u=>u.roles.includes(role) && !roles.slice(0,index).some(r=>u.roles.includes(r))).map(u=>'<option value="'+esc(u.id)+'" '+(selected.map(String).includes(String(u.id))?'selected':'')+'>'+esc(u.full_name || u.name || u.username)+'</option>').join('') + '</optgroup>').join('') +
+    '</select><div class="employee-groups">'+roles.map(role=>'<section class="employee-group" data-employee-role="'+role+'"><div class="employee-group-heading"><strong>'+(role==='STOCKTAKER'?'Ban kiểm kê':'QC/AC')+'</strong><button type="button" class="button small" data-pick-employees="'+role+'">Chọn nhân viên</button></div><div class="employee-selected">'+users.filter(u=>u.roles.includes(role)&&selected.map(String).includes(String(u.id))).map(u=>'<span class="employee-name">'+esc(u.full_name||u.name||u.username)+'</span>').join('')+'</div></section>').join('')+'</div></div>';
+}
+function selectedEmployees() {
+  const ids=[...document.querySelector('#f-assignee_ids').selectedOptions].map(o=>o.value);
+  if(!ids.length) throw new Error('Vui lòng chọn ít nhất một nhân viên được phân công.');
+  return ids;
+}
+document.addEventListener('click', event=>{
+  const button=event.target.closest('[data-pick-employees]');
+  if(!button)return;
+  const picker=button.closest('.employee-picker'), role=button.dataset.pickEmployees;
+  const users=JSON.parse(picker.dataset.employees).filter(u=>u.roles.includes(role));
+  const select=picker.querySelector('#f-assignee_ids');
+  const selected=new Set([...select.selectedOptions].map(o=>o.value));
+  const dialog=document.createElement('dialog');dialog.className='employee-dialog';
+  dialog.innerHTML='<form method="dialog"><div class="employee-dialog-heading"><div><h2>Chọn nhân viên '+(role==='STOCKTAKER'?'Ban kiểm kê':'QC/AC')+'</h2><p>Chọn từng nhân viên tham gia công việc.</p></div><button class="button" value="cancel" aria-label="Đóng danh sách">✕</button></div><div class="employee-profiles">'+(users.length?users.map(u=>'<label class="employee-profile"><input type="checkbox" value="'+esc(u.id)+'" '+(selected.has(String(u.id))?'checked':'')+'><span class="employee-avatar">'+esc((u.full_name||u.name||u.username||'?').trim().slice(0,1))+'</span><span><strong>'+esc(u.full_name||u.name||u.username)+'</strong><small>Tài khoản: '+esc(u.username||'—')+'</small><small>'+(role==='STOCKTAKER'?'Ban kiểm kê':'QC/AC')+' · Đang hoạt động</small></span></label>').join(''):'<p>Chưa có nhân viên đang hoạt động thuộc bộ phận này.</p>')+'</div><div class="form-actions"><button class="button" value="cancel">Hủy</button><button class="button primary" value="confirm">Xác nhận</button></div></form>';
+  document.body.append(dialog);
+  dialog.addEventListener('close',()=>{
+    if(dialog.returnValue==='confirm'){
+      const groupIds=new Set(users.map(u=>String(u.id)));
+      const checked=new Set([...dialog.querySelectorAll('input:checked')].map(i=>i.value));
+      for(const option of select.options)if(groupIds.has(option.value))option.selected=checked.has(option.value);
+      const allUsers=JSON.parse(picker.dataset.employees);
+      for(const group of picker.querySelectorAll('[data-employee-role]')){
+        group.querySelector('.employee-selected').innerHTML=allUsers.filter(u=>u.roles.includes(group.dataset.employeeRole)&&[...select.selectedOptions].some(o=>o.value===String(u.id))).map(u=>'<span class="employee-name">'+esc(u.full_name||u.name||u.username)+'</span>').join('');
+      }
+      select.dispatchEvent(new Event('input',{bubbles:true}));
+    }
+    dialog.remove();
+  },{once:true});
+  dialog.showModal();
+});
 function readLines(section = "lines") {
   return [...document.querySelectorAll(`[data-section="${section}"]`)].map(
     (r) =>
@@ -432,13 +473,13 @@ async function createForm() {
         f("priority", "select", true, ["LOW", "NORMAL", "HIGH"]) +
         f("start_at", "datetime-local") +
         f("end_at", "datetime-local") +
-        f("assignee_ids", "select", true, await options("users")) +
+        employeePicker(await options("users")) +
         f("description", "textarea", false);
       builder = (d) => ({
         ...d,
         start_at: new Date(d.start_at + "+07:00").toISOString(),
         end_at: new Date(d.end_at + "+07:00").toISOString(),
-        assignee_ids: [d.assignee_ids],
+        assignee_ids: selectedEmployees(),
       });
     } else throw new Error("Biểu mẫu này chưa được hỗ trợ.");
     openModal("Tạo mới · " + moduleInfo()[1], formWrap(html));
@@ -449,9 +490,11 @@ async function createForm() {
         const purchase = document.querySelector("#f-type").value === "PURCHASE";
         for (const k of ["supplier_id", "customer_id", "customer_order_id"]) {
           const el = document.querySelector("#f-" + k);
-          el.required = k === "supplier_id" ? purchase : !purchase;
-          el.disabled = k === "supplier_id" ? !purchase : purchase;
+          el.required = k !== "supplier_id" && !purchase;
+          el.disabled = k === "supplier_id" || purchase;
+          el.parentElement.hidden = k === "supplier_id" || purchase;
         }
+        document.querySelector('label[for="f-planned_date"]').textContent = purchase ? 'Ngày mong nhận NVL *' : 'Ngày dự kiến giao thành phẩm *';
       };
       document.querySelector("#f-type").addEventListener("change", sync);
       sync();
@@ -803,15 +846,6 @@ async function editForm(r) {
       html =
         f("planned_date", "date", true, [], r.planned_date) +
         f("note", "textarea", false, [], r.note || "") +
-        (r.type === "PURCHASE"
-          ? f(
-              "supplier_id",
-              "select",
-              true,
-              await options("suppliers"),
-              r.supplier_id,
-            )
-          : "") +
         e.html;
       builder = (d) => ({ version: r.version, ...d, lines: readLines() });
     } else if (current === "stock-requests") {
@@ -969,20 +1003,14 @@ async function editForm(r) {
         f("title", "text", true, [], r.title) +
         f("start_at", "datetime-local", true, [], localInput(r.start_at)) +
         f("end_at", "datetime-local", true, [], localInput(r.end_at)) +
-        f(
-          "assignee_ids",
-          "select",
-          true,
-          await options("users"),
-          r.assignee_ids[0],
-        ) +
+        employeePicker(await options("users"), r.assignee_ids) +
         f("description", "textarea", false, [], r.description || "");
       builder = (d) => ({
         version: r.version,
         ...d,
         start_at: new Date(d.start_at + "+07:00").toISOString(),
         end_at: new Date(d.end_at + "+07:00").toISOString(),
-        assignee_ids: [d.assignee_ids],
+        assignee_ids: selectedEmployees(),
       });
     } else if (current === "stocktake-minutes")
       html = f("remarks", "textarea", true, [], r.remarks);

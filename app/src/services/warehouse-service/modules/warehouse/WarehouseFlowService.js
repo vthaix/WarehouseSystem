@@ -111,17 +111,22 @@ class WarehouseFlowService {
       "SELECT id,code,name FROM warehouse_locations WHERE warehouse_id=? AND is_active=1 ORDER BY id",
       [request.warehouse_id],
     );
+    let lotScope='',lotParams=[];
+    if(request.production_source_mode==='MANUAL'){lotScope=' AND l.production_receipt_request_id=?';lotParams=[requestId];}
+    else if(request.purpose==='PURCHASE_RECEIPT'){lotScope=' AND l.purchase_order_line_id IN (SELECT id FROM purchase_order_lines WHERE purchase_order_id=?)';lotParams=[request.purchase_order_id];}
+    else if(request.purpose==='PRODUCTION_RECEIPT'){lotScope=' AND l.id IN (SELECT lot_id FROM finished_report_outputs WHERE finished_report_id=?)';lotParams=[request.production_report_id];}
+    else if(request.purpose==='SALE_ISSUE'){lotScope=' AND l.id IN (SELECT o.lot_id FROM finished_report_outputs o JOIN business_plans p ON p.finished_report_id=o.finished_report_id WHERE p.id=?)';lotParams=[request.business_plan_id];}
     const [lots] = await this.pool.execute(
-      "SELECT l.id,l.code,l.item_id,l.received_quantity,l.qc_status,q.passed_quantity,COALESCE((SELECT SUM(d.quantity) FROM stock_document_lines d JOIN stock_documents doc ON doc.id=d.stock_document_id WHERE d.lot_id=l.id AND doc.type='IN'),0) AS posted_quantity FROM lots l JOIN qc_inspection_lines q ON q.lot_id=l.id JOIN qc_inspections qi ON qi.id=q.qc_inspection_id AND qi.status='RECORDED' WHERE l.qc_status IN ('PASSED','PARTIAL') AND (l.expiry_date IS NULL OR l.expiry_date>=CURRENT_DATE)"+(request.production_source_mode==='MANUAL'?' AND l.production_receipt_request_id=?':'')+" ORDER BY l.id LIMIT 500",
-      request.production_source_mode==='MANUAL'?[requestId]:[],
+      "SELECT l.id,l.code,l.item_id,l.received_quantity,l.qc_status,q.passed_quantity,COALESCE((SELECT SUM(d.quantity) FROM stock_document_lines d JOIN stock_documents doc ON doc.id=d.stock_document_id WHERE d.lot_id=l.id AND doc.type='IN'),0) AS posted_quantity FROM lots l JOIN qc_inspection_lines q ON q.lot_id=l.id JOIN qc_inspections qi ON qi.id=q.qc_inspection_id AND qi.status='RECORDED' WHERE l.qc_status IN ('PASSED','PARTIAL') AND (l.expiry_date IS NULL OR l.expiry_date>=CURRENT_DATE)"+lotScope+" ORDER BY l.id LIMIT 500",
+      lotParams,
     );
     const [balances] = await this.pool.execute(
       "SELECT b.lot_id,b.location_id,b.quality_bucket,b.quantity FROM inventory_balances b JOIN warehouse_locations loc ON loc.id=b.location_id WHERE loc.warehouse_id=?",
       [request.warehouse_id],
     );
     const [allocations] = await this.pool.execute(
-      "SELECT * FROM stock_allocations WHERE stock_request_id=?" +
-        (query.task_id ? " AND task_id=?" : ""),
+      "SELECT a.* FROM stock_allocations a JOIN tasks t ON t.id=a.task_id WHERE a.stock_request_id=? AND t.status<>'CANCELLED'" +
+        (query.task_id ? " AND a.task_id=?" : ""),
       query.task_id ? [requestId, query.task_id] : [requestId],
     );
     const visibleAllocations = allocations.filter(
@@ -150,7 +155,7 @@ class WarehouseFlowService {
         )
         .map((line) => ({
           ...line,
-          unit: "",
+          unit: line.unit||"",
           lots: lots
             .filter(
               (lot) =>
@@ -557,6 +562,7 @@ class WarehouseFlowService {
           assignee_id: assigneeId,
           code,
         });
+        await connection.execute("INSERT INTO notifications(user_id,subject,body,resource_type,resource_id,business_key) VALUES (?,?,?,'tasks',?,?) ON DUPLICATE KEY UPDATE id=notifications.id",[assigneeId,'Phân công '+(request.type==='IN'?'nhập':'xuất')+' kho '+request.code,'Đối chiếu giấy tờ và ghi lượng thực tế trong công việc được giao.',created.insertId,'warehouse-task-'+created.insertId+'-assigned']);
         for (const line of body.allocations.filter(
           (entry) => String(entry.assignee_id) === assigneeId,
         ))
@@ -1087,6 +1093,7 @@ class WarehouseFlowService {
         ],
       );
       const result = await this.document(user, created.insertId, connection);
+      await connection.execute("INSERT INTO notifications(user_id,subject,body,resource_type,resource_id,business_key) SELECT DISTINCT u.id,?,?,'stock-documents',?,? FROM users u JOIN user_roles ur ON ur.user_id=u.id JOIN roles ro ON ro.id=ur.role_id WHERE u.status='ACTIVE' AND (ro.code='DIRECTOR' OR (ro.code='WAREHOUSE_MANAGER' AND u.id=?) OR (ro.code='WORKSHOP_OWNER' AND EXISTS(SELECT 1 FROM workshop_users wu WHERE wu.user_id=u.id AND wu.workshop_id=?))) ON DUPLICATE KEY UPDATE id=notifications.id",['Phiếu '+(request.type==='IN'?'nhập':'xuất')+' kho mới: '+code,'Nhân viên đã ghi lượng thực tế; hồ sơ kho được cập nhật.',created.insertId,'stock-document-'+created.insertId+'-posted',request.manager_id,request.workshop_id]);
       await connection.execute(
         "UPDATE idempotency_records SET response_status=200,response_body=? WHERE id=?",
         [JSON.stringify(result), record.id],

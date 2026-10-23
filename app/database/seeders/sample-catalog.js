@@ -1,5 +1,6 @@
 // Development catalog only. Never fabricate balances, posted documents or sessions.
 async function seedSampleCatalog(c) {
+  try{const [[r]]=await c.execute("SELECT COUNT(*) AS total FROM TrangThaiDichVu WHERE Ma='018_bakery_catalog'");if(Number(r.total))return;}catch(e){if(e.code!=='ER_NO_SUCH_TABLE')throw e;}
   async function insert(table, fields, values) {
     await c.execute(
       `INSERT INTO ${table} (${fields.join(",")}) VALUES (${fields.map(() => "?").join(",")}) ON DUPLICATE KEY UPDATE id = id`,
@@ -74,7 +75,7 @@ async function seedSampleCatalog(c) {
   await insert(
     "workshops",
     ["code", "name", "address", "is_active"],
-    ["XUONG-02", "Xưởng nướng và đóng gói bánh", "Địa chỉ xưởng mẫu", 1],
+    ["XUONG-02", "Xưởng bánh bông lan Sweet Bakery", "Địa chỉ xưởng mẫu", 1],
   );
   const items = [
     [

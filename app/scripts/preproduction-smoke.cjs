@@ -88,6 +88,11 @@ function ok(r, status = 200) {
   const estimate = ok(
     await planner.call("production-plans/recipe-estimate", "POST", { outputs }),
   );
+  const shiftDay = days => new Date(Date.parse(date + 'T00:00:00Z') + days*86400000).toISOString().slice(0,10);
+  for (const dates of [{start_date:shiftDay(-1),end_date:date},{start_date:date,end_date:shiftDay(1)}]) {
+    const invalid = await planner.call('production-plans','POST',{customer_order_id:order.id,workshop_id:String(w.workshop_id),...dates,outputs,materials:[]});
+    assert.equal(invalid.status,422,JSON.stringify(invalid));
+  }
   assert.equal(
     estimate.materials.find((l) => l.item_id === byCode["NVL-001"])
       .required_quantity,
@@ -105,6 +110,7 @@ function ok(r, status = 200) {
     201,
   );
   assert.equal(plan.order_lines.length, 2);
+  assert.equal((await planner.call('production-plans/'+plan.id,'PATCH',{version:plan.version,end_date:shiftDay(1)})).status,422);
   assert.equal(plan.delivery_address, "PREPRODUCTION multi-product fixture");
   assert.equal(
     plan.materials.find((l) => l.item_id === byCode["NVL-001"])
@@ -191,6 +197,13 @@ function ok(r, status = 200) {
   const [[supplier]] = await pool.query(
     "SELECT id FROM suppliers WHERE is_active=1 ORDER BY id LIMIT 1",
   );
+  const manualBuy = ok(await planner.call('business-plans', 'POST', {
+    type: 'PURCHASE', planned_date: date, note: 'Manual purchasing plan',
+    lines: [{ item_id: comparison.lines[0].item_id, quantity: '1.000', unit_price: '1000.0000' }],
+  }), 201);
+  assert.equal(manualBuy.production_report_id, null);
+  assert.equal(manualBuy.production_plan_id, null);
+  assert.equal(manualBuy.supplier_id, null);
   const buy = ok(
     await planner.call("business-plans", "POST", {
       type: "PURCHASE",
@@ -203,10 +216,13 @@ function ok(r, status = 200) {
           quantity: "1.000",
           unit_price: "1000.0000",
         },
+        {item_id:comparison.lines[1].item_id,quantity:'1.000',unit_price:'2000.0000'},
       ],
     }),
     201,
   );
+  assert.equal(buy.supplier_id,null,'Planner does not select the supplier');
+  assert.equal((await planner.call('business-plans/'+buy.id,'PATCH',{version:buy.version,planned_date:shiftDay(1)})).status,422);
   ok(
     await director.call(`business-plans/${buy.id}/review`, "POST", {
       version: buy.version,
@@ -218,6 +234,49 @@ function ok(r, status = 200) {
     ["buy-plan-" + buy.id + "-approved"],
   );
   assert.ok(Number(purchaseNotice.n) > 0);
+  const purchaser=client(), manager=client();
+  await purchaser.login('purchaser'); await manager.login('manager');
+  const [suppliers]=await pool.query('SELECT id FROM suppliers WHERE is_active=1 ORDER BY id LIMIT 2');
+  assert.equal(suppliers.length,2);
+  const purchaseBody={source_mode:'PLAN',business_plan_id:buy.id,delivery_terms:'NCC theo tung NVL',
+    lines:buy.lines.map((line,i)=>({business_plan_line_id:line.id,unit_price:'1000.0000',supplier_id:String(suppliers[i].id)}))};
+  assert.equal((await purchaser.call('purchase-orders','POST',{...purchaseBody,expected_delivery_date:shiftDay(1)})).status,422);
+  assert.equal((await purchaser.call('purchase-orders','POST',{source_mode:'REPORT',production_report_id:report.id})).status,422);
+  assert.equal((await purchaser.call('purchase-orders','POST',{...purchaseBody,lines:purchaseBody.lines.map((l,i)=>i?{...l,supplier_id:'999999999999'}:l)})).status,422);
+  assert.equal((await purchaser.call('purchase-orders','POST',{source_mode:'MANUAL',expected_delivery_date:shiftDay(-1),delivery_terms:'Past date rejected',lines:[{item_id:comparison.lines[0].item_id,quantity:'1',unit_price:'1',supplier_id:String(suppliers[0].id)}]})).status,422);
+  const bought=ok(await purchaser.call('purchase-orders','POST',purchaseBody),201);
+  assert.equal(bought.supplier_id,null);
+  assert.equal(bought.expected_delivery_date,date);
+  assert.equal(new Set(bought.lines.map(l=>l.supplier_id)).size,2);
+  assert.ok(bought.lines.every(l=>l.supplier_name));
+  const mixed=await manager.call('lots','POST',{code:'MIXED-'+crypto.randomBytes(5).toString('hex'),lines:bought.lines.map(l=>({purchase_order_line_id:l.id,received_quantity:'1.000'}))});
+  assert.equal(mixed.status,422,'A received lot cannot mix suppliers');
+  const [[inspector]]=await pool.execute("SELECT id FROM users WHERE username='qc'");
+  const plannedQcBody={campaign_type:'QUALITY_CHECK',quality_kind:'MATERIAL',source_mode:'PURCHASE_PLAN',source_plan_id:buy.id,planned_date:date,start_at:date+'T08:00:00+07:00',end_at:date+'T09:00:00+07:00',location:'QC dự kiến từ kế hoạch mua',assignee_ids:[String(inspector.id)],lot_ids:[]};
+  const plannedQc=ok(await director.call('quality-campaigns','POST',plannedQcBody),201);
+  assert.equal(plannedQc.source_plan_id,buy.id);assert.deepEqual(plannedQc.lot_ids,[]);
+  assert.equal((await director.call('quality-campaigns/'+plannedQc.id+'/start','POST',{version:plannedQc.version})).status,409);
+  assert.equal((await director.call('quality-campaigns','POST',{...plannedQcBody,start_at:shiftDay(-1)+'T08:00:00+07:00'})).status,422);
+  const futureBuy=ok(await planner.call('business-plans','POST',{type:'PURCHASE',planned_date:shiftDay(2),lines:[{item_id:comparison.lines[0].item_id,quantity:'1.000',unit_price:'1.0000'}]}),201);
+  ok(await director.call('business-plans/'+futureBuy.id+'/review','POST',{version:futureBuy.version,decision:'APPROVE'}));
+  const tooEarly=await director.call('quality-campaigns','POST',{...plannedQcBody,source_plan_id:futureBuy.id,start_at:date+'T08:00:00+07:00'});
+  assert.equal(tooEarly.status,422,'QC may not start before the purchase plan receipt date');
+  assert.equal((await director.call('quality-campaigns/'+plannedQc.id+'/bind-lots','POST',{version:plannedQc.version,lot_ids:['999999999']})).status,422);
+  const receivedLots=[];
+  for (const l of bought.lines) {
+    const shipment=ok(await manager.call('lots','POST',{code:'NCC-'+crypto.randomBytes(5).toString('hex'),lines:[{purchase_order_line_id:l.id,received_quantity:'1.000'}]}),201);
+    receivedLots.push(shipment.lines[0].id);
+  }
+  const available=ok(await director.call('quality-campaigns/'+plannedQc.id));
+  assert.ok(receivedLots.every(id=>available.eligible_lots.some(l=>l.id===id)));
+  const bound=ok(await director.call('quality-campaigns/'+plannedQc.id+'/bind-lots','POST',{version:available.version,lot_ids:receivedLots}));
+  assert.deepEqual(new Set(bound.lot_ids),new Set(receivedLots));
+  assert.equal((await director.call('quality-campaigns/'+plannedQc.id+'/bind-lots','POST',{version:available.version,lot_ids:receivedLots})).status,409);
+  const productionSources=ok(await director.call('quality-campaign-sources'));
+  const expectedFinished=productionSources.plans.find(p=>p.source_mode==='PRODUCTION_PLAN'&&p.id===plan.id);
+  assert.ok(expectedFinished);
+  const futureFinished=ok(await director.call('quality-campaigns','POST',{...plannedQcBody,quality_kind:'FINISHED_PRODUCT',source_mode:'PRODUCTION_PLAN',source_plan_id:plan.id,planned_date:expectedFinished.expected_date,start_at:expectedFinished.expected_date+'T08:00:00+07:00',end_at:expectedFinished.expected_date+'T09:00:00+07:00'}),201);
+  assert.equal(futureFinished.expected_date,expectedFinished.expected_date);
   assert.equal(
     (
       await workshop.call("production-report-images", "POST", {

@@ -4,6 +4,9 @@ class NotificationService {
   constructor(pool) {
     this.pool = pool;
   }
+  async badges(user) {
+    return require('./function-badges')(this.pool,user);
+  }
   async list(user, query = {}) {
     const { page, per_page, offset } = paginate(query);
     const unread = query.unread_only === "true" ? " AND read_at IS NULL" : "";

@@ -1,4 +1,7 @@
 const labels = {
+  ADMIN:'Quản trị hệ thống',
+  MINUTE_EXCEPTION:'Ngoại lệ trong biên bản',OPEN:'Chờ quản lý xử lý',RESOLVED:'Đã xử lý',
+  LOT_INSPECTION:'Kiểm tra lô hàng',PART:'Từng phần',FINAL:'Tổng kết trước đây',
   QC_FAILURE:'Hàng QC lỗi', STOCKTAKE_DIFFERENCE:'Chênh lệch kiểm kê',
   TIEN_DO:'Tiến độ',SU_CO:'Sự cố',NHU_CAU:'Thiếu / nhu cầu NVL',
   RELEASE: "Giải phóng / tái kiểm để sử dụng lại", SCRAP: "Tiêu hủy", RETURN_SUPPLIER: "Trả nhà cung cấp",
@@ -51,6 +54,10 @@ const labels = {
   FINISHED_PRODUCT: "Thành phẩm",
 };
 const modules = [
+  ['material-prices','Đơn giá nguyên vật liệu','₫',['WAREHOUSE_MANAGER','PURCHASER'],[],'/catalog/material-prices','Đơn vị tính và đơn giá NVL theo từng nhà cung cấp.'],
+  ['accounts','Quản lý tài khoản','♙',['ADMIN'],['ADMIN'],'/admin/accounts','Thêm, sửa, xóa tài khoản và phân quyền sử dụng hệ thống.'],
+  ['warehouse-lookup','Tra cứu kho','▦',['WAREHOUSE_MANAGER','WORKSHOP_OWNER'],[],'/warehouse/lookup','Xem sơ đồ vị trí, mặt hàng, lô và lượng tồn khả dụng.'],
+  ['inspection-counts','Quản lý kiểm kê','≡',['STOCKTAKER'],['STOCKTAKER'],'/inspection-counts','Chọn công việc và ghi số đếm các dòng lô trong một lần.'],
   ["customer-returns", "Hàng khách trả", "↩", ["WAREHOUSE_MANAGER", "WAREHOUSE_STAFF", "QC_INSPECTOR", "DIRECTOR"], ["WAREHOUSE_MANAGER"], "/customer-returns", "Nhận hàng theo phiếu giao gốc và cách ly để QC kiểm tra."],
   [
     "customer-orders",
@@ -77,7 +84,7 @@ const modules = [
     ["PURCHASER", "WORKSHOP_OWNER", "WAREHOUSE_STAFF", "QC_INSPECTOR"],
     ["PURCHASER"],
     "/purchases",
-    "Nhập thủ công hoặc lấy dữ liệu từ báo cáo, kế hoạch mua đã duyệt.",
+    "Tự nhập hoặc lấy kế hoạch mua NVL đã duyệt; chọn NCC theo từng NVL.",
   ],
   [
     "categories",
@@ -189,12 +196,12 @@ const modules = [
   ],
   [
     "stocktakes",
-    "Kiểm kê kho",
+    "Lập đợt kiểm kê",
     "≡",
-    ["DIRECTOR", "STOCKTAKER", "WAREHOUSE_MANAGER", "QC_INSPECTOR"],
+    ["DIRECTOR"],
     ["DIRECTOR"],
     "/stocktakes",
-    "Chốt snapshot và kiểm đếm từng kho.",
+    "Lập đợt, chọn phạm vi và phân công Ban kiểm kê / QC/AC.",
   ],
   [
     "stocktake-minutes",
@@ -208,14 +215,14 @@ const modules = [
     "exception-proposals",
     "Xử lý ngoại lệ",
     "△",
-    ["DIRECTOR", "WAREHOUSE_MANAGER", "QC_INSPECTOR"],
-    ["WAREHOUSE_MANAGER", "QC_INSPECTOR"],
+    ["DIRECTOR", "WAREHOUSE_MANAGER", "WORKSHOP_OWNER"],
+    ["WAREHOUSE_MANAGER"],
     "/approvals/exceptions",
     "Đề xuất điều chỉnh chênh lệch kiểm kê.",
   ],
   [
     "tasks",
-    "Công việc",
+    "Quản lý công việc",
     "▢",
     [
       "DIRECTOR",
@@ -227,9 +234,9 @@ const modules = [
       "QC_INSPECTOR",
       "STOCKTAKER",
     ],
-    ["DIRECTOR"],
+    [],
     "/tasks",
-    "Phân công và kiểm soát lịch nhân viên.",
+    "Xem, sửa, hủy công việc và theo dõi kết quả thực hiện.",
   ],
   [
     "reports/inventory",
@@ -263,7 +270,7 @@ const modules = [
     "Hồ sơ kho tổng hợp",
     "▨",
     ["WAREHOUSE_MANAGER", "DIRECTOR", "WORKSHOP_OWNER"],
-    ["WAREHOUSE_MANAGER"],
+    [],
     "/warehouse/records",
     "Tổng hợp phiếu kho từ các nhân viên.",
   ],
@@ -278,6 +285,15 @@ const modules = [
   ],
 ];
 function columnsFor(n) {
+  if(n==='material-prices')return [['code','Mã NVL'],['name','Nguyên vật liệu'],['unit','Đơn vị tính'],['reference_price','Giá tham khảo (đ/đơn vị)']];
+  if(n==='accounts')return [['username','Tên đăng nhập'],['full_name','Họ và tên'],['roles','Vai trò'],['status','Trạng thái']];
+  if(n==='production-plans')return [['code','Kế hoạch sản xuất'],['customer_order_code','Đơn khách hàng'],['workshop_name','Xưởng phụ trách'],['start_date','Ngày bắt đầu'],['end_date','Ngày hoàn thành'],['status','Trạng thái']];
+  if(n==='business-plans')return [['code','Kế hoạch'],['type','Loại kế hoạch'],['planned_date','Ngày kế hoạch'],['status','Trạng thái']];
+  if(n==='purchase-orders')return [['code','Đơn mua NVL'],['expected_delivery_date','Ngày dự kiến nhận'],['status','Trạng thái']];
+  if(n==='stock-requests')return [['code','Yêu cầu'],['purpose','Nghiệp vụ'],['requested_at','Ngày giờ thực hiện'],['status','Trạng thái']];
+  if(n==='stock-documents')return [['code','Phiếu kho'],['type','Loại phiếu'],['posted_at','Ngày giờ ghi phiếu'],['status','Trạng thái']];
+  if(n==='inspection-counts')return [['code','Mã công việc'],['title','Công việc'],['start_at','Bắt đầu'],['status','Trạng thái']];
+  if(n==='exception-proposals')return [['code','Mã ngoại lệ'],['type','Nguồn'],['reason','Vấn đề cần xử lý'],['status','Trạng thái']];
   if(n==='categories')return [['image_path','Ảnh'],['code','Mã'],['name','Tên'],['is_active','Hoạt động']];
   if(n==='production-reports')return [['code','Mã báo cáo'],['production_plan_code','Kế hoạch'],['report_purpose','Mục đích'],['progress_percentage','Tiến độ (%)'],['status','Trạng thái']];
   if(n === "customer-returns")return [["code","Mã hàng trả"],["return_warehouse_id","Kho nhận"],["return_receiver_id","Nhân viên nhận"],["status","Trạng thái"],["created_at","Ngày lập"]];
@@ -307,10 +323,10 @@ function columnsFor(n) {
     ];
   if (n === "reports/inventory")
     return [
-      ["warehouse_id", "Kho"],
+      ["warehouse_name", "Kho"],
       ["item_name", "Mặt hàng"],
-      ["lot_id", "Lô"],
-      ["location_id", "Vị trí"],
+      ["lot_code", "Lô"],
+      ["location_code", "Vị trí"],
       ["quality_bucket", "Chất lượng"],
       ["quantity", "Tồn"],
     ];
@@ -318,7 +334,7 @@ function columnsFor(n) {
     return [
       ["warehouse_id", "Kho"],
       ["item_name", "Mặt hàng"],
-      ["system_quantity", "Snapshot"],
+      ["system_quantity", "Số lượng ghi nhận"],
       ["actual_quantity", "Thực tế"],
       ["difference", "Chênh lệch"],
     ];
@@ -339,7 +355,7 @@ function columnsFor(n) {
   if (n === "stocktakes")
     return [
       ["code", "Mã đợt"],
-      ["campaign_type", "Loại đợt"],
+      ["quality_kind", "Nhóm hàng"],
       ["planned_date", "Ngày"],
       ["location", "Địa điểm"],
       ["status", "Trạng thái"],
@@ -361,6 +377,12 @@ function columnsFor(n) {
   ];
 }
 const fieldNames = {
+  minute_author_id:'Nhân viên lập biên bản chung',minute_conclusion:'Kết luận biên bản',minute_lines:'Kết quả kiểm tra trong biên bản',
+  requested_at:'Ngày giờ đề nghị thực hiện',workflow_source_id:'Nguồn yêu cầu',request_direction:'Thao tác',sale_plan_id:'Kế hoạch bán cần giao',source_lots:'Thông tin lô hàng nguồn',documents:'Các phiếu nhập / xuất',document_lines:'Chi tiết hàng thực nhập / xuất',document_code:'Mã phiếu',
+  exception_mode:'Ngoại lệ',exception_description:'Mô tả ngoại lệ',exception_status:'Trạng thái ngoại lệ',owner_instruction:'Phương án / ý kiến của chủ xưởng',decision_status:'Kết quả xử lý',
+  source_kind:'Nguồn biên bản',source_code:'Mã đợt nguồn',lot_code:'Mã phần / dòng lô',difference_quantity:'Chênh lệch số lượng',
+  counted_quantity:'Số lượng kiểm đếm',counted_by:'Người kiểm đếm',counted_at:'Thời điểm kiểm đếm',KiemSoLuong:'Kiểm số lượng',KiemChatLuong:'Kiểm chất lượng',
+  inspection_type:'Nhóm hàng',inspection_lots:'Các phần / dòng lô được giao',finished_report_code:'Báo cáo thành phẩm',lot_header_code:'Lô tổng',report_mode:'Hình thức báo cáo thành phẩm',
   material_source:'Nguồn định lượng NVL',
   customer_order_status:'Trạng thái đơn nguồn',customer_note:'Ghi chú khách hàng',
   image_path:'Ảnh danh mục',
@@ -474,4 +496,17 @@ const fieldNames = {
   location_id: "Vị trí",
 };
 
+// Navigation represents UC entry points. Read access to source data used by a
+// different UC does not automatically add that management screen to the menu.
+const menuRoles={
+  'customer-orders':['CUSTOMER','PLANNER'],
+  'business-plans':['PLANNER','DIRECTOR','PURCHASER'],
+  'purchase-orders':['PURCHASER'],
+  categories:['WAREHOUSE_MANAGER'],items:['WAREHOUSE_MANAGER'],warehouses:['WAREHOUSE_MANAGER'],
+  'warehouse-locations':['WAREHOUSE_MANAGER'],suppliers:['WAREHOUSE_MANAGER'],lots:['WAREHOUSE_MANAGER'],
+  'stock-requests':['WORKSHOP_OWNER','WAREHOUSE_MANAGER','WAREHOUSE_STAFF'],
+  'qc-inspections':['QC_INSPECTOR'],
+  'production-plans':['PLANNER','DIRECTOR','WORKSHOP_OWNER'],
+};
+for(const item of modules){if(menuRoles[item[0]])item[3]=menuRoles[item[0]];item[4]=item[4].filter(role=>item[3].includes(role)||item[3].includes('*'));}
 module.exports = { labels, modules, columnsFor, fieldNames };

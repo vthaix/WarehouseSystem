@@ -37,43 +37,14 @@ class ExceptionService {
             : [],
     };
   }
-  async list(u, q = {}) {
-    P.role(u, P.read["exception-proposals"]);
-    C.fields(q, ["page", "per_page", "q", "status", "sort"]);
-    const p = paginate(q),
-      params = [],
-      where = [];
-    if (q.q) {
-      C.text(q.q, "q", 150);
-      where.push("code LIKE ?");
-      params.push("%" + q.q + "%");
-    }
-    if (q.status) {
-      where.push("status=?");
-      params.push(q.status);
-    }
-    const base =
-      " FROM exception_proposals" +
-      (where.length ? " WHERE " + where.join(" AND ") : "");
-    const [[n]] = await this.pool.execute(
-      "SELECT COUNT(*) AS total" + base,
-      params,
-    );
-    const [rows] = await this.pool.execute(
-      "SELECT *" + base + " ORDER BY id DESC LIMIT ? OFFSET ?",
-      [...params, String(p.per_page), String(p.offset)],
-    );
-    return {
-      data: rows.map((r) => this.dto(u, r)),
-      meta: {
-        ...p,
-        total: Number(n.total),
-        total_pages: Math.ceil(Number(n.total) / p.per_page),
-      },
-    };
-  }
+  async list(u,q={}) { return require('./minute-exceptions').list(this,u,q); }
   async get(u, r) {
+    if(/^LOT-[1-9]\d*$/.test(String(r)))return require('./minute-exceptions').get(this,u,String(r).slice(4));
+    C.fail(!u.roles.some(x=>['DIRECTOR','WAREHOUSE_MANAGER','QC_INSPECTOR'].includes(x)),'NOT_FOUND','Không tìm thấy đề xuất thuộc xưởng của bạn.',404);
     P.role(u, P.read["exception-proposals"]);
+    return this.legacyGet(u,r);
+  }
+  async legacyGet(u,r) {
     C.fail(!id(r), "NOT_FOUND", "Không tìm thấy đề xuất.", 404);
     const [[row]] = await this.pool.execute(
       "SELECT * FROM exception_proposals WHERE id=?",
@@ -91,7 +62,7 @@ class ExceptionService {
     return { ...this.dto(u, row), allocations: allocations.map(norm), decision_history: history.map(norm), reinspections: reinspections.map(r=>({...norm(r),result:r.KetLuan,KetLuan:undefined})) };
   }
   async create(u, b, request) {
-    P.role(u, ["WAREHOUSE_MANAGER", "QC_INSPECTOR"]);
+    P.role(u, ["WAREHOUSE_MANAGER"]);
     C.fields(b, [
       "stocktake_id",
       "warehouse_id",
@@ -223,6 +194,7 @@ class ExceptionService {
     return this.get(u, target);
   }
   async review(u, r, b, request) {
+    if(/^LOT-[1-9]\d*$/.test(String(r)))return require('./minute-exceptions').act(this,u,String(r).slice(4),b,'review',request);
     P.role(u, ["DIRECTOR"]);
     C.fields(b, ["version", "decision", "reason"]);
     b = {
@@ -269,6 +241,7 @@ class ExceptionService {
     return this.get(u, r);
   }
   async apply(u, r, b, request) {
+    if(/^LOT-[1-9]\d*$/.test(String(r)))return require('./minute-exceptions').act(this,u,String(r).slice(4),b,'apply',request);
     P.role(u, ["WAREHOUSE_MANAGER"]);
     C.fields(b, ["version"]);
     await this.tx(async (c) => {
@@ -411,7 +384,7 @@ class ExceptionService {
       await c.execute("UPDATE exception_proposals SET version=version+1 WHERE id=?", [r]);
       await this.audit(c, u, r, "REINSPECT_"+b.result, request);
     });
-    return this.get(u, r);
+    return this.legacyGet(u, r);
   }
 
   async release(c, u, row, request) {

@@ -23,7 +23,7 @@ function assertReady(row, today = C.today()) {
 }
 async function saleReadiness(connection, businessPlanId, workshopId) {
   const [[row]] = await connection.execute(
-    "SELECT r.status AS report_status,r.production_completed,p.status AS production_status,p.workshop_id,o.latest_delivery_date FROM business_plans b JOIN finished_reports r ON r.id=b.finished_report_id JOIN production_plans p ON p.id=r.production_plan_id JOIN customer_orders o ON o.id=b.customer_order_id WHERE b.id=? AND b.type='SALE' AND b.status IN ('APPROVED','IN_PROGRESS') AND p.customer_order_id=o.id FOR UPDATE",
+    "SELECT r.status AS report_status,CASE WHEN r.KieuThanhPham='PART' AND EXISTS(SELECT 1 FROM finished_reports final WHERE final.production_plan_id=r.production_plan_id AND final.production_completed=1 AND final.status='SUBMITTED') THEN 1 ELSE r.production_completed END AS production_completed,p.status AS production_status,p.workshop_id,o.latest_delivery_date FROM business_plans b JOIN finished_reports r ON r.id=b.finished_report_id JOIN production_plans p ON p.id=r.production_plan_id JOIN customer_orders o ON o.id=b.customer_order_id WHERE b.id=? AND b.type='SALE' AND b.status IN ('APPROVED','IN_PROGRESS') AND p.customer_order_id=o.id FOR UPDATE",
     [businessPlanId],
   );
   assertReady(row);

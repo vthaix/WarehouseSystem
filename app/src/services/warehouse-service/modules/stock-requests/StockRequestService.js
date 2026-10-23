@@ -60,6 +60,7 @@ class StockRequestService {
   constructor(pool) {
     this.pool = pool;
   }
+  async workflowSources(user){return require('./request-workflow').options(this.pool,user);}
 
   visible(user, row) {
     if (
@@ -92,6 +93,8 @@ class StockRequestService {
     ])
       if (result[field] != null) result[field] = String(result[field]);
     result.requested_date = asDate(result.requested_date);
+    result.requested_at=result.ThoiDiemThucHien?new Date(result.ThoiDiemThucHien).toISOString():null;
+    delete result.ThoiDiemThucHien;
     result.actions = [];
     if (
       user.roles.includes("WORKSHOP_OWNER") &&
@@ -230,7 +233,7 @@ class StockRequestService {
     P.role(user, P.read["stock-requests"]);
     const row = await this.load(connection, user, id);
     const [lines] = await connection.execute(
-      "SELECT l.*,i.code AS item_code,i.name AS item_name FROM stock_request_lines l JOIN items i ON i.id=l.item_id WHERE l.stock_request_id=? ORDER BY l.id",
+      "SELECT l.*,i.code AS item_code,i.name AS item_name,u.name AS unit FROM stock_request_lines l JOIN items i ON i.id=l.item_id JOIN units u ON u.id=i.unit_id WHERE l.stock_request_id=? ORDER BY l.id",
       [id],
     );
     const [posted] = await connection.execute(
@@ -250,6 +253,7 @@ class StockRequestService {
     }
     const result = {
       ...this.present(user, row),
+      source_lots:await require('./request-workflow').lots(connection,row),
       lines: lines.map((line) => ({
         ...line,
         id: String(line.id),
@@ -318,7 +322,7 @@ class StockRequestService {
     }
     if (purpose === "PURCHASE_RECEIPT") {
       const [plans] = await connection.execute(
-        "SELECT COALESCE(r.workshop_id,s.workshop_id) AS workshop_id FROM business_plans p LEFT JOIN stock_requests r ON r.id=p.source_request_id LEFT JOIN production_plans s ON s.id=p.production_plan_id WHERE p.id=?",
+        "SELECT COALESCE(ps.workshop_id,r.workshop_id,s.workshop_id) AS workshop_id FROM business_plans p LEFT JOIN production_reports pr ON pr.id=p.production_report_id LEFT JOIN production_plans ps ON ps.id=pr.production_plan_id LEFT JOIN stock_requests r ON r.id=p.source_request_id LEFT JOIN production_plans s ON s.id=p.production_plan_id WHERE p.id=?",
         [source.business_plan_id],
       );
       sourceWorkshop = plans[0]?.workshop_id || null;
@@ -349,6 +353,13 @@ class StockRequestService {
           : C.qty(String(line.quantity)),
       ]),
     );
+    if(purpose==='PURCHASE_RECEIPT'||(purpose==='PRODUCTION_RECEIPT'&&source.KieuThanhPham==='PART')){
+      const [passed]=await connection.execute(purpose==='PURCHASE_RECEIPT'
+        ?"SELECT l.item_id,SUM(q.passed_quantity) AS quantity FROM lots l JOIN qc_inspection_lines q ON q.lot_id=l.id JOIN qc_inspections qi ON qi.id=q.qc_inspection_id AND qi.status='RECORDED' JOIN purchase_order_lines p ON p.id=l.purchase_order_line_id WHERE p.purchase_order_id=? GROUP BY l.item_id"
+        :"SELECT l.item_id,SUM(q.passed_quantity) AS quantity FROM finished_report_outputs o JOIN lots l ON l.id=o.lot_id JOIN qc_inspection_lines q ON q.lot_id=l.id JOIN qc_inspections qi ON qi.id=q.qc_inspection_id AND qi.status='RECORDED' WHERE o.finished_report_id=? GROUP BY l.item_id",[sourceId]);
+      const quality=new Map(passed.map(l=>[String(l.item_id),C.qty(String(l.quantity),false)]));
+      for(const [item,amount]of limits){const good=quality.get(item)||0n;limits.set(item,good<amount?good:amount);}
+    }
     if (purpose === "PRODUCTION_ISSUE" && mode === "PLAN") {
       const [actual] = await connection.execute("SELECT l.item_id,l.required_quantity FROM production_report_lines l JOIN production_reports r ON r.id=l.production_report_id WHERE r.production_plan_id=? AND r.status='SUBMITTED'", [sourceId]);
       if (actual.length) {
@@ -386,7 +397,7 @@ class StockRequestService {
       if (line.note !== undefined) C.text(line.note, "note", 5000, false);
     }
     const definition = sourceInfo?.definition || sources[purpose];
-    const aggregateByPlan = ['PRODUCTION_ISSUE','PRODUCTION_RECEIPT'].includes(purpose) && sourceInfo;
+    const aggregateByPlan = ['PRODUCTION_ISSUE','PRODUCTION_RECEIPT'].includes(purpose) && sourceInfo && !(purpose==='PRODUCTION_RECEIPT'&&sourceInfo.source.KieuThanhPham==='PART');
     const [allocated] = await connection.execute(
       `SELECT l.item_id,l.quantity FROM stock_request_lines l JOIN stock_requests r ON r.id=l.stock_request_id WHERE r.${aggregateByPlan ? "production_plan_id" : definition.field}=? AND r.purpose=? AND r.status<>'CANCELLED'${excludeId ? " AND r.id<>?" : ""} FOR UPDATE`,
       [aggregateByPlan ? sourceInfo.source.production_plan_id : sourceId, purpose, ...(excludeId ? [excludeId] : [])],
@@ -440,6 +451,12 @@ class StockRequestService {
 
   async create(user, body, requestId) {
     P.role(user, ["WORKSHOP_OWNER"]);
+    if(body.workflow_source_id!==undefined){
+      C.fields(body,['purpose','workflow_source_id','sale_plan_id','workshop_id','warehouse_id','manager_id','requested_date','requested_at','note','lines']);
+      const {workflow_source_id,sale_plan_id,...rest}=body;
+      const source=await require('./request-workflow').resolve(this.pool,user,body.purpose,workflow_source_id,body.workshop_id,sale_plan_id);
+      return this.create(user,{...rest,...source},requestId);
+    }
     if(body.purpose==='PRODUCTION_RECEIPT'&&body.production_source_mode==='MANUAL')return require('./partial-receipt').create(this,user,body,requestId);
     C.fields(body, [
       "purpose",
@@ -447,6 +464,7 @@ class StockRequestService {
       "workshop_id",
       "manager_id",
       "requested_date",
+      "requested_at",
       "purchase_order_id",
       "business_plan_id",
       "production_plan_id",
@@ -471,7 +489,8 @@ class StockRequestService {
       "Xưởng hoặc kho không hợp lệ.",
       403,
     );
-    C.date(body.requested_date, "requested_date");
+    C.date(body.requested_date, "requested_date", true);
+    const executionAt=require('./request-workflow').execution(body);
     if (body.note !== undefined) C.text(body.note, "note", 5000, false);
     for (const field of [
       "purchase_order_id",
@@ -549,11 +568,13 @@ class StockRequestService {
         ],
       );
       id = created.insertId;
+      await connection.execute('UPDATE stock_requests SET ThoiDiemThucHien=? WHERE id=?',[executionAt,id]);
       for (const line of lines)
         await connection.execute(
           "INSERT INTO stock_request_lines (stock_request_id,item_id,quantity,note) VALUES (?,?,?,?)",
           [id, line.item_id, line.quantity, line.note],
         );
+      if(managerId)await connection.execute("INSERT INTO notifications(user_id,subject,body,resource_type,resource_id,business_key) VALUES (?,?,?,'stock-requests',?,?) ON DUPLICATE KEY UPDATE id=notifications.id",[managerId,'Yêu cầu '+code+' cần phân công','Chủ xưởng đề nghị '+(definition.type==='IN'?'nhập':'xuất')+' kho; xem lô hàng và ngày giờ thực hiện.',id,'stock-request-'+id+'-created']);
       await connection.execute(
         "INSERT INTO audit_logs (actor_id,resource_type,resource_id,action,after_data,request_id) VALUES (?,'stock-requests',?,'CREATE',?,?)",
         [
@@ -578,6 +599,7 @@ class StockRequestService {
     C.fields(body, [
       "version",
       "requested_date",
+      "requested_at",
       "warehouse_id",
       "manager_id",
       "note",
@@ -589,14 +611,14 @@ class StockRequestService {
       "Thiếu phiên bản yêu cầu.",
     );
     C.fail(
-      !["requested_date", "warehouse_id", "manager_id", "note", "lines"].some(
+      !["requested_date", "requested_at", "warehouse_id", "manager_id", "note", "lines"].some(
         (field) => Object.hasOwn(body, field),
       ),
       "VALIDATION_ERROR",
       "Không có nội dung cần sửa.",
     );
     if (body.requested_date !== undefined)
-      C.date(body.requested_date, "requested_date");
+      C.date(body.requested_date, "requested_date", true);
     if (body.note !== undefined) C.text(body.note, "note", 5000, false);
     const connection = await this.pool.getConnection();
     try {
@@ -613,6 +635,7 @@ class StockRequestService {
         404,
       );
       const definition = this.definition(source[0].purpose,source[0].production_source_mode);
+      const executionAt=body.requested_date!==undefined||body.requested_at!==undefined?require('./request-workflow').execution(body,source[0]):null;
       C.fail(source[0].production_source_mode==='MANUAL','IMMUTABLE_RECEIPT','Đợt nhập đã ghi lô; hủy đợt chưa dùng rồi tạo lại thay vì sửa số lượng.',409);
       const sourceInfo = await this.source(
         connection,
@@ -681,6 +704,7 @@ class StockRequestService {
           id,
         ],
       );
+      if(executionAt)await connection.execute('UPDATE stock_requests SET ThoiDiemThucHien=? WHERE id=?',[executionAt,id]);
       await connection.execute(
         "INSERT INTO audit_logs (actor_id,resource_type,resource_id,action,before_data,after_data,request_id) VALUES (?,'stock-requests',?,'UPDATE',?,?,?)",
         [

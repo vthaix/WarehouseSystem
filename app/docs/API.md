@@ -1,5 +1,7 @@
 # API hiện hành
 
+Đính chính 22/10/2026: Công việc tạo trực tiếp hai loại kiểm tra. `GET /task-inspection-sources` trả lô TP và các phần theo **báo cáo thành phẩm đã gửi**, cùng nguồn NVL theo kế hoạch MUA. `POST /tasks` nhận `inspection_type=FINISHED_PRODUCT` với `lot_header_id`, `finished_report_ids`, hoặc `inspection_type=MATERIAL` với `material_source`; giữ tên/lịch/ưu tiên/nhân viên. Công việc và lịch QC tạo atomically, trạng thái đồng bộ khi bắt đầu/QC hoàn tất. `POST /finished-reports` nhận `report_mode=PART`, `production_completed=false` cho phần thường hoặc true cho phần cuối; mỗi báo cáo tạo dòng lô mới cùng lô tổng/KHSX, không tự cộng tồn. Bỏ report_mode giữ FINAL cho dữ liệu/API cũ. Báo cáo tiến độ không tạo phần lô. Chi tiết [CONG_VIEC_KIEM_TRA_LO.md](CONG_VIEC_KIEM_TRA_LO.md).
+
 Hợp nhất 14/10/2026 theo router, service owner và validation thực tế. Browser gọi cùng origin /api/v1 qua gateway; EJS không xử lý domain thay backend.
 
 ## Auth và bảo vệ request
@@ -30,11 +32,13 @@ Có version thì mutation phải gửi bản hiện hành. Idempotency-Key chỉ
 
 ## Nguồn nghiệp vụ
 
+Cập nhật mua NVL 22/10/2026: chỉ tạo PLAN/MANUAL. Dòng đơn mua nhận `supplier_id`; PLAN nhận `business_plan_line_id`, giá và NCC từng dòng, số lượng phải khớp nguồn. PLAN tự lấy `expected_delivery_date=planned_date`, không bắt buộc client gửi lại; gửi khác nguồn bị chặn. Header supplier_id chỉ là giá trị chung suy ra (NULL nếu nhiều NCC). `supplier_id` gửi vào kế hoạch MUA không còn quyết định NCC. Xem [MUA_NVL_VA_RANG_BUOC_NGAY.md](MUA_NVL_VA_RANG_BUOC_NGAY.md).
+
 | Nhóm | Field/chế độ và quy tắc |
 | --- | --- |
 | KHSX | customer_order_id, workshop_id, start_date/end_date, outputs/materials/note; NVL gốc +10% một lần |
 | Kế hoạch MUA/BAN | type PURCHASE/SALE, production_report_id theo đúng loại nguồn; liên kết đơn cho bán không thay nguồn tổng kết |
-| Đơn mua | source_mode PLAN/REPORT/MANUAL; business_plan_id hoặc production_report_id theo chế độ, supplier_id, ngày/điều kiện giao, lines |
+| Đơn mua | source_mode PLAN/MANUAL; business_plan_id ở PLAN; lines[].supplier_id chọn từng NVL, ngày PLAN tự lấy planned_date, điều kiện giao/đơn giá do purchaser nhập |
 | Báo cáo đang SX | production_plan_id, report_purpose TIEN_DO/SU_CO/NHU_CAU, note/progress_percentage/send_to_planner; chỉ NHU_CAU có dòng NVL |
 | Tổng kết TP | production_plan_id, production_completed=true, completed_date, outputs/materials thực tế; gửi chuyển KHSX COMPLETED |
 | Yêu cầu NVL | purpose PRODUCTION_ISSUE, production_source_mode PLAN/REPORT; cùng hạn mức KHSX |
@@ -60,3 +64,11 @@ Xem [UI_SPEC.md](UI_SPEC.md), [MODULE_MATRIX.md](MODULE_MATRIX.md), [IMPLEMENTAT
 
 
 Ảnh danh mục: LoaiHang.DuongDanAnh / image_path, chọn/xem trước/bỏ ảnh, PNG/JPEG/WebP ≤5 MB. Migration service 007; file ở src/images/categories, Docker lưu volume category_images. Chi tiết: [CATEGORY_IMAGES.md](CATEGORY_IMAGES.md).
+# Nguồn kế hoạch và đợt hàng thực tế của lịch QC (22/10/2026)
+
+- `GET /api/v1/quality-campaign-sources`: chỉ DIRECTOR; trả `plans` và `lots` đang chờ QC/chưa được lịch khác chọn. Dòng có `lot_header_code`, `code`, `received_quantity`, `expected_date`; tên phân biệt từng đợt cùng lô tổng.
+- Tạo qua `POST /api/v1/quality-campaigns` hoặc nhánh QUALITY_CHECK của `/stocktakes`: `source_mode=ACTUAL` và `lot_ids` không rỗng, hoặc `source_mode=PURCHASE_PLAN|PRODUCTION_PLAN`, `source_plan_id`, `lot_ids=[]`. Giữ trường lịch/phân công hiện có. Chỉ nguồn đã duyệt/còn hiệu lực, đúng loại hàng; không tạo lô/tồn cho hàng chưa có.
+- `POST /api/v1/quality-campaigns/:id/bind-lots`: DIRECTOR, body `{ "version": 1, "lot_ids": ["123"] }`; chỉ lịch PLANNED có nguồn kế hoạch, bổ sung các dòng thực tế thuộc nguồn. Kiểm tra version, trạng thái QC, chống phân công trùng; audit BIND_LOTS. ID là ChiTietLo, không phải đầu lô.
+- Chi tiết trả `source_mode`, `source_plan_id`, `source_code`, `expected_date`, `lot_ids`, `lots`; DIRECTOR có thêm `eligible_lots`. Hành động `bindLots` cho lịch dự kiến; `start` chỉ khi đã gắn hàng, backend kiểm tra lại.
+
+Ngày dự kiến NVL lấy MUA; ngày TP dự kiến lấy ngày giao của đơn gắn KHSX. Đợt TP hiện có lấy ngày yêu cầu nhập phần đó, được QC sớm trước ngày giao cuối. Mặc định không trước hôm nay/ngày nguồn; lịch dự kiến chưa đến ngày nguồn không bắt đầu được. QC ghi theo từng ChiTietLo, không theo lượng kế hoạch hoặc tổng LoHang. Xem [KICH_BAN_TEST_QCAC_KIEM_KE.md](KICH_BAN_TEST_QCAC_KIEM_KE.md).

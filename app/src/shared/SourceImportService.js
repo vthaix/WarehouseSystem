@@ -31,13 +31,22 @@ class SourceImportService {
       "production_source_mode",
       "workshop_id",
       "warehouse_id",
+      "workflow_source","sale_plan_id",
     ]);
     C.fail(
-      !validId(body.source_id),
+      !validId(body.source_id)&&!(target==='stock-requests'&&body.workflow_source==='true'&&body.purpose==='PURCHASE_RECEIPT'&&/^ORDER:[1-9]\d*$/.test(String(body.source_id))),
       "VALIDATION_ERROR",
       "Chọn chứng từ nguồn.",
     );
     const id = body.source_id;
+    if(body.workflow_source!==undefined){
+      C.fail(target!=='stock-requests'||body.workflow_source!=='true','VALIDATION_ERROR','Nguồn luồng nhập/xuất không hợp lệ.');
+      const helper=require('../services/warehouse-service/modules/stock-requests/request-workflow');
+      const source=await helper.resolve(this.pool,user,body.purpose,id,body.workshop_id,body.sale_plan_id);
+      const field=body.purpose==='PURCHASE_RECEIPT'?'purchase_order_id':body.purpose==='SALE_ISSUE'?'business_plan_id':body.purpose==='PRODUCTION_ISSUE'?'production_plan_id':'production_report_id';
+      const result=await this.preview(user,target,{source_id:source[field],purpose:body.purpose,production_source_mode:source.production_source_mode,workshop_id:body.workshop_id,...(body.warehouse_id?{warehouse_id:body.warehouse_id}:{})});
+      return {...result,workflow_source_id:String(id),source_lots:await helper.lots(this.pool,{purpose:body.purpose,...source})};
+    }
     if(target==='finished-reports') {
       P.role(user,['WORKSHOP_OWNER']);
       const plan=await this.r.productionPlans.get(user,id);C.state(plan,['APPROVED','IN_PROGRESS']);
@@ -136,7 +145,7 @@ class SourceImportService {
       );
       C.fail(!order, "NOT_FOUND", "Đơn mua không còn chờ nhận.", 404);
       const [lines] = await this.pool.execute(
-        "SELECT p.id,i.name AS item_name,p.quantity,COALESCE((SELECT SUM(l.received_quantity) FROM lots l WHERE l.purchase_order_line_id=p.id),0) AS received FROM purchase_order_lines p JOIN items i ON i.id=p.item_id WHERE p.purchase_order_id=?",
+        "SELECT p.id,i.name AS item_name,p.supplier_id,s.name AS supplier_name,p.quantity,COALESCE((SELECT SUM(l.received_quantity) FROM lots l WHERE l.purchase_order_line_id=p.id),0) AS received FROM purchase_order_lines p JOIN items i ON i.id=p.item_id LEFT JOIN suppliers s ON s.id=p.supplier_id WHERE p.purchase_order_id=?",
         [id],
       );
       return {
@@ -147,6 +156,8 @@ class SourceImportService {
             item_id: String(l.id),
             purchase_order_line_id: String(l.id),
             item_name: l.item_name,
+            supplier_id: l.supplier_id == null ? null : String(l.supplier_id),
+            supplier_name: l.supplier_name,
             quantity: remaining(q(l.quantity), q(l.received)),
           })),
         ),
@@ -207,7 +218,7 @@ class SourceImportService {
         workshop,
         mode,
       );
-      const byPlan = ['PRODUCTION_ISSUE','PRODUCTION_RECEIPT'].includes(body.purpose);
+      const byPlan = ['PRODUCTION_ISSUE','PRODUCTION_RECEIPT'].includes(body.purpose)&&!(body.purpose==='PRODUCTION_RECEIPT'&&info.source.KieuThanhPham==='PART');
       if (body.purpose === "SALE_ISSUE") {
         const report = await this.r.finishedReports.get(
           user,

@@ -1,5 +1,7 @@
 # Quyết định nghiệp vụ hiện hành
 
+Cập nhật 23/10/2026: giới hạn số lượng dự kiến của KHSX và kế hoạch mua/bán so với nguồn chuyển thành cảnh báo xác nhận, áp dụng cả tạo, sửa và duyệt. Không thay đổi giới hạn tồn kho/QC khi ghi nhận thực tế hoặc ràng buộc ngày đã thống nhất. Quy tắc này thay thế các mô tả cũ yêu cầu chặn tuyệt đối số lượng kế hoạch vượt nguồn. Xem [XAC_NHAN_VUOT_SO_LUONG_KE_HOACH.md](XAC_NHAN_VUOT_SO_LUONG_KE_HOACH.md).
+
 Hợp nhất 14/10/2026. Những lựa chọn dưới đã được chủ dự án chấp thuận hoặc yêu cầu trực tiếp; không đặt chúng lại thành câu hỏi còn mở.
 
 | Mã | Quy tắc hiện hành |
@@ -8,7 +10,7 @@ Hợp nhất 14/10/2026. Những lựa chọn dưới đã được chủ dự �
 | BR-02 | Cập nhật 22/10: KHSX tính NVL gốc theo công thức cấu hình × lượng bánh, cộng gộp NVL chung; vẫn cho nhập tay. Cộng 10% đúng một lần, làm tròn lên 3 chữ số. Lưu vào chi tiết hiện có; công thức hiện là mẫu minh họa. |
 | BR-03 | Một báo cáo nhu cầu hiệu lực/KHSX. Nguồn đã gửi/đã sử dụng bất biến; tồn/thiếu lấy hệ thống, không tự khai tồn. |
 | BR-04 | Kế hoạch MUA lấy báo cáo SAN_XUAT mục đích NHU_CAU; kế hoạch BAN lấy tổng kết THANH_PHAM. Không dùng tiến độ/sự cố làm nguồn nhu cầu. |
-| BR-05 | Đơn mua PLAN/REPORT/MANUAL. PLAN tối đa một đơn/kế hoạch; REPORT và kế hoạch MUA cùng chia sẻ hạn mức thiếu, không đếm đơn PLAN thêm lần nữa. MANUAL không tự đáp ứng báo cáo. |
+| BR-05 | Đơn mua mới chỉ PLAN/MANUAL; PLAN tối đa một đơn/kế hoạch, ngày nhận lấy từ MUA đã duyệt. Planner không chọn NCC; purchaser chọn NCC riêng từng NVL. REPORT lịch sử giữ nguyên, không tạo mới. MANUAL không tự đáp ứng báo cáo. |
 | BR-06 | LoHang là đầu lô, ChiTietLo là dòng hàng. QC kiểm toàn bộ mỗi dòng, kiểm=đạt+lỗi; chỉ phần đạt được nhập AVAILABLE. Lỗi NVL trước nhập ghi trả NCC theo kết luận. |
 | BR-07 | Ngoại lệ: lập → giám đốc duyệt/từ chối → quản lý áp dụng riêng; người lập không tự duyệt. Điều chỉnh hàng đã nhập cần xác nhận QC và chứng từ bù, giữ phiếu gốc. |
 | BR-08 | Yêu cầu NVL PLAN hoặc REPORT; tổng yêu cầu/cấp đối chiếu cùng KHSX. Nếu đã có báo cáo nhu cầu gửi, PLAN không vượt nhu cầu thực tế. Yêu cầu không có bước duyệt riêng. |

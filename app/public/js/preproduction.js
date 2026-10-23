@@ -11,6 +11,12 @@
     )
       return;
     const button = document.createElement("button");
+    for (const key of ['start_date','end_date']) {
+      const input = document.querySelector('#f-'+key);
+      if (input && record.latest_delivery_date) input.max=record.latest_delivery_date;
+    }
+    const startInput=document.querySelector('#f-start_date'), endInput=document.querySelector('#f-end_date');
+    if(startInput && endInput) startInput.onchange=()=>{endInput.min=startInput.value || calendarToday();};
     button.type = "button";
     button.className = "button";
     button.id = "recalculate-plan-recipe";
@@ -56,7 +62,7 @@
     `/api/v1/production-reports/${encodeURIComponent(id)}/images/${encodeURIComponent(name)}`;
   function comparisonTable(data) {
     return (
-      `<p>${esc(data.notice)}</p><p>Thời điểm đối chiếu: ${esc(new Date(data.checked_at).toLocaleString("vi-VN"))}</p><div class="table-scroll"><table id="material-comparison-table"><thead><tr><th>NVL</th><th>ĐVT</th><th>Nhu cầu KHSX</th><th>Tồn khả dụng</th><th>Còn thiếu</th></tr></thead><tbody>${data.lines.map((l) => `<tr><td>${esc(l.item_name)}</td><td>${esc(l.unit)}</td><td>${esc(l.required_quantity)}</td><td>${esc(l.available_quantity)}</td><td>${esc(l.shortage_quantity)}</td></tr>`).join("")}</tbody></table></div>` +
+      `<p>${esc(data.notice)}</p><p>Thời điểm đối chiếu: ${esc(format(data.checked_at))}</p><div class="table-scroll"><table id="material-comparison-table"><thead><tr><th>NVL</th><th>ĐVT</th><th>Nhu cầu KHSX</th><th>Tồn khả dụng</th><th>Còn thiếu</th></tr></thead><tbody>${data.lines.map((l) => `<tr><td>${esc(l.item_name)}</td><td>${esc(l.unit)}</td><td>${esc(l.required_quantity)}</td><td>${esc(l.available_quantity)}</td><td>${esc(l.shortage_quantity)}</td></tr>`).join("")}</tbody></table></div>` +
       (data.recipe
         ? "<details><summary>Công thức minh họa hiện tại</summary><p>" +
           esc(data.recipe.description) +
@@ -84,7 +90,7 @@
     ctx.font = "bold 22px Arial";
     ctx.fillText("ĐỐI CHIẾU NVL — " + data.production_plan_code, 25, 35);
     ctx.font = "16px Arial";
-    ctx.fillText(new Date(data.checked_at).toLocaleString("vi-VN"), 25, 65);
+    ctx.fillText(format(data.checked_at), 25, 65);
     const xs = [25, 470, 590, 765, 940];
     ["Nguyên vật liệu", "ĐVT", "Nhu cầu", "Khả dụng", "Còn thiếu"].forEach(
       (s, i) => ctx.fillText(s, xs[i], 105),

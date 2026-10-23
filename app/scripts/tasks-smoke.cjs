@@ -11,7 +11,7 @@ const TaskService = require("../src/services/warehouse-service/modules/tasks/Tas
     marker = "SQL-TASK-" + crypto.randomUUID();
   try {
     const [users] = await pool.query(
-      "SELECT id,username FROM users WHERE username IN ('director','purchaser','customer')",
+      "SELECT id,username FROM users WHERE username IN ('director','purchaser','stocktaker','qc','customer')",
     );
     const ids = new Map(users.map((r) => [r.username, String(r.id)]));
     const director = {
@@ -20,8 +20,8 @@ const TaskService = require("../src/services/warehouse-service/modules/tasks/Tas
         workshop_ids: [],
       },
       worker = {
-        id: ids.get("purchaser"),
-        roles: ["PURCHASER"],
+        id: ids.get("stocktaker"),
+        roles: ["STOCKTAKER"],
         workshop_ids: [],
       },
       customer = {
@@ -34,22 +34,20 @@ const TaskService = require("../src/services/warehouse-service/modules/tasks/Tas
       priority: "NORMAL",
       start_at: "2040-01-01T00:00:00Z",
       end_at: "2040-01-01T01:00:00Z",
-      assignee_ids: [worker.id],
+      assignee_ids: [worker.id, ids.get('qc')],
     };
     await assert.rejects(
       () => service.create(worker, b, crypto.randomUUID()),
       (e) => e.status === 403 || e.statusCode === 403,
     );
+    await assert.rejects(()=>service.create(director,{...b,assignee_ids:[ids.get('purchaser')]},crypto.randomUUID()));
     const results = await Promise.allSettled([
       service.create(director, b, crypto.randomUUID()),
       service.create(director, b, crypto.randomUUID()),
     ]);
     assert.equal(results.filter((r) => r.status === "fulfilled").length, 1);
     const task = results.find((r) => r.status === "fulfilled").value;
-    assert.equal(
-      (await service.get(worker, task.id)).assignee_ids[0],
-      worker.id,
-    );
+    assert.deepEqual(new Set((await service.get(worker, task.id)).assignee_ids),new Set(b.assignee_ids));
     await assert.rejects(() => service.get(customer, task.id));
     await assert.rejects(() =>
       service.update(

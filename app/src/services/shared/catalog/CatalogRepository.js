@@ -27,6 +27,9 @@ class CatalogRepository {
     const { page, per_page, offset } = paginate(query);
     const where = [],
       values = [];
+    if(['items','categories'].includes(resource)&&query.include_inactive!=='true')where.push('t.is_active=1');
+    if(resource==='categories'&&query.kind){C.fail(!['MATERIAL','FINISHED_PRODUCT'].includes(query.kind),'VALIDATION_ERROR','Nhóm danh mục không hợp lệ.');where.push('t.LoaiDanhMuc=?');values.push(query.kind);}
+    if(resource==='items'&&query.category_id){C.fail(!/^[1-9]\d*$/.test(String(query.category_id)),'VALIDATION_ERROR','Danh mục không hợp lệ.');where.push('t.category_id=?');values.push(String(query.category_id));}
     if (query.q) {
       C.text(query.q, "q", 150);
       where.push(resource === "lots" ? "t.code LIKE ?" : "(t.code LIKE ? OR t.name LIKE ?)");
@@ -98,6 +101,8 @@ class CatalogRepository {
 }
 function normalize(row) {
   const result = { ...row, actions: [] };
+  delete result.BangGiaNCC;
+  if(Object.hasOwn(result,'LoaiDanhMuc')){result.catalog_kind=result.LoaiDanhMuc;delete result.LoaiDanhMuc;}
   for (const key of Object.keys(result)) {
     if (key === "id" || key.endsWith("_id"))
       result[key] = result[key] === null ? null : String(result[key]);

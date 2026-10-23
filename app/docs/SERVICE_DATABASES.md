@@ -1,5 +1,7 @@
 # MySQL theo service
 
+Cập nhật 22/10/2026: migration 009 bổ sung FK nguồn QC trên DotKiemKe; migration **010_finished_report_parts** thêm `BanBaoCaoSanXuat.KieuThanhPham` và cập nhật view để báo cáo thành phẩm tạo các phần trong cùng lô. Runtime yêu cầu đủ **10** marker. Không xóa/copy lại source KhoHang, không thêm database. Luồng hiện hành [CONG_VIEC_KIEM_TRA_LO.md](CONG_VIEC_KIEM_TRA_LO.md).
+
 Hiện trạng: bảng đã tách vật lý thành **6 database trên cùng MySQL 8.4**, mỗi runtime dùng database và tài khoản riêng. Đây là bước tách từ schema có sẵn, giữ nghiệp vụ và dữ liệu; vẫn có view tương thích, FK, JOIN và transaction xuyên schema. Chưa thể chuyển các database sang MySQL server riêng mà không thay các phụ thuộc này bằng API/events.
 
 | Service | Database mặc định | Tài khoản | Dữ liệu sở hữu |
@@ -31,6 +33,8 @@ Chuỗi khởi động: **setup → MySQL → migrate legacy → split-databases
 Migration thực thi: [database/services/migrations](../database/services/migrations). Các file [schemas](../database/services/schemas) là snapshot DDL theo owner để review, không có dữ liệu/secret và **không chạy chồng lên database hiện có**. Boot dùng migration JavaScript lấy cấu trúc nguồn thực tế, không phụ thuộc snapshot này. Các thay đổi schema tiếp theo cần migration mới theo owner, không sửa các migration đã áp dụng hoặc sửa ownership của lần cutover đã hoàn tất.
 
 ## Quyền tương thích
+
+Migration service mới nhất `008_purchase_line_suppliers`: NCC ở từng `ChiTietDonMuaHang`; đầu đơn NCC chung được NULL khi có nhiều NCC; kế hoạch MUA không cần NCC. Backfill từ đầu đơn lịch sử, giữ dữ liệu và FK theo owner, refresh view liên quan. Runtime yêu cầu tám checkpoint. Snapshot DDL đã xuất lại từ schema hiện hành; xem [MUA_NVL_VA_RANG_BUOC_NGAY.md](MUA_NVL_VA_RANG_BUOC_NGAY.md).
 
 Tài khoản có SELECT qua các view để giữ các JOIN hiện hữu. DML chỉ cấp cho bảng sở hữu và danh sách ngoại lệ trong [compatibility-grants.json](../database/services/compatibility-grants.json): Business còn đăng ký lô thành phẩm, ghi notification/audit/idempotency; Warehouse cập nhật trạng thái đơn mua/đơn khách/kế hoạch bán và notification; Identity ghi audit. Reporting không ghi nghiệp vụ; Gateway chỉ ghi session. Service không có CREATE/ALTER/DROP/GRANT.
 

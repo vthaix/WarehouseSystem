@@ -206,6 +206,22 @@ async function run() {
     await require('../database/services/migrations/005_quarantine_disposition.cjs').migrate(c,source,result);
     await require('../database/services/migrations/006_stock_qc_correction.cjs').migrate(c,source,result);
     await require('../database/services/migrations/007_category_images.cjs').migrate(c,source,result);
+    await require('../database/services/migrations/008_purchase_line_suppliers.cjs').migrate(c,source,result);
+    await require('../database/services/migrations/009_planned_qc_sources.cjs').migrate(c,source,result);
+    await require('../database/services/migrations/010_finished_report_parts.cjs').migrate(c,source,result);
+    await require('../database/services/migrations/011_inspection_assignment_scope.cjs').migrate(c,source,result);
+    await require('../database/services/migrations/012_inspection_minutes.cjs').migrate(c,source,result);
+    await require('../database/services/migrations/013_minute_exceptions.cjs').migrate(c,source,result);
+    await require('../database/services/migrations/014_stock_request_execution_time.cjs').migrate(c,source,result);
+    await require('../database/services/migrations/015_inspection_minute_author.cjs').migrate(c,source,result);
+    await require('../database/services/migrations/016_workshop_display_names.cjs').migrate(c,source,result);
+    await require('../database/services/migrations/017_admin_accounts.cjs').migrate(c,source,result);
+    await require('../database/services/migrations/018_bakery_catalog.cjs').migrate(c,source,result);
+    await require('../database/services/migrations/019_workshop_accounts.cjs').migrate(c,source,result);
+    if(process.env.SEED_DEMO==='true'){
+      const password=process.env.DEMO_PASSWORD || fs.readFileSync(process.env.DEMO_PASSWORD_FILE,'utf8').trim();
+      await require('../database/seeders/checker-accounts').seedCheckers(c,result.databases['identity-service'].database,password);
+    }
     for (const [service, entry] of Object.entries(result.databases)) {
       const {user,password} = credentialsFor(service);
       const test = await mysql.createConnection({

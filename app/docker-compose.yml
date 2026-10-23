@@ -111,6 +111,8 @@ services:
     environment:
       <<: [*service-env, *db-credentials]
       MYSQL_ROOT_PASSWORD_FILE: /run/warehouse-mysql-secrets/root_password
+      SEED_DEMO: ${SEED_DEMO:-true}
+      DEMO_PASSWORD_FILE: /run/warehouse-app-secrets/demo_password
     volumes:
       - app_secrets:/run/warehouse-app-secrets:ro
       - mysql_secrets:/run/warehouse-mysql-secrets:ro

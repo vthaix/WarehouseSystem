@@ -9,6 +9,7 @@ const reportRoles = {
 };
 class ReportService {
   constructor(pool) { this.pool = pool; }
+  async warehouseLookup(user,query={}){return require('./warehouse-lookup')(this.pool,user,query);}
 
   validate(user, kind, query, exportMode) {
     C.fail(!reportRoles[kind] || !user.roles.some((role) => reportRoles[kind].includes(role)), "FORBIDDEN", "Bạn không có quyền xem báo cáo.", 403);

@@ -287,6 +287,7 @@ class QualityService {
       "SELECT id FROM quality_campaign_assignments WHERE campaign_id=? AND user_id=?",
       [id, user.id],
     );
+    C.fail(!rows[0].KiemChatLuong,'FORBIDDEN','Đợt này không phân công kiểm tra chất lượng.',403);
     C.fail(
       !assigned.length,
       "FORBIDDEN",
@@ -373,15 +374,7 @@ class QualityService {
   }
 
   async finishCampaign(connection, campaignId) {
-    const [[count]] = await connection.execute(
-      "SELECT COUNT(*) AS pending FROM quality_campaign_lots q JOIN lots l ON l.id=q.lot_id WHERE q.campaign_id=? AND l.qc_status='PENDING'",
-      [campaignId],
-    );
-    if (Number(count.pending) === 0)
-      await connection.execute(
-        "UPDATE stocktakes SET status='COMPLETED',version=version+1 WHERE id=? AND status='IN_PROGRESS'",
-        [campaignId],
-      );
+    await require('../tasks/inspection-scope').finish(connection,campaignId);
   }
 
   async create(user, body, requestId) {

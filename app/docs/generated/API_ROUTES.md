@@ -8,6 +8,18 @@ Sinh bằng `node scripts/sync-project-docs.cjs`. Tiền tố `/api/v1`; quyền
 | POST | `/auth/login` | web-gateway / identity-service | Có handler |
 | GET | `/auth/me` | web-gateway / identity-service | Có handler |
 | POST | `/auth/logout` | web-gateway / identity-service | Có handler |
+| GET | `/material-price-options` | business-service | Có handler |
+| GET | `/material-prices` | business-service | Có handler |
+| GET | `/material-prices/:id` | business-service | Có handler |
+| PATCH | `/material-prices/:id` | business-service | Có handler |
+| GET | `/account-options` | identity-service | Có handler |
+| GET | `/accounts` | identity-service | Có handler |
+| GET | `/accounts/:id` | identity-service | Có handler |
+| POST | `/accounts` | identity-service | Có handler |
+| PATCH | `/accounts/:id` | identity-service | Có handler |
+| DELETE | `/accounts/:id` | identity-service | Có handler |
+| GET | `/warehouse-lookup` | reporting-service | Có handler |
+| GET | `/stock-request-workflow-sources` | warehouse-service | Có handler |
 | GET | `/source-imports/purchase-report-options` | business-service | Có handler |
 | GET | `/source-imports/:target` | business-service | Có handler |
 | GET | `/customer-return-deliveries` | warehouse-service | Có handler |
@@ -18,6 +30,10 @@ Sinh bằng `node scripts/sync-project-docs.cjs`. Tiền tố `/api/v1`; quyền
 | POST | `/customer-returns/:id/cancel` | warehouse-service | Có handler |
 | GET | `/lot-headers` | warehouse-service | Có handler |
 | GET | `/lot-headers/:id` | warehouse-service | Có handler |
+| GET | `/function-badges` | notification-service | Có handler |
+| GET | `/inspection-counts` | warehouse-service | Có handler |
+| GET | `/inspection-counts/:id` | warehouse-service | Có handler |
+| POST | `/tasks/:id/minute-author` | warehouse-service | Có handler |
 | GET | `/tasks` | warehouse-service | Có handler |
 | GET | `/tasks/:id` | warehouse-service | Có handler |
 | POST | `/tasks` | warehouse-service | Có handler |
@@ -68,6 +84,9 @@ Sinh bằng `node scripts/sync-project-docs.cjs`. Tiền tố `/api/v1`; quyền
 | GET | `/reports/stocktakes` | reporting-service | Có handler |
 | GET | `/reports/stocktakes/export` | reporting-service | Có handler |
 | GET | `/quality-campaigns` | warehouse-service | Có handler |
+| GET | `/quality-campaign-sources` | warehouse-service | Có handler |
+| GET | `/task-inspection-sources` | warehouse-service | Có handler |
+| POST | `/quality-campaigns/:id/bind-lots` | warehouse-service | Có handler |
 | GET | `/quality-campaigns/:id` | warehouse-service | Có handler |
 | POST | `/quality-campaigns` | warehouse-service | Có handler |
 | POST | `/quality-campaigns/:id/start` | warehouse-service | Có handler |

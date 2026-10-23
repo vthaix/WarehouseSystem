@@ -1,3 +1,4 @@
+const confirmation=require('../../../../shared/planning-confirmation');
 const crypto = require("node:crypto");
 const C = require("../../../domain/core");
 const P = require("../../../domain/policy");
@@ -149,7 +150,7 @@ class BusinessPlanService {
     };
   }
 
-  async validateLines(connection, type, lines, orderId, excludeId = null) {
+  async validateLines(connection, type, lines, orderId, excludeId = null, confirmed = false) {
     C.fail(
       !Array.isArray(lines) || !lines.length || lines.length > 100,
       "VALIDATION_ERROR",
@@ -208,11 +209,7 @@ class BusinessPlanService {
       for (const line of [...allocated, ...normalized]) {
         const key = String(line.item_id);
         const rest = (remaining.get(key) || 0n) - C.qty(String(line.quantity));
-        C.fail(
-          rest < 0n,
-          "SOURCE_LIMIT_EXCEEDED",
-          "Kế hoạch bán vượt số lượng đơn hàng.",
-        );
+        confirmation.check(rest < 0n,confirmed,"Kế hoạch bán vượt số lượng đơn hàng.");
         remaining.set(key, rest);
       }
     }
@@ -235,20 +232,8 @@ class BusinessPlanService {
       "Loại kế hoạch không hợp lệ.",
     );
     if (type === "PURCHASE") {
-      const supplierId = body.supplier_id || existing?.supplier_id;
-      C.fail(
-        !isId(supplierId) ||
-          body.customer_id ||
-          body.customer_order_id ||
-          body.finished_report_id,
-        "VALIDATION_ERROR",
-        "Kế hoạch mua cần nhà cung cấp.",
-      );
-      const [rows] = await connection.execute(
-        "SELECT id FROM suppliers WHERE id=? AND is_active=1",
-        [supplierId],
-      );
-      C.fail(!rows.length, "VALIDATION_ERROR", "Nhà cung cấp không hoạt động.");
+      const supplierId = null; // Supplier selection belongs to purchaser, per material line.
+      C.fail(body.customer_id || body.customer_order_id || body.finished_report_id, "VALIDATION_ERROR", "Kế hoạch mua không chọn nguồn bán.");
       const requestId =
         existing?.source_request_id || body.source_request_id || null;
       let productionId =
@@ -289,11 +274,6 @@ class BusinessPlanService {
         );
         reportId = String(requests[0].production_report_id);
       }
-      C.fail(
-        !reportId && !existing,
-        "VALIDATION_ERROR",
-        "Kế hoạch mua phải lấy nguồn từ báo cáo sản xuất thực tế.",
-      );
       if (reportId) {
         C.fail(
           !isId(reportId),
@@ -318,12 +298,9 @@ class BusinessPlanService {
         );
         productionId = String(reports[0].production_plan_id);
       }
-      // Historical manual plans remain editable; every new purchase plan needs a production source.
-      C.fail(
-        !productionId && !existing,
-        "VALIDATION_ERROR",
-        "Kế hoạch mua cần kế hoạch sản xuất hoặc yêu cầu bổ sung NVL.",
-      );
+      // Manual purchasing plans have no production source; imported plans retain source validation.
+      C.fail(productionId && !reportId && !requestId && !existing,
+        'VALIDATION_ERROR', 'Import kế hoạch mua phải dựa trên báo cáo nhu cầu thực tế; nhập tay không chọn nguồn KHSX.');
       if (productionId) {
         C.fail(
           !isId(productionId),
@@ -421,6 +398,7 @@ class BusinessPlanService {
     lines,
     excludeId = null,
     approving = false,
+    confirmed = false,
   ) {
     if (source.type === "SALE") {
       if (!source.finished_report_id) return;
@@ -446,11 +424,7 @@ class BusinessPlanService {
       for (const row of [...allocated, ...lines]) {
         const key = String(row.item_id),
           rest = (remaining.get(key) || 0n) - C.qty(String(row.quantity));
-        C.fail(
-          rest < 0n,
-          "SOURCE_LIMIT_EXCEEDED",
-          "Kế hoạch bán vượt lượng thành phẩm báo cáo nguồn.",
-        );
+        confirmation.check(rest < 0n,confirmed,"Kế hoạch bán vượt lượng thành phẩm báo cáo nguồn.");
         remaining.set(key, rest);
       }
       if (approving) {
@@ -538,11 +512,7 @@ class BusinessPlanService {
         for (const row of [...allocated, ...lines]) {
           const key = String(row.item_id),
             rest = (remaining.get(key) || 0n) - C.qty(String(row.quantity));
-          C.fail(
-            rest < 0n,
-            "SOURCE_LIMIT_EXCEEDED",
-            "Tổng kế hoạch mua vượt nhu cầu của kế hoạch sản xuất.",
-          );
+          confirmation.check(rest < 0n,confirmed,"Tổng kế hoạch mua vượt nhu cầu của kế hoạch sản xuất.");
           remaining.set(key, rest);
         }
       }
@@ -550,18 +520,15 @@ class BusinessPlanService {
     for (const line of lines) {
       const key = String(line.item_id),
         remaining = (limits.get(key) || 0n) - C.qty(String(line.quantity));
-      C.fail(
-        remaining < 0n,
-        "SOURCE_LIMIT_EXCEEDED",
-        "Kế hoạch mua vượt nhu cầu nguyên liệu của nguồn.",
-      );
+      confirmation.check(remaining < 0n,confirmed,"Kế hoạch mua vượt nhu cầu nguyên liệu của nguồn.");
       limits.set(key, remaining);
     }
   }
 
   async create(user, body, requestId) {
     P.role(user, ["PLANNER"]);
-    C.fields(body, [
+    confirmation.validate(body);
+    C.fields(body, ["confirm_plan_overage",
       "type",
       "supplier_id",
       "customer_id",
@@ -574,17 +541,19 @@ class BusinessPlanService {
       "note",
       "lines",
     ]);
-    C.date(body.planned_date, "planned_date");
+    C.date(body.planned_date, "planned_date", true);
     if (body.note !== undefined) C.text(body.note, "note", 5000, false);
     const id = await this.transaction(async (connection) => {
       const source = await this.source(connection, body);
+      await require("../../../../shared/planning-dates").businessDate(connection, source, body.planned_date);
       const data = await this.validateLines(
         connection,
         source.type,
         body.lines,
         source.customer_order_id,
+        null,body.confirm_plan_overage,
       );
-      await this.validatePurchaseSource(connection, source, data.lines);
+      await this.validatePurchaseSource(connection, source, data.lines,null,false,body.confirm_plan_overage);
       const code = "KH-" + crypto.randomBytes(8).toString("hex").toUpperCase();
       const [created] = await connection.execute(
         "INSERT INTO business_plans (code,type,supplier_id,customer_id,customer_order_id,production_plan_id,source_request_id,production_report_id,finished_report_id,planned_date,note,status,created_by,total_amount,version) VALUES (?,?,?,?,?,?,?,?,?,?,?,'PENDING_APPROVAL',?,?,1)",
@@ -614,7 +583,7 @@ class BusinessPlanService {
         [
           user.id,
           created.insertId,
-          JSON.stringify({ code, type: source.type }),
+          JSON.stringify({ code, type: source.type,confirm_plan_overage:body.confirm_plan_overage===true }),
           requestId,
         ],
       );
@@ -626,7 +595,8 @@ class BusinessPlanService {
 
   async update(user, id, body, requestId) {
     P.role(user, ["PLANNER"]);
-    C.fields(body, ["version", "supplier_id", "planned_date", "note", "lines"]);
+    confirmation.validate(body);
+    C.fields(body, ["confirm_plan_overage","version", "supplier_id", "planned_date", "note", "lines"]);
     C.fail(
       !Number.isInteger(body.version),
       "VALIDATION_ERROR",
@@ -640,7 +610,7 @@ class BusinessPlanService {
       "Không có nội dung cần sửa.",
     );
     if (body.planned_date !== undefined)
-      C.date(body.planned_date, "planned_date");
+      C.date(body.planned_date, "planned_date", true);
     if (body.note !== undefined) C.text(body.note, "note", 5000, false);
     await this.transaction(async (connection) => {
       const current = await this.load(connection, id, true);
@@ -652,13 +622,14 @@ class BusinessPlanService {
         "Không thể đổi nguồn kế hoạch bán.",
       );
       const source = await this.source(connection, body, current);
+      await require("../../../../shared/planning-dates").businessDate(connection, source, body.planned_date || asDate(current.planned_date));
       let total = current.total_amount;
       if (body.lines === undefined) {
         const [currentLines] = await connection.execute(
           "SELECT item_id,quantity FROM business_plan_lines WHERE business_plan_id=?",
           [id],
         );
-        await this.validatePurchaseSource(connection, source, currentLines, id);
+        await this.validatePurchaseSource(connection, source, currentLines, id,false,body.confirm_plan_overage);
       }
       if (body.lines !== undefined) {
         const data = await this.validateLines(
@@ -666,9 +637,9 @@ class BusinessPlanService {
           current.type,
           body.lines,
           current.customer_order_id,
-          id,
+          id,body.confirm_plan_overage,
         );
-        await this.validatePurchaseSource(connection, source, data.lines, id);
+        await this.validatePurchaseSource(connection, source, data.lines, id,false,body.confirm_plan_overage);
         total = data.total_amount;
         await connection.execute(
           "DELETE FROM business_plan_lines WHERE business_plan_id=?",
@@ -706,7 +677,8 @@ class BusinessPlanService {
 
   async review(user, id, body, key, requestId) {
     P.role(user, ["DIRECTOR"]);
-    C.fields(body, ["version", "decision", "reason"]);
+    confirmation.validate(body);
+    C.fields(body, ["confirm_plan_overage","version", "decision", "reason"]);
     C.fail(
       !Number.isInteger(body.version) ||
         !["APPROVE", "REJECT"].includes(body.decision),
@@ -747,6 +719,7 @@ class BusinessPlanService {
       C.state(plan, ["PENDING_APPROVAL"]);
       if (body.decision === "APPROVE") {
         const source = await this.source(connection, {}, plan);
+        await require('../../../../shared/planning-dates').businessDate(connection, source, asDate(plan.planned_date));
         const [lines] = await connection.execute(
           "SELECT item_id,quantity,unit_price FROM business_plan_lines WHERE business_plan_id=?",
           [id],
@@ -760,9 +733,9 @@ class BusinessPlanService {
             unit_price: String(line.unit_price),
           })),
           plan.customer_order_id,
-          id,
+          id,body.confirm_plan_overage,
         );
-        await this.validatePurchaseSource(connection, source, lines, id, true);
+        await this.validatePurchaseSource(connection, source, lines, id, true,body.confirm_plan_overage);
       }
       const status = body.decision === "APPROVE" ? "APPROVED" : "REJECTED";
       if(status==='APPROVED'&&plan.type==='PURCHASE')await connection.execute("INSERT INTO notifications (user_id,subject,body,resource_type,resource_id,business_key) SELECT u.id,?,?, 'business-plans',?,? FROM users u JOIN user_roles ur ON ur.user_id=u.id JOIN roles r ON r.id=ur.role_id WHERE u.status='ACTIVE' AND r.code='PURCHASER' ON DUPLICATE KEY UPDATE id=notifications.id",[`Kế hoạch mua ${plan.code} đã duyệt`,`Lập đơn mua NVL theo kế hoạch ${plan.code}.`,id,`buy-plan-${id}-approved`]);
@@ -781,7 +754,7 @@ class BusinessPlanService {
           user.id,
           id,
           JSON.stringify({ status: plan.status }),
-          JSON.stringify({ status, reason: body.reason || null }),
+          JSON.stringify({ status, reason: body.reason || null,confirm_plan_overage:body.confirm_plan_overage===true }),
           requestId,
         ],
       );

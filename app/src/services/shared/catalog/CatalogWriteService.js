@@ -4,8 +4,8 @@ const P = require("../../domain/policy");
 const definitions = {
   categories: {
     table: "categories",
-    create: ["code", "name", "description", "is_active", "image_path"],
-    edit: ["name", "description", "is_active", "image_path"],
+    create: ["code", "name", "description", "is_active", "image_path", "catalog_kind"],
+    edit: ["name", "description", "is_active", "image_path", "catalog_kind"],
     required: ["code", "name"],
   },
   warehouses: {
@@ -123,6 +123,7 @@ class CatalogWriteService {
       );
     const normalized = {};
     for (const [field, value] of Object.entries(body)) {
+      if(field==='catalog_kind'){C.fail(!['MATERIAL','FINISHED_PRODUCT'].includes(value),'VALIDATION_ERROR','Chọn nhóm Thành phẩm hoặc Nguyên vật liệu.');normalized.LoaiDanhMuc=value;continue;}
       if(field==='image_path'){normalized[field]=require('../../../config/category-images').validatePath(value);continue;}
       if (field === "version") continue;
       if (["category_id", "unit_id", "warehouse_id"].includes(field)) {
@@ -202,6 +203,7 @@ class CatalogWriteService {
   }
 
   async references(connection, resource, values) {
+    if(resource==='items'&&values.category_id){const [[category]]=await connection.execute('SELECT LoaiDanhMuc FROM categories WHERE id=?',[values.category_id]);C.fail(category?.LoaiDanhMuc&&category.LoaiDanhMuc!==values.kind,'VALIDATION_ERROR','Mặt hàng phải thuộc đúng nhóm của danh mục.');}
     const checks =
       resource === "items"
         ? [
@@ -267,6 +269,7 @@ class CatalogWriteService {
       );
       C.fail(!rows.length, "NOT_FOUND", "Không tìm thấy dữ liệu.", 404);
       const current = rows[0];
+      if(resource==='categories'&&values.LoaiDanhMuc){const [[mixed]]=await connection.execute('SELECT COUNT(*) AS total FROM items WHERE category_id=? AND is_active=1 AND kind<>?',[id,values.LoaiDanhMuc]);C.fail(Number(mixed.total)>0,'IN_USE','Danh mục đang chứa mặt hàng thuộc nhóm khác.',409);}
       if (resource === "items") {
         C.version(current, body.version);
         C.fail(

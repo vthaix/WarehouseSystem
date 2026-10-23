@@ -120,21 +120,21 @@ module.exports = async ({
     );
     assert.equal(afterLot.lines[0].quantity, "1.623");
     const races = await Promise.all([
-      purchaser.call(
-        "/api/v1/purchase-orders",
+      planner.call(
+        "/api/v1/business-plans",
         "POST",
-        body("REPORT", "2.000"),
+        {type:'PURCHASE',production_report_id:reportId,planned_date:date,lines:body('MANUAL','2.000').lines},
       ),
-      purchaser.call(
-        "/api/v1/purchase-orders",
+      planner.call(
+        "/api/v1/business-plans",
         "POST",
-        body("REPORT", "2.000"),
+        {type:'PURCHASE',production_report_id:reportId,planned_date:date,lines:body('MANUAL','2.000').lines},
       ),
     ]);
-    for (const r of races) if (r.status === 201) orders.push(r.data.id);
+    for (const r of races) if (r.status === 201) plans.push(r.data.id);
     assert.deepEqual(
       races.map((r) => r.status).sort(),
-      [201, 422],
+      [201, 409],
       JSON.stringify(races),
     );
     const remaining = expect(
@@ -154,7 +154,10 @@ module.exports = async ({
       planned_date: date,
       lines: [{ item_id: materialId, quantity: "1.001", unit_price: "1.0000" }],
     };
-    expect(await planner.call("/api/v1/business-plans", "POST", planBody), 422);
+    const warning=await planner.call("/api/v1/business-plans", "POST", planBody);
+    expect(warning,409);assert.equal(warning.error.code,'PLAN_CONFIRMATION_REQUIRED');
+    const extra=expect(await planner.call('/api/v1/business-plans','POST',{...planBody,confirm_plan_overage:true}),201);
+    expect(await planner.call('/api/v1/business-plans/'+extra.id,'DELETE',{version:extra.version}),200);
     const plan = expect(
       await planner.call("/api/v1/business-plans", "POST", {
         ...planBody,
@@ -179,7 +182,7 @@ module.exports = async ({
     );
     assert.deepEqual(exhausted.lines, []);
     console.log(
-      "IMPORT PURCHASE PASS: manual/report modes, scoped previews, remaining quantities, exact money, source concurrency and shared plan/order limit",
+      "IMPORT PURCHASE PASS: manual purchases, plan source concurrency, disabled REPORT purchase mode, scoped previews, remaining quantities and exact money",
     );
   } finally {
     for (const id of lots)

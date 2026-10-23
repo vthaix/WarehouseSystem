@@ -1,5 +1,5 @@
 {
-  "identity-service": { "NhatKyHeThong": ["INSERT"] },
+  "identity-service": { "NhatKyHeThong": ["INSERT"], "KhachHang": ["INSERT", "UPDATE"] },
   "business-service": {
     "LoHang": ["INSERT", "UPDATE", "DELETE"],
     "ChiTietLo": ["INSERT", "UPDATE", "DELETE"],

@@ -116,7 +116,8 @@ function client() {
       outputs: [{ item_id: item.id, quantity: "4.000" }],
       materials: [],
     });
-    assert.equal(oversized.status, 422);
+    assert.equal(oversized.status, 409);
+    assert.equal(oversized.error.code, 'PLAN_CONFIRMATION_REQUIRED');
     const plan = await planner.call("/api/v1/production-plans", "POST", {
       customer_order_id: orderId,
       workshop_id: "1",

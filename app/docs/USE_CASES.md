@@ -212,10 +212,10 @@ Danh sách rỗng vẫn trả kết quả hợp lệ. Sai dữ liệu, sai ngu�
 
 ### Luồng cơ bản
 
-1. BGĐ lập COUNT, phạm vi kho/loại hàng, người đếm và người lập kết luận; QUALITY_CHECK là lịch QC riêng.
-2. Bắt đầu COUNT khóa kho/chụp snapshot; kho giữ khóa đến đóng đợt.
-3. Theo dõi tiến độ từng kho; chỉ đóng khi kết luận/chênh lệch đã xử lý.
-4. Chênh lệch chuyển UC-16/17; không tự sửa tồn từ số đếm.
+1. BGĐ mở Lập đợt kiểm kê, chọn nhóm hàng, lô và các phần cần kiểm tra; ghi lịch, mô tả và chọn từng nhân viên Ban kiểm kê/QC/AC. Không chọn loại đợt.
+2. Backend suy nội dung từ nhân viên: Ban kiểm kê kiểm số lượng, QC/AC kiểm chất lượng; chọn cả hai thì làm cả hai. Lưu đợt và công việc liên kết trong một giao dịch.
+3. Công việc được xem, sửa hoặc hủy trong Quản lý công việc theo quyền/trạng thái. Màn hình này không tạo mới đợt.
+4. Sau khi bắt đầu, nhân viên ghi kết quả đúng chuyên môn trên từng dòng lô. Đợt chỉ hoàn tất khi đủ kết quả của các nội dung được giao. Số đếm không tự điều chỉnh tồn. Nghiệp vụ COUNT tồn kho/chứng từ lịch sử vẫn được bảo toàn qua API tương thích.
 
 **Hậu điều kiện:** đọc trả dữ liệu trong phạm vi; ghi thành công cập nhật version/trạng thái và lịch sử theo service. Hủy form không tạo mutation; hủy chứng từ tuân thủ trạng thái/nguồn.
 
@@ -394,7 +394,7 @@ Danh sách rỗng vẫn trả kết quả hợp lệ. Sai dữ liệu, sai ngu�
 
 ### Luồng cơ bản
 
-1. Bộ phận mua chọn nguồn PLAN/REPORT/MANUAL hoặc mở đơn mua.
+1. Bộ phận mua chọn nguồn PLAN/MANUAL hoặc mở đơn mua.
 2. Xem nguồn, các dòng mua, lượng nhận/trả và trạng thái đơn.
 3. Server kiểm đúng loại báo cáo, hạn mức dùng chung và giá trị tiền; chưa tự mua bù khi trả NCC.
 
@@ -412,11 +412,12 @@ Danh sách rỗng vẫn trả kết quả hợp lệ. Sai dữ liệu, sai ngu�
 
 ### Luồng cơ bản
 
-1. Chủ xưởng chọn một trong bốn nhánh: nhập NVL, nhập TP từng phần, xuất NVL sản xuất, xuất TP bán.
-2. Nhập NVL lấy phần đạt QC còn lại từ nguồn mua; nhập TP MANUAL theo KHSX và lượng thực mỗi đợt, chung đầu lô/KHSX.
-3. Xuất NVL PLAN/REPORT kiểm nhu cầu chung; xuất TP lấy BAN đã duyệt và tổng kết hoàn tất, đúng ngày giao và tồn khả dụng.
-4. Lưu yêu cầu sau kiểm lại nguồn; chưa tạo tồn hoặc tự duyệt.
-5. Quản lý phân công; nhân viên được giao mới thực hiện phiếu thực nhập/xuất.
+1. Chủ xưởng chọn Nhập hoặc Xuất; Nhập chọn NVL từ kế hoạch mua hoặc TP từ báo cáo thành phẩm; Xuất chọn NVL hoặc TP từ KHSX.
+2. Xem lô nguồn, lượng QC đạt, lượng còn được đề nghị; chọn kho, quản lý, ngày giờ đề nghị và gửi. Nhập TP theo từng báo cáo phần, không trừ nhầm nhu cầu của các phần khác cùng KHSX.
+3. Xuất NVL kiểm nhu cầu chung của KHSX; xuất TP đối chiếu kế hoạch BAN đã duyệt liên quan, hoàn tất sản xuất, ngày giao và tồn khả dụng. Có nhiều kế hoạch bán thì chọn rõ nguồn, không đoán.
+4. Quản lý xem yêu cầu/lô/lịch, chọn nhân viên, lô, vị trí và lượng thực hiện; nhân viên nhận công việc.
+5. Nhân viên đối chiếu giấy ngoài, hệ thống điền lượng phân công còn lại nhưng cho sửa trong hạn mức; xác nhận phiếu mới cập nhật tồn. Nhập/xuất một phần giữ lại nhu cầu chưa thực hiện.
+6. Chủ xưởng, quản lý và giám đốc xem hồ sơ tổng hợp từ các phiếu đã ghi, gồm lô, lượng thực tế và ghi chú giấy tờ. API cũ PLAN/REPORT/MANUAL giữ để tương thích; form mới chỉ có bốn nhánh trên.
 
 **Hậu điều kiện:** đọc trả dữ liệu trong phạm vi; ghi thành công cập nhật version/trạng thái và lịch sử theo service. Hủy form không tạo mutation; hủy chứng từ tuân thủ trạng thái/nguồn.
 
@@ -486,14 +487,16 @@ Danh sách rỗng vẫn trả kết quả hợp lệ. Sai dữ liệu, sai ngu�
 
 ## UC-27 Mua hàng
 
+Cập nhật: chỉ PLAN/MANUAL, mỗi dòng NVL chọn NCC riêng. PLAN tự lấy ngày mong nhận và lượng từ MUA đã duyệt; xem [MUA_NVL_VA_RANG_BUOC_NGAY.md](MUA_NVL_VA_RANG_BUOC_NGAY.md).
+
 **Actor chính:** Bộ phận mua hàng
 
 **Tiền điều kiện:** phiên hợp lệ, vai trò/phạm vi được phép, nguồn/chứng từ ở trạng thái có thể thao tác.
 
 ### Luồng cơ bản
 
-1. Bộ phận mua chọn nguồn PLAN/REPORT/MANUAL hoặc mở đơn mua.
-2. PLAN từ MUA đã duyệt, một đơn/kế hoạch; REPORT lấy thiếu còn lại, MANUAL không có nguồn giả. Nhập giá/NCC/điều kiện mua.
+1. Bộ phận mua chọn nguồn PLAN/MANUAL hoặc mở đơn mua.
+2. PLAN từ MUA đã duyệt, một đơn/kế hoạch; nhập ngày/lượng từ kế hoạch, chọn NCC riêng từng NVL và giá/điều kiện mua. MANUAL tự nhập không có nguồn giả.
 3. Server kiểm đúng loại báo cáo, hạn mức dùng chung và giá trị tiền; chưa tự mua bù khi trả NCC.
 
 **Hậu điều kiện:** đọc trả dữ liệu trong phạm vi; ghi thành công cập nhật version/trạng thái và lịch sử theo service. Hủy form không tạo mutation; hủy chứng từ tuân thủ trạng thái/nguồn.
@@ -503,6 +506,8 @@ Danh sách rỗng vẫn trả kết quả hợp lệ. Sai dữ liệu, sai ngu�
 Danh sách rỗng vẫn trả kết quả hợp lệ. Sai dữ liệu, sai nguồn/quyền, version cũ, trạng thái không hợp lệ, nguồn hết hạn mức hoặc kho khóa phải bị chặn. Không tự đổi nguồn, tạo số liệu giả hoặc retry mutation khi chưa đối soát kết quả. Chi tiết điều kiện tương ứng trong SRS, API và service owner.
 
 ## UC-04 Lập kế hoạch mua/bán
+
+Nhánh MUA không chọn NCC; planner chọn ngày mong nhận NVL trong thời hạn KHSX/đơn nguồn. NCC do purchaser chọn theo từng NVL lúc lập đơn. KHSX chặn ngày quá khứ hoặc vượt ngày giao đơn.
 
 **Actor chính:** Bộ phận lập kế hoạch
 
@@ -658,9 +663,9 @@ Danh sách rỗng vẫn trả kết quả hợp lệ. Sai dữ liệu, sai ngu�
 
 ### Luồng cơ bản
 
-1. Chỉ lập tổng kết khi xưởng xác nhận hoàn tất toàn bộ.
-2. Lấy lại mọi dòng lô nhập từng phần, giữ lượng/code/ngày thực tế; ghi NVL thực dùng không vượt đã cấp.
-3. Lưu nháp/gửi; không tạo lô/phiếu nhập trùng. Gửi tổng kết đánh dấu KHSX COMPLETED, làm nguồn BAN.
+1. Chủ xưởng lập báo cáo thành phẩm cho từng phần hoàn thành của KHSX, nhập lượng thực tế phần mới, ngày và NVL đã dùng (nếu có).
+2. Báo cáo tạo một phần gồm các dòng sản phẩm riêng trong cùng lô tổng của KHSX. Gửi báo cáo để giám đốc chọn phần này khi lập Công việc kiểm tra thành phẩm; QC rồi nhập riêng phần đạt.
+3. Nhiều báo cáo phần được phép; không nhập lại tổng tích lũy. Báo cáo phần thường giữ KHSX IN_PROGRESS; chỉ phần cuối có xác nhận hoàn tất mới chuyển COMPLETED. Không tự tạo phiếu/tồn khi chỉ báo cáo. Báo cáo tiến độ UC-34 không tạo phần lô.
 
 **Hậu điều kiện:** đọc trả dữ liệu trong phạm vi; ghi thành công cập nhật version/trạng thái và lịch sử theo service. Hủy form không tạo mutation; hủy chứng từ tuân thủ trạng thái/nguồn.
 
@@ -784,10 +789,10 @@ Danh sách rỗng vẫn trả kết quả hợp lệ. Sai dữ liệu, sai ngu�
 
 ### Luồng cơ bản
 
-1. Người được giao mở các dòng snapshot của kho và nhập số đếm; null khác số 0.
-2. Bắt đầu COUNT khóa kho/chụp snapshot; kho giữ khóa đến đóng đợt.
-3. Lưu theo version, hoàn tất khi mọi dòng đã đếm.
-4. Chênh lệch chuyển UC-16/17; không tự sửa tồn từ số đếm.
+1. Ban kiểm kê vào Quản lý kiểm kê → Tạo mới, chọn công việc được giao đã bắt đầu; hệ thống hiện toàn bộ dòng lô/phần lô của công việc.
+2. Nhập mọi dòng chưa ghi và xác nhận một lần, null khác số 0; lưu nguyên tử theo version, không chấp nhận thiếu/trùng/dòng ngoài phạm vi.
+3. Đợt kiểm tra lô hoàn tất khi đủ số đếm và QC theo bộ phận được giao. Không khóa cả kho chỉ vì kiểm tra lô.
+4. Không tự sửa tồn từ số đếm. COUNT theo kho lịch sử vẫn giữ snapshot và khóa đến đóng đợt; không thay bằng luồng kiểm tra lô.
 
 **Hậu điều kiện:** đọc trả dữ liệu trong phạm vi; ghi thành công cập nhật version/trạng thái và lịch sử theo service. Hủy form không tạo mutation; hủy chứng từ tuân thủ trạng thái/nguồn.
 
@@ -803,10 +808,10 @@ Danh sách rỗng vẫn trả kết quả hợp lệ. Sai dữ liệu, sai ngu�
 
 ### Luồng cơ bản
 
-1. Người đếm hoặc QC được phân công lập kết luận của từng kho đã hoàn tất đếm.
-2. Bắt đầu COUNT khóa kho/chụp snapshot; kho giữ khóa đến đóng đợt.
-3. Lưu/sửa kết luận nháp, gửi và giữ bất biến; kết luận trên PhieuKiemKe, không tạo biên bản vật lý riêng.
-4. Chênh lệch chuyển UC-16/17; không tự sửa tồn từ số đếm.
+1. Giám đốc chỉ định một nhân viên trong nhóm được giao khi lập đợt; chỉ người đó được lập/sửa/gửi biên bản chung.
+2. Đủ kết quả theo phạm vi thì tổng hợp số đếm, chênh lệch và QC của toàn đợt trong một biên bản, kể cả khi người lập thuộc QC/AC.
+3. Nhập kết luận, chọn không có ngoại lệ hoặc mô tả ngoại lệ; lưu nháp rồi gửi. Giám đốc nhận thông báo; bản gửi giữ bất biến.
+4. Ngoại lệ xuất hiện tự động cho quản lý xử lý hoặc đề xuất chủ xưởng. Không tự sửa tồn từ biên bản. Kết luận COUNT lịch sử tiếp tục lưu theo kho; chi tiết [KIEM_KE_BIEN_BAN_VA_HUY_HIEU.md](KIEM_KE_BIEN_BAN_VA_HUY_HIEU.md).
 
 **Hậu điều kiện:** đọc trả dữ liệu trong phạm vi; ghi thành công cập nhật version/trạng thái và lịch sử theo service. Hủy form không tạo mutation; hủy chứng từ tuân thủ trạng thái/nguồn.
 

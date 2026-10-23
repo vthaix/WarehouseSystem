@@ -171,7 +171,7 @@ function client() {
     assert.equal(
       (await planner.call("/api/v1/business-plans", "POST", missingSource))
         .status,
-      422,
+      201,
     );
     assert.equal(
       (
@@ -230,7 +230,8 @@ function client() {
       ...payload,
       lines: [{ ...payload.lines[0], quantity: "3.000" }],
     });
-    assert.equal(overPurchase.status, 422);
+    assert.equal(overPurchase.status, 409);
+    assert.equal(overPurchase.error.code, 'PLAN_CONFIRMATION_REQUIRED');
     const invalidEdit = await planner.call(
       `/api/v1/business-plans/${purchasePlan.data.id}`,
       "PATCH",
@@ -239,7 +240,8 @@ function client() {
         lines: [{ ...payload.lines[0], quantity: "3.001" }],
       },
     );
-    assert.equal(invalidEdit.status, 422);
+    assert.equal(invalidEdit.status, 409);
+    assert.equal(invalidEdit.error.code, 'PLAN_CONFIRMATION_REQUIRED');
     const competing = await Promise.all(
       [1, 2].map(() =>
         planner.call("/api/v1/business-plans", "POST", {
@@ -252,7 +254,7 @@ function client() {
       if (result.status === 201) purchasePlanIds.push(result.data.id);
     assert.deepEqual(
       competing.map((r) => r.status).sort(),
-      [201, 422],
+      [201, 409],
       JSON.stringify(competing),
     );
     const reviewedPurchase = await director.call(
@@ -269,6 +271,7 @@ function client() {
     const purchaser = client();
     await purchaser.login("purchaser");
     const buying = {
+      supplier_id: String(supplier.id),
       business_plan_id: purchasePlan.data.id,
       expected_delivery_date: delivery,
       delivery_terms: "Test report trace",
@@ -391,7 +394,7 @@ function client() {
     assert.equal(earlyApproval.error.code, "INSUFFICIENT_STOCK");
     assert.equal(
       (await planner.call("/api/v1/business-plans", "POST", selling)).status,
-      422,
+      409,
     );
     const [balances] = await pool.execute(
       "SELECT id FROM inventory_balances WHERE lot_id=?",

@@ -1,4 +1,6 @@
 const specs = {
+  materialCatalog:{owner:'business-service',methods:['list','get','metadata','update']},
+  accounts:{owner:'identity-service',methods:['list','get','create','update','remove','metadata']},
   users: { owner: "identity-service", methods: ["get", "hydrate"] },
   auth: { owner: "identity-service", methods: ["authenticate"] },
   orders: {
@@ -27,7 +29,7 @@ const specs = {
   },
   stockRequests: {
     owner: "warehouse-service",
-    methods: ["list", "get", "create", "update", "remove"],
+    methods: ["list", "get", "create", "update", "remove", "workflowSources"],
   },
   warehouseFlow: {
     owner: "warehouse-service",
@@ -50,7 +52,7 @@ const specs = {
   },
   qualityCampaigns: {
     owner: "warehouse-service",
-    methods: ["list", "get", "create", "action"],
+    methods: ["list", "get", "create", "action", "sources", "bindLots"],
   },
   stocktakes: {
     owner: "warehouse-service",
@@ -74,7 +76,7 @@ const specs = {
   },
   tasks: {
     owner: "warehouse-service",
-    methods: ["list", "get", "create", "update", "remove", "progress"],
+    methods: ["list", "get", "create", "update", "remove", "progress", "inspectionSources", "counts", "setMinuteAuthor"],
   },
   customerReturns: {
     owner: "warehouse-service",
@@ -82,11 +84,11 @@ const specs = {
   },
   notifications: {
     owner: "notification-service",
-    methods: ["list", "get", "read"],
+    methods: ["list", "get", "read", "badges"],
   },
   reports: {
     owner: "reporting-service",
-    methods: ["inventory", "stockDocuments", "stocktakes", "run", "csv"],
+    methods: ["inventory", "stockDocuments", "stocktakes", "run", "csv", "warehouseLookup"],
   },
 };
 const catalogResources = [
@@ -144,7 +146,10 @@ function apiOwner(url) {
       : catalogOwner(resource);
   }
   if (r === "reports") return "reporting-service";
-  if (r === "notifications") return "notification-service";
+  if (r === 'warehouse-lookup') return 'reporting-service';
+  if(r==='accounts'||r==='account-options')return 'identity-service';
+  if(r==='material-prices'||r==='material-price-options')return 'business-service';
+  if (r === "function-badges" || r === "notifications") return "notification-service";
   if (
     [
       "customer-orders",

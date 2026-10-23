@@ -79,13 +79,13 @@ function client() {
     );
     let r = await director.call("stocktakes", "POST", {
       campaign_type: "COUNT",
-      planned_date: new Date().toISOString().slice(0, 10),
+      planned_date: require('../src/services/domain/core').today(),
       start_at: new Date().toISOString(),
       end_at: new Date(Date.now() + 3600000).toISOString(),
       warehouses: [
         {
           warehouse_id: String(loc.warehouse_id),
-          assignee_ids: [String(person.id)],
+          assignee_ids: [String(person.id), String(inspector.id)],
           conclusion_assignee_ids: [String(inspector.id)],
         },
       ],
@@ -99,7 +99,7 @@ function client() {
     assert.equal(r.status, 200, JSON.stringify(r));
     const path = "stocktakes/" + count + "/warehouses/" + loc.warehouse_id;
     assert.equal((await qc.call('stocktakes/'+count)).status,200);
-    assert.equal((await qc.call(path+'/counts','PATCH',{lines:[]})).status,403);
+    assert.equal((await qc.call(path+'/lines')).status,200);
     assert.equal((await qc.call('stocktake-minutes','POST',{stocktake_id:count,warehouse_id:String(loc.warehouse_id),remarks:'Before completion'})).status,409);
     let w = (await counter.call(path + "/lines")).data;
     assert.equal(
@@ -107,7 +107,7 @@ function client() {
         .status,
       409,
     );
-    r = await counter.call(path + "/counts", "PATCH", {
+    r = await qc.call(path + "/counts", "PATCH", {
       lines: w.lines.map((l) => ({
         id: l.id,
         version: l.version,

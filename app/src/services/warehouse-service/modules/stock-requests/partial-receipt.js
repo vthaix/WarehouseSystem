@@ -31,7 +31,7 @@ async function create(service, user, body, requestId) {
     "Xưởng ngoài phạm vi.",
     403,
   );
-  C.date(body.requested_date, "requested_date");
+  C.date(body.requested_date, "requested_date", true);
   if (body.note !== undefined) C.text(body.note, "note", 5000, false);
   C.fail(
     !Array.isArray(body.lines) || !body.lines.length || body.lines.length > 100,
@@ -48,13 +48,13 @@ async function create(service, user, body, requestId) {
       "note",
     ]);
     C.qty(line.quantity);
-    C.date(line.manufactured_date, "manufactured_date");
+    C.date(line.manufactured_date, "manufactured_date", true);
     C.fail(
       line.manufactured_date > C.today(),
       "VALIDATION_ERROR",
       "Ngày sản xuất không được ở tương lai.",
     );
-    if (line.expiry_date) C.date(line.expiry_date, "expiry_date");
+    if (line.expiry_date) C.date(line.expiry_date, "expiry_date", true);
     C.fail(
       line.expiry_date && line.expiry_date < line.manufactured_date,
       "VALIDATION_ERROR",

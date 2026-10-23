@@ -311,7 +311,7 @@ module.exports = async function ({
     );
     const saleRequest = {
       ...requestBody("SALE_ISSUE", null, finishedItemId, "1.000"),
-      business_plan_id: sale,
+      workflow_source_id: productionPlanId,
     };
     delete saleRequest.production_report_id;
     const early = await workshop.call('/api/v1/stock-requests','POST',saleRequest);

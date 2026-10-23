@@ -10,6 +10,8 @@ Identity giữ người dùng/vai trò/phạm vi; Business giữ khách/xưởng
 
 ## Quan hệ chính
 
+Cập nhật lịch QC 22/10/2026: `DotKiemKe` loại QUALITY_CHECK có hai FK nguồn tùy chọn `MaKeHoachMuaQC` → `KeHoachMuaBan`, `MaKeHoachSanXuatQC` → `KeHoachSanXuat` (migration service 009). Lịch dự kiến chưa có ChiTietLo vẫn lưu được; chỉ sau gắn các phần hàng thực tế trong `LoLichKiemTra` mới bắt đầu. Ngày NVL dự kiến lấy MUA; ngày TP dự kiến lấy ngày giao của đơn gắn KHSX. TP từng phần hiện có dùng ngày yêu cầu nhập riêng, không đợi ngày giao cuối. Một LoHang có nhiều ChiTietLo theo đợt; QC duy nhất theo dòng, không gộp theo đầu lô. Không tạo lô/tồn giả cho kế hoạch chưa giao hàng.
+
 ```mermaid
 erDiagram
   DonHang ||--|{ ChiTietDonHang : gom
@@ -20,6 +22,7 @@ erDiagram
   BanBaoCaoSanXuat ||--o{ KeHoachMuaBan : nguon
   KeHoachMuaBan ||--|{ ChiTietKeHoachMuaBan : gom
   DonMuaHang ||--|{ ChiTietDonMuaHang : gom
+  NhaCungCap ||--o{ ChiTietDonMuaHang : cung_cap_tung_NVL
   LoHang ||--|{ ChiTietLo : dong_lo
   ChiTietLo ||--o| ChiTietKetQuaKiemTraQCAC : kiem_tra
   PhieuYeuCauNhapXuat ||--|{ ChiTietPhieuYeuCauNhapXuat : de_nghi
@@ -47,10 +50,10 @@ Sơ đồ thể hiện quan hệ nghiệp vụ chính; FK và NULL thực tế �
 
 1. Khách đặt đơn; planner tiếp nhận và lập KHSX cho xưởng. BGĐ duyệt KHSX; đơn hàng liên quan tự chuyển sang đã phê duyệt.
 2. Chủ xưởng tra cứu tồn khả dụng. Khi đang sản xuất, có thể gửi tiến độ/sự cố cho BGĐ; nếu có nhu cầu NVL thì gửi báo cáo NHU_CAU và chọn thêm planner.
-3. Mua bổ sung theo kế hoạch MUA đã duyệt hoặc nhập đơn REPORT/MANUAL. Nhận hàng tạo lô/dòng lô, QC; phần đạt lập yêu cầu nhập, quản lý phân công, nhân viên ghi phiếu. QC không tự tạo tồn.
+3. Mua bổ sung từ MUA đã duyệt hoặc tự nhập MANUAL, chọn NCC theo từng NVL. Nhận hàng tạo lô/dòng lô, QC; phần đạt lập yêu cầu nhập, quản lý phân công, nhân viên ghi phiếu. QC không tự tạo tồn.
 4. Xuất NVL lấy KHSX PLAN hoặc báo cáo NHU_CAU REPORT; kiểm nhu cầu cộng dồn, giữ chỗ và lô thực xuất.
-5. Thành phẩm hoàn thành phần nào, chủ xưởng nhập tay yêu cầu phần đó theo KHSX; một đầu lô/KHSX, dòng lô riêng từng đợt. QC đạt mới nhập. Không cần báo cáo tổng kết trước khi nhập từng đợt.
-6. Hoàn tất toàn bộ mới lập UC-35, lấy lại các dòng lô từng phần đã có. Không tạo lô hoặc nhập lần hai; sản lượng thực tế có thể khác dự kiến, NVL dùng không vượt đã cấp. Gửi tổng kết đánh dấu KHSX COMPLETED.
+5. Chủ xưởng lập báo cáo thành phẩm UC-35 theo từng phần hoàn thành. Mỗi báo cáo tạo một phần gồm các dòng ChiTietLo riêng trong cùng LoHang của KHSX. Báo cáo tiến độ UC-34 không tạo phần. Giám đốc chọn loại công việc → lô → các phần theo báo cáo thành phẩm → nhân viên.
+6. Nhiều báo cáo phần được phép; mỗi báo cáo ghi lượng phần mới. QC xong mới yêu cầu nhập đúng phần đạt, không cộng tồn bằng báo cáo. Báo cáo phần cuối có xác nhận hoàn tất mới chuyển KHSX COMPLETED. NVL dùng cộng dồn không vượt đã cấp. Migration 010 thêm KieuThanhPham để giữ tương thích báo cáo tổng kết cũ.
 7. Planner lập BAN từ tổng kết, BGĐ duyệt. Xuất bán khi đã hoàn tất SX, đến ngày giao, còn thành phẩm QC đạt khả dụng; ghi lượng giao và trạng thái đơn. Hiện code dùng latest_delivery_date làm điều kiện ngày giao, chưa có lịch giao riêng.
 8. Kiểm kê, công việc, kết luận, ngoại lệ và hàng trả vận hành theo quyền/phân công. Hàng cách ly chỉ giải phóng/loại bỏ/trả NCC sau phê duyệt; bù QC không sửa lịch sử phiếu.
 

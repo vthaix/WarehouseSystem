@@ -9,7 +9,7 @@
 - Auth/session/CSRF/RBAC/scope và thông báo.
 - Đơn khách, tiếp nhận, kế hoạch SX, duyệt KHSX và tự cập nhật đơn; NVL dự phòng 10% một lần.
 - Báo cáo tiến độ/sự cố/nhu cầu, tổng kết thành phẩm; loại báo cáo chung bảng.
-- Kế hoạch MUA/BAN, đơn mua nguồn PLAN/REPORT/MANUAL, import nguồn và kiểm hạn mức.
+- Kế hoạch MUA/BAN, đơn mua nguồn PLAN/MANUAL, import nguồn và kiểm hạn mức.
 - Lô/QC, giữ chỗ/phân công, phiếu nhập/xuất và biến động tồn; kiểm điều kiện giao thành phẩm.
 - Kiểm kê theo kho, kết luận, duyệt ngoại lệ và áp dụng riêng; tái kiểm QC.
 - Hàng khách trả theo dòng giao gốc, nhập một lần vào cách ly; chưa giao bù/hoàn tiền.

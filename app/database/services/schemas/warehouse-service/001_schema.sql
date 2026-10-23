@@ -13,7 +13,7 @@ CREATE TABLE `Kho` (
   `NgayCapNhat` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`MaBanGhi`),
   UNIQUE KEY `DuyNhat_Kho_1` (`Ma`)
-) ENGINE=InnoDB AUTO_INCREMENT=236 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=244 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `ViTriKho` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaKho` bigint unsigned NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE `ViTriKho` (
   PRIMARY KEY (`MaBanGhi`),
   UNIQUE KEY `DuyNhat_ViTriKho_1` (`MaKho`,`Ma`),
   CONSTRAINT `KhoaNgoai_ViTriKho_MaKho` FOREIGN KEY (`MaKho`) REFERENCES `Kho` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=536 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=544 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `LoHang` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `Ma` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -52,7 +52,7 @@ CREATE TABLE `LoHang` (
   CONSTRAINT `LoHang_chk_1` CHECK (((`HuongTra` is null) or ((`LoaiLo` = _utf8mb4'TRA_VE') and (`HuongTra` in (_utf8mb4'NCC',_utf8mb4'KHACH_HANG'))))),
   CONSTRAINT `LoHang_chk_2` CHECK ((`LoaiLo` in (_utf8mb4'NGUYEN_VAT_LIEU',_utf8mb4'THANH_PHAM',_utf8mb4'TRA_VE'))),
   CONSTRAINT `LoHang_chk_3` CHECK (((`TrangThaiTra` is null) or ((`LoaiLo` = _utf8mb4'TRA_VE') and (`HuongTra` = _utf8mb4'KHACH_HANG') and (`TrangThaiTra` in (_utf8mb4'PENDING',_utf8mb4'POSTED',_utf8mb4'CANCELLED')) and (`MaNguoiNhanTra` is not null) and (`MaKhoNhanTra` is not null) and (`MaNguoiLapTra` is not null))))
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `ChiTietLo` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `Ma` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -84,7 +84,7 @@ CREATE TABLE `ChiTietLo` (
   CONSTRAINT `ChiTietLo_chk_2` CHECK ((`TrangThaiKiemTra` in (_utf8mb4'PENDING',_utf8mb4'PASSED',_utf8mb4'PARTIAL',_utf8mb4'FAILED'))),
   CONSTRAINT `ChiTietLo_chk_3` CHECK (((`HanSuDung` is null) or (`NgaySanXuat` is null) or (`HanSuDung` >= `NgaySanXuat`))),
   CONSTRAINT `ChiTietLo_chk_4` CHECK ((((`MaChiTietDonMuaHang` is not null) and (`MaKeHoachSanXuat` is null)) or ((`MaChiTietDonMuaHang` is null) and (`MaKeHoachSanXuat` is not null))))
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `KetQuaKiemTraQCAC` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `Ma` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -103,7 +103,7 @@ CREATE TABLE `KetQuaKiemTraQCAC` (
   CONSTRAINT `KhoaNgoai_PhieuKiemTraChatLuong_Lich` FOREIGN KEY (`MaLichKiemTra`) REFERENCES `DotKiemKe` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `KhoaNgoai_PhieuKiemTraChatLuong_MaNguoiKiemTra` FOREIGN KEY (`MaNguoiKiemTra`) REFERENCES `KhoHang_Identity`.`NguoiDung` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `KetQuaKiemTraQCAC_chk_1` CHECK ((`TrangThai` in (_utf8mb4'RECORDED',_utf8mb4'VOID')))
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `ChiTietKetQuaKiemTraQCAC` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaPhieuKiemTraChatLuong` bigint unsigned NOT NULL,
@@ -123,7 +123,7 @@ CREATE TABLE `ChiTietKetQuaKiemTraQCAC` (
   CONSTRAINT `ChiTietKetQuaKiemTraQCAC_chk_2` CHECK ((`SoLuongDat` >= 0)),
   CONSTRAINT `ChiTietKetQuaKiemTraQCAC_chk_3` CHECK ((`SoLuongLoi` >= 0)),
   CONSTRAINT `ChiTietKetQuaKiemTraQCAC_chk_4` CHECK ((`SoLuongKiemTra` = (`SoLuongDat` + `SoLuongLoi`)))
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `PhieuYeuCauNhapXuat` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `Ma` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -144,6 +144,7 @@ CREATE TABLE `PhieuYeuCauNhapXuat` (
   `MaBaoCaoSanXuat` bigint unsigned DEFAULT NULL,
   `MaNguoiPhuTrach` bigint unsigned DEFAULT NULL,
   `LoaiNguonSanXuat` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'REPORT',
+  `ThoiDiemThucHien` datetime(6) DEFAULT NULL,
   PRIMARY KEY (`MaBanGhi`),
   UNIQUE KEY `DuyNhat_YeuCauKho_1` (`Ma`),
   KEY `ChiMuc_YeuCauKho_1` (`MaKho`,`Kieu`,`TrangThai`),
@@ -165,7 +166,7 @@ CREATE TABLE `PhieuYeuCauNhapXuat` (
   CONSTRAINT `CK_NguonNhapThanhPham004` CHECK (((`LoaiNguonSanXuat` = _utf8mb4'REPORT') or ((`LoaiNguonSanXuat` = _utf8mb4'PLAN') and (`PhuongThuc` = _utf8mb4'PRODUCTION_ISSUE') and (`MaKeHoachSanXuat` is not null) and (`MaBaoCaoSanXuat` is null)) or ((`LoaiNguonSanXuat` = _utf8mb4'MANUAL') and (`PhuongThuc` = _utf8mb4'PRODUCTION_RECEIPT') and (`Kieu` = _utf8mb4'IN') and (`MaKeHoachSanXuat` is not null) and (`MaBaoCaoSanXuat` is null)))),
   CONSTRAINT `PhieuYeuCauNhapXuat_chk_2` CHECK ((((`PhuongThuc` = _utf8mb4'PURCHASE_RECEIPT') and (`Kieu` = _utf8mb4'IN') and (`MaDonMuaHang` is not null) and (`MaKeHoachKinhDoanh` is null) and (`MaKeHoachSanXuat` is null) and (`MaBaoCaoSanXuat` is null)) or ((`PhuongThuc` = _utf8mb4'SALE_ISSUE') and (`Kieu` = _utf8mb4'OUT') and (`MaDonMuaHang` is null) and (`MaKeHoachKinhDoanh` is not null) and (`MaKeHoachSanXuat` is null) and (`MaBaoCaoSanXuat` is null)) or ((`PhuongThuc` in (_utf8mb4'PRODUCTION_ISSUE',_utf8mb4'PRODUCTION_RECEIPT')) and (((`PhuongThuc` = _utf8mb4'PRODUCTION_ISSUE') and (`Kieu` = _utf8mb4'OUT')) or ((`PhuongThuc` = _utf8mb4'PRODUCTION_RECEIPT') and (`Kieu` = _utf8mb4'IN'))) and (`MaDonMuaHang` is null) and (`MaKeHoachKinhDoanh` is null) and (`MaKeHoachSanXuat` is not null)) or ((`PhuongThuc` = _utf8mb4'MATERIAL_PURCHASE') and (`Kieu` = _utf8mb4'PROCUREMENT') and (`MaDonMuaHang` is null) and (`MaKeHoachKinhDoanh` is null) and (`MaKeHoachSanXuat` is null) and (`MaBaoCaoSanXuat` is not null)))),
   CONSTRAINT `PhieuYeuCauNhapXuat_chk_3` CHECK ((`TrangThai` in (_utf8mb4'PENDING',_utf8mb4'PARTIALLY_FULFILLED',_utf8mb4'FULFILLED',_utf8mb4'CANCELLED')))
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `ChiTietPhieuYeuCauNhapXuat` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaYeuCauKho` bigint unsigned NOT NULL,
@@ -180,7 +181,7 @@ CREATE TABLE `ChiTietPhieuYeuCauNhapXuat` (
   CONSTRAINT `KhoaNgoai_ChiTietYeuCauKho_MaMatHang` FOREIGN KEY (`MaMatHang`) REFERENCES `KhoHang_Business`.`MatHang` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `KhoaNgoai_ChiTietYeuCauKho_MaYeuCauKho` FOREIGN KEY (`MaYeuCauKho`) REFERENCES `PhieuYeuCauNhapXuat` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `ChiTietPhieuYeuCauNhapXuat_chk_1` CHECK ((`SoLuong` > 0))
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `PhieuKho` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `Ma` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -212,7 +213,7 @@ CREATE TABLE `PhieuKho` (
   CONSTRAINT `PhieuKho_chk_1` CHECK ((((`MaYeuCauKho` is not null) + (`MaLoTraVe` is not null)) = 1)),
   CONSTRAINT `PhieuKho_chk_2` CHECK ((`Kieu` in (_utf8mb4'IN',_utf8mb4'OUT'))),
   CONSTRAINT `PhieuKho_chk_3` CHECK ((`TrangThai` = _utf8mb4'POSTED'))
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `ChiTietPhieuKho` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaPhieuKho` bigint unsigned NOT NULL,
@@ -242,7 +243,7 @@ CREATE TABLE `ChiTietPhieuKho` (
   CONSTRAINT `ChiTietPhieuKho_chk_1` CHECK ((((`MaChiTietYeuCauKho` is not null) + (`MaChiTietTraVe` is not null)) = 1)),
   CONSTRAINT `ChiTietPhieuKho_chk_2` CHECK ((`SoLuong` > 0)),
   CONSTRAINT `ChiTietPhieuKho_chk_3` CHECK ((`NhomChatLuong` in (_utf8mb4'AVAILABLE',_utf8mb4'QUARANTINE')))
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `TonKho` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaChiTietLo` bigint unsigned NOT NULL,
@@ -259,7 +260,7 @@ CREATE TABLE `TonKho` (
   CONSTRAINT `KhoaNgoai_TonKho_MaViTriKho` FOREIGN KEY (`MaViTriKho`) REFERENCES `ViTriKho` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `TonKho_chk_1` CHECK ((`SoLuong` >= 0)),
   CONSTRAINT `TonKho_chk_2` CHECK ((`NhomChatLuong` in (_utf8mb4'AVAILABLE',_utf8mb4'QUARANTINE')))
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `BienDongKho` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaChiTietLo` bigint unsigned NOT NULL,
@@ -292,7 +293,7 @@ CREATE TABLE `BienDongKho` (
   CONSTRAINT `BienDongKho_chk_1` CHECK ((`BienDongSoLuong` <> 0)),
   CONSTRAINT `BienDongKho_chk_2` CHECK ((`NhomChatLuong` in (_utf8mb4'AVAILABLE',_utf8mb4'QUARANTINE'))),
   CONSTRAINT `BienDongKho_chk_3` CHECK (((((`MaChiTietPhieuKho` is not null) + (`MaDeXuatXuLy` is not null)) + (`MaChiTietKiemKe` is not null)) = 1))
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `DotKiemKe` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `Ma` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -309,15 +310,36 @@ CREATE TABLE `DotKiemKe` (
   `LoaiDot` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'COUNT',
   `LoaiKiemTra` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `DiaDiem` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `MaKeHoachMuaQC` bigint unsigned DEFAULT NULL,
+  `MaKeHoachSanXuatQC` bigint unsigned DEFAULT NULL,
+  `KiemSoLuong` tinyint(1) NOT NULL DEFAULT '0',
+  `KiemChatLuong` tinyint(1) NOT NULL DEFAULT '1',
+  `BienBanKetLuan` text COLLATE utf8mb4_unicode_ci,
+  `BienBanTrangThai` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'DRAFT',
+  `BienBanNguoiLap` bigint unsigned DEFAULT NULL,
+  `BienBanNgayGui` datetime(6) DEFAULT NULL,
+  `BienBanDuLieu` json DEFAULT NULL,
+  `NgoaiLeMoTa` text COLLATE utf8mb4_unicode_ci,
+  `NgoaiLeTrangThai` varchar(24) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'NONE',
+  `NgoaiLeCachXuLy` text COLLATE utf8mb4_unicode_ci,
+  `NgoaiLeMaXuong` bigint unsigned DEFAULT NULL,
+  `NgoaiLeNguoiXuLy` bigint unsigned DEFAULT NULL,
+  `NgoaiLeYKienPheDuyet` text COLLATE utf8mb4_unicode_ci,
+  `NgoaiLeNguoiDuyet` bigint unsigned DEFAULT NULL,
+  `NguoiLapBienBanDuocChon` bigint unsigned DEFAULT NULL,
   PRIMARY KEY (`MaBanGhi`),
   UNIQUE KEY `DuyNhat_DotKiemKe_1` (`Ma`),
   KEY `KhoaNgoai_DotKiemKe_MaNguoiTao` (`MaNguoiTao`),
+  KEY `FK_QC009_MaKeHoachMuaQC` (`MaKeHoachMuaQC`),
+  KEY `FK_QC009_MaKeHoachSanXuatQC` (`MaKeHoachSanXuatQC`),
+  CONSTRAINT `FK_QC009_MaKeHoachMuaQC` FOREIGN KEY (`MaKeHoachMuaQC`) REFERENCES `KhoHang_Business`.`KeHoachMuaBan` (`MaBanGhi`),
+  CONSTRAINT `FK_QC009_MaKeHoachSanXuatQC` FOREIGN KEY (`MaKeHoachSanXuatQC`) REFERENCES `KhoHang_Business`.`KeHoachSanXuat` (`MaBanGhi`),
   CONSTRAINT `KhoaNgoai_DotKiemKe_MaNguoiTao` FOREIGN KEY (`MaNguoiTao`) REFERENCES `KhoHang_Identity`.`NguoiDung` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `DotKiemKe_chk_1` CHECK ((`TrangThai` in (_utf8mb4'PLANNED',_utf8mb4'IN_PROGRESS',_utf8mb4'COMPLETED',_utf8mb4'CLOSED',_utf8mb4'CANCELLED'))),
   CONSTRAINT `DotKiemKe_chk_2` CHECK (((`LoaiMatHang` is null) or (`LoaiMatHang` in (_utf8mb4'MATERIAL',_utf8mb4'FINISHED_PRODUCT')))),
   CONSTRAINT `DotKiemKe_chk_3` CHECK ((`LoaiDot` in (_utf8mb4'COUNT',_utf8mb4'QUALITY_CHECK'))),
   CONSTRAINT `DotKiemKe_chk_4` CHECK (((`LoaiKiemTra` is null) or (`LoaiKiemTra` in (_utf8mb4'MATERIAL',_utf8mb4'FINISHED_PRODUCT'))))
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `PhieuKiemKe` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaDotKiemKe` bigint unsigned NOT NULL,
@@ -338,7 +360,7 @@ CREATE TABLE `PhieuKiemKe` (
   CONSTRAINT `KhoaNgoai_KhoKiemKe_MaDotKiemKe` FOREIGN KEY (`MaDotKiemKe`) REFERENCES `DotKiemKe` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `KhoaNgoai_KhoKiemKe_MaKho` FOREIGN KEY (`MaKho`) REFERENCES `Kho` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `PhieuKiemKe_chk_1` CHECK ((`TrangThai` in (_utf8mb4'PLANNED',_utf8mb4'COUNTING',_utf8mb4'COMPLETED',_utf8mb4'CLOSED')))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `PhanCongKiemKe` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaKhoKiemKe` bigint unsigned NOT NULL,
@@ -350,7 +372,7 @@ CREATE TABLE `PhanCongKiemKe` (
   KEY `KhoaNgoai_PhanCongKiemKe_MaNguoiDung` (`MaNguoiDung`),
   CONSTRAINT `KhoaNgoai_PhanCongKiemKe_MaKhoKiemKe` FOREIGN KEY (`MaKhoKiemKe`) REFERENCES `PhieuKiemKe` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `KhoaNgoai_PhanCongKiemKe_MaNguoiDung` FOREIGN KEY (`MaNguoiDung`) REFERENCES `KhoHang_Identity`.`NguoiDung` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `ChiTietPhieuKiemKe` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaKhoKiemKe` bigint unsigned NOT NULL,
@@ -379,7 +401,7 @@ CREATE TABLE `ChiTietPhieuKiemKe` (
   CONSTRAINT `ChiTietPhieuKiemKe_chk_2` CHECK (((`SoLuongThucTe` is null) or (`SoLuongThucTe` >= 0))),
   CONSTRAINT `ChiTietPhieuKiemKe_chk_3` CHECK ((`NhomChatLuong` in (_utf8mb4'AVAILABLE',_utf8mb4'QUARANTINE'))),
   CONSTRAINT `ChiTietPhieuKiemKe_chk_4` CHECK ((`TrangThaiXuLy` in (_utf8mb4'NONE',_utf8mb4'PENDING_APPROVAL',_utf8mb4'RESOLVED')))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `PhanCongKetLuanKiemKe` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaPhieuKiemKe` bigint unsigned NOT NULL,
@@ -389,7 +411,7 @@ CREATE TABLE `PhanCongKetLuanKiemKe` (
   KEY `FK_KetLuan_PhanCong_Nguoi` (`MaNguoiDung`),
   CONSTRAINT `FK_KetLuan_PhanCong_Nguoi` FOREIGN KEY (`MaNguoiDung`) REFERENCES `KhoHang_Identity`.`NguoiDung` (`MaBanGhi`),
   CONSTRAINT `FK_KetLuan_PhanCong_Phieu` FOREIGN KEY (`MaPhieuKiemKe`) REFERENCES `PhieuKiemKe` (`MaBanGhi`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `BanDeXuatXuLyNgoaiLe` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `Ma` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -424,7 +446,7 @@ CREATE TABLE `BanDeXuatXuLyNgoaiLe` (
   CONSTRAINT `CK_NgoaiLe_HanhDong006` CHECK ((`HanhDong` in (_utf8mb4'ADJUST_TO_ACTUAL',_utf8mb4'SCRAP',_utf8mb4'RETURN_SUPPLIER',_utf8mb4'RELEASE',_utf8mb4'QUARANTINE'))),
   CONSTRAINT `CK_NgoaiLe_Loai005` CHECK ((`Kieu` in (_utf8mb4'QC_FAILURE',_utf8mb4'STOCKTAKE_DIFFERENCE',_utf8mb4'QUARANTINE_DISPOSITION'))),
   CONSTRAINT `CK_NgoaiLe_Nguon005` CHECK ((((`Kieu` in (_utf8mb4'QC_FAILURE',_utf8mb4'QUARANTINE_DISPOSITION')) and (`MaChiTietKiemTraChatLuong` is not null) and (`MaChiTietKiemKe` is null)) or ((`Kieu` = _utf8mb4'STOCKTAKE_DIFFERENCE') and (`MaChiTietKiemTraChatLuong` is null) and (`MaChiTietKiemKe` is not null))))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `KetQuaXuLyNgoaiLe` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaDeXuatXuLy` bigint unsigned NOT NULL,
@@ -439,7 +461,7 @@ CREATE TABLE `KetQuaXuLyNgoaiLe` (
   CONSTRAINT `FK_KetQuaNgoaiLe_DeXuat` FOREIGN KEY (`MaDeXuatXuLy`) REFERENCES `BanDeXuatXuLyNgoaiLe` (`MaBanGhi`),
   CONSTRAINT `FK_KetQuaNgoaiLe_Nguoi` FOREIGN KEY (`MaNguoiDuyet`) REFERENCES `KhoHang_Identity`.`NguoiDung` (`MaBanGhi`),
   CONSTRAINT `KetQuaXuLyNgoaiLe_chk_1` CHECK ((`QuyetDinh` in (_utf8mb4'APPROVED',_utf8mb4'REJECTED')))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `PhanBoXuLy` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaDeXuatXuLy` bigint unsigned NOT NULL,
@@ -548,7 +570,7 @@ CREATE TABLE `CongViec` (
   CONSTRAINT `CongViec_chk_1` CHECK ((`KetThucLuc` > `BatDauLuc`)),
   CONSTRAINT `CongViec_chk_2` CHECK ((`MucDoUuTien` in (_utf8mb4'LOW',_utf8mb4'NORMAL',_utf8mb4'HIGH'))),
   CONSTRAINT `CongViec_chk_3` CHECK ((`TrangThai` in (_utf8mb4'PLANNED',_utf8mb4'IN_PROGRESS',_utf8mb4'COMPLETED',_utf8mb4'CANCELLED')))
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `PhanCongCongViec` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaCongViec` bigint unsigned NOT NULL,
@@ -560,19 +582,22 @@ CREATE TABLE `PhanCongCongViec` (
   KEY `KhoaNgoai_PhanCongCongViec_MaNguoiDung` (`MaNguoiDung`),
   CONSTRAINT `KhoaNgoai_PhanCongCongViec_MaCongViec` FOREIGN KEY (`MaCongViec`) REFERENCES `CongViec` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `KhoaNgoai_PhanCongCongViec_MaNguoiDung` FOREIGN KEY (`MaNguoiDung`) REFERENCES `KhoHang_Identity`.`NguoiDung` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `LoLichKiemTra` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaLichKiemTra` bigint unsigned NOT NULL,
   `MaChiTietLo` bigint unsigned NOT NULL,
   `NgayTao` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `NgayCapNhat` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `SoLuongDem` decimal(18,3) DEFAULT NULL,
+  `NguoiDem` bigint unsigned DEFAULT NULL,
+  `ThoiDiemDem` datetime(6) DEFAULT NULL,
   PRIMARY KEY (`MaBanGhi`),
   UNIQUE KEY `DuyNhat_LoLichKiemTra` (`MaLichKiemTra`,`MaChiTietLo`),
   KEY `KhoaNgoai_LoLichKiemTra_LoHang` (`MaChiTietLo`),
   CONSTRAINT `KhoaNgoai_LoLichKiemTra_DotKiemKe` FOREIGN KEY (`MaLichKiemTra`) REFERENCES `DotKiemKe` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `KhoaNgoai_LoLichKiemTra_LoHang` FOREIGN KEY (`MaChiTietLo`) REFERENCES `ChiTietLo` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `PhanCongLichKiemTra` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaLichKiemTra` bigint unsigned NOT NULL,
@@ -584,7 +609,7 @@ CREATE TABLE `PhanCongLichKiemTra` (
   KEY `KhoaNgoai_PhanCongLichKiemTra_NguoiDung` (`MaNguoiDung`),
   CONSTRAINT `KhoaNgoai_PhanCongLichKiemTra_DotKiemKe` FOREIGN KEY (`MaLichKiemTra`) REFERENCES `DotKiemKe` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `KhoaNgoai_PhanCongLichKiemTra_NguoiDung` FOREIGN KEY (`MaNguoiDung`) REFERENCES `KhoHang_Identity`.`NguoiDung` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `PhanCongKho` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaYeuCauKho` bigint unsigned NOT NULL,
@@ -613,7 +638,7 @@ CREATE TABLE `PhanCongKho` (
   CONSTRAINT `KhoaNgoai_PhanCongKho_YeuCauKho` FOREIGN KEY (`MaYeuCauKho`) REFERENCES `PhieuYeuCauNhapXuat` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `PhanCongKho_chk_1` CHECK ((`NhomChatLuong` = _utf8mb4'AVAILABLE')),
   CONSTRAINT `PhanCongKho_chk_2` CHECK (((`SoLuong` > 0) and (`SoLuongDaGhi` >= 0) and (`SoLuongDaGhi` <= `SoLuong`)))
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `YeuCauChongLap` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaNguoiDung` bigint unsigned NOT NULL,
@@ -628,7 +653,7 @@ CREATE TABLE `YeuCauChongLap` (
   PRIMARY KEY (`MaBanGhi`),
   UNIQUE KEY `DuyNhat_YeuCauChongLap_1` (`MaNguoiDung`,`ThaoTac`,`KhoaChongLap`),
   CONSTRAINT `KhoaNgoai_YeuCauChongLap_MaNguoiDung` FOREIGN KEY (`MaNguoiDung`) REFERENCES `KhoHang_Identity`.`NguoiDung` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=143 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `NhatKyHeThong` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `MaNguoiThucHien` bigint unsigned DEFAULT NULL,
@@ -644,7 +669,7 @@ CREATE TABLE `NhatKyHeThong` (
   KEY `ChiMuc_NhatKyHeThong_1` (`LoaiTaiNguyen`,`MaTaiNguyen`,`NgayTao`),
   KEY `KhoaNgoai_NhatKyHeThong_MaNguoiThucHien` (`MaNguoiThucHien`),
   CONSTRAINT `KhoaNgoai_NhatKyHeThong_MaNguoiThucHien` FOREIGN KEY (`MaNguoiThucHien`) REFERENCES `KhoHang_Identity`.`NguoiDung` (`MaBanGhi`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=572 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1513 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `LuuTruBienBanKiemKeTruoc015` (
   `MaBanGhi` bigint unsigned NOT NULL AUTO_INCREMENT,
   `Ma` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,

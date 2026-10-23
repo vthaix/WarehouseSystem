@@ -19,15 +19,21 @@ createForm = async function () {
       const listed=(await api("stocktakes?per_page=100")).data.filter(s=>s.campaign_type==="COUNT");
       const scopes=await Promise.all(listed.map(s=>api("stocktakes/"+s.id).then(r=>r.data)));
       const candidates=scopes.filter(s=>s.warehouses.some(w=>w.status==="COMPLETED" && w.conclusion_status==="DRAFT" && w.remarks===null));
-      if(!candidates.length){toast("Chưa có kho được phân công đã đếm xong và cần lập kết luận.");return;}
+      const inspections=(await api('quality-campaigns?per_page=100')).data.filter(s=>['COMPLETED','CLOSED'].includes(s.status)&&s.BienBanKetLuan==null&&String(s.NguoiLapBienBanDuocChon)===String(user.id));
+      if(!candidates.length&&!inspections.length){toast("Chưa có đợt được phân công đã hoàn tất và cần lập biên bản. Nếu có cả hai bộ phận, cần đủ số đếm và kết quả QC.");return;}
       openModal("Lập kết luận kiểm kê",formWrap(
-        f("stocktake_id","select",true,candidates.map(s=>({id:s.id,name:s.code})))+
-        f("warehouse_id","select",true,[])+f("remarks","textarea")));
+        f("stocktake_id","select",true,[...inspections.map(s=>({id:'LOT-'+s.id,name:s.code+' · Kiểm tra lô'})),...candidates.map(s=>({id:s.id,name:s.code+' · Kiểm đếm kho'}))])+
+        f("warehouse_id","select",true,[])+f("remarks","textarea")+inspectionExceptionFields()+'<div class="span2" id="minute-source-info"></div>'));
+      const syncException=mountInspectionExceptionFields();
       const sync=()=>{
-        const s=candidates.find(s=>s.id===document.querySelector("#f-stocktake_id").value);
-        document.querySelector("#f-warehouse_id").innerHTML=s.warehouses.filter(w=>w.status==="COMPLETED" && w.conclusion_status==="DRAFT" && w.remarks===null).map(w=>'<option value="'+esc(w.warehouse_id)+'">Kho '+esc(w.warehouse_id)+'</option>').join("");
+        const id=document.querySelector("#f-stocktake_id").value,isLot=id.startsWith('LOT-'),warehouse=document.querySelector('#f-warehouse_id');
+        warehouse.closest('.field').hidden=isLot;warehouse.disabled=isLot;warehouse.required=!isLot;
+        document.querySelector('#minute-exception-fields').hidden=!isLot;document.querySelector('#f-exception_mode').disabled=!isLot;syncException();
+        const s=candidates.find(s=>String(s.id)===id);
+        warehouse.innerHTML=isLot?'':s.warehouses.filter(w=>w.status==="COMPLETED" && w.conclusion_status==="DRAFT" && w.remarks===null).map(w=>'<option value="'+esc(w.warehouse_id)+'">Kho '+esc(w.warehouse_id)+'</option>').join("");
+        document.querySelector('#minute-source-info').textContent=isLot?'Biên bản tự tổng hợp kết quả QC/AC và số đếm của các dòng lô thuộc đợt. Nhập kết luận, lưu nháp rồi gửi cho Ban giám đốc.':'';
       };
-      document.querySelector("#f-stocktake_id").onchange=sync;sync();bindForm(d=>d,current);return;
+      document.querySelector("#f-stocktake_id").onchange=sync;sync();bindForm(d=>d.stocktake_id.startsWith('LOT-')?{inspection_campaign_id:d.stocktake_id.slice(4),remarks:d.remarks,exception_mode:d.exception_mode,...(d.exception_mode==='DESCRIBE'?{exception_description:d.exception_description}:{})}:{stocktake_id:d.stocktake_id,warehouse_id:d.warehouse_id,remarks:d.remarks},current);return;
     }
     if (isMysql && current === "exception-proposals") {
       const differences = user.roles.includes("WAREHOUSE_MANAGER")
@@ -138,6 +144,7 @@ createForm = async function () {
       const warehouses = await options("warehouses"),
         users = await options("users"),
         lots = (await options("lots")).filter((l) => l.qc_status === "PENDING");
+      const qcSources=isMysql?(await api('quality-campaign-sources')).data:{lots,plans:[]};
       openModal(
         "Lập đợt kiểm kê / QC",
         formWrap(
@@ -159,42 +166,59 @@ createForm = async function () {
                 "FINISHED_PRODUCT",
               ]) +
               f("location") +
-              f(
-                "assignee_ids",
-                "select",
-                true,
-                users.filter((u) => u.roles.includes("QC_INSPECTOR")),
-              ) +
-              f(
-                "lot_ids",
-                "select",
-                true,
-                lots.filter((l) => l.kind === "MATERIAL"),
-              )
+              employeePicker(users, [], ['QC_INSPECTOR']) +
+              '<div class="field"><label for="qc-source-mode">Nguồn hàng kiểm tra</label><select id="qc-source-mode"><option value="ACTUAL">Lô / đợt hàng đã ghi nhận</option><option value="PURCHASE_PLAN">NVL dự kiến từ kế hoạch mua</option><option value="PRODUCTION_PLAN">Thành phẩm dự kiến từ KHSX</option></select></div><div class="field" id="qc-plan-field"><label for="qc-source-plan">Kế hoạch nguồn</label><select id="qc-source-plan"></select></div><div class="span2 field" id="qc-actual-field"><label for="f-lot_ids">Chọn từng dòng lô / đợt thành phẩm thực tế</label><select id="f-lot_ids" multiple size="6"></select><small>Cùng mã lô tổng vẫn có thể chọn riêng từng đợt. Giữ Ctrl để chọn nhiều đợt.</small></div><div class="span2 notice" id="qc-source-info"></div>'
             : f("item_kind", "select", false, [
                 { id: "", name: "Tất cả" },
                 { id: "MATERIAL", name: "Nguyên liệu" },
                 { id: "FINISHED_PRODUCT", name: "Thành phẩm" },
               ]) +
               f("warehouse_id", "select", true, warehouses) +
-              f(
-                "assignee_ids",
-                "select",
-                true,
-                users.filter((u) => u.roles.includes("STOCKTAKER")),
-              ) + f("conclusion_assignee_ids","select",false,[{id:"",name:"Ban kiểm kê lập kết luận"},...users.filter(u=>u.roles.includes("QC_INSPECTOR"))])) +
+              employeePicker(users) + f("conclusion_assignee_ids","select",false,[{id:"",name:"Nhân viên được phân công lập kết luận"},...users.filter(u=>u.roles.includes("QC_INSPECTOR"))])) +
           f("note", "textarea", false) +
           "</div>";
-        if (qc)
-          document.querySelector("#f-quality_kind").onchange = () => {
-            document.querySelector("#f-lot_ids").innerHTML = lots
+        if (qc) {
+          const syncReceivedDate=()=>{
+            const mode=document.querySelector('#qc-source-mode').value;
+            const plan=qcSources.plans.find(p=>p.source_mode===mode&&String(p.id)===document.querySelector('#qc-source-plan').value);
+            const selected=[...document.querySelector('#f-lot_ids').selectedOptions].map(o=>o.value);
+            const chosen=qcSources.lots.filter(l=>selected.includes(String(l.id)));
+            const received=mode==='ACTUAL'?chosen.map(l=>l.expected_date||l.received_date).filter(Boolean).sort().at(-1):plan?.expected_date;
+            const day=[received||calendarToday(),calendarToday()].sort().at(-1);
+            const start=document.querySelector('#f-start_at'),end=document.querySelector('#f-end_at');
+            start.min=day+'T00:00'; start.value=day+'T08:00';
+            end.min=start.value; end.value=day+'T09:00';
+            const planned=document.querySelector('#f-planned_date'); planned.min=day;planned.value=day;
+            document.querySelector('#qc-source-info').innerHTML=plan?'Ngày theo kế hoạch: <strong>'+esc(format(plan.expected_date))+'</strong>. Lịch dự kiến chưa tạo tồn kho hoặc kết quả QC. Khi có hàng, mở chi tiết lịch để chọn từng phần lô thực tế.'+tableData(plan.lines||[]):'Chọn phần hàng thực tế để kiểm tra. Mỗi mã đợt là một phạm vi QC riêng, không kiểm lại toàn bộ lô tổng.';
+          };
+          document.querySelector('#f-lot_ids').onchange=syncReceivedDate;
+          const syncSource=()=>{
+            const mode=document.querySelector('#qc-source-mode').value,actual=mode==='ACTUAL';
+            const kind=document.querySelector('#f-quality_kind');
+            kind.disabled=!actual;
+            if(!actual)kind.value=mode==='PURCHASE_PLAN'?'MATERIAL':'FINISHED_PRODUCT';
+            document.querySelector('#qc-plan-field').hidden=actual;
+            document.querySelector('#qc-source-plan').required=!actual;
+            document.querySelector('#qc-actual-field').hidden=!actual;
+            document.querySelector('#f-lot_ids').required=actual;
+            document.querySelector('#qc-source-plan').innerHTML=qcSources.plans.filter(p=>p.source_mode===mode).map(p=>'<option value="'+esc(p.id)+'">'+esc(p.code+' · '+format(p.expected_date))+'</option>').join('');
+            document.querySelector("#f-lot_ids").innerHTML = qcSources.lots
               .filter(
                 (l) =>
                   l.kind === document.querySelector("#f-quality_kind").value,
               )
-              .map((l) => `<option value="${l.id}">${esc(l.name)}</option>`)
+              .map((l) => `<option value="${l.id}">${esc(l.name||l.code)}</option>`)
               .join("");
+            syncReceivedDate();
           };
+          document.querySelector('#qc-source-mode').onchange=syncSource;
+          document.querySelector('#qc-source-plan').onchange=syncReceivedDate;
+          document.querySelector('#f-quality_kind').onchange=syncSource;
+          syncSource();
+          document.querySelector('#f-start_at').onchange=()=>{
+            document.querySelector('#f-end_at').min=document.querySelector('#f-start_at').value;
+          };
+        }
       };
       document.querySelector("#f-campaign_type").onchange = fields;
       fields();
@@ -207,17 +231,19 @@ createForm = async function () {
           note: d.note,
           ...(d.campaign_type === "QUALITY_CHECK"
             ? {
-                quality_kind: d.quality_kind,
+                quality_kind: document.querySelector('#f-quality_kind').value,
                 location: d.location,
-                assignee_ids: [d.assignee_ids],
-                lot_ids: [d.lot_ids],
+                assignee_ids: selectedEmployees(),
+                source_mode:document.querySelector('#qc-source-mode').value,
+                ...(document.querySelector('#qc-source-mode').value!=='ACTUAL'?{source_plan_id:document.querySelector('#qc-source-plan').value}:{}),
+                lot_ids:document.querySelector('#qc-source-mode').value==='ACTUAL'?[...document.querySelector('#f-lot_ids').selectedOptions].map(o=>o.value):[],
               }
             : {
                 ...(d.item_kind ? { item_kind: d.item_kind } : {}),
                 warehouses: [
                   {
                     warehouse_id: d.warehouse_id,
-                    assignee_ids: [d.assignee_ids],
+                    assignee_ids: selectedEmployees(),
                     ...(isMysql ? {conclusion_assignee_ids: d.conclusion_assignee_ids ? [d.conclusion_assignee_ids] : []} : {}),
                   },
                 ],
@@ -225,13 +251,18 @@ createForm = async function () {
         }),
         current,
       );
+      if(location.hash==='#quality-create'){
+        document.querySelector('#f-campaign_type').value='QUALITY_CHECK';fields();
+        history.replaceState(null,'',location.pathname+location.search);
+      }
       return;
     }
     if (current === "qc-inspections") {
-      const campaigns = (await api("stocktakes")).data.filter(
+      const campaigns = (await api("quality-campaigns?per_page=100&status=IN_PROGRESS")).data.filter(
           (s) =>
             s.campaign_type === "QUALITY_CHECK" &&
-            s.assignee_ids.includes(user.id) &&
+            (s.assignee_ids||[]).map(String).includes(String(user.id)) &&
+            s.KiemChatLuong!==false && s.KiemChatLuong!==0 &&
             s.status === "IN_PROGRESS",
         ),
         lots = await options("lots");
@@ -269,7 +300,7 @@ createForm = async function () {
           (c) => c.id === document.querySelector("#f-campaign_id").value,
         );
         const eligible = lots.filter(
-          (l) => campaign.lot_ids.includes(l.id) && l.qc_status === "PENDING",
+          (l) => (campaign?.lot_ids||[]).map(String).includes(String(l.id)) && l.qc_status === "PENDING",
         );
         document.querySelector("#f-lot_id").innerHTML = eligible
           .map((l) => `<option value="${l.id}">${esc(l.name)}</option>`)
@@ -514,7 +545,7 @@ createForm = async function () {
       const finishedReports = isMysql ? await options("finished-reports") : [];
       const reports = isMysql
         ? (await options("production-reports")).filter(
-            (r) => r.status === "SUBMITTED",
+            (r) => r.status === "SUBMITTED" && r.report_purpose === "NHU_CAU" && r.send_to_planner,
           )
         : [];
       const requests = (await options("stock-requests")).filter(
@@ -525,6 +556,7 @@ createForm = async function () {
       const grid = document.querySelector("#data-form .form-grid");
       grid.insertAdjacentHTML(
         "afterbegin",
+        '<div class="field" id="purchase-plan-mode-field"><label for="purchase-plan-mode">Hình thức lập kế hoạch mua NVL</label><select id="purchase-plan-mode"><option value="MANUAL">Lập kế hoạch trực tiếp</option><option value="REPORT">Lập từ báo cáo sản xuất</option></select></div>' +
         (isMysql
           ? f("finished_report_id", "select", false, [
               { id: "", name: "Chọn báo cáo thành phẩm nguồn" },
@@ -549,9 +581,14 @@ createForm = async function () {
           ]),
       );
       const sync = () => {
+        const manual = document.querySelector('#purchase-plan-mode').value === 'MANUAL';
+        const purchase = document.querySelector('#f-type').value === 'PURCHASE';
+        document.querySelector('#purchase-plan-mode-field').hidden = document.querySelector('#f-type').value !== 'PURCHASE';
         const el = document.querySelector("#f-source_request_id");
         el.disabled = document.querySelector("#f-type").value !== "PURCHASE";
         el.parentElement.hidden = el.disabled;
+        el.disabled = true;
+        el.parentElement.hidden = true;
         const plan = document.querySelector("#f-production_plan_id");
         if (plan) {
           plan.disabled = true;
@@ -561,18 +598,35 @@ createForm = async function () {
         const report = document.querySelector("#f-production_report_id");
         const finished = document.querySelector("#f-finished_report_id");
         if (finished) {
-          finished.disabled = !el.disabled;
-          finished.parentElement.hidden = !el.disabled;
-          finished.required = el.disabled;
+          finished.disabled = purchase;
+          finished.parentElement.hidden = purchase;
+          finished.required = !purchase;
         }
         if (report) {
-          report.disabled = el.disabled;
-          report.parentElement.hidden = el.disabled;
-          report.required = !el.disabled && !el.value;
+          const purchase = document.querySelector('#f-type').value === 'PURCHASE';
+          report.disabled = !purchase || manual;
+          report.parentElement.hidden = report.disabled;
+          report.required = purchase && !manual;
         }
+        const selectedReport = !purchase ? finishedReports.find(r=>r.id===finished?.value) : !manual ? reports.find(r=>r.id===report?.value) : null;
+        const source = production.find(p=>p.id===String(selectedReport?.production_plan_id || plan?.value));
+        const date = document.querySelector('#f-planned_date');
+        const limit = !purchase ? source?.latest_delivery_date : source?.end_date;
+        if (limit) date.max=limit; else date.removeAttribute('max');
       };
       document.querySelector("#f-type").addEventListener("change", sync);
-      sync();
+      const purchaseItems = (await options('items')).filter(i=>i.kind === 'MATERIAL');
+      document.querySelector('#purchase-plan-mode').onchange = () => {
+        for (const name of ['production_report_id','production_plan_id','source_request_id']) {
+          const input = document.querySelector('#f-' + name); if (input) input.value = '';
+        }
+        const editor = lineEditor('NVL cần mua', purchaseItems, 'lines', ['quantity','unit_price']);
+        document.querySelector('#lines-rows').closest('.form-section')?.remove();
+        document.querySelector('#data-form .form-grid').insertAdjacentHTML('beforeend', editor.html);
+        editor.mount();
+        sync();
+      };
+      document.querySelector('#purchase-plan-mode').onchange();
       if (isMysql)
         document.querySelector("#f-finished_report_id").onchange = () => {
           const report = finishedReports.find(
@@ -608,6 +662,7 @@ createForm = async function () {
             ["quantity", "unit_price"],
             lines,
           ).mount();
+          sync();
         };
       if (isMysql)
         document.querySelector("#f-production_report_id").onchange = () => {
@@ -664,6 +719,10 @@ createForm = async function () {
       bindForm((d) => {
         const b = { ...d, lines: readLines() };
         if (b.type === "PURCHASE") {
+          delete b.supplier_id;
+          if (document.querySelector('#purchase-plan-mode').value === 'MANUAL') {
+            delete b.production_report_id; delete b.production_plan_id; delete b.source_request_id;
+          }
           delete b.finished_report_id;
           delete b.customer_id;
           delete b.customer_order_id;
@@ -678,16 +737,28 @@ createForm = async function () {
         }
         return b;
       }, current);
+      const reportSource = new URLSearchParams(location.hash.slice(1)).get('purchase_report');
+      if (reportSource && reports.some(r=>String(r.id)===reportSource)) {
+        document.querySelector('#f-type').value = 'PURCHASE';
+        const mode=document.querySelector('#purchase-plan-mode'); mode.value='REPORT'; mode.onchange();
+        const report=document.querySelector('#f-production_report_id'); report.value=reportSource; report.onchange();
+        const url=new URL(location.href); url.hash=''; history.replaceState(null,'',url);
+      }
     }
   } catch (e) {
     openModal("Không thể tạo chứng từ", errorHTML(e));
   }
 };
 actionForm = async function (r, action) {
+  if(isMysql&&action==='bindLots'){
+    openModal('Chọn phần lô thực tế cho '+r.code,formWrap('<div class="span2 notice">Chỉ chọn các đợt đã ghi nhận thuộc đúng kế hoạch nguồn; không gộp số lượng cả lô tổng.</div><div class="span2 field"><label for="qc-bind-lots">Phần lô đang chờ QC</label><select id="qc-bind-lots" multiple size="8" required>'+(r.eligible_lots||[]).map(l=>'<option value="'+esc(l.id)+'">'+esc(l.name)+'</option>').join('')+'</select></div>'));
+    bindForm(()=>({version:r.version,lot_ids:[...document.querySelector('#qc-bind-lots').selectedOptions].map(o=>o.value)}),'quality-campaigns/'+r.id+'/bind-lots');return;
+  }
   if (isMysql && action === "correct") {
     openModal(
       "Chứng từ bù QC",
       formWrap(
+        '<div class="span2 notice">Điều chỉnh kết quả QC đã ghi, giữ lịch sử và bắt buộc nêu lý do. Nhập số đạt/lỗi mới của toàn bộ dòng, không nhập phần chênh lệch. Đạt + lỗi phải bằng số đã kiểm. Hàng đã nhập/phân bổ/trả phải xử lý theo luồng ngoại lệ.</div>'+
         inputField(
           "lot_id",
           "select",
@@ -700,6 +771,8 @@ actionForm = async function (r, action) {
           inputField("reason", "textarea"),
       ),
     );
+    const fillCorrection=()=>{const line=r.lines.find(l=>String(l.lot_id)===document.querySelector('#f-lot_id').value);document.querySelector('#f-passed_quantity').value=line?.passed_quantity||'0';document.querySelector('#f-failed_quantity').value=line?.failed_quantity||'0';document.querySelector('#f-issue').value=line?.issue||'';};
+    document.querySelector('#f-lot_id').onchange=fillCorrection;fillCorrection();
     bindForm(
       (d) => ({
         version: r.version,
@@ -803,6 +876,16 @@ actionForm = async function (r, action) {
 };
 detail = function (r) {
   originalDetail(r);
+  if (current === 'production-reports' && has(['PLANNER']) && r.status === 'SUBMITTED' && r.report_purpose === 'NHU_CAU' && r.send_to_planner) {
+    const button = document.createElement('button');
+    button.className = 'button primary';
+    button.textContent = 'Tạo kế hoạch mua NVL';
+    button.onclick = async () => {
+      const module = modules.find(m=>m[0]==='business-plans');
+      location.assign(module[5]+'?module=business-plans#purchase_report='+encodeURIComponent(r.id));
+    };
+    modalBody.querySelector('.form-actions').append(button);
+  }
   if (r.production_plans) {
     const div = document.createElement("div");
     div.className = "form-section";
@@ -837,18 +920,25 @@ detail = function (r) {
     modalBody.querySelector(".form-actions").append(btn);
   }
 };
+window.addEventListener('DOMContentLoaded', () => {
+  if(current==='business-plans' && new URLSearchParams(location.hash.slice(1)).has('purchase_report') && has(['PLANNER'])) createForm();
+  if(current==='stocktakes'&&location.hash==='#quality-create'&&has(['DIRECTOR']))createForm();
+});
 async function dispatchForm(req) {
   try {
+    const qty=value=>{const [a,b='']=String(value||'0').split('.');return BigInt(a)*1000n+BigInt(b.padEnd(3,'0'));};
+    const decimal=n=>`${n/1000n}.${String(n%1000n).padStart(3,'0')}`;
     const preview = (await api("stock-requests/" + req.id + "/allocations"))
         .data,
       staff = (await options("users")).filter((u) =>
         u.roles.includes("WAREHOUSE_STAFF"),
       );
+    const requestedAt=req.requested_at||req.requested_date+'T08:00:00+07:00';
     openModal(
       "Phân công kho · " + req.code,
-      `<div class="notice">Phân công cụ thể nhân viên, dòng hàng, lô, vị trí và số lượng. Mỗi nhân viên chỉ được ghi phiếu cho phần hàng của mình.</div>${formWrap(inputField("start_at", "datetime-local", true, [], req.requested_date + "T08:00") + inputField("end_at", "datetime-local", true, [], req.requested_date + "T09:00") + '<div class="span2" id="dispatch-lines"></div><button class="button" type="button" id="add-dispatch">＋ Thêm phân bổ</button>')}`,
+      `<div class="notice">Chọn nhân viên kho và kiểm tra lô, vị trí, số lượng được giao. Lịch gợi ý lấy từ ngày giờ chủ xưởng đề nghị.</div>${req.source_lots?.length?tableData(req.source_lots):''}${formWrap(inputField("start_at", "datetime-local", true, [], localInput(requestedAt)) + inputField("end_at", "datetime-local", true, [], localInput(new Date(Date.parse(requestedAt)+3600000).toISOString())) + '<div class="span2" id="dispatch-lines"></div><button class="button" type="button" id="add-dispatch">＋ Thêm phân bổ</button>')}`,
     );
-    const add = () => {
+    const add = (lineId=null) => {
       const row = document.createElement("div");
       row.className = "form-section";
       row.dataset.dispatch = "true";
@@ -861,12 +951,24 @@ async function dispatchForm(req) {
             l.id ===
             row.querySelector('[data-key="stock_request_line_id"]').value,
         );
-        row.querySelector('[data-key="lot_id"]').innerHTML = l.lots
+        const eligible=l.lots.filter(lot=>req.type==='IN'?qty(lot.passed_quantity)>qty(lot.posted_quantity):l.balances.some(b=>String(b.lot_id)===lot.id&&b.quality_bucket==='AVAILABLE'&&qty(b.quantity)>0n));
+        row.querySelector('[data-key="lot_id"]').innerHTML = eligible
           .map((t) => `<option value="${t.id}">${esc(t.code)}</option>`)
           .join("");
+        const updateQuantity=()=>{
+          const lot=eligible.find(t=>t.id===row.querySelector('[data-key="lot_id"]').value);let location=row.querySelector('[data-key="location_id"]').value;
+          if(req.type==='OUT'&&lot&&!l.balances.some(b=>String(b.lot_id)===lot.id&&String(b.location_id)===location&&b.quality_bucket==='AVAILABLE'&&qty(b.quantity)>0n)){const first=l.balances.find(b=>String(b.lot_id)===lot.id&&b.quality_bucket==='AVAILABLE'&&qty(b.quantity)>0n);if(first){row.querySelector('[data-key="location_id"]').value=String(first.location_id);location=String(first.location_id);}}
+          let cap=lot?(req.type==='IN'?qty(lot.passed_quantity)-qty(lot.posted_quantity):l.balances.filter(b=>String(b.lot_id)===lot.id&&String(b.location_id)===location&&b.quality_bucket==='AVAILABLE').reduce((n,b)=>n+qty(b.quantity),0n)):0n;
+          const reserved=(preview.allocations||[]).filter(a=>String(a.stock_request_line_id)===l.id).reduce((n,a)=>n+qty(a.quantity)-qty(a.posted_quantity),0n);
+          const drafted=[...document.querySelectorAll('[data-dispatch]')].filter(other=>other!==row&&other.querySelector('[data-key="stock_request_line_id"]').value===l.id).reduce((n,other)=>n+qty(other.querySelector('[data-key="quantity"]').value),0n);
+          const remaining=qty(l.remaining_quantity)-reserved-drafted;if(remaining<cap)cap=remaining;if(cap<0n)cap=0n;
+          row.querySelector('[data-key="quantity"]').value=decimal(cap);
+        };
+        row.querySelector('[data-key="lot_id"]').onchange=updateQuantity;row.querySelector('[data-key="location_id"]').onchange=updateQuantity;
         row.querySelector('[data-key="location_id"]').innerHTML = l.locations
           .map((t) => `<option value="${t.id}">${esc(t.name)}</option>`)
           .join("");
+        updateQuantity();
       };
       row.querySelector('[data-key="stock_request_line_id"]').onchange = sync;
       row.querySelector("button").onclick = () => {
@@ -874,13 +976,14 @@ async function dispatchForm(req) {
         retryKey = crypto.randomUUID();
       };
       document.querySelector("#dispatch-lines").append(row);
+      if(lineId)row.querySelector('[data-key="stock_request_line_id"]').value=lineId;
       sync();
     };
     document.querySelector("#add-dispatch").onclick = () => {
       add();
       retryKey = crypto.randomUUID();
     };
-    add();
+    for(const line of preview.lines.filter(l=>qty(l.remaining_quantity)>0n))add(line.id);
     bindForm(
       (d) => ({
         version: preview.request.version,
