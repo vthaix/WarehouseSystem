@@ -12,7 +12,9 @@ Lần sau bật lại: `docker compose up -d`. Khi thay code/image: thêm `--bui
 
 Chuỗi bootstrap: setup → MySQL healthy → migrate nguồn legacy → split-databases → backend → gateway. Setup/migrate/split-databases là job một lần, exit 0 là bình thường. Runtime không tự chạy DDL.
 
-Development mặc định chạy thêm service khởi tạo demo-fixtures sau gateway healthy để dựng 36 bộ chứng từ cho test UC độc lập. Chỉ healthy khi đã dựng xong; `--wait` chờ cả bước này. Tiến trình sau đó chờ nhẹ, không ghi thêm. Chi tiết và ảnh: [DEMO_FIXTURES.md](DEMO_FIXTURES.md). Bỏ qua khởi tạo khi NODE_ENV=production hoặc SEED_DEMO=false; chạy lại không reset fixture đã tạo.
+Máy mới tự tải image công khai còn thiếu và build mọi image nội bộ từ mã nguồn. Node/npm/MySQL chỉ cần trong container; không cần cài trên host hay chuẩn bị secret thủ công. Các job dùng chung image gateway đều có khai báo build để không phụ thuộc image sẵn trên máy tác giả. Xem [KHOI_DONG_MAY_MOI.md](KHOI_DONG_MAY_MOI.md).
+
+Mặc định có tài khoản/danh mục mẫu (`SEED_DEMO=true`), chưa tự tạo 36 bộ chứng từ (`SEED_WORKFLOWS=false`). Service demo-fixtures bỏ qua dựng chứng từ khi chưa bật cờ này. Có thể bật `SEED_WORKFLOWS=true` cho bộ UC độc lập; `--wait` chờ bước khởi tạo xong. Chi tiết: [DEMO_FIXTURES.md](DEMO_FIXTURES.md). Không seed demo trong production; chạy lại không reset fixture đã tạo.
 
 Giao diện http://localhost:3000. Gateway có tên Compose `app`; năm backend và MySQL chỉ trong network nội bộ.
 
@@ -28,7 +30,7 @@ Mở http://localhost:8080, hệ quản trị MySQL, server mysql. Chọn databa
 
 `docker compose down` dừng và bỏ container, giữ volumes dữ liệu/secret/backup. `down -v` xóa volumes, chỉ dùng khi chủ động bỏ dữ liệu. Build lại không xóa dữ liệu.
 
-Clone mới tạo nguồn từ migration 001–026/seed rồi chuyển sang sáu database. Sau cutover không copy/seed đè dữ liệu service. Thay schema mới phải thêm migration service, không chỉ sửa seed hay snapshot SQL. Hiện có migration service 001–007.
+Clone mới tạo nguồn từ migration legacy/seed rồi chuyển sang sáu database. Sau cutover không copy/seed đè dữ liệu service. Thay schema mới phải thêm migration service, không chỉ sửa seed hay snapshot SQL. Hiện có migration service 001–019.
 
 Không chạy migrate/seed/roles trên gateway: các thao tác này bị chặn với database service. Nâng cấp theo chuỗi job trong Compose và xem log:
 

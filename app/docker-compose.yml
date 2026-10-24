@@ -1,3 +1,12 @@
+# Local application images are built from this checkout, never fetched from a
+# private registry. All helper jobs use the same self-contained build definition.
+x-local-app: &local-app
+  image: warehouse-system-app:${APP_IMAGE_TAG:-local}
+  pull_policy: build
+  build:
+    context: .
+    dockerfile: src/services/web-gateway/Dockerfile
+    target: runtime
 x-db-credentials: &db-credentials
   IDENTITY_DB_USER: ${IDENTITY_DB_USER:-identity_db}
   IDENTITY_DB_PASSWORD: ${IDENTITY_DB_PASSWORD:-identity123}
@@ -32,6 +41,7 @@ x-service-env: &service-env
   SEED_DEMO: "false"
   SERVICE_DB_LAYOUT: split
 x-backend: &backend
+  pull_policy: build
   init: true
   environment: *service-env
   volumes:
@@ -50,11 +60,7 @@ x-backend: &backend
   stop_grace_period: 20s
 services:
   setup:
-    image: warehouse-system-app:${APP_IMAGE_TAG:-local}
-    build:
-      context: .
-      dockerfile: src/services/web-gateway/Dockerfile
-      target: runtime
+    <<: *local-app
     command: ["node", "scripts/setup-secrets.cjs"]
     environment:
       DB_PASSWORD: ${DB_PASSWORD:-}
@@ -69,6 +75,7 @@ services:
     network_mode: none
   mysql:
     image: mysql:8.4
+    pull_policy: missing
     command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--default-time-zone=+00:00", "--log-bin-trust-function-creators=1"]
     environment:
       MYSQL_DATABASE: ${DB_NAME:-KhoHang}
@@ -90,7 +97,7 @@ services:
     networks: [backend]
     restart: unless-stopped
   migrate:
-    image: warehouse-system-app:${APP_IMAGE_TAG:-local}
+    <<: *local-app
     command: ["node", "scripts/bootstrap-database.cjs"]
     environment:
       <<: *service-env
@@ -105,8 +112,8 @@ services:
     networks: [backend]
     restart: "no"
   split-databases:
+    <<: *local-app
     user: "0:0"
-    image: warehouse-system-app:${APP_IMAGE_TAG:-local}
     command: ["node", "scripts/split-service-databases.cjs"]
     environment:
       <<: [*service-env, *db-credentials]
@@ -234,7 +241,7 @@ services:
         condition: service_healthy
     networks: [backend, frontend]
   test-reset:
-    image: warehouse-system-app:${APP_IMAGE_TAG:-local}
+    <<: *local-app
     user: "0:0"
     command: ["node", "scripts/reset-tools-server.cjs"]
     environment:
@@ -258,7 +265,7 @@ services:
       timeout: 3s
       retries: 10
   demo-fixtures:
-    image: warehouse-system-app:${APP_IMAGE_TAG:-local}
+    <<: *local-app
     user: "0:0"
     command: ["node", "scripts/seed-demo-workflows.cjs", "--serve"]
     environment:
@@ -285,6 +292,7 @@ services:
       retries: 30
   adminer:
     image: adminer:5
+    pull_policy: missing
     profiles: [dev]
     environment:
       ADMINER_DEFAULT_SERVER: mysql

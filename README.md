@@ -1,5 +1,29 @@
 # WarehouseSystem
 
+Máy mới chỉ cần **Git, Docker Desktop đã mở (Linux containers)** và Internet cho lần build đầu. Không cần cài Node.js, npm, MySQL hoặc tự tạo file `.env`/`deploy.env`.
+
+```powershell
+git clone https://github.com/vthaix/WarehouseSystem.git
+cd WarehouseSystem
+docker compose up -d --build --wait
+```
+
+Mở **http://localhost:3000**. Compose tự tải image Node/MySQL còn thiếu, cài dependency trong image, tạo secret, khởi tạo/migrate CSDL và tạo tài khoản/danh mục mẫu. Image ứng dụng được build từ mã nguồn, không cần đăng nhập registry riêng. Danh sách tài khoản mới nhất: [DEMO_ACCOUNTS.md](app/docs/DEMO_ACCOUNTS.md), gồm `admin`, `workshop`, `workshop2`, `workshop3`; mật khẩu mẫu `123456`.
+
+Lần sau chạy `docker compose up -d`; sau `git pull` dùng lại lệnh có `--build`. Các image nội bộ có chính sách build nên `up` cũng kiểm tra build cache. Dữ liệu nằm trong volume trên từng máy, không tự đồng bộ dữ liệu đang dùng qua Git. `docker compose down` giữ dữ liệu; không dùng `down -v` nếu muốn giữ CSDL. Hướng dẫn máy mới và xử lý lỗi: [KHOI_DONG_MAY_MOI.md](app/docs/KHOI_DONG_MAY_MOI.md).
+
+Máy mới chỉ cần **Git, Docker Desktop đã mở (Linux containers)** và Internet cho lần build đầu. Không cần cài Node.js, npm, MySQL hoặc tự tạo file `.env`/`deploy.env`.
+
+```powershell
+git clone https://github.com/vthaix/WarehouseSystem.git
+cd WarehouseSystem
+docker compose up -d --build --wait
+```
+
+Mở **http://localhost:3000**. Compose tự tải image Node/MySQL còn thiếu, cài dependency trong image, tạo secret, khởi tạo/migrate CSDL và tạo tài khoản/danh mục mẫu. Image ứng dụng được build từ mã nguồn, không cần đăng nhập registry riêng. Danh sách tài khoản mới nhất: [DEMO_ACCOUNTS.md](app/docs/DEMO_ACCOUNTS.md), gồm `admin`, `workshop`, `workshop2`, `workshop3`; mật khẩu mẫu `123456`.
+
+Lần sau chạy `docker compose up -d`; sau `git pull` dùng lại lệnh có `--build`. Các image nội bộ có chính sách build nên `up` cũng kiểm tra build cache. Dữ liệu nằm trong volume trên từng máy, không tự đồng bộ dữ liệu đang dùng qua Git. `docker compose down` giữ dữ liệu; không dùng `down -v` nếu muốn giữ CSDL. Hướng dẫn máy mới và xử lý lỗi: [KHOI_DONG_MAY_MOI.md](app/docs/KHOI_DONG_MAY_MOI.md).
+
 Ứng dụng quản lý kho và sản xuất bánh đóng gói, Express + EJS + MySQL. Cập nhật kiến trúc ngày 14/10/2026: **5 backend HTTP và 1 web gateway**, mỗi service có entrypoint/Dockerfile và database/tài khoản riêng. Sáu database vẫn nằm trên cùng MySQL 8.4 và còn phụ thuộc SQL xuyên schema.
 
 # Tui không deploy database nên muốn xem trực tiếp phải chạy adminer của docker á
