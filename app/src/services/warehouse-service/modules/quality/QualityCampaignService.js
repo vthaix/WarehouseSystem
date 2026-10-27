@@ -26,6 +26,8 @@ class QualityCampaignService {
     const planned=sourceId?await Sources.source(connection,sourceMode,sourceId):null;
     return {
       ...row, id: String(row.id), created_by: String(row.created_by), assignee_ids,
+      assigned_minute_author:assignee_ids.includes(String(user.id))&&String(row.NguoiLapBienBanDuocChon)===String(user.id),
+      can_create_minute:assignee_ids.includes(String(user.id))&&String(row.NguoiLapBienBanDuocChon)===String(user.id)&&['COMPLETED','CLOSED'].includes(row.status)&&row.BienBanKetLuan==null,
       source_mode:sourceMode,source_plan_id:sourceId?String(sourceId):null,source_code:planned?.code||null,expected_date:planned?.expected_date||null,
       lot_ids: lotRows.map((lot) => String(lot.lot_id)),
       planned_date: row.planned_date instanceof Date ? row.planned_date.toISOString().slice(0, 10) : row.planned_date,

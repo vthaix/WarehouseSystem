@@ -33,6 +33,9 @@ try{
   const taskBody={minute_author_id:ids.qc,inspection_type:'FINISHED_PRODUCT',lot_header_id:group.id,finished_report_ids:[first.id],title:prefix,description:'Select report 1 only',priority:'NORMAL',start_at:'2041-01-01T01:00:00Z',end_at:'2041-01-01T02:00:00Z',assignee_ids:[ids.qc,ids.stocktaker],location:'QC parts'};
   assert.equal((await director.call('tasks','POST',{...taskBody,finished_report_ids:['999999999']})).status,422);
   let task=ok(await director.call('tasks','POST',taskBody),201);assert.equal(task.task_type,'LOT_INSPECTION');assert.deepEqual(task.inspection.lot_ids,[first.outputs[0].lot_id]);
+  const qcAssignment=ok(await qc.call('quality-campaigns/'+task.stocktake_id)),counterAssignment=ok(await counter.call('quality-campaigns/'+task.stocktake_id));
+  assert.equal(qcAssignment.assigned_minute_author,true);assert.equal(qcAssignment.can_create_minute,false);assert.equal(counterAssignment.assigned_minute_author,false);
+  const [authorNotices]=await pool.execute('SELECT user_id FROM notifications WHERE business_key=?',['task-'+task.id+'-minute-author-created']);assert.deepEqual(authorNotices.map(n=>String(n.user_id)),[ids.qc]);
   ok(await counter.call('tasks/'+task.id));assert.equal((await outsider.call('tasks/'+task.id)).status,404);
   for(const actor of [qc,counter])assert.ok(ok(await actor.call('notifications?per_page=100')).some(n=>n.resource_type==='tasks'&&String(n.resource_id)===task.id),'Assigned employees receive the new task notification');
   task=ok(await director.call('tasks/'+task.id,'PATCH',{version:task.version,title:prefix+' edited',assignee_ids:[ids.qc,ids.stocktaker]}));

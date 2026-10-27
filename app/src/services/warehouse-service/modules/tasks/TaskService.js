@@ -42,6 +42,7 @@ class TaskService {
       await c.execute('UPDATE stocktakes SET NguoiLapBienBanDuocChon=?,version=version+1 WHERE id=?',[b.minute_author_id,task.stocktake_id]);
       await c.execute('UPDATE tasks SET version=version+1 WHERE id=?',[id]);
       await this.audit(c,user,id,'ASSIGN_MINUTE_AUTHOR',b,requestId);
+      await c.execute("INSERT INTO notifications(user_id,subject,body,resource_type,resource_id,business_key) VALUES (?,? ,?,'tasks',?,?) ON DUPLICATE KEY UPDATE id=notifications.id",[b.minute_author_id,'Bạn được phân công lập biên bản chung',task.title,id,'task-'+id+'-minute-author-'+(task.version+1)]);
     });return this.get(user,id);
   }
   async list(user, query = {}, countsOnly=false) {
@@ -281,6 +282,7 @@ class TaskService {
         );
       await this.audit(c, user, created.insertId, "CREATE", b, requestId);
       for(const who of value.ids)await c.execute("INSERT INTO notifications(user_id,subject,body,resource_type,resource_id,business_key) VALUES (?,?,?,'tasks',?,?) ON DUPLICATE KEY UPDATE id=notifications.id",[who,'Công việc mới: '+b.title,b.description||'Bạn được phân công thực hiện công việc.',created.insertId,'task-'+created.insertId+'-assigned']);
+      if(inspection)await c.execute("INSERT INTO notifications(user_id,subject,body,resource_type,resource_id,business_key) VALUES (?,?,?,'tasks',?,?) ON DUPLICATE KEY UPDATE id=notifications.id",[inspection.NguoiLapBienBanDuocChon,'Bạn được phân công lập biên bản chung',b.title,created.insertId,'task-'+created.insertId+'-minute-author-created']);
       return created.insertId;
     });
     return this.get(user, String(id));

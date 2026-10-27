@@ -58,6 +58,6 @@ async function create(pool,c,user,b,value,requestId){
   },requestId,c);
   await require('./inspection-scope').sync(c,campaign.id,value.ids);
   await c.execute('UPDATE stocktakes SET NguoiLapBienBanDuocChon=? WHERE id=?',[author,campaign.id]);
-  return campaign;
+  return {...campaign,NguoiLapBienBanDuocChon:String(author)};
 }
 module.exports={sources,create};

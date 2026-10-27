@@ -54,6 +54,13 @@ try{
     await page.locator('#f-resolution_note').fill('De xuat dong goi lai');await page.locator('#request-owner-approval').check();await page.locator('#f-workshop_id').selectOption('1');
     const body=await capture(page,'exception-proposals/LOT-301/apply');assert.equal(body.request_approval,true);assert.equal(body.workshop_id,'1');assert.deepEqual(errors,[]);await context.close();
   }
+  for(const [username,author]of [['qc',true],['stocktaker',false]]){
+    const {context,page,errors}=await pageFor(username,'stocktake-minutes');
+    await page.route('**/api/v1/quality-campaigns?*',r=>r.fulfill({json:{data:[{id:'990',code:'DOT-990',status:'COMPLETED',assigned_minute_author:author,can_create_minute:author,BienBanKetLuan:null}]}}));
+    await page.evaluate(()=>window.dispatchEvent(new Event('focus')));
+    await page.waitForFunction(expected=>document.querySelector('#minute-assignment-info')?.textContent.includes(expected),author?'DOT-990':'Bạn chưa được chỉ định');
+    assert.equal(await page.locator('#create').isDisabled(),!author);assert.equal(await page.locator('#table').count(),1);assert.deepEqual(errors,[]);await context.close();
+  }
   for(const [username,resource]of [['qc','qc-inspections'],['workshop','exception-proposals'],['planner','production-plans'],['purchaser','purchase-orders'],['staff','tasks'],['customer','customer-orders']]){const {context,errors}=await pageFor(username,resource);assert.deepEqual(errors,[]);await context.close();}
   console.log('INSPECTION BROWSER PASS: designated author; whole-task two-lot counts with zero; manager detail opens handling/evidence/proposal; numeric white-on-red badges; live badge API for all nine actor roles. Writes mocked.');
 }finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

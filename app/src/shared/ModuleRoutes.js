@@ -739,7 +739,7 @@ module.exports = (runtime) => {
   }
   router.get(
     "/quality-campaigns",
-    role(["DIRECTOR", "WAREHOUSE_MANAGER", "QC_INSPECTOR"]),
+    role(["DIRECTOR", "WAREHOUSE_MANAGER", "QC_INSPECTOR", "STOCKTAKER"]),
     async (req, res) => {
       const result = await runtime.qualityCampaigns.list(req.user, req.query);
       ok(req, res, result.data, 200, result.meta);
@@ -750,7 +750,7 @@ module.exports = (runtime) => {
   router.post('/quality-campaigns/:id/bind-lots',role(['DIRECTOR']),async(req,res)=>ok(req,res,await runtime.qualityCampaigns.bindLots(req.user,req.params.id,req.body,req.request_id)));
   router.get(
     "/quality-campaigns/:id",
-    role(["DIRECTOR", "WAREHOUSE_MANAGER", "QC_INSPECTOR"]),
+    role(["DIRECTOR", "WAREHOUSE_MANAGER", "QC_INSPECTOR", "STOCKTAKER"]),
     async (req, res) =>
       ok(req, res, await runtime.qualityCampaigns.get(req.user, req.params.id)),
   );

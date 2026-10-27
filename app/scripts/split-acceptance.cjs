@@ -51,6 +51,18 @@ if (!/^KhoHang_Acceptance_\d{8}$/.test(source))
       await seedPool.end();
     }
     const result = await migrate(admin, source);
+    // Verify the copied rows before later migrations intentionally add demo data.
+    for (const object of result.objects.filter(
+      (o) => o.type === "BASE TABLE" && o.name !== "LichSuCSDL",
+    )) {
+      const target = result.databases[result.byTable[object.name]].database;
+      const [[r]] = await admin.query(
+        `SELECT (SELECT COUNT(*) FROM ${q(source)}.${q(object.name)}) a,(SELECT COUNT(*) FROM ${q(target)}.${q(object.name)}) b`,
+      );
+      if (!result.alreadyApplied && String(r.a) !== String(r.b))
+        throw Error("Preservation failed: " + object.name);
+    }
+
     await require("../database/services/migrations/002_qualified_views.cjs").migrate(
       admin,
       source,
@@ -153,16 +165,6 @@ if (!/^KhoHang_Acceptance_\d{8}$/.test(source))
       `DELETE FROM ${gateway}.PhienDangNhap WHERE MaPhien=?`,
       [replayKey],
     );
-    for (const object of result.objects.filter(
-      (o) => o.type === "BASE TABLE" && o.name !== "LichSuCSDL",
-    )) {
-      const target = result.databases[result.byTable[object.name]].database;
-      const [[r]] = await admin.query(
-        `SELECT (SELECT COUNT(*) FROM ${q(source)}.${q(object.name)}) a,(SELECT COUNT(*) FROM ${q(target)}.${q(object.name)}) b`,
-      );
-      if (!result.alreadyApplied && String(r.a) !== String(r.b))
-        throw Error("Preservation failed: " + object.name);
-    }
     const [fks] = await admin.query(
       "SELECT REFERENCED_TABLE_SCHEMA s FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA IN (?) AND REFERENCED_TABLE_SCHEMA IS NOT NULL",
       [Object.values(result.databases).map((v) => v.database)],

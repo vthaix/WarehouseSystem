@@ -1,5 +1,18 @@
 (()=>{
   const previousCreate=createForm,previousEdit=editForm,previousAction=actionForm,previousDetail=detail;
+  let minuteRefresh=0;
+  async function refreshMinuteAssignments(){
+    if(!isMysql||current!=='stocktake-minutes'||!has(['QC_INSPECTOR','STOCKTAKER']))return;
+    const token=++minuteRefresh,button=document.querySelector('#create');if(button)button.disabled=true;
+    let panel=document.querySelector('#minute-assignment-info');if(!panel){panel=document.createElement('div');panel.id='minute-assignment-info';panel.className='notice';document.querySelector('#content')?.prepend(panel);}
+    try{
+      const campaigns=(await api('quality-campaigns?per_page=100')).data;if(token!==minuteRefresh||current!=='stocktake-minutes')return;
+      const assigned=campaigns.filter(c=>c.assigned_minute_author),ready=assigned.filter(c=>c.can_create_minute);
+      panel.innerHTML=assigned.length?'<strong>Bạn được phân công lập biên bản chung</strong><div>'+assigned.map(c=>esc(c.code)+' · '+(c.BienBanKetLuan!=null?'Đã có biên bản':c.can_create_minute?'Đã đủ kết quả, có thể lập biên bản':'Đang chờ hoàn tất kiểm đếm / QC')).join('<br>')+'</div>':'Bạn chưa được chỉ định lập biên bản. Bạn vẫn có thể xem các biên bản thuộc phạm vi được phân công.';
+      if(button){button.disabled=!ready.length;button.title=ready.length?'Lập biên bản cho đợt được chỉ định':'Chỉ nhân viên được chỉ định mới có thể tạo khi đợt đã đủ kết quả.';}
+    }catch(e){panel.textContent='Chưa tải được thông tin phân công lập biên bản. Vui lòng tải lại trang.';}
+  }
+  window.addEventListener('DOMContentLoaded',refreshMinuteAssignments);window.addEventListener('focus',refreshMinuteAssignments);
   function mountAuthor(value){
     const employees=document.querySelector('#f-assignee_ids');if(!employees)return;
     employees.closest('.employee-picker').insertAdjacentHTML('afterend',inputField('minute_author_id','select',true,[]));

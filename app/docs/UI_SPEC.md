@@ -1,5 +1,7 @@
 # Giao diện hiện hành
 
+Cập nhật 27/10: yêu cầu nhập/xuất tự chọn tên xưởng thật theo tài khoản chủ xưởng, khóa ô khi chỉ có một xưởng. Màn hình Biên bản vẫn mở được với QC/AC và Ban kiểm kê; chỉ người được chỉ định có đợt đã hoàn tất mới được tạo. Người được chỉ định thấy phân công trên màn hình và nhận thông báo riêng. Chi tiết: [XUONG_PHU_TRACH_VA_NGUOI_LAP_BIEN_BAN.md](XUONG_PHU_TRACH_VA_NGUOI_LAP_BIEN_BAN.md).
+
 Lập đợt kiểm kê của giám đốc có ô chọn phần lô NVL thực nhận ngay trong form, bên dưới nguồn lô/kế hoạch mua. Chọn các phần chờ QC cần kiểm, không phải lưu rồi mở Công việc để gắn lại. Chưa có hàng thực nhận thì hiển thị hướng dẫn lập đợt dự kiến. Hướng dẫn bù QC và kịch bản kiểm thử tại [TEST_BU_QC_VA_CHON_LO_KIEM_KE.md](TEST_BU_QC_VA_CHON_LO_KIEM_KE.md).
 
 Cảnh báo số lượng kế hoạch vượt nguồn: khi lưu hoặc duyệt KHSX/kế hoạch mua/bán, chọn Đồng ý để tiếp tục hoặc Hủy để sửa lại. Không tự điều chỉnh số lượng người dùng nhập. Xem [XAC_NHAN_VUOT_SO_LUONG_KE_HOACH.md](XAC_NHAN_VUOT_SO_LUONG_KE_HOACH.md).

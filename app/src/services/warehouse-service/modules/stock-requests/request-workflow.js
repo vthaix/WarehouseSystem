@@ -13,15 +13,16 @@ function execution(body,existing=null){
 }
 async function options(c,u){
   P.role(u,['WORKSHOP_OWNER']);
-  const ids=(u.workshop_ids||[]).map(String);if(!ids.length)return {purchase_plans:[],production_plans:[],finished_reports:[],sale_plans:[]};
+  const ids=(u.workshop_ids||[]).map(String);if(!ids.length)return {workshops:[],purchase_plans:[],production_plans:[],finished_reports:[],sale_plans:[]};
   const slots=ids.map(()=>'?').join(',');
+  const [workshops]=await c.execute('SELECT id,code,name FROM workshops WHERE is_active=1 AND id IN ('+slots+') ORDER BY name',ids);
   const [production]=await c.execute("SELECT id,code,workshop_id,status FROM production_plans WHERE workshop_id IN ("+slots+") AND status IN ('APPROVED','IN_PROGRESS','COMPLETED') ORDER BY id DESC LIMIT 200",ids);
   const [reports]=await c.execute("SELECT r.id,r.code,r.production_plan_id,p.workshop_id FROM finished_reports r JOIN production_plans p ON p.id=r.production_plan_id WHERE p.workshop_id IN ("+slots+") AND r.status='SUBMITTED' ORDER BY r.id DESC LIMIT 200",ids);
   const [purchases]=await c.execute("SELECT b.id,b.code,p.id AS purchase_order_id,p.code AS purchase_order_code,COALESCE(ps.workshop_id,r.workshop_id,s.workshop_id) AS workshop_id FROM business_plans b JOIN purchase_orders p ON p.business_plan_id=b.id LEFT JOIN production_reports pr ON pr.id=b.production_report_id LEFT JOIN production_plans ps ON ps.id=pr.production_plan_id LEFT JOIN stock_requests r ON r.id=b.source_request_id LEFT JOIN production_plans s ON s.id=b.production_plan_id WHERE b.type='PURCHASE' AND b.status IN ('APPROVED','IN_PROGRESS','COMPLETED') AND p.status IN ('PENDING','PARTIALLY_RECEIVED') AND (COALESCE(ps.workshop_id,r.workshop_id,s.workshop_id) IS NULL OR COALESCE(ps.workshop_id,r.workshop_id,s.workshop_id) IN ("+slots+')) ORDER BY b.id DESC LIMIT 200',ids);
   const [sales]=await c.execute("SELECT b.id,b.code,r.production_plan_id,p.workshop_id FROM business_plans b JOIN finished_reports r ON r.id=b.finished_report_id JOIN production_plans p ON p.id=r.production_plan_id WHERE b.type='SALE' AND b.status IN ('APPROVED','IN_PROGRESS') AND p.workshop_id IN ("+slots+') ORDER BY b.id DESC LIMIT 200',ids);
   const [direct]=await c.execute("SELECT id,code FROM purchase_orders WHERE business_plan_id IS NULL AND status IN ('PENDING','PARTIALLY_RECEIVED') ORDER BY id DESC LIMIT 100");
   const normalize=rows=>rows.map(r=>Object.fromEntries(Object.entries(r).map(([k,v])=>[k,(k==='id'||k.endsWith('_id'))&&v!==null?String(v):v])));
-  return {purchase_plans:[...normalize(purchases),...direct.map(p=>({id:'ORDER:'+p.id,code:'Đơn mua trực tiếp · '+p.code,purchase_order_id:String(p.id),workshop_id:null}))],production_plans:normalize(production),finished_reports:normalize(reports),sale_plans:normalize(sales)};
+  return {workshops:normalize(workshops),purchase_plans:[...normalize(purchases),...direct.map(p=>({id:'ORDER:'+p.id,code:'Đơn mua trực tiếp · '+p.code,purchase_order_id:String(p.id),workshop_id:null}))],production_plans:normalize(production),finished_reports:normalize(reports),sale_plans:normalize(sales)};
 }
 async function resolve(c,u,purpose,sourceId,workshopId,salePlanId){
   P.role(u,['WORKSHOP_OWNER']);C.fail((!valid(sourceId)&&!(purpose==='PURCHASE_RECEIPT'&&/^ORDER:[1-9]\d*$/.test(String(sourceId))))||!valid(workshopId)||!(u.workshop_ids||[]).map(String).includes(String(workshopId)),'FORBIDDEN','Nguồn hoặc xưởng không hợp lệ.',403);
