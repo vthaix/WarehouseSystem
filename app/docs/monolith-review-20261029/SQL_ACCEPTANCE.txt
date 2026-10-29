@@ -1,0 +1,34 @@
+﻿MONOLITH RESET PASS: test instance only, backed up before clearing workflows.
+MONOLITH SCHEMA PASS: local foreign keys, one matching subtype, wrong subtype rejected, subtype create/update/rollback and cascade delete.
+UC_SUITE_RESULT monolith-schema 0
+TASKS SQL PASS: role/scope, concurrent overlap, stale version, progress and immutable completion
+UC_SUITE_RESULT tasks 0
+STOCKTAKE SQL PASS: scope, null versus zero, warehouse conclusion, separate approval/application, decision history, exactly-once adjustment, close
+UC_SUITE_RESULT stocktake 0
+ORDER PASS: create, ownership, stale version, edit, receive, plan, approve, reject, replay, RBAC.
+UC_SUITE_RESULT order 0
+PRODUCTION REPORT PASS: multiple progress/incident reports, no mandatory materials, director delivery, optional planner access, immutable submissions and excluded purchasing sources
+APPROVED PURCHASE PASS: manual/report bypass denied; pending denied; exact approved lines, concurrency, supplier validation, receipt remainder, approved direct plan and confirmed overage.
+PRODUCTION PASS: material report/shortage, purchase source trace, lookup/UI data, over-demand rollback, concurrent source limits, approval, finished lot, no inventory posting.
+UC_SUITE_RESULT production 0
+POSTED MATERIAL RETURN PASS: verified QC correction, approved supplier return, quarantine reduction and original lot trace
+QUARANTINE DISPOSITION PASS: QC limits, concurrent proposals, director approval, warehouse freeze, release/scrap, no duplicate movement or order changes
+CUSTOMER RETURNS PASS: original delivery cap, concurrent returns, assignment, one-time quarantine receipt, cancellation, normal QC and unchanged order
+PRODUCTION DELIVERY PASS: actual report source, release/reallocate, issued material consumption cap, finished QC/receipt, approved sale and customer delivery
+COMMERCE PASS: purchase plan, order, QC, request, dispatch, one-time stock posting.
+UC_SUITE_RESULT commerce 0
+POSTED QC CORRECTION PASS: director approval, mandatory QC verification, quarantine/release/scrap, immutable receipt and compensation history
+PARTIAL RECEIPT PASS: shared header, separate QC, replay, exact stock, immutable lot reuse in final report and no duplicate report receipt.
+UC_SUITE_RESULT partial-receipt 0
+CATEGORY IMAGE SQL PASS: RBAC, bytes/type validation, upload/read, image attribute persistence, partial edits, invalid path rejection and clear
+UC_SUITE_RESULT category-images 0
+PREPRODUCTION SQL PASS: multi-item order, recipe multiplication/reserve once, full source details, approval notification, stock comparison, image upload/access, automatic shortage sharing and private incidents.
+UC_SUITE_RESULT preproduction 0
+FINISHED PART TASK PASS: two submitted reports create independent 40/60 portions in one header; task selection, RBAC, edit, start, QC completion, cancel/reuse and material plan source.
+UC_SUITE_RESULT finished-parts-task 0
+ACCOUNTS/CATALOG SQL PASS: admin-only CRUD, roles, customer profile, session revocation, stale versions, self-protection, safe audit, supplier prices and grouped catalogue.
+UC_SUITE_RESULT accounts-catalog 0
+PLANNING CONFIRMATION SQL PASS: create/update/review above order, no writes before confirmation, exact saved quantity and linked order approval.
+UC_SUITE_RESULT planning-confirmation 0
+[{"name":"monolith-schema","code":0,"ms":200},{"name":"tasks","code":0,"ms":134},{"name":"stocktake","code":0,"ms":754},{"name":"order","code":0,"ms":642},{"name":"production","code":0,"ms":1672},{"name":"commerce","code":0,"ms":3143},{"name":"partial-receipt","code":0,"ms":1176},{"name":"category-images","code":0,"ms":238},{"name":"preproduction","code":0,"ms":945},{"name":"finished-parts-task","code":0,"ms":2140},{"name":"accounts-catalog","code":0,"ms":642},{"name":"planning-confirmation","code":0,"ms":357}]
+

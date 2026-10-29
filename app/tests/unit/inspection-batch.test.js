@@ -1,5 +1,5 @@
 const test=require('node:test'),assert=require('node:assert/strict');
-const {record}=require('../../src/services/warehouse-service/modules/tasks/inspection-scope');
+const {record}=require('../../src/modules/tasks/inspection-scope');
 function connection(){const writes=[];return {writes,async execute(sql,args){
   if(sql==='SELECT status FROM stocktakes WHERE id=? FOR UPDATE')return [[{status:'IN_PROGRESS'}]];
   if(sql.startsWith('SELECT lot_id FROM quality_campaign_lots'))return [[{lot_id:11},{lot_id:12}]];

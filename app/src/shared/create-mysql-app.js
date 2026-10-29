@@ -79,15 +79,15 @@ module.exports = function createMysqlApp(runtime) {
     res.json({
       status: "ok",
       storage: "mysql",
-      stage: runtime.remote ? 'microservices-shared-database' : 'foundation',
+      stage: 'monolith',
+      test_instance: process.env.ACCEPTANCE_MONOLITH === 'true',
       view_engine: "ejs",
     }),
   );
   app.get("/health/ready", async (_req, res) => {
     try {
       await runtime.pool.query("SELECT 1");
-      if(runtime.remote)await Promise.all(require('../services/shared/contracts').serviceNames.map(async name=>{const response=await fetch(require('../services/shared/transport').urlFor(name)+'/health/ready',{signal:AbortSignal.timeout(3000)});if(!response.ok)throw Error('Service not ready');}));
-      res.json({ status: "ready", storage: "mysql", stage: "foundation" });
+      res.json({ status: "ready", storage: "mysql", stage: "monolith" });
     } catch {
       res.status(503).json({ status: "not_ready" });
     }
@@ -100,7 +100,7 @@ module.exports = function createMysqlApp(runtime) {
   app.use(require('./CategoryImageRoutes')());
   app.use(require('./ProductionReportImageRoutes')(runtime));
   app.use("/api/v1/auth", require("../routes/auth.routes")(runtime.auth));
-  app.use("/api/v1", csrf, requireApiAuth, runtime.remote ? require('../services/shared/api-proxy')(runtime) : require("./ModuleRoutes")(runtime));
+  app.use("/api/v1", csrf, requireApiAuth, require("./ModuleRoutes")(runtime));
   app.use("/api", (_req, res, next) =>
     next(new C.DomainError(404, "NOT_FOUND", "API không tồn tại.")),
   );

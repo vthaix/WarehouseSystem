@@ -3,7 +3,7 @@ const test = require("node:test"),
 const {
   assertReady,
   saleReadiness,
-} = require("../../src/services/warehouse-service/modules/stock-requests/sale-readiness");
+} = require("../../src/modules/stock-requests/sale-readiness");
 const ready = {
   report_status: "SUBMITTED",
   production_completed: 1,

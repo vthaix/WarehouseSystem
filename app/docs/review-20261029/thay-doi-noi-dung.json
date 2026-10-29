@@ -1,0 +1,1430 @@
+﻿[
+    {
+        "uc":  "UC-10",
+        "column":  1,
+        "before":  "Nhân viên kho đã đăng nhập; có lô NVL hoặc thành phẩm được QC/AC kết luận đạt, còn lượng chưa nhập kho.",
+        "row":  1,
+        "after":  "Nhân viên kho đã đăng nhập, được Quản lý kho phân công nhập hàng; phần hàng đạt chất lượng và còn lượng được phép nhập; kho, vị trí phù hợp."
+    },
+    {
+        "uc":  "UC-10",
+        "column":  1,
+        "before":  "2. Hiển thị các dòng lô NVL/thành phẩm đạt QC còn chờ nhập. (LoHang, LoNguyenVatLieu, LoThanhPham, ChiTietLo, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)",
+        "row":  7,
+        "after":  "2. Hiển thị công việc nhập kho được giao, yêu cầu nguồn, lô hoặc phần lô và lượng còn được thực hiện."
+    },
+    {
+        "uc":  "UC-10",
+        "column":  0,
+        "before":  "3. Chọn dòng lô, nhập vị trí kho/ngày nhập; lượng mặc định là phần đạt QC chưa nhập. Nhập thành phẩm đối chiếu báo cáo và yêu cầu nhập liên quan. (ChiTietLo, Kho, ChiTietPhieuKho, ChiTietKetQuaKiemTraQCAC, PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, BanBaoCaoSanXuat)",
+        "row":  8,
+        "after":  "3. Chọn công việc, đối chiếu giấy tờ thực nhập; kiểm tra lượng hệ thống gợi ý và điều chỉnh lượng thực nhập, vị trí, ngày nhập hoặc ghi chú theo thực tế."
+    },
+    {
+        "uc":  "UC-10",
+        "column":  1,
+        "before":  "4. Kiểm tra kho, dòng lô và lượng thực nhập không vượt phần đạt còn chưa nhập. (ChiTietPhieuKho, Kho, ChiTietLo, ChiTietKetQuaKiemTraQCAC)",
+        "row":  8,
+        "after":  "4. Kiểm tra đúng người được phân công, kho, vị trí, dòng lô và lượng nhập không vượt lượng được giao hoặc phần đạt chất lượng còn chưa nhập."
+    },
+    {
+        "uc":  "UC-10",
+        "column":  1,
+        "before":  "6. Cập nhật tồn kho và tạo phiếu nhập kho (TonKho, PhieuKho, ChiTietPhieuKho)",
+        "row":  9,
+        "after":  "6. Ghi phiếu nhập kho, tăng tồn theo lượng thực nhập, cập nhật lượng đã thực hiện và trạng thái công việc; thông báo thành công. Hồ sơ được cung cấp cho người có quyền xem."
+    },
+    {
+        "uc":  "UC-10",
+        "column":  0,
+        "before":  "4.1 Số lượng thực nhập khác với kế hoạch",
+        "row":  11,
+        "after":  "3.1 Chỉ nhập một phần số lượng được phân công"
+    },
+    {
+        "uc":  "UC-10",
+        "column":  0,
+        "before":  "1. Hệ thống ghi nhận chênh lệch giữa số lượng thực nhập và kế hoạch (ChiTietPhieuKho, ChiTietPhieuYeuCauNhapXuat)",
+        "row":  12,
+        "after":  "1. Nhân viên kho điều chỉnh lượng thực nhập trong giới hạn còn được nhập và ghi chú thực tế nếu cần."
+    },
+    {
+        "uc":  "UC-10",
+        "column":  0,
+        "before":  "2. Nhân viên nhập lý do chênh lệch (ChiTietPhieuKho)",
+        "row":  13,
+        "after":  "2. Hệ thống ghi nhận đúng lượng thực nhập; lượng còn lại chưa được coi là đã nhập."
+    },
+    {
+        "uc":  "UC-10",
+        "column":  0,
+        "before":  "3. Quay lại bước 3",
+        "row":  14,
+        "after":  "3. Tiếp tục bước 5; phần còn lại thực hiện bằng lần ghi nhận sau khi còn đủ điều kiện."
+    },
+    {
+        "uc":  "UC-11",
+        "column":  1,
+        "before":  "Nhân viên kho đã đăng nhập hệ thống và có quyền xuất kho",
+        "row":  1,
+        "after":  "Nhân viên kho đã đăng nhập, được phân công thực hiện yêu cầu xuất kho còn hiệu lực."
+    },
+    {
+        "uc":  "UC-11",
+        "column":  1,
+        "before":  "2. Hiển thị các loại xuất kho gồm: xuất nguyên vật liệu, xuất thành phẩm",
+        "row":  7,
+        "after":  "2. Hiển thị công việc xuất kho được giao gồm xuất nguyên vật liệu để sản xuất hoặc xuất thành phẩm để giao hàng."
+    },
+    {
+        "uc":  "UC-12",
+        "column":  0,
+        "before":  "4.2 Chọn Xóa",
+        "row":  18,
+        "after":  "4.2 Xem kết quả đã ghi nhận"
+    },
+    {
+        "uc":  "UC-12",
+        "column":  0,
+        "before":  "1. Hệ thống thực hiện UC-12.3",
+        "row":  19,
+        "after":  "1. Kết quả đã ghi không được xóa; nếu sai, thực hiện điều chỉnh tại UC-12.2 để giữ lịch sử. UC-12.3 không còn được sử dụng để xóa kết quả."
+    },
+    {
+        "uc":  "UC-12",
+        "column":  0,
+        "before":  "1.1 Tìm kiếm/lọc kết quả (đạt/không đạt, thời gian, phiếu nhập kho)",
+        "row":  10,
+        "after":  "1.1 Tìm kiếm hoặc lọc kết quả theo những điều kiện được hiển thị trên màn hình"
+    },
+    {
+        "uc":  "UC-12",
+        "column":  0,
+        "before":  "1. Nhân viên nhập điều kiện lọc (KetQuaKiemTraQCAC, PhieuKho)",
+        "row":  11,
+        "after":  "1. Nhân viên nhập điều kiện tìm kiếm hoặc lọc kết quả."
+    },
+    {
+        "uc":  "UC-13",
+        "column":  1,
+        "before":  "Đợt kiểm kê mới được tạo, lưu vào hệ thống và gửi cho Ban kiểm kê",
+        "row":  2,
+        "after":  "Đợt kiểm kê được lưu thành công; những nhân viên QC/AC và Ban kiểm kê được chọn nhận thông báo, người được chỉ định lập biên bản nhận thông tin phân công."
+    },
+    {
+        "uc":  "UC-15",
+        "column":  1,
+        "before":  "Ban kiểm kê đã được phân công cho đợt kiểm kê",
+        "row":  1,
+        "after":  "Nhân viên Ban kiểm kê đã đăng nhập, được phân công trong đợt đã bắt đầu và còn phần việc kiểm số lượng chưa hoàn tất."
+    },
+    {
+        "uc":  "UC-15",
+        "column":  1,
+        "before":  "2. Hiển thị danh sách mặt hàng cần kiểm kê thuộc khu vực được phân công (CongViec, PhieuKiemKe, ChiTietPhieuKiemKe, MatHang, Kho)",
+        "row":  7,
+        "after":  "2. Hiển thị các công việc được giao; khi chọn công việc, hiển thị toàn bộ lô hoặc phần lô phải kiểm cùng mặt hàng, đơn vị và lượng hệ thống để đối chiếu."
+    },
+    {
+        "uc":  "UC-15",
+        "column":  0,
+        "before":  "3. Nhập số lượng thực tế đếm được cho từng mặt hàng (PhieuKiemKe, ChiTietPhieuKiemKe)",
+        "row":  8,
+        "after":  "3. Chọn công việc và nhập lượng thực đếm của từng dòng; có thể chọn Đạt ở một dòng hoặc Đạt tất cả để điền lượng bằng lượng hệ thống."
+    },
+    {
+        "uc":  "UC-15",
+        "column":  1,
+        "before":  "4. Ghi nhận số liệu kiểm kê (PhieuKiemKe, ChiTietPhieuKiemKe)",
+        "row":  8,
+        "after":  "4. Hiển thị chênh lệch theo số lượng vừa nhập; vẫn cho sửa lượng đã điền để đúng thực tế. Nút Đạt chỉ hỗ trợ kiểm số lượng, không thay kết luận chất lượng của QC/AC."
+    },
+    {
+        "uc":  "UC-15",
+        "column":  0,
+        "before":  "5. Xác nhận hoàn thành kiểm kê khu vực (PhieuKiemKe)",
+        "row":  9,
+        "after":  "5. Xác nhận lưu kết quả kiểm số lượng của công việc."
+    },
+    {
+        "uc":  "UC-15",
+        "column":  1,
+        "before":  "6. Cập nhật trạng thái hoàn thành và lưu kết quả kiểm kê (PhieuKiemKe, ChiTietPhieuKiemKe)",
+        "row":  9,
+        "after":  "6. Kiểm tra đủ dòng và quyền phân công; lưu số đếm, người đếm, thời điểm và tiến độ. Nếu đợt có QC/AC, vẫn chờ phần chất lượng hoàn tất. Không tự điều chỉnh tồn kho theo số đếm."
+    },
+    {
+        "uc":  "UC-15",
+        "column":  0,
+        "before":  "2.1 Tạm dừng kiểm kê",
+        "row":  11,
+        "after":  "3.1 Điền nhanh số lượng đạt"
+    },
+    {
+        "uc":  "UC-15",
+        "column":  0,
+        "before":  "1. Nhân viên chọn Lưu tạm để tiếp tục sau (PhieuKiemKe, ChiTietPhieuKiemKe)",
+        "row":  12,
+        "after":  "1. Nhân viên chọn Đạt ở dòng cần điền hoặc Đạt tất cả."
+    },
+    {
+        "uc":  "UC-15",
+        "column":  0,
+        "before":  "2. Hệ thống lưu tạm số liệu đã nhập (PhieuKiemKe, ChiTietPhieuKiemKe)",
+        "row":  13,
+        "after":  "2. Hệ thống điền lượng đối chiếu cho dòng chưa ghi nhận; không ghi đè các dòng đã có kết quả hoàn tất."
+    },
+    {
+        "uc":  "UC-15",
+        "column":  0,
+        "before":  "3. Kết thúc use case",
+        "row":  14,
+        "after":  "3. Nhân viên kiểm tra và điều chỉnh số thực đếm, sau đó tiếp tục bước 5."
+    },
+    {
+        "uc":  "UC-15",
+        "column":  0,
+        "before":  "1. Hệ thống thông báo lỗi kết nối và giữ lại số liệu đã nhập cục bộ (PhieuKiemKe, ChiTietPhieuKiemKe)",
+        "row":  17,
+        "after":  "1. Hệ thống thông báo lỗi kết nối. Khi có kết nối trở lại, nhân viên mở danh sách kiểm tra lần ghi trước đã thành công chưa; chỉ nhập và xác nhận lại phần chưa được ghi nhận."
+    },
+    {
+        "uc":  "UC-16",
+        "column":  1,
+        "before":  "Quản lý kho đăng nhập thành công vào hệ thống và đợt kiểm kê đã hoàn thành",
+        "row":  1,
+        "after":  "Quản lý kho đã đăng nhập; có biên bản đã gửi ghi ngoại lệ hoặc kết quả chênh lệch đủ điều kiện xử lý trong phạm vi được quản lý."
+    },
+    {
+        "uc":  "UC-16",
+        "column":  1,
+        "before":  "Chênh lệch kiểm kê được ghi nhận nguyên nhân và phương án xử lý",
+        "row":  2,
+        "after":  "Vấn đề được ghi nhận cách xử lý, chuyển Chủ xưởng phê duyệt khi cần, hoặc được thực hiện theo phương án đủ điều kiện. Ghi mô tả xử lý không tự thay đổi tồn kho."
+    },
+    {
+        "uc":  "UC-16",
+        "column":  1,
+        "before":  "2. Hiển thị danh sách mặt hàng có chênh lệch sau kiểm kê (ChiTietPhieuKiemKe, MatHang)",
+        "row":  7,
+        "after":  "2. Tự hiển thị các ngoại lệ từ biên bản đã gửi và các chênh lệch cần xử lý; không yêu cầu Quản lý kho tự tạo lại vấn đề đã có."
+    },
+    {
+        "uc":  "UC-16",
+        "column":  0,
+        "before":  "3. Chọn mặt hàng (ChiTietPhieuKiemKe, MatHang)",
+        "row":  8,
+        "after":  "3. Chọn vấn đề cần xử lý."
+    },
+    {
+        "uc":  "UC-16",
+        "column":  1,
+        "before":  "4. Hiển thị thông tin chi tiết mặt hàng gồm: loại hàng, số lượng, bị vấn đề gì (ChiTietPhieuKiemKe, MatHang, LoaiHang, LoHang)",
+        "row":  8,
+        "after":  "4. Hiển thị biên bản, kết quả số lượng hoặc chất lượng, mặt hàng, lô, lượng liên quan và mô tả ngoại lệ; mở form xử lý."
+    },
+    {
+        "uc":  "UC-16",
+        "column":  0,
+        "before":  "5. Nhập đề xuất xử lý (PhieuKiemKe, ChiTietPhieuKiemKe)",
+        "row":  9,
+        "after":  "5. Nhập cách xử lý; nếu cần xin ý kiến, chọn gửi đề xuất cho Chủ xưởng và nhập nội dung đề nghị."
+    },
+    {
+        "uc":  "UC-16",
+        "column":  0,
+        "before":  "4. Xác nhận xử lý chênh lệch (ChiTietPhieuKiemKe)",
+        "row":  10,
+        "after":  "6. Xác nhận nội dung xử lý."
+    },
+    {
+        "uc":  "UC-16",
+        "column":  1,
+        "before":  "6. Cập nhật tồn kho theo phương án xử lý và lưu kết quả (TonKho, ChiTietPhieuKiemKe)",
+        "row":  10,
+        "after":  "7. Lưu cách xử lý hoặc gửi đề xuất chờ Chủ xưởng phê duyệt. Vấn đề đơn giản có thể xác nhận xử lý trực tiếp bằng mô tả; nếu cần điều chỉnh tồn kho, phải thực hiện bước chứng từ và phê duyệt tương ứng, không chỉ sửa số tồn bằng ghi chú."
+    },
+    {
+        "uc":  "UC-16",
+        "column":  0,
+        "before":  "4.1 Chênh lệch vượt hạn mức xử lý",
+        "row":  12,
+        "after":  "5.1 Gửi đề xuất cho Chủ xưởng"
+    },
+    {
+        "uc":  "UC-16",
+        "column":  0,
+        "before":  "1. Nếu quản lý cảm thấy mức độ chênh lệch và độ nghiêm trọng cao có thể gửi đề xuất xử lý cho Chủ xưởng (BanDeXuatXuLyNgoaiLe)",
+        "row":  13,
+        "after":  "1. Quản lý kho chọn gửi phê duyệt, nhập cách xử lý đề xuất và nội dung cần Chủ xưởng xem xét."
+    },
+    {
+        "uc":  "UC-16",
+        "column":  0,
+        "before":  "2. Hệ thống chuyển đề xuất xử lý sang chờ phê duyệt (BanDeXuatXuLyNgoaiLe)",
+        "row":  14,
+        "after":  "2. Hệ thống lưu đề xuất Chờ phê duyệt, thông báo cho Chủ xưởng đúng xưởng; thực hiện quyết định tại UC-17."
+    },
+    {
+        "uc":  "UC-17",
+        "column":  1,
+        "before":  "Có đề xuất xử lý hàng lỗi hoặc chênh lệch kiểm kê đang chờ phê duyệt",
+        "row":  1,
+        "after":  "Chủ xưởng đã đăng nhập; có đề xuất xử lý ngoại lệ thuộc xưởng đang chờ phê duyệt."
+    },
+    {
+        "uc":  "UC-17",
+        "column":  1,
+        "before":  "6. Cập nhật trạng thái đề xuất đã duyệt và áp dụng thay đổi liên quan (BanDeXuatXuLyNgoaiLe, KetQuaXuLyNgoaiLe, TonKho)",
+        "row":  9,
+        "after":  "6. Lưu quyết định phê duyệt và thông báo cho Quản lý kho. Việc phê duyệt không tự thay đổi số lượng tồn kho; Quản lý kho thực hiện phương án được chấp thuận ở bước xử lý riêng."
+    },
+    {
+        "uc":  "UC-17",
+        "column":  0,
+        "before":  "5.1 Từ chối đề xuất và có nhập lý do",
+        "row":  11,
+        "after":  "5.1 Không đồng ý phương án đề xuất"
+    },
+    {
+        "uc":  "UC-17",
+        "column":  0,
+        "before":  "1. Chủ xưởng chọn Từ chối và nhập lý do (BanDeXuatXuLyNgoaiLe)",
+        "row":  12,
+        "after":  "1. Chủ xưởng chọn Không đồng ý, nhập lý do và hướng xử lý theo ý kiến của chủ xưởng."
+    },
+    {
+        "uc":  "UC-17",
+        "column":  0,
+        "before":  "2. Hệ thống cập nhật trạng thái đề xuất bị từ chối và thông báo cho người đề xuất (BanDeXuatXuLyNgoaiLe, KetQuaXuLyNgoaiLe)",
+        "row":  13,
+        "after":  "2. Hệ thống lưu quyết định, lý do và hướng xử lý; thông báo cho Quản lý kho để thực hiện."
+    },
+    {
+        "uc":  "UC-17",
+        "column":  0,
+        "before":  "5.2 Từ chối đề xuất nhưng không nhập lý do",
+        "row":  15,
+        "after":  "5.2 Chưa nhập nội dung bắt buộc khi không đồng ý"
+    },
+    {
+        "uc":  "UC-17",
+        "column":  0,
+        "before":  "1. Chủ xưởng chọn Từ chối nhưng để trống lý do (BanDeXuatXuLyNgoaiLe)",
+        "row":  16,
+        "after":  "1. Chủ xưởng chọn Không đồng ý nhưng chưa nhập lý do hoặc hướng xử lý bắt buộc."
+    },
+    {
+        "uc":  "UC-17",
+        "column":  0,
+        "before":  "2. Hệ thống thông báo yêu cầu nhập lý do từ chối (KetQuaXuLyNgoaiLe)",
+        "row":  17,
+        "after":  "2. Hệ thống yêu cầu bổ sung nội dung; chưa gửi quyết định."
+    },
+    {
+        "uc":  "UC-18",
+        "column":  1,
+        "before":  "Ban giám đốc đã đăng nhập và có quyền xem báo cáo tồn kho",
+        "row":  1,
+        "after":  "Ban giám đốc, Quản lý kho hoặc Chủ xưởng đã đăng nhập và có quyền xem tồn kho."
+    },
+    {
+        "uc":  "UC-18",
+        "column":  0,
+        "before":  "Ban giám đốc",
+        "row":  6,
+        "after":  "Ban giám đốc / Quản lý kho / Chủ xưởng"
+    },
+    {
+        "uc":  "UC-19",
+        "column":  1,
+        "before":  "Ban giám đốc hoặc Chủ xưởng đã đăng nhập và có quyền xem hồ sơ kho",
+        "row":  1,
+        "after":  "Ban giám đốc, Quản lý kho hoặc Chủ xưởng đã đăng nhập và được xem hồ sơ kho trong phạm vi quyền hạn."
+    },
+    {
+        "uc":  "UC-19",
+        "column":  1,
+        "before":  "Ban giám đốc, Chủ xưởng",
+        "row":  3,
+        "after":  "Ban giám đốc, Quản lý kho, Chủ xưởng"
+    },
+    {
+        "uc":  "UC-19",
+        "column":  0,
+        "before":  "Ban giám đốc/Chủ xưởng",
+        "row":  6,
+        "after":  "Ban giám đốc / Quản lý kho / Chủ xưởng"
+    },
+    {
+        "uc":  "UC-20",
+        "column":  1,
+        "before":  "Ban giám đốc hoặc Chủ xưởng đã đăng nhập và có quyền xem hồ sơ kho",
+        "row":  1,
+        "after":  "Ban giám đốc, Quản lý kho hoặc Chủ xưởng đã đăng nhập và được xem hồ sơ kho trong phạm vi quyền hạn."
+    },
+    {
+        "uc":  "UC-20",
+        "column":  1,
+        "before":  "Ban giám đốc, Chủ xưởng",
+        "row":  3,
+        "after":  "Ban giám đốc, Quản lý kho, Chủ xưởng"
+    },
+    {
+        "uc":  "UC-20",
+        "column":  0,
+        "before":  "Ban giám đốc/Chủ xưởng",
+        "row":  6,
+        "after":  "Ban giám đốc / Quản lý kho / Chủ xưởng"
+    },
+    {
+        "uc":  "UC-22",
+        "column":  1,
+        "before":  "Quản lý kho đăng nhập thành công vào hệ thống",
+        "row":  1,
+        "after":  "Quản lý kho hoặc Chủ xưởng đã đăng nhập và có quyền tra cứu kho."
+    },
+    {
+        "uc":  "UC-22",
+        "column":  0,
+        "before":  "Quản lý kho",
+        "row":  6,
+        "after":  "Quản lý kho / Chủ xưởng"
+    },
+    {
+        "uc":  "UC-23",
+        "column":  1,
+        "before":  "2. Hiển thị form yêu cầu nhập/xuất.",
+        "row":  7,
+        "after":  "2. Hiển thị form chọn Nhập kho hoặc Xuất kho, mục đích, nguồn hàng, kho, Quản lý kho phụ trách, ngày giờ thực hiện và ghi chú. Xưởng mặc định là xưởng gắn với tài khoản Chủ xưởng."
+    },
+    {
+        "uc":  "UC-23",
+        "column":  0,
+        "before":  "3. Chọn loại nhập/xuất và loại hàng; nhập tay mặt hàng, lượng đề nghị, thông tin lô, kho, thời điểm và ghi chú. (MatHang, LoHang, ChiTietPhieuYeuCauNhapXuat)",
+        "row":  8,
+        "after":  "3. Chọn nhập hoặc xuất, mục đích và nguồn phù hợp; xem các mặt hàng, phần lô và lượng còn được yêu cầu; chọn kho, Quản lý kho phụ trách, ngày giờ và ghi chú."
+    },
+    {
+        "uc":  "UC-23",
+        "column":  1,
+        "before":  "4. Hiển thị các dòng dữ liệu đã nhập.",
+        "row":  8,
+        "after":  "4. Hiển thị thông tin nguồn, xưởng phụ trách và danh sách mặt hàng của yêu cầu."
+    },
+    {
+        "uc":  "UC-23",
+        "column":  1,
+        "before":  "7. Kiểm tra quyền, lô, điều kiện nhập/xuất và lượng còn được phép; đối chiếu lượng đã thực hiện và các yêu cầu còn hiệu lực để chặn trùng hoặc vượt nhu cầu. (ChiTietPhieuKho, ChiTietPhieuYeuCauNhapXuat)",
+        "row":  10,
+        "after":  "7. Kiểm tra quyền đối với xưởng, nguồn, phần lô, ngày giờ và lượng còn được phép; không tính lại lượng đã thực hiện hoặc đã nằm trong yêu cầu còn hiệu lực."
+    },
+    {
+        "uc":  "UC-23",
+        "column":  1,
+        "before":  "8. Lưu yêu cầu với trạng thái Chờ xử lý và tham chiếu nguồn nếu import. (PhieuYeuCauNhapXuat)",
+        "row":  11,
+        "after":  "8. Lưu yêu cầu Chờ xử lý kèm nguồn đã chọn."
+    },
+    {
+        "uc":  "UC-23",
+        "column":  1,
+        "before":  "11. Hiển thị message “Tạo yêu cầu thành công”.",
+        "row":  14,
+        "after":  "11. Hiển thị thông báo tạo yêu cầu thành công."
+    },
+    {
+        "uc":  "UC-23",
+        "column":  0,
+        "before":  "3.1 Import dữ liệu",
+        "row":  17,
+        "after":  "3.1 Yêu cầu nhập nguyên vật liệu"
+    },
+    {
+        "uc":  "UC-23",
+        "column":  0,
+        "before":  "1. Chủ xưởng chọn Import dữ liệu thay cho nhập tay.",
+        "row":  18,
+        "after":  "1. Chủ xưởng chọn Nhập kho, mục đích Nhập nguyên vật liệu từ kế hoạch mua."
+    },
+    {
+        "uc":  "UC-23",
+        "column":  0,
+        "before":  "2. Hệ thống hiển thị nguồn phù hợp với loại yêu cầu. (KeHoachMuaBan (MUA, BAN), KeHoachSanXuat)",
+        "row":  19,
+        "after":  "2. Chọn kế hoạch mua có đơn mua và phần hàng thực nhận phù hợp."
+    },
+    {
+        "uc":  "UC-23",
+        "column":  0,
+        "before":  "3. Chủ xưởng chọn kế hoạch và lô/đợt nhận tương ứng.",
+        "row":  20,
+        "after":  "3. Hệ thống hiển thị lô nguyên vật liệu, phần đạt chất lượng còn chưa nhập và số lượng được phép yêu cầu; phần lỗi hoặc đã trả nhà cung cấp không được tính vào lượng đạt."
+    },
+    {
+        "uc":  "UC-23",
+        "column":  0,
+        "before":  "4. Hệ thống lấy danh sách mặt hàng và lượng nguồn: nhập NVL từ kế hoạch MUA; xuất thành phẩm từ kế hoạch BAN; xuất NVL từ kế hoạch sản xuất. (ChiTietKeHoachMuaBan, ChiTietKeHoachSanXuat)",
+        "row":  21,
+        "after":  "4. Chủ xưởng xác nhận thông tin kho, ngày giờ và người nhận yêu cầu; tiếp tục bước 5 của luồng cơ bản."
+    },
+    {
+        "uc":  "UC-23",
+        "column":  0,
+        "before":  "5. Hệ thống đối chiếu kết quả QC/AC cùng mặt hàng và lô/đợt nhận: nhập NVL chỉ lấy phần thực nhận đạt QC, trừ phần trả về; xuất thành phẩm chỉ lấy phần đạt QC đã nhập kho. (ChiTietKetQuaKiemTraQCAC)",
+        "row":  22,
+        "after":  "3.2 Yêu cầu nhập thành phẩm\n1. Chủ xưởng chọn Nhập kho, mục đích Nhập thành phẩm, rồi chọn báo cáo thành phẩm đã gửi.\n2. Hệ thống hiển thị đúng phần thành phẩm của báo cáo, cùng mã lô sản xuất; lấy phần đạt chất lượng còn chưa nhập.\n3. Chủ xưởng hoàn thiện thông tin và tiếp tục bước 5."
+    },
+    {
+        "uc":  "UC-23",
+        "column":  0,
+        "before":  "6. Hệ thống điền dữ liệu nguồn vào form để chủ xưởng nhập lượng đề nghị, kho, thời điểm và ghi chú. Nhập thành phẩm từng phần sử dụng nhập tay và cùng mã lô sản xuất.",
+        "row":  23,
+        "after":  "3.3 Yêu cầu xuất nguyên vật liệu\n1. Chủ xưởng chọn Xuất kho, mục đích Xuất nguyên vật liệu để sản xuất, rồi chọn kế hoạch sản xuất của xưởng.\n2. Hệ thống lấy nhu cầu nguyên vật liệu, trừ lượng đã cấp và lượng đã được yêu cầu còn hiệu lực; không cộng thêm 10% lần nữa.\n3. Chủ xưởng hoàn thiện thông tin và tiếp tục bước 5."
+    },
+    {
+        "uc":  "UC-23",
+        "column":  0,
+        "before":  "7. Đi đến bước 4 của luồng cơ bản.",
+        "row":  24,
+        "after":  "3.4 Yêu cầu xuất thành phẩm\n1. Chủ xưởng chọn Xuất kho, mục đích Giao thành phẩm, rồi chọn kế hoạch sản xuất.\n2. Hệ thống đối chiếu đơn hàng, kế hoạch bán đã được duyệt, sản lượng hoàn tất và thành phẩm đạt chất lượng đã nhập kho còn có thể xuất.\n3. Chủ xưởng hoàn thiện thông tin và tiếp tục bước 5.\n3.5 Hủy trước khi gửi\n1. Chủ xưởng chọn Hủy.\n2. Không tạo yêu cầu; kết thúc UC."
+    },
+    {
+        "uc":  "UC-23",
+        "column":  0,
+        "before":  "1. Hệ thống hiển thị message “Không có nguồn hợp lệ để lập yêu cầu”. Không lưu yêu cầu.",
+        "row":  27,
+        "after":  "1. Hệ thống thông báo không có nguồn hợp lệ để lập yêu cầu; không lưu yêu cầu."
+    },
+    {
+        "uc":  "UC-23",
+        "column":  0,
+        "before":  "5.1 Hủy trước khi gửi",
+        "row":  29,
+        "after":  "3.2 Chưa có phần hàng thực nhận hoặc chưa có báo cáo thành phẩm đã gửi"
+    },
+    {
+        "uc":  "UC-23",
+        "column":  0,
+        "before":  "1. Hệ thống hiển thị message “Hủy dữ liệu chưa lưu; không tạo yêu cầu”. Không lưu yêu cầu.",
+        "row":  30,
+        "after":  "1. Hệ thống thông báo chưa có dữ liệu nguồn phù hợp; không tự tạo lô chỉ vì đã có kế hoạch hoặc đến ngày dự kiến."
+    },
+    {
+        "uc":  "UC-23",
+        "column":  0,
+        "before":  "2. Đi đến bước 12 của luồng cơ bản.",
+        "row":  31,
+        "after":  "2. Chủ xưởng kiểm tra lại việc ghi nhận hàng về hoặc gửi báo cáo rồi thực hiện lại."
+    },
+    {
+        "uc":  "UC-23",
+        "column":  0,
+        "before":  "1. Hệ thống hiển thị message “Vui lòng nhập đầy đủ thông tin và số lượng lớn hơn 0”. Không lưu yêu cầu.",
+        "row":  33,
+        "after":  "1. Hệ thống yêu cầu nhập đầy đủ thông tin và số lượng lớn hơn 0; không lưu yêu cầu."
+    },
+    {
+        "uc":  "UC-23",
+        "column":  0,
+        "before":  "1. Hệ thống hiển thị message “Yêu cầu không đủ điều kiện hoặc lượng đề nghị vượt lượng còn được phép”. Không lưu yêu cầu.",
+        "row":  36,
+        "after":  "1. Hệ thống thông báo yêu cầu không đủ điều kiện hoặc lượng đề nghị vượt lượng còn được phép; không lưu yêu cầu."
+    },
+    {
+        "uc":  "UC-23",
+        "column":  0,
+        "before":  "1. Nhập thành phẩm từng phần: nhập tay lượng mới hoàn thành; các lần thuộc cùng đợt sản xuất sử dụng cùng mã lô.",
+        "row":  39,
+        "after":  "1. Xưởng được lấy từ tài khoản Chủ xưởng: Xưởng ahtor, Xưởng edxn hoặc Xưởng trnvnth. Chủ xưởng không tự chọn thay xưởng ngoài quyền phụ trách."
+    },
+    {
+        "uc":  "UC-23",
+        "column":  0,
+        "before":  "2. Kế hoạch BAN được tạo từ kế hoạch sản xuất. Xuất thành phẩm lấy căn cứ từ kế hoạch BAN, khi sản xuất hoàn thành toàn bộ và đến ngày giao. (KeHoachMuaBan, KeHoachSanXuat)",
+        "row":  40,
+        "after":  "2. Thành phẩm được báo cáo từng phần; mỗi phần thuộc cùng lô sản xuất nhưng chỉ được yêu cầu nhập trong lượng của chính phần đó."
+    },
+    {
+        "uc":  "UC-23",
+        "column":  0,
+        "before":  "3. Báo cáo thành phẩm chỉ dùng để báo cáo ban giám đốc, không làm nguồn import yêu cầu xuất thành phẩm. (BanBaoCaoSanXuat)",
+        "row":  41,
+        "after":  "3. Báo cáo thành phẩm đã gửi là nguồn cho yêu cầu nhập phần thành phẩm. Xuất thành phẩm được đối chiếu với kế hoạch sản xuất, đơn hàng và kế hoạch bán theo điều kiện giao hàng."
+    },
+    {
+        "uc":  "UC-23",
+        "column":  0,
+        "before":  "4. Xuất NVL lấy nhu cầu trong kế hoạch sản xuất, không lấy lượng thiếu và không cộng dự phòng 10% lần nữa. (ChiTietKeHoachSanXuat)",
+        "row":  42,
+        "after":  "4. Nhu cầu xuất nguyên vật liệu lấy từ kế hoạch sản xuất; nếu sử dụng báo cáo nhu cầu theo lựa chọn được cung cấp thì lấy đúng nhu cầu được phép của báo cáo. Không lấy lượng thiếu cần mua làm toàn bộ lượng xuất sản xuất."
+    },
+    {
+        "uc":  "UC-23",
+        "column":  0,
+        "before":  "5. Lượng đề nghị khác lượng/lô thực nhập xuất. Chặn cấp trùng hoặc vượt nhu cầu bằng lượng đã thực hiện và lượng còn cam kết. (ChiTietPhieuYeuCauNhapXuat, ChiTietPhieuKho)",
+        "row":  43,
+        "after":  "5. Gửi yêu cầu chưa làm thay đổi tồn kho. Quản lý kho phân công nhân viên và phần lô thực hiện; Nhân viên kho ghi phiếu thực nhập hoặc thực xuất mới cập nhật tồn kho."
+    },
+    {
+        "uc":  "UC-24",
+        "column":  0,
+        "before":  "1.1 Tìm kiếm/lọc không có 1 t quả phù hợp",
+        "row":  19,
+        "after":  "1.1 Tìm kiếm hoặc lọc không có kết quả phù hợp"
+    },
+    {
+        "uc":  "UC-27",
+        "column":  1,
+        "before":  "Bộ phận mua hàng đăng nhập thành công vào hệ thống và kế hoạch mua hàng đã được duyệt",
+        "row":  1,
+        "after":  "Bộ phận mua hàng đã đăng nhập; có thể lập đơn trực tiếp hoặc theo kế hoạch mua nguyên vật liệu đã được duyệt, chưa có đơn mua theo chính sách một đơn mua cho mỗi kế hoạch."
+    },
+    {
+        "uc":  "UC-27",
+        "column":  1,
+        "before":  "2. Hiển thị kế hoạch loại MUA đã được duyệt, còn nhu cầu cần xử lý. (KeHoachMuaBan)",
+        "row":  7,
+        "after":  "2. Hiển thị hai hình thức Lập trực tiếp và Theo kế hoạch mua nguyên vật liệu."
+    },
+    {
+        "uc":  "UC-27",
+        "column":  0,
+        "before":  "3. Chọn một kế hoạch mua để xem chi tiết (KeHoachMuaBan)",
+        "row":  8,
+        "after":  "3. Chọn Theo kế hoạch mua nguyên vật liệu và chọn kế hoạch đã được duyệt."
+    },
+    {
+        "uc":  "UC-27",
+        "column":  1,
+        "before":  "4. Hiển thị chi tiết kế hoạch và báo cáo sản xuất nguồn. (KeHoachMuaBan, ChiTietKeHoachMuaBan, BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, MatHang)",
+        "row":  8,
+        "after":  "4. Hiển thị danh sách nguyên vật liệu, số lượng và ngày nhận mong muốn của kế hoạch; hiển thị báo cáo nguồn nếu kế hoạch có báo cáo."
+    },
+    {
+        "uc":  "UC-27",
+        "column":  0,
+        "before":  "5. Nhập thông tin nhà cung cấp, giá, điều kiện giao hàng (DonMuaHang, ChiTietDonMuaHang, NhaCungCap)",
+        "row":  9,
+        "after":  "5. Chọn nhà cung cấp cho từng nguyên vật liệu; kiểm tra đơn vị, nhập giá thỏa thuận, điều kiện giao hàng và ghi chú."
+    },
+    {
+        "uc":  "UC-27",
+        "column":  1,
+        "before":  "6. Kiểm tra thông tin đơn mua, lượng đã mua và báo cáo nguồn phải là SAN_XUAT, trùng nguồn của kế hoạch MUA đã duyệt. (DonMuaHang, ChiTietDonMuaHang, KeHoachMuaBan, BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)",
+        "row":  9,
+        "after":  "6. Kiểm tra mặt hàng, nhà cung cấp từng dòng, lượng mua, đơn giá, ngày nhận và kế hoạch nguồn. Ngày nhận của đơn theo kế hoạch được lấy từ kế hoạch mua."
+    },
+    {
+        "uc":  "UC-27",
+        "column":  1,
+        "before":  "8. Tạo đơn mua và chi tiết, tham chiếu kế hoạch MUA và MaBaoCao nguồn; cập nhật trạng thái thực hiện kế hoạch. (DonMuaHang, ChiTietDonMuaHang, KeHoachMuaBan)",
+        "row":  10,
+        "after":  "8. Tạo đơn mua và các dòng nguyên vật liệu, nhà cung cấp tương ứng; ghi nhận kế hoạch và báo cáo nguồn nếu có; thông báo mua hàng thành công. Chưa tạo hàng thực nhận hoặc tăng tồn kho."
+    },
+    {
+        "uc":  "UC-28",
+        "column":  1,
+        "before":  "Đợt kiểm kê đã hoàn thành",
+        "row":  1,
+        "after":  "Đợt đã hoàn tất các nội dung được giao; người lập biên bản là nhân viên QC/AC hoặc Ban kiểm kê được Ban giám đốc chỉ định; chưa có biên bản đã gửi."
+    },
+    {
+        "uc":  "UC-28",
+        "column":  1,
+        "before":  "Biên bản kiểm kê được lập và gửi cho Quản lý kho",
+        "row":  2,
+        "after":  "Lưu nháp hoặc gửi một biên bản chung tổng hợp kết quả của đợt. Khi gửi, Ban giám đốc nhận thông tin; nếu có ngoại lệ, Quản lý kho thấy nội dung cần xử lý."
+    },
+    {
+        "uc":  "UC-28",
+        "column":  1,
+        "before":  "2. Hiển thị số liệu tổng hợp của đợt kiểm kê (số liệu thực tế, số liệu hệ thống, chênh lệch) (PhieuKiemKe, ChiTietPhieuKiemKe)",
+        "row":  7,
+        "after":  "2. Hiển thị công việc và kết quả đã hoàn tất. Đợt có cả QC/AC và Ban kiểm kê tổng hợp cả chất lượng và số đếm; đợt chỉ có một nhóm chỉ yêu cầu kết quả của nhóm được giao."
+    },
+    {
+        "uc":  "UC-28",
+        "column":  0,
+        "before":  "3. Nhập nội dung biên bản (nhận xét, xác nhận) và xác nhận lập biên bản (PhieuKiemKe)",
+        "row":  8,
+        "after":  "3. Người được chỉ định nhập kết luận, nhận xét; chọn Không có ngoại lệ hoặc Nhập mô tả ngoại lệ; nếu có ngoại lệ thì nhập nội dung, xem lại và gửi biên bản."
+    },
+    {
+        "uc":  "UC-28",
+        "column":  1,
+        "before":  "4. Lưu kết luận, nhận xét và trạng thái biên bản trên phiếu kiểm kê; gửi cho Quản lý kho. (PhieuKiemKe)",
+        "row":  8,
+        "after":  "4. Kiểm tra người lập và kết quả đợt; lưu biên bản chung, nội dung ngoại lệ nếu có và gửi thông báo. Biên bản đã gửi giữ nguyên kết quả được tổng hợp tại thời điểm gửi."
+    },
+    {
+        "uc":  "UC-28",
+        "column":  0,
+        "before":  "1. Hệ thống thông báo còn khu vực chưa kiểm kê xong, chưa thể lập biên bản (PhieuKiemKe, ChiTietPhieuKiemKe)",
+        "row":  16,
+        "after":  "1. Hệ thống thông báo còn nội dung kiểm số lượng hoặc chất lượng được giao chưa hoàn tất; chưa cho lập biên bản chung."
+    },
+    {
+        "uc":  "UC-29",
+        "column":  1,
+        "before":  "Đơn hàng được tiếp nhận và chuyển sang trạng thái đã tiếp nhận, chờ Ban giám đốc phê duyệt (UC-31 Phê duyệt đơn hàng)",
+        "row":  2,
+        "after":  "Đơn hàng được chuyển sang trạng thái Đã tiếp nhận để Bộ phận lập kế hoạch lập kế hoạch sản xuất. Ban giám đốc phê duyệt kế hoạch sản xuất tại UC-31; không phê duyệt trực tiếp đơn hàng."
+    },
+    {
+        "uc":  "UC-29",
+        "column":  1,
+        "before":  "6. Cập nhật trạng thái đơn hàng thành Đã tiếp nhận, chờ phê duyệt",
+        "row":  10,
+        "after":  "6. Cập nhật trạng thái đơn hàng thành Đã tiếp nhận."
+    },
+    {
+        "uc":  "UC-31",
+        "column":  0,
+        "before":  "UC-31 Phê duyệt đơn hàng",
+        "row":  0,
+        "after":  "UC-31 Phê duyệt kế hoạch sản xuất"
+    },
+    {
+        "uc":  "UC-31",
+        "column":  1,
+        "before":  "Đơn hàng được phê duyệt hoặc từ chối và trạng thái đơn hàng được cập nhật",
+        "row":  2,
+        "after":  "Kế hoạch sản xuất được phê duyệt hoặc từ chối. Khi kế hoạch gắn với đơn hàng được phê duyệt, hệ thống cập nhật trạng thái đơn hàng tương ứng và thông báo cho xưởng phụ trách."
+    },
+    {
+        "uc":  "UC-31",
+        "column":  0,
+        "before":  "1. Chọn chức năng Phê duyệt đơn hàng",
+        "row":  7,
+        "after":  "1. Chọn chức năng Phê duyệt kế hoạch sản xuất."
+    },
+    {
+        "uc":  "UC-31",
+        "column":  1,
+        "before":  "2. Hiển thị danh sách đơn hàng đang chờ phê duyệt (DonHang)",
+        "row":  7,
+        "after":  "2. Hiển thị danh sách kế hoạch sản xuất đang chờ phê duyệt."
+    },
+    {
+        "uc":  "UC-31",
+        "column":  0,
+        "before":  "3. Chọn một đơn hàng để xem chi tiết (DonHang)",
+        "row":  8,
+        "after":  "3. Chọn kế hoạch sản xuất để xem chi tiết."
+    },
+    {
+        "uc":  "UC-31",
+        "column":  0,
+        "before":  "5. Chọn Phê duyệt (DonHang)",
+        "row":  9,
+        "after":  "5. Chọn Phê duyệt kế hoạch sản xuất."
+    },
+    {
+        "uc":  "UC-31",
+        "column":  1,
+        "before":  "6. Cập nhật đơn hàng và kế hoạch sản xuất liên quan thành Đã duyệt; thông báo cho Bộ phận lập kế hoạch. (DonHang, KeHoachSanXuat)",
+        "row":  9,
+        "after":  "6. Kiểm tra lại kế hoạch, ngày thực hiện và đơn hàng liên quan; lưu quyết định phê duyệt kế hoạch, cập nhật trạng thái đơn hàng theo quyết định và thông báo cho Bộ phận lập kế hoạch, Chủ xưởng phụ trách."
+    },
+    {
+        "uc":  "UC-31",
+        "column":  0,
+        "before":  "5.1 Từ chối đơn hàng",
+        "row":  11,
+        "after":  "5.1 Từ chối kế hoạch sản xuất"
+    },
+    {
+        "uc":  "UC-31",
+        "column":  0,
+        "before":  "1. Ban giám đốc chọn Từ chối và nhập lý do (DonHang)",
+        "row":  12,
+        "after":  "1. Ban giám đốc chọn Từ chối và nhập lý do."
+    },
+    {
+        "uc":  "UC-31",
+        "column":  0,
+        "before":  "2. Cập nhật đơn hàng và kế hoạch sản xuất liên quan thành Từ chối, lưu lý do; thông báo cho khách hàng và Bộ phận lập kế hoạch. (DonHang, KeHoachSanXuat, KhachHang)",
+        "row":  13,
+        "after":  "2. Hệ thống lưu kế hoạch bị từ chối cùng lý do, cập nhật thông tin liên quan và thông báo cho Bộ phận lập kế hoạch. Không coi việc từ chối một kế hoạch là hủy mọi kế hoạch hoặc chứng từ của đơn hàng."
+    },
+    {
+        "uc":  "UC-31",
+        "column":  0,
+        "before":  "2.1 Danh sách đơn hàng chờ phê duyệt rỗng",
+        "row":  16,
+        "after":  "2.1 Danh sách kế hoạch sản xuất chờ phê duyệt rỗng"
+    },
+    {
+        "uc":  "UC-31",
+        "column":  0,
+        "before":  "1. Hệ thống hiển thị danh sách rỗng / thông báo không có đơn hàng nào cần phê duyệt.  (DonHang)2. Kết thúc UC. ",
+        "row":  17,
+        "after":  "1. Hệ thống thông báo không có kế hoạch sản xuất cần phê duyệt.\n2. Kết thúc UC."
+    },
+    {
+        "uc":  "UC-31",
+        "column":  0,
+        "before":  "4.1 Đơn hàng không còn ở trạng thái chờ phê duyệt (đã được xử lý bởi người khác)",
+        "row":  18,
+        "after":  "4.1 Kế hoạch không còn chờ phê duyệt"
+    },
+    {
+        "uc":  "UC-31",
+        "column":  0,
+        "before":  "1. Hệ thống thông báo đơn hàng không còn hiệu lực để phê duyệt (DonHang)",
+        "row":  19,
+        "after":  "1. Hệ thống thông báo kế hoạch không còn được phép phê duyệt."
+    },
+    {
+        "uc":  "UC-32",
+        "column":  1,
+        "before":  "4. Hiển thị kế hoạch, chi tiết và báo cáo nguồn: MUA đối chiếu báo cáo SAN_XUAT; BAN đối chiếu báo cáo THANH_PHAM và tồn khả dụng. (KeHoachMuaBan, ChiTietKeHoachMuaBan, BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, MatHang, TonKho, ChiTietLo)",
+        "row":  8,
+        "after":  "4. Hiển thị kế hoạch, các dòng, ngày nhận hoặc ngày bán và nguồn nếu có. Kế hoạch mua trực tiếp không bắt buộc có báo cáo; kế hoạch mua theo báo cáo lấy nhu cầu nguyên vật liệu; kế hoạch bán đối chiếu báo cáo thành phẩm và lượng đạt chất lượng còn có thể sử dụng."
+    },
+    {
+        "uc":  "UC-32",
+        "column":  0,
+        "before":  "4.1 Kế hoạch không còn ở trạng thái chờ phê duyệt (đã được xử lý bởi người khác)",
+        "row":  23,
+        "after":  "4.2 Kế hoạch không còn ở trạng thái chờ phê duyệt"
+    },
+    {
+        "uc":  "UC-34",
+        "column":  1,
+        "before":  "Báo cáo loại SAN_XUAT được lưu, liên kết kế hoạch sản xuất và xưởng. Báo cáo mặc định gửi đến Ban giám đốc; chỉ gửi thêm đến Bộ phận lập kế hoạch khi chủ xưởng chủ động lựa chọn. Hủy hoặc thông tin không hợp lệ thì không lưu và không gửi báo cáo. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)",
+        "row":  2,
+        "after":  "Báo cáo được lưu nháp hoặc gửi theo lựa chọn. Khi gửi, Ban giám đốc luôn nhận được; báo cáo nhu cầu còn thiếu nguyên vật liệu được gửi thêm Bộ phận lập kế hoạch. Báo cáo tiến độ hoặc sự cố không tự tạo phần lô hay tăng tồn kho."
+    },
+    {
+        "uc":  "UC-34",
+        "column":  0,
+        "before":  "3. Chọn kế hoạch sản xuất cần báo cáo.",
+        "row":  9,
+        "after":  "3. Chọn kế hoạch sản xuất và mục đích báo cáo: tiến độ, sự cố hoặc nhu cầu nguyên vật liệu."
+    },
+    {
+        "uc":  "UC-34",
+        "column":  1,
+        "before":  "4. Hiển thị thông tin kế hoạch, xưởng và lượng NVL ước lượng cần dùng. (KeHoachSanXuat, ChiTietKeHoachSanXuat, Xuong, MatHang)",
+        "row":  10,
+        "after":  "4. Hiển thị kế hoạch, xưởng và các nội dung phù hợp với mục đích báo cáo. Với báo cáo nhu cầu, lấy lượng nguyên vật liệu ước lượng từ kế hoạch."
+    },
+    {
+        "uc":  "UC-34",
+        "column":  1,
+        "before":  "5. Hiển thị lượng NVL hiện có khả dụng của xưởng. (TonKho, ChiTietLo)",
+        "row":  11,
+        "after":  "5. Với báo cáo nhu cầu, hiển thị lượng tồn khả dụng từ hệ thống; không coi toàn bộ lượng đã dành cho nhu cầu khác là lượng còn có thể cấp."
+    },
+    {
+        "uc":  "UC-34",
+        "column":  1,
+        "before":  "8. Đối chiếu lượng NVL hiện có khả dụng với lượng NVL ước lượng cần dùng.",
+        "row":  14,
+        "after":  "8. Với báo cáo nhu cầu, đối chiếu lượng có thể cấp với lượng ước lượng cần dùng."
+    },
+    {
+        "uc":  "UC-34",
+        "column":  1,
+        "before":  "9. Tính lượng còn thiếu của từng NVL và xác định trạng thái “Đủ” hoặc “Không đủ”.",
+        "row":  15,
+        "after":  "9. Tính lượng thiếu của từng nguyên vật liệu, không nhỏ hơn 0; xác định đủ hoặc thiếu. Báo cáo tiến độ hoặc sự cố không bắt buộc phải có dòng nguyên vật liệu."
+    },
+    {
+        "uc":  "UC-34",
+        "column":  0,
+        "before":  "11. Chọn gửi thêm đến Bộ phận lập kế hoạch nếu cần.",
+        "row":  17,
+        "after":  "11. Chọn gửi thêm Bộ phận lập kế hoạch nếu cần. Với báo cáo nhu cầu còn thiếu nguyên vật liệu, hệ thống tự gửi thêm bộ phận này."
+    },
+    {
+        "uc":  "UC-34",
+        "column":  1,
+        "before":  "14. Lưu báo cáo với LoaiBaoCao=SAN_XUAT, gồm thời gian lập, tiến độ, mô tả và trạng thái NVL; tham chiếu kế hoạch sản xuất và xưởng. (BanBaoCaoSanXuat)",
+        "row":  20,
+        "after":  "14. Lưu báo cáo sản xuất với thời gian lập, mục đích, tiến độ và mô tả, liên kết kế hoạch sản xuất và xưởng."
+    },
+    {
+        "uc":  "UC-34",
+        "column":  1,
+        "before":  "15. Lưu các dòng NVL hiện có, NVL ước lượng cần dùng và NVL còn thiếu. (ChiTietBaoCaoSanXuat)",
+        "row":  21,
+        "after":  "15. Đối với báo cáo nhu cầu, lưu từng nguyên vật liệu, lượng có thể cấp, lượng cần dùng và lượng còn thiếu."
+    },
+    {
+        "uc":  "UC-34",
+        "column":  1,
+        "before":  "17. Gửi thêm đến Bộ phận lập kế hoạch nếu chủ xưởng đã chọn ở bước 11.",
+        "row":  23,
+        "after":  "17. Gửi thêm Bộ phận lập kế hoạch nếu Chủ xưởng đã chọn hoặc nếu là báo cáo nhu cầu còn thiếu nguyên vật liệu."
+    },
+    {
+        "uc":  "UC-35",
+        "column":  1,
+        "before":  "Chủ xưởng đã đăng nhập hệ thống và lô thành phẩm đã hoàn thành sản xuất",
+        "row":  1,
+        "after":  "Chủ xưởng đã đăng nhập; kế hoạch sản xuất đã được phê duyệt, thuộc xưởng phụ trách, chưa chốt hoàn tất và có thành phẩm mới hoàn thành cần báo cáo."
+    },
+    {
+        "uc":  "UC-35",
+        "column":  1,
+        "before":  "Báo cáo thành phẩm thực tế được lưu, liên kết kế hoạch sản xuất và xưởng; làm nguồn lập kế hoạch bán. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)",
+        "row":  2,
+        "after":  "Báo cáo thành phẩm được lưu; khi gửi sẽ ghi nhận phần thành phẩm trong cùng lô sản xuất để kiểm tra chất lượng và yêu cầu nhập kho. Gửi báo cáo chưa làm tăng tồn kho. Báo cáo đợt cuối đủ điều kiện hoàn tất kế hoạch và làm căn cứ bước bán hàng."
+    },
+    {
+        "uc":  "UC-35",
+        "column":  1,
+        "before":  "2. Hiển thị kế hoạch sản xuất, xưởng và dữ liệu xuất NVL thực tế liên quan. (KeHoachSanXuat, ChiTietKeHoachSanXuat, Xuong, PhieuKho, ChiTietPhieuKho, ChiTietLo)",
+        "row":  7,
+        "after":  "2. Hiển thị kế hoạch, xưởng, số lượng thành phẩm theo kế hoạch, đã báo cáo, còn lại và nguyên vật liệu đã xuất cho sản xuất."
+    },
+    {
+        "uc":  "UC-35",
+        "column":  0,
+        "before":  "3. Nhập lượng thành phẩm thực tế, lượng NVL đã sử dụng, ngày hoàn thành và ghi chú; phân bổ theo lô nếu có. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, ChiTietLoBaoCaoSanXuat, ChiTietLo)",
+        "row":  8,
+        "after":  "3. Nhập lượng thành phẩm mới hoàn thành của phần này, thông tin phần lô, ngày sản xuất, hạn dùng nếu có và ghi chú. Khi báo cáo đợt cuối, kiểm tra và nhập lượng nguyên vật liệu thực tế đã dùng."
+    },
+    {
+        "uc":  "UC-35",
+        "column":  1,
+        "before":  "4. Kiểm tra thông tin và tổng lượng phân bổ theo lô. (ChiTietBaoCaoSanXuat, ChiTietLoBaoCaoSanXuat)",
+        "row":  8,
+        "after":  "4. Cập nhật lượng còn lại theo lượng đang nhập; kiểm tra tổng các phần thành phẩm, lô, ngày và lượng nguyên vật liệu sử dụng. Các phần của cùng kế hoạch dùng chung mã lô sản xuất nhưng có thông tin phần riêng."
+    },
+    {
+        "uc":  "UC-35",
+        "column":  1,
+        "before":  "6. Lưu báo cáo loại THANH_PHAM, liên kết kế hoạch và xưởng; lưu chi tiết và phân bổ lô nếu có, gửi cho Ban giám đốc và làm nguồn lập kế hoạch bán. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, ChiTietLoBaoCaoSanXuat)",
+        "row":  9,
+        "after":  "6. Lưu và gửi báo cáo thành phẩm; ghi nhận phần lô tương ứng, thông báo cho người nhận. Chỉ đợt cuối đủ điều kiện mới hoàn tất kế hoạch; không tự nhập tồn hoặc tự kết luận chất lượng."
+    },
+    {
+        "uc":  "UC-06",
+        "column":  1,
+        "before":  "Danh sách danh mục kho (gồm khu vực kho, nhà cung cấp, nguyên vật liệu, thành phẩm, hàng lỗi, lô nguyên vật liệu, lô thành phẩm) được hiển thị/chỉnh sửa/xoá theo yêu cầu",
+        "row":  2,
+        "after":  "Danh mục nguyên vật liệu hoặc thành phẩm được hiển thị; Quản lý kho có thể xem, thêm, sửa hoặc xóa danh mục theo quyền được cấp."
+    },
+    {
+        "uc":  "UC-06",
+        "column":  1,
+        "before":  "4. Hiển thị chi tiết danh mục gồm (Mã danh mục, tên danh mục, mô tả, ngày tạo, ngày chỉnh sửa cuối cùng, số lượng dữ liệu hiện có, số lượng dữ liệu chưa được xuất bản) (LoaiHang, MatHang)",
+        "row":  8,
+        "after":  "4. Hiển thị tên, nhóm nguyên vật liệu hoặc thành phẩm, mô tả, ảnh nếu có và danh sách mặt hàng thuộc danh mục đã chọn."
+    },
+    {
+        "uc":  "UC-06.1",
+        "column":  1,
+        "before":  "2. Hiển thị form thêm danh mục gồm (Tên danh mục, mô tả) (LoaiHang)",
+        "row":  7,
+        "after":  "2. Hiển thị form thêm danh mục gồm tên danh mục, nhóm nguyên vật liệu hoặc thành phẩm, mô tả và ảnh nếu có."
+    },
+    {
+        "uc":  "UC-06.1",
+        "column":  0,
+        "before":  "3.1 Quản lý kho chọn nhập lại",
+        "row":  11,
+        "after":  "3.1 Hủy trước khi xác nhận"
+    },
+    {
+        "uc":  "UC-06.1",
+        "column":  0,
+        "before":  "1. Thông tin danh mục đã nhập bị xóa",
+        "row":  12,
+        "after":  "1. Quản lý kho chọn Hủy; hệ thống không thêm danh mục."
+    },
+    {
+        "uc":  "UC-06.1",
+        "column":  0,
+        "before":  "2. Quay lại UC-06 bước 4",
+        "row":  13,
+        "after":  "2. Quay lại danh sách danh mục của UC-06."
+    },
+    {
+        "uc":  "UC-06.1",
+        "column":  0,
+        "before":  "4.3 Nếu dữ liệu là số và Quản lý kho nhập chữ",
+        "row":  21,
+        "after":  "4.3 Nhóm danh mục không hợp lệ"
+    },
+    {
+        "uc":  "UC-06.1",
+        "column":  0,
+        "before":  "1. Hệ thống thông báo lỗi định dạng và yêu cầu nhập lại (LoaiHang)",
+        "row":  22,
+        "after":  "1. Hệ thống yêu cầu chọn nhóm Nguyên vật liệu hoặc Thành phẩm."
+    },
+    {
+        "uc":  "UC-06.1",
+        "column":  0,
+        "before":  "4.4 Nếu dữ liệu là số và Quản lý kho nhập giá trị \u003c 0",
+        "row":  24,
+        "after":  "4.4 Ảnh không hợp lệ"
+    },
+    {
+        "uc":  "UC-06.1",
+        "column":  0,
+        "before":  "1. Hệ thống thông báo giá trị phải lớn hơn 0 và yêu cầu nhập lại (LoaiHang)",
+        "row":  25,
+        "after":  "1. Hệ thống thông báo ảnh không được chấp nhận và yêu cầu chọn lại ảnh."
+    },
+    {
+        "uc":  "UC-06.2",
+        "column":  1,
+        "before":  "Danh mục được xóa khỏi danh sách",
+        "row":  2,
+        "after":  "Danh mục đủ điều kiện được xóa; nếu hủy hoặc danh mục đang được sử dụng thì giữ nguyên danh mục."
+    },
+    {
+        "uc":  "UC-06.3",
+        "column":  1,
+        "before":  "2. Hệ thống hiển thị form với thông tin có thể sửa là tên danh mục và mô tả (LoaiHang)",
+        "row":  7,
+        "after":  "2. Hiển thị form với tên danh mục, nhóm hàng, mô tả và ảnh hiện tại để chỉnh sửa theo các trường được phép."
+    },
+    {
+        "uc":  "UC-06.3",
+        "column":  0,
+        "before":  "5.2 Nếu dữ liệu là số và Quản lý kho nhập chữ",
+        "row":  20,
+        "after":  "5.2 Nhóm hàng không hợp lệ hoặc không được phép thay đổi"
+    },
+    {
+        "uc":  "UC-06.3",
+        "column":  0,
+        "before":  "1. Hệ thống thông báo lỗi định dạng và yêu cầu nhập lại (LoaiHang)",
+        "row":  21,
+        "after":  "1. Hệ thống thông báo và yêu cầu chọn lại nhóm hàng hợp lệ."
+    },
+    {
+        "uc":  "UC-06.3",
+        "column":  0,
+        "before":  "5.3 Nếu dữ liệu là số và Quản lý kho nhập giá trị \u003c 0",
+        "row":  23,
+        "after":  "5.3 Ảnh không hợp lệ"
+    },
+    {
+        "uc":  "UC-06.3",
+        "column":  0,
+        "before":  "1. Hệ thống thông báo giá trị phải lớn hơn 0 và yêu cầu nhập lại (LoaiHang)",
+        "row":  24,
+        "after":  "1. Hệ thống thông báo ảnh không được chấp nhận và yêu cầu chọn lại."
+    },
+    {
+        "uc":  "UC-06.3",
+        "column":  0,
+        "before":  "5.3 Nếu dữ liệu bị bỏ trống",
+        "row":  26,
+        "after":  "5.4 Thông tin bắt buộc bị bỏ trống"
+    },
+    {
+        "uc":  "UC-07",
+        "column":  1,
+        "before":  "Danh sách dữ liệu gồm (khu vực kho, nhà cung cấp, nguyên vật liệu, thành phẩm, hàng lỗi, lô nguyên vật liệu, lô thành phẩm) trong danh mục được hiển thị/chỉnh sửa/xóa theo yêu cầu",
+        "row":  2,
+        "after":  "Hiển thị dữ liệu thuộc danh mục được chọn; Quản lý kho có thể tìm kiếm, xem, thêm, sửa hoặc xóa dữ liệu theo điều kiện cho phép."
+    },
+    {
+        "uc":  "UC-07",
+        "column":  0,
+        "before":  "1. Quản lý kho tên dữ liệu cần tìm (MatHang)",
+        "row":  11,
+        "after":  "1. Quản lý kho nhập tên dữ liệu cần tìm."
+    },
+    {
+        "uc":  "UC-07.1",
+        "column":  1,
+        "before":  "2. Hiển thị form thêm dữ liệu yêu cầu nhập dữ liệu theo các cột tương ứng trong hệ thống ngoại trừ mã, ngày tạo, ngày cập nhật gần nhất (MatHang, LoaiHang)",
+        "row":  7,
+        "after":  "2. Hiển thị form của loại dữ liệu đang thêm. Đối với mặt hàng, hiển thị tên, danh mục, đơn vị tính, giá, ảnh, mô tả và trạng thái theo các trường được phép nhập; mã và thời điểm tạo do hệ thống ghi nhận."
+    },
+    {
+        "uc":  "UC-07.3",
+        "column":  0,
+        "before":  "3. Chỉnh sửa thông tin (tên danh mục, mô tả danh mục) và xác nhận (MatHang, LoaiHang)",
+        "row":  8,
+        "after":  "3. Chỉnh sửa các thông tin được phép của dữ liệu đang chọn, như tên mặt hàng, danh mục, đơn vị tính, giá, ảnh hoặc mô tả, rồi xác nhận."
+    },
+    {
+        "uc":  "UC-07.3",
+        "column":  1,
+        "before":  "4. Hệ thống lưu thông tin mới vào hệ thống và thông báo chỉnh sửa thành công (MatHang)",
+        "row":  9,
+        "after":  "5. Hệ thống lưu thông tin mới và thông báo chỉnh sửa thành công."
+    },
+    {
+        "uc":  "UC-09",
+        "column":  0,
+        "before":  "1. Nhập mã phiếu để tìm kiếm phiếu nhập kho (PhieuKho)",
+        "row":  11,
+        "after":  "1. Nhập mã phiếu để tìm kiếm phiếu xuất kho."
+    },
+    {
+        "uc":  "UC-09",
+        "column":  0,
+        "before":  "2. Hệ thống hiển thị các phiếu nhập kho phù hợp (PhieuKho)",
+        "row":  12,
+        "after":  "2. Hệ thống hiển thị các phiếu xuất kho phù hợp."
+    },
+    {
+        "uc":  "UC-25.1",
+        "column":  0,
+        "before":  "3. Nhập thông tin muốn chỉnh sửa (CongViec, NhanVien)",
+        "row":  8,
+        "after":  "3. Nhập thông tin muốn chỉnh sửa và chọn Xác nhận."
+    },
+    {
+        "uc":  "UC-25.1",
+        "column":  1,
+        "before":  "4. Chọn Xác nhận",
+        "row":  8,
+        "after":  "4. Hệ thống kiểm tra công việc còn được phép chỉnh sửa."
+    },
+    {
+        "uc":  "UC-25.1",
+        "column":  1,
+        "before":  "6. Kiểm tra lịch trình nhân viên nếu có bổ sung/thay đổi nhân viên (NhanVien, CongViec)",
+        "row":  10,
+        "after":  "6. Kiểm tra nhân viên được giao, người lập biên bản và phạm vi lô khi có thay đổi; với đợt kiểm kê, chỉ chọn nhân viên QC/AC hoặc Ban kiểm kê."
+    },
+    {
+        "uc":  "UC-25.1",
+        "column":  0,
+        "before":  "6.1 Nếu giám đốc thêm nhân viên có lịch trùng vào thời điểm thực hiện công việc",
+        "row":  29,
+        "after":  "6.1 Phân công không hợp lệ"
+    },
+    {
+        "uc":  "UC-25.1",
+        "column":  0,
+        "before":  "1. Hệ thống thông báo nhân viên đang không trống lịch, yêu cầu chọn nhân viên khác (NhanVien, CongViec)",
+        "row":  30,
+        "after":  "1. Hệ thống yêu cầu chọn nhân viên đúng nhóm và người lập biên bản thuộc danh sách được giao."
+    },
+    {
+        "uc":  "UC-24.2",
+        "column":  1,
+        "before":  "Bộ phận ",
+        "row":  4,
+        "after":  "Quản lý kho nhận thông báo hủy yêu cầu."
+    },
+    {
+        "uc":  "UC-24.2",
+        "column":  1,
+        "before":  "Yêu cầu bị xóa/hủy khỏi danh sách",
+        "row":  2,
+        "after":  "Yêu cầu đủ điều kiện được hủy, vẫn giữ lịch sử; các chứng từ đã ghi không bị xóa theo yêu cầu."
+    },
+    {
+        "uc":  "UC-04",
+        "column":  1,
+        "before":  "2. Hiển thị form chọn loại kế hoạch và báo cáo nguồn. (KeHoachMuaBan, BanBaoCaoSanXuat)",
+        "row":  7,
+        "after":  "2. Hiển thị form lập kế hoạch với loại kế hoạch và nguồn phù hợp; đối với kế hoạch mua nguyên vật liệu, có hai hình thức Lập trực tiếp và Theo báo cáo sản xuất."
+    },
+    {
+        "uc":  "UC-04",
+        "column":  0,
+        "before":  "3. Chọn kế hoạch MUA và báo cáo sản xuất có NVL còn thiếu. (KeHoachMuaBan, BanBaoCaoSanXuat)",
+        "row":  8,
+        "after":  "3. Chọn kế hoạch mua nguyên vật liệu, hình thức Theo báo cáo sản xuất và báo cáo nhu cầu đã gửi có nguyên vật liệu còn thiếu."
+    },
+    {
+        "uc":  "UC-04",
+        "column":  0,
+        "before":  "4. Lấy danh sách NVL còn thiếu từ báo cáo; nhập giá dự kiến và ghi chú, đối chiếu lượng cần mua. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, ChiTietKeHoachMuaBan, MatHang)",
+        "row":  9,
+        "after":  "4. Hệ thống lấy danh sách nguyên vật liệu và lượng thiếu; Bộ phận lập kế hoạch kiểm tra lượng mua, đơn giá dự kiến, chọn ngày nhận mong muốn và nhập ghi chú. Không chọn nhà cung cấp ở bước lập kế hoạch."
+    },
+    {
+        "uc":  "UC-04",
+        "column":  1,
+        "before":  "8. Lưu kế hoạch MUA và chi tiết, tham chiếu MaBaoCao nguồn, chuyển sang Chờ phê duyệt; thông báo thành công. (KeHoachMuaBan, ChiTietKeHoachMuaBan)",
+        "row":  11,
+        "after":  "8. Lưu kế hoạch và chi tiết, ghi nhận báo cáo nguồn nếu có, chuyển sang Chờ phê duyệt và thông báo thành công."
+    },
+    {
+        "uc":  "UC-04",
+        "column":  0,
+        "before":  "1. Chọn báo cáo THANH_PHAM; lấy thành phẩm thực tế, đối chiếu phần đạt QC đã nhập kho và tồn khả dụng, nhập lượng bán và ghi chú. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, MatHang, TonKho, ChiTietLo, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)",
+        "row":  14,
+        "after":  "1. Chọn báo cáo thành phẩm đã gửi phù hợp; lấy thành phẩm thực tế, đối chiếu phần đạt chất lượng đã nhập kho và lượng còn có thể sử dụng, nhập lượng bán và ghi chú."
+    },
+    {
+        "uc":  "UC-04",
+        "column":  0,
+        "before":  "2. Thực hiện kiểm tra và tính tổng tiền như bước 5–6; khi xác nhận, lưu kế hoạch BAN và chi tiết, tham chiếu báo cáo thành phẩm, trạng thái Chờ phê duyệt. (KeHoachMuaBan, ChiTietKeHoachMuaBan)",
+        "row":  15,
+        "after":  "2. Kiểm tra và tính tổng tiền như bước 5 đến bước 6; khi xác nhận, lưu kế hoạch bán và các dòng, gắn với báo cáo thành phẩm nguồn, trạng thái Chờ phê duyệt."
+    },
+    {
+        "uc":  "UC-04",
+        "column":  0,
+        "before":  "2. Chọn xưởng, nhập ghi chú; hệ thống ước lượng NVL bằng thuật toán, cộng 10% từng loại và đối chiếu tồn khả dụng để xác định lượng thiếu dự kiến. Chi tiết kế hoạch gồm thành phẩm và NVL, phân biệt bằng LoaiChiTiet. (KeHoachSanXuat, ChiTietKeHoachSanXuat, Xuong, MatHang, TonKho, ChiTietLo)",
+        "row":  18,
+        "after":  "2. Chọn xưởng, ngày bắt đầu, ngày kết thúc và ghi chú; hệ thống tính nguyên vật liệu dự kiến từ công thức và số lượng thành phẩm, cộng dự phòng 10% một lần cho từng loại. Đối chiếu lượng có thể cấp để hiển thị phần thiếu dự kiến; kế hoạch có cả danh sách thành phẩm và nguyên vật liệu."
+    },
+    {
+        "uc":  "UC-04",
+        "column":  0,
+        "before":  "3. Kiểm tra đơn hàng, xưởng và lượng dự kiến; khi xác nhận, lưu kế hoạch sản xuất và chi tiết để trình duyệt cùng đơn hàng tại UC-31. Không lưu vào kế hoạch mua/bán ở nhánh này. (KeHoachSanXuat, ChiTietKeHoachSanXuat)",
+        "row":  19,
+        "after":  "3. Kiểm tra đơn hàng, xưởng, ngày bắt đầu, ngày kết thúc và lượng dự kiến; khi xác nhận, lưu kế hoạch sản xuất để Ban giám đốc phê duyệt tại UC-31. Kế hoạch sản xuất được lưu riêng với kế hoạch mua hoặc bán."
+    },
+    {
+        "uc":  "UC-05",
+        "column":  1,
+        "before":  "Danh sách kế hoạch mua/bán được hiển thị/tìm kiếm theo yêu cầu",
+        "row":  2,
+        "after":  "Danh sách kế hoạch sản xuất, kế hoạch mua hoặc bán được hiển thị theo chức năng đang chọn; có thể tìm kiếm và thực hiện thao tác được phép."
+    },
+    {
+        "uc":  "UC-05",
+        "column":  1,
+        "before":  "2. Hiển thị danh sách kế hoạch hiện có (KeHoachMuaBan)",
+        "row":  7,
+        "after":  "2. Hiển thị các kế hoạch của chức năng đang chọn cùng trạng thái và nguồn liên quan."
+    },
+    {
+        "uc":  "UC-05",
+        "column":  1,
+        "before":  "4. Hiển thị kế hoạch, chi tiết và báo cáo nguồn theo loại MUA/BAN. (KeHoachMuaBan, ChiTietKeHoachMuaBan, BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, MatHang)",
+        "row":  8,
+        "after":  "4. Hiển thị kế hoạch và các dòng chi tiết; kế hoạch sản xuất có đơn hàng, xưởng và nguyên vật liệu; kế hoạch mua hoặc bán có báo cáo nguồn nếu được lập từ báo cáo."
+    },
+    {
+        "uc":  "UC-11.01",
+        "column":  1,
+        "before":  "2. Hiển thị yêu cầu xuất NVL Chờ xử lý, chưa xuất hết và đủ điều kiện thực hiện. (PhieuYeuCauNhapXuat)",
+        "row":  7,
+        "after":  "2. Hiển thị các công việc xuất đúng mục đích được giao cho nhân viên, còn lượng chưa thực hiện."
+    },
+    {
+        "uc":  "UC-11.01",
+        "column":  0,
+        "before":  "3. Chọn phiếu yêu cầu",
+        "row":  8,
+        "after":  "3. Chọn công việc và đối chiếu giấy tờ thực xuất; kiểm tra số lượng gợi ý, nhập lượng thực xuất và ghi chú thực tế."
+    },
+    {
+        "uc":  "UC-11.01",
+        "column":  1,
+        "before":  "4. Lấy yêu cầu và báo cáo SAN_XUAT nguồn; đối chiếu lượng cần cấp, tự phân bổ lô khả dụng theo mặt hàng và lượng yêu cầu, hiển thị phiếu xuất dự thảo. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, LoNguyenVatLieu, ChiTietLo, TonKho, Kho)",
+        "row":  8,
+        "after":  "4. Hiển thị yêu cầu xuất cho kế hoạch sản xuất hoặc nguồn nhu cầu được phép, cùng lô, vị trí và lượng Quản lý kho đã phân công. Kiểm tra lượng chưa cấp; không tự phân bổ lại lô thay Quản lý kho."
+    },
+    {
+        "uc":  "UC-11.01",
+        "column":  0,
+        "before":  "4.1 Phiếu yêu cầu không thực hiện được trên thực tế (lô hỏng, thiếu hàng…)",
+        "row":  14,
+        "after":  "3.1 Chưa thể xuất theo thực tế"
+    },
+    {
+        "uc":  "UC-11.01",
+        "column":  0,
+        "before":  "1. Chọn Báo phiếu yêu cầu không thực hiện được và nêu lý do (BanDeXuatXuLyNgoaiLe)",
+        "row":  15,
+        "after":  "1. Nhân viên kho không xác nhận xuất khi thiếu hàng hoặc phát hiện hàng không đủ điều kiện; liên hệ Quản lý kho để kiểm tra và điều chỉnh theo quyền."
+    },
+    {
+        "uc":  "UC-11.01",
+        "column":  0,
+        "before":  "2. Hệ thống ghi nhận đề xuất, chuyển phiếu yêu cầu sang “Chờ duyệt lại” và kết thúc UC (BanDeXuatXuLyNgoaiLe, PhieuYeuCauNhapXuat)",
+        "row":  16,
+        "after":  "2. Khi chưa ghi phiếu, hệ thống không trừ tồn. Nếu cần xử lý ngoại lệ, Quản lý kho thực hiện tại UC-16; không tự tạo đề xuất hoặc tự đổi yêu cầu sang Chờ duyệt lại."
+    },
+    {
+        "uc":  "UC-11.01",
+        "column":  1,
+        "before":  "Nhân viên kho đã đăng nhập và chọn Xuất NVL (UC-11); có yêu cầu xuất từ báo cáo SAN_XUAT của xưởng, đang Chờ xử lý và đủ điều kiện xuất.",
+        "row":  1,
+        "after":  "Nhân viên kho được phân công xuất nguyên vật liệu cho kế hoạch sản xuất hoặc báo cáo nhu cầu hợp lệ của xưởng; nguồn, lô, vị trí và lượng còn đủ điều kiện."
+    },
+    {
+        "uc":  "UC-11.02",
+        "column":  1,
+        "before":  "2. Hiển thị đơn hàng và kế hoạch BAN đã duyệt còn lượng chờ giao. (DonHang, KeHoachMuaBan)",
+        "row":  7,
+        "after":  "2. Hiển thị các công việc xuất đúng mục đích được giao cho nhân viên, còn lượng chưa thực hiện."
+    },
+    {
+        "uc":  "UC-11.02",
+        "column":  0,
+        "before":  "3. Chọn đơn hàng và kế hoạch BAN để xuất giao.",
+        "row":  8,
+        "after":  "3. Chọn công việc và đối chiếu giấy tờ thực xuất; kiểm tra số lượng gợi ý, nhập lượng thực xuất và ghi chú thực tế."
+    },
+    {
+        "uc":  "UC-11.02",
+        "column":  1,
+        "before":  "4. Lấy chi tiết đơn, kế hoạch BAN và báo cáo thành phẩm nguồn; phân bổ lô đạt chất lượng còn khả dụng, hiển thị phiếu xuất dự thảo. (DonHang, ChiTietDonHang, KeHoachMuaBan, ChiTietKeHoachMuaBan, BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, LoThanhPham, ChiTietLo, TonKho, Kho)",
+        "row":  8,
+        "after":  "4. Hiển thị yêu cầu, đơn hàng, kế hoạch sản xuất, kế hoạch bán và các phần thành phẩm đạt chất lượng mà Quản lý kho đã phân công. Kiểm tra điều kiện hoàn tất sản xuất, ngày giao và lượng còn được giao."
+    },
+    {
+        "uc":  "UC-11.02",
+        "column":  0,
+        "before":  "4.1 Nhu cầu xuất không thực hiện được trên thực tế (lô hỏng, thiếu hàng…)",
+        "row":  14,
+        "after":  "3.1 Chưa thể xuất theo thực tế"
+    },
+    {
+        "uc":  "UC-11.02",
+        "column":  0,
+        "before":  "1. Chọn Báo không thể xuất giao và nhập lý do. (BanDeXuatXuLyNgoaiLe)",
+        "row":  15,
+        "after":  "1. Nhân viên kho không xác nhận xuất khi thiếu hàng hoặc phát hiện hàng không đủ điều kiện; liên hệ Quản lý kho để kiểm tra và điều chỉnh theo quyền."
+    },
+    {
+        "uc":  "UC-11.02",
+        "column":  0,
+        "before":  "2. Ghi nhận đề xuất, tạm dừng phần giao hàng chưa thực hiện và kết thúc UC. (BanDeXuatXuLyNgoaiLe, DonHang, KeHoachMuaBan)",
+        "row":  16,
+        "after":  "2. Khi chưa ghi phiếu, hệ thống không trừ tồn. Nếu cần xử lý ngoại lệ, Quản lý kho thực hiện tại UC-16; không tự tạo đề xuất hoặc tự đổi yêu cầu sang Chờ duyệt lại."
+    },
+    {
+        "uc":  "UC-01",
+        "column":  0,
+        "before":  "1. Hệ thống thông báo tài khoản đã bị khóa, hướng dẫn liên hệ quản trị viên (NguoiDung)",
+        "row":  19,
+        "after":  "1. Hệ thống không cho đăng nhập bằng tài khoản không hoạt động; hiển thị thông báo tên đăng nhập hoặc mật khẩu không đúng. Người dùng liên hệ quản trị viên để kiểm tra tài khoản."
+    },
+    {
+        "uc":  "UC-12.1",
+        "column":  1,
+        "before":  "Có lô và chi tiết lô NVL hoặc thành phẩm cần kiểm tra chất lượng trước khi nhập kho.",
+        "row":  1,
+        "after":  "Nhân viên QC/AC được phân công trong đợt đã bắt đầu; có phần lô nguyên vật liệu hoặc thành phẩm thực tế chưa được ghi kết quả kiểm tra."
+    },
+    {
+        "uc":  "UC-12.1",
+        "column":  1,
+        "before":  "2. Hiển thị form và các dòng lô cần kiểm tra. (KetQuaKiemTraQCAC, LoHang, ChiTietLo, MatHang)",
+        "row":  7,
+        "after":  "2. Hiển thị các đợt được phân công và từng phần lô còn chờ kiểm tra; gợi ý lượng cần kiểm."
+    },
+    {
+        "uc":  "UC-12.1",
+        "column":  1,
+        "before":  "4. Kiểm tra lượng đạt + lượng lỗi bằng lượng kiểm tra; lưu kết quả. Chuyển phần đạt sang UC-10 để nhập kho; phần NVL lỗi xử lý trả NCC ngay, phần TP lỗi xử lý ngoại lệ khi cần. (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC, ChiTietLo)",
+        "row":  8,
+        "after":  "4. Kiểm tra lượng đạt cộng lượng lỗi bằng toàn bộ lượng phải kiểm của từng dòng; lưu kết quả và cập nhật tiến độ đợt. Nguyên vật liệu lỗi được ghi nhận trả nhà cung cấp theo kết luận; phần đạt chưa tăng tồn, phải có yêu cầu và phiếu nhập. Thành phẩm lỗi được xử lý theo kết luận và ngoại lệ nếu cần."
+    },
+    {
+        "uc":  "UC-12.2",
+        "column":  1,
+        "before":  "Bộ phận QC/AC đã đăng nhập hệ thống; kết quả kiểm tra đang được chọn từ danh sách",
+        "row":  1,
+        "after":  "Nhân viên QC/AC đã lập kết quả gốc đăng nhập; kết quả còn đủ điều kiện điều chỉnh và chưa có chứng từ liên quan ngăn việc điều chỉnh trực tiếp."
+    },
+    {
+        "uc":  "UC-12.2",
+        "column":  1,
+        "before":  "Kết quả kiểm tra chất lượng được cập nhật chính xác",
+        "row":  2,
+        "after":  "Kết quả được điều chỉnh bằng chứng từ ghi lại số trước, số sau và lý do; vẫn giữ lịch sử kết quả ban đầu."
+    },
+    {
+        "uc":  "UC-12.2",
+        "column":  0,
+        "before":  "1. Chọn một kết quả và chọn Sửa (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)",
+        "row":  7,
+        "after":  "1. Chọn kết quả cần điều chỉnh và mở Chứng từ bù QC."
+    },
+    {
+        "uc":  "UC-12.2",
+        "column":  1,
+        "before":  "2. Hệ thống hiển thị form với thông tin hiện tại (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)",
+        "row":  7,
+        "after":  "2. Hiển thị dòng lô, số lượng đạt, số lượng lỗi và nội dung lỗi hiện tại."
+    },
+    {
+        "uc":  "UC-12.2",
+        "column":  0,
+        "before":  "3. Chỉnh sửa thông tin và xác nhận (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)",
+        "row":  8,
+        "after":  "3. Nhập số đạt, số lỗi mới, mô tả lỗi nếu có và lý do điều chỉnh; xác nhận. Số nhập là kết quả mới, không phải số chênh lệch."
+    },
+    {
+        "uc":  "UC-12.2",
+        "column":  1,
+        "before":  "4. Hệ thống kiểm tra và cập nhật kết quả kiểm tra (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)",
+        "row":  8,
+        "after":  "4. Kiểm tra người lập, dòng lô và tổng lượng không đổi; lưu chứng từ điều chỉnh và kết quả mới nếu đủ điều kiện. Không sửa phiếu kho hoặc tự thay đổi tồn kho."
+    },
+    {
+        "uc":  "UC-12.3",
+        "column":  1,
+        "before":  "Bộ phận QC/AC đã đăng nhập hệ thống; kết quả kiểm tra đang được chọn từ danh sách",
+        "row":  1,
+        "after":  "Chức năng xóa kết quả QC/AC đã ghi không còn được sử dụng; giữ bảng đặc tả này để đối chiếu với tài liệu ban đầu."
+    },
+    {
+        "uc":  "UC-12.3",
+        "column":  1,
+        "before":  "Kết quả kiểm tra bị xóa khỏi danh sách",
+        "row":  2,
+        "after":  "Không xóa kết quả đã ghi; nếu cần sửa sai, thực hiện UC-12.2 theo điều kiện cho phép."
+    },
+    {
+        "uc":  "UC-02",
+        "column":  0,
+        "before":  "3. Chọn sản phẩm, nhập số lượng, thông tin giao hàng gồm: địa chỉ, ngày nhận hàng trễ nhất, ghi chú (MatHang, ChiTietDonHang, DonHang, KhachHang)",
+        "row":  8,
+        "after":  "3. Chọn một hoặc nhiều mặt hàng, nhập số lượng theo đơn vị hiển thị, ghi chú từng dòng nếu có; nhập địa chỉ, ngày nhận trễ nhất và ghi chú chung."
+    },
+    {
+        "uc":  "UC-02",
+        "column":  1,
+        "before":  "5. Kiểm tra thông tin đơn hàng (DonHang, ChiTietDonHang)",
+        "row":  9,
+        "after":  "5. Kiểm tra hàng còn được đặt, các mặt hàng không trùng, số lượng dương, địa chỉ và ngày nhận; lấy giá hiện hành của mặt hàng để tính tiền tham khảo."
+    },
+    {
+        "uc":  "UC-02",
+        "column":  1,
+        "before":  "6. Lưu đơn hàng và thông báo đặt hàng thành công (DonHang, ChiTietDonHang, KhachHang)",
+        "row":  10,
+        "after":  "6. Lưu một đơn hàng với các dòng đã chọn, trạng thái Chờ tiếp nhận; thông báo đặt thành công và gửi thông báo cho Bộ phận lập kế hoạch. Đặt hàng chưa tạo lô hàng vật lý."
+    },
+    {
+        "uc":  "UC-03.1",
+        "column":  1,
+        "before":  "Thông tin đơn hàng khách hàng được cập nhật chính xác trong hệ thống với trạng thái chờ phê duyệt (Ban giám đốc thực hiện UC-31 Phê duyệt đơn hàng)",
+        "row":  2,
+        "after":  "Thông tin đơn hàng được cập nhật khi còn được phép sửa; giữ trạng thái xử lý hiện tại, không tự chuyển đơn thành Chờ phê duyệt. Ban giám đốc phê duyệt kế hoạch sản xuất tại UC-31."
+    },
+    {
+        "uc":  "UC-03.1",
+        "column":  1,
+        "before":  "6. Cập nhật đơn hàng lên hệ thống với trạng thái chờ phê duyệt (DonHang, ChiTietDonHang)",
+        "row":  10,
+        "after":  "6. Cập nhật thông tin đơn hàng hợp lệ, giữ trạng thái xử lý hiện tại."
+    },
+    {
+        "uc":  "UC-03.1",
+        "column":  1,
+        "before":  "7. Thông báo đơn hàng đã được cập nhật và cần chờ phê duyệt (DonHang, ChiTietDonHang)",
+        "row":  11,
+        "after":  "7. Thông báo cập nhật đơn hàng thành công."
+    },
+    {
+        "uc":  "UC-03.1",
+        "column":  0,
+        "before":  "1. Hệ thống thông báo thời gian nhận hàng dự kiến có thể tăng tùy theo quy mô đơn hàng (DonHang)",
+        "row":  16,
+        "after":  "1. Hệ thống yêu cầu xác nhận việc thay đổi số lượng; khách hàng kiểm tra lại số lượng và ngày nhận mong muốn."
+    },
+    {
+        "uc":  "UC-03.1",
+        "column":  0,
+        "before":  "1. Hệ thống thông báo việc giảm số lượng đơn hàng có thể phải chịu đền bù đặt cọc dựa vào hợp đồng (DonHang, ChiTietDonHang)",
+        "row":  20,
+        "after":  "1. Hệ thống yêu cầu khách hàng kiểm tra và xác nhận việc giảm số lượng."
+    }
+]

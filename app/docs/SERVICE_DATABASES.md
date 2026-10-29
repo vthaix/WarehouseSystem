@@ -1,93 +1,67 @@
-# MySQL theo service
+# Kiến trúc mono hiện tại
 
-Cập nhật 22/10/2026: migration 009 bổ sung FK nguồn QC trên DotKiemKe; migration **010_finished_report_parts** thêm `BanBaoCaoSanXuat.KieuThanhPham` và cập nhật view để báo cáo thành phẩm tạo các phần trong cùng lô. Runtime yêu cầu đủ **10** marker. Không xóa/copy lại source KhoHang, không thêm database. Luồng hiện hành [CONG_VIEC_KIEM_TRA_LO.md](CONG_VIEC_KIEM_TRA_LO.md).
+Ứng dụng là modular monolith: một tiến trình Express chạy `src/server.js`, giao diện EJS và API trong cùng ứng dụng; các mô-đun gọi trực tiếp bằng hàm, không gọi HTTP nội bộ giữa service.
 
-Hiện trạng: bảng đã tách vật lý thành **6 database trên cùng MySQL 8.4**, mỗi runtime dùng database và tài khoản riêng. Đây là bước tách từ schema có sẵn, giữ nghiệp vụ và dữ liệu; vẫn có view tương thích, FK, JOIN và transaction xuyên schema. Chưa thể chuyển các database sang MySQL server riêng mà không thay các phụ thuộc này bằng API/events.
+| Cấu hình MySQL | Giá trị mặc định |
+| --- | --- |
+| Server trong Docker | `mysql:3306` |
+| Database duy nhất | `warehouse_db` |
+| Username | `warehouse` |
+| Password | `warehouse123` |
 
-| Service | Database mặc định | Tài khoản | Dữ liệu sở hữu |
-| --- | --- | --- | --- |
-| Identity | KhoHang_Identity | identity_db | NguoiDung, VaiTro, NguoiDungVaiTro, NguoiDungXuong, NhanVien, BoPhan, LanThuDangNhap |
-| Business | KhoHang_Business | business_db | KhachHang, Xuong, danh mục hàng/NCC, DonHang và chi tiết, kế hoạch mua/bán/SX, đơn mua, báo cáo SX/thành phẩm và chi tiết |
-| Warehouse | KhoHang_Warehouse | warehouse_db | Kho, ViTriKho, lô, QC, yêu cầu/phiếu kho, tồn, biến động, kiểm kê, ngoại lệ, hàng trả, công việc; audit/idempotency dùng chung tạm thời |
-| Notification | KhoHang_Notification | notification_db | ThongBao |
-| Reporting | KhoHang_Reporting | reporting_db | View HoSoKho và lưu trữ hồ sơ cũ; báo cáo vẫn đọc nguồn trực tiếp |
-| Web Gateway | KhoHang_Gateway | gateway_db | PhienDangNhap |
+Chạy ở thư mục gốc bằng `docker compose up -d --build --wait`, vào `http://localhost:3000`. Adminer: `http://localhost:8080`, hệ quản trị MySQL, server `mysql`, tài khoản và database theo bảng trên. Docker tải các image công khai, build ứng dụng, tạo schema và dữ liệu danh mục/tài khoản trên máy mới.
 
-Ánh xạ đầy đủ, kể cả bảng lưu trữ và 8 view cũ: [ownership.json](../database/services/ownership.json). `LichSuCSDL` được sao chép vào mỗi database để truy vết migration 001–026; `TrangThaiDichVu` ghi mốc chuyển đổi. Một bảng nghiệp vụ chỉ có **một bản vật lý đang dùng**; đối tượng cùng tên ở database khác là view trỏ về owner, không phải bản sao cần đồng bộ.
+## Cấu trúc đang chạy
 
-`DB_NAME` tại Compose là tiền tố/source, mặc định `KhoHang`; các service dùng `<DB_NAME>_Identity`, `_Business`, `_Warehouse`, `_Notification`, `_Reporting`, `_Gateway`. Không đổi tiền tố sau cutover để nâng cấp code. Tài khoản/password mặc định từng service đặt trong docker-compose.yml theo yêu cầu: identity_db/identity123, business_db/business123, warehouse_db/warehouse123, notification_db/notification123, reporting_db/reporting123, gateway_db/gateway123. Có thể override bằng biến môi trường tương ứng. Job split-databases tạo/cập nhật tài khoản trong MySQL khi chạy lại. Chỉ job chuyển đổi được mount root secret, backend/gateway không có root secret.
-
-## Migration và dữ liệu
-
-Chuỗi khởi động: **setup → MySQL → migrate legacy → split-databases → backend → gateway**.
-
-- Migration 001–026 cũ không bị sửa. Với clone mới, tạo schema nguồn, chạy đầy đủ migration và seed demo, sau đó tách. Với volume có dữ liệu, dùng schema nguồn hiện có.
-- `001_split_existing.cjs` kiểm tra mọi object có owner; từ chối đích có dữ liệu không thuộc lần chuyển đổi đang phục hồi. Clone cấu trúc, giữ PK, password hash, số lượng, ngày tạo/cập nhật, generated columns, index/check, AUTO_INCREMENT; sao chép và đối soát mọi cột trong transaction. Không dùng INSERT IGNORE để bỏ qua dữ liệu lỗi.
-- FK được dựng lại đến **database owner mới**, giữ ON DELETE/ON UPDATE; trigger lô được tạo trong Warehouse. Không còn FK trỏ về schema nguồn.
-- View discriminator và view tổng hợp được chuyển về owner, tham chiếu database mới; `002_qualified_views.cjs` chuẩn hóa tên schema trong view, có thể chạy lại. Các view tương thích dùng SQL SECURITY INVOKER, không mượn quyền root.
-- `003_auto_increment.cjs` giữ bộ đếm ID của nguồn, không chỉ max ID còn tồn tại; không giảm bộ đếm hiện tại và không chạy lại sau khi đủ checkpoint.
-- Migration service 004 nhập TP từng phần; 005 mở xử lý cách ly; 006 mở QUARANTINE/bù QC hàng đã nhập. Runtime yêu cầu đủ sáu marker 001–006 tại mỗi schema.
-- Checkpoint nguồn `ChuyenDoiDichVu`: STARTED → COPIED → COMPLETE. Dữ liệu và COPIED commit cùng transaction; lỗi DDL sau đó có thể chạy lại. Khi COMPLETE, không copy/seed đè dữ liệu hoạt động. Job tiếp tục kiểm tra tài khoản và cập nhật view tương thích; chỉ cho backend chạy khi job thành công.
-- `KhoHang` cũ được giữ làm bản nguồn trước chuyển đổi; **không phải CSDL đang ghi và không đồng bộ sau cutover**. Seed/migration legacy không được chạy lại trên database của service. Không chỉnh sửa dữ liệu ở schema nguồn để mong thay đổi giao diện.
-
-Migration thực thi: [database/services/migrations](../database/services/migrations). Các file [schemas](../database/services/schemas) là snapshot DDL theo owner để review, không có dữ liệu/secret và **không chạy chồng lên database hiện có**. Boot dùng migration JavaScript lấy cấu trúc nguồn thực tế, không phụ thuộc snapshot này. Các thay đổi schema tiếp theo cần migration mới theo owner, không sửa các migration đã áp dụng hoặc sửa ownership của lần cutover đã hoàn tất.
-
-## Quyền tương thích
-
-Migration service mới nhất `008_purchase_line_suppliers`: NCC ở từng `ChiTietDonMuaHang`; đầu đơn NCC chung được NULL khi có nhiều NCC; kế hoạch MUA không cần NCC. Backfill từ đầu đơn lịch sử, giữ dữ liệu và FK theo owner, refresh view liên quan. Runtime yêu cầu tám checkpoint. Snapshot DDL đã xuất lại từ schema hiện hành; xem [MUA_NVL_VA_RANG_BUOC_NGAY.md](MUA_NVL_VA_RANG_BUOC_NGAY.md).
-
-Tài khoản có SELECT qua các view để giữ các JOIN hiện hữu. DML chỉ cấp cho bảng sở hữu và danh sách ngoại lệ trong [compatibility-grants.json](../database/services/compatibility-grants.json): Business còn đăng ký lô thành phẩm, ghi notification/audit/idempotency; Warehouse cập nhật trạng thái đơn mua/đơn khách/kế hoạch bán và notification; Identity ghi audit. Reporting không ghi nghiệp vụ; Gateway chỉ ghi session. Service không có CREATE/ALTER/DROP/GRANT.
-
-Đây là quyền chuyển tiếp có chủ đích, **chưa phải cách ly quyền đọc hoàn toàn**. Cần loại bỏ foreign writes/read views và FK xuyên schema khi chuyển sang các MySQL instance độc lập. Không bỏ FK hoặc tách transaction hiện hữu trước khi có cơ chế chống mua/cấp/giao trùng thay thế.
-
-SQL adapter định danh bảng bằng database owner, giữ alias JSON/API cũ. Business và Warehouse được cấp LOCK TABLES trên schema nguồn liên quan để SELECT FOR UPDATE vẫn khóa đúng dòng khi đối chiếu tồn/nhu cầu; không cấp UPDATE tồn kho cho Business chỉ để vượt lỗi quyền khóa. Đây vẫn là phụ thuộc giao dịch trên cùng MySQL.
-
-## Chạy và backup
-
-Lệnh chạy từ repository root. **Nâng lần đầu từ schema dùng chung phải dừng writer cũ trước khi copy**:
-
-```powershell
-docker compose stop app identity-service business-service warehouse-service notification-service reporting-service
-docker compose up -d --build --wait
-docker compose ps
-docker compose logs --tail=50 split-databases
+```text
+app/
+  src/
+    app.js, server.js
+    modules/        # auth, catalog, customer-orders, business-plans,
+                    # production, purchasing, warehouse, stock-requests,
+                    # quality, stocktakes, tasks, exceptions, returns,
+                    # notifications, reporting
+    boundaries/     # ghép các mô-đun trong cùng tiến trình
+    shared/         # router, session MySQL, migration và tiện ích dùng chung
+    config/         # môi trường, kết nối MySQL, phân quyền, danh mục
+    views/          # EJS
+    images/         # ảnh danh mục và ảnh báo cáo
+  public/           # CSS và JavaScript trình duyệt
+  database/
+    monolith/       # migration đang dùng
+    seeders/        # tạo dữ liệu demo ban đầu, không ghi đè mật khẩu đã đổi
+  Dockerfile        # một Dockerfile ứng dụng
+  docker-compose.yml
+  docker-compose.test.yml
+archive/microservices-20261029/project/ # bản microservice giữ riêng
 ```
 
-Clone mới hoặc các lần build sau chỉ cần `docker compose up -d --build --wait`. Lần bật lại dùng `docker compose up -d`. Không chạy `down -v` để nâng code.
+`src/services/domain` và repository bộ nhớ còn phục vụ kiểm thử nghiệp vụ; không phải các tiến trình microservice. Runtime MySQL dùng các lớp tại `src/modules`.
 
-Job lưu SQL backup trước cutover tại `/var/backups/warehouse/KhoHang-before-service-split-v3.sql` trong named volume `database_backups` (tiền tố thay theo DB_NAME). File chứa dữ liệu và password hash, không đưa vào Git. Sao chép ra máy để giữ ngoài Docker:
+## Mặt hàng và lô
 
-```powershell
-New-Item -ItemType Directory -Force app/backups
-docker compose cp split-databases:/var/backups/warehouse/KhoHang-before-service-split-v3.sql app/backups/
-```
+- `MatHang` chứa thuộc tính chung và loại nguyên vật liệu/thành phẩm. `NguyenVatLieu.MaMatHang` và `ThanhPham.MaMatHang` vừa là khóa chính vừa tham chiếu mặt hàng cha. Thêm mặt hàng tự tạo dòng con đúng loại. Tiêu chuẩn nhập lưu tại nguyên vật liệu; hạn sử dụng mặc định theo ngày lưu tại thành phẩm. Các thuộc tính riêng là tùy chọn.
+- Không có bảng lô nguyên vật liệu và lô thành phẩm độc lập. `LoHang.LoaiLo` phân biệt nguyên vật liệu, thành phẩm, hàng trả. `ChiTietLo` lưu từng mặt hàng/phần giao nhận/ngày sản xuất/hạn dùng. Nhiều phần thành phẩm vẫn cùng đầu lô nhưng kiểm chất lượng và nhập kho riêng.
+- Hướng trả và chứng từ gốc vẫn được giữ để kiểm soát lượng hàng trả. Các bảng tồn, phiếu kho, QC, kiểm kê, phân công và lịch sử là dữ liệu nghiệp vụ riêng, không phải bản sao của mặt hàng.
+- Một số VIEW giữ tên báo cáo/chi tiết để dùng chung một bảng dữ liệu gốc; VIEW không tạo thêm bản sao dữ liệu. Danh sách SQL sinh từ migration ở `generated/DATABASE_OBJECTS.md`.
 
-Backup này là mốc **trước cutover**, không thay thế backup định kỳ 6 database đang hoạt động. Sau khi đã có ghi mới, không rollback bằng cách quay về KhoHang cũ vì sẽ mất các cập nhật mới. Phục hồi vào môi trường biệt lập, kiểm tra trước khi cutover; không restore đè môi trường đang dùng.
+## Mua nguyên vật liệu bắt buộc duyệt
 
-Adminer: `docker compose --profile dev up -d adminer`, http://localhost:8080. Chọn đúng database owner khi xem/sửa dữ liệu. Tài khoản app cũ chỉ được thêm SELECT trên database mới; dùng account service cho dữ liệu thuộc quyền của service đó.
+Bộ phận lập kế hoạch lập kế hoạch mua, có thể lập trực tiếp hoặc từ báo cáo nhu cầu. Ban giám đốc phê duyệt. Bộ phận mua hàng chỉ tạo đơn từ kế hoạch mua đã duyệt, chọn nhà cung cấp và giá từng dòng; lượng và ngày nhận lấy đúng kế hoạch. Không còn mua trực tiếp hoặc mua thẳng từ báo cáo để bỏ qua phê duyệt. Giao diện, API và trigger MySQL đều kiểm điều kiện này. Kế hoạch mua trực tiếp đã duyệt không bị buộc phải có báo cáo sản xuất.
 
-## Kiểm tra
+## Dữ liệu và bản cũ
 
-`npm test`, `npm run check`; kiểm thử SQL trên database riêng, không tạo chứng từ thử trong dữ liệu chính:
+Compose dùng `mono_mysql_data`, không dùng lại hoặc xóa volume microservice cũ. Migration không chạy lại seed để thay mật khẩu hoặc xóa giao dịch mỗi lần khởi động. Không dùng `down -v` khi cần giữ dữ liệu.
 
-```powershell
-docker compose run --rm --no-deps -T split-databases node scripts/split-acceptance.cjs
-```
+Ảnh trong Docker lưu ở volume `mono_images`, gắn tại `/app/src/images` của ứng dụng. Upload qua giao diện, không cần chép ảnh thủ công. Để sao lưu ảnh ra máy: `docker compose cp app:/app/src/images ./backups/images`. Chạy Node trực tiếp thì ảnh ở `app/src/images` trên máy.
 
-Test tạo source `KhoHang_Acceptance_20261013` và 6 database con, chạy 6 HTTP process với tài khoản service thật. Kết nối SQL trực tiếp của bộ test dùng root trong môi trường test để dựng/đối soát dữ liệu; root không được dùng bởi runtime service. Test kiểm tra replay, FK, bảo toàn dữ liệu và các luồng nghiệp vụ. Browser tests vẫn chạy qua gateway tại cổng 3000.
+Mã microservice, schema và tài liệu trước chuyển đổi nằm trong `../../archive/microservices-20261029/`. Bản có cấu hình riêng tư nằm trong ZIP tại `../../backups/mono-refactor-20261029/`, không đưa lên Git. Bản mã nguồn không thay thế bản sao dữ liệu MySQL; không tự nhận đã chuyển dữ liệu thật từ các database cũ. Chưa xóa volume cũ.
 
-Bằng chứng đợt nghiệp vụ kho: 48 test Node và syntax đạt; migration từ source mới và nghiệm thu qua 6 tài khoản thật đạt. Kiểm thử quyền xác nhận Business không được UPDATE TonKho, Gateway/Reporting không được UPDATE NguoiDung; replay giữ dữ liệu đã ghi sau cutover. Backup v3 đã restore vào database biệt lập và đối soát đủ 62 bảng nguồn, từng cột, gồm ngày/JSON/password hash. Test restore chỉ tạo database mới, không ghi đè source:
+## Kiểm thử an toàn
 
 ```powershell
-docker compose run --rm --no-deps -T split-databases node scripts/verify-service-backup.cjs
+docker compose -f app/docker-compose.yml -f app/docker-compose.test.yml -p warehouse-mono-review-20261029 up -d --build --wait
+docker compose -f app/docker-compose.yml -f app/docker-compose.test.yml -p warehouse-mono-review-20261029 exec -T -e ACCEPTANCE_MONOLITH=true app node scripts/monolith-acceptance.cjs
 ```
 
-Database test/restore được giữ riêng để xem kết quả, không phải dữ liệu sản xuất. Khi cần cập nhật snapshot DDL, chạy `scripts/export-service-schemas.cjs` qua job split-databases; snapshot chỉ chứa cấu trúc thuộc owner, không chứa compatibility view của service khác.
-
-Sau build cuối, cả 6 service healthy; browser import và EJS/Adminer đều đạt với cấu hình database mới. Các kiểm thử này xác minh bước tách schema hiện tại, không chứng nhận độc lập dữ liệu giữa các MySQL server hay mọi UC còn trong backlog.
-
-Tham khảo hành vi MySQL: [CREATE TABLE LIKE](https://dev.mysql.com/doc/refman/8.4/en/create-table-like.html) không giữ FK; migration dựng FK lại. [CREATE VIEW](https://dev.mysql.com/doc/refman/8.4/en/create-view.html) hỗ trợ tham chiếu database khác và SQL SECURITY INVOKER.
-
-Danh mục owner/TABLE/VIEW/cột sinh từ snapshot: [generated/DATABASE_OBJECTS.md](generated/DATABASE_OBJECTS.md). Kiểm tự động structure/migration/docs: npm run docs:sync và npm run check:sync.
-
-Ảnh danh mục: LoaiHang.DuongDanAnh / image_path, chọn/xem trước/bỏ ảnh, PNG/JPEG/WebP ≤5 MB. Migration service 007; file ở src/images/categories, Docker lưu volume category_images. Chi tiết: [CATEGORY_IMAGES.md](CATEGORY_IMAGES.md).
+Bản kiểm thử dùng project và volume riêng; giao diện ở cổng 3310. Chỉ chạy các bộ kiểm thử ghi dữ liệu trên bản thử riêng này. Xem báo cáo thực thi để biết bộ nào đã chạy đạt; không coi có đặc tả hoặc có mã là đã kiểm thử mọi trường hợp.

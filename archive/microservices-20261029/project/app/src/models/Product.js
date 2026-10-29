@@ -1,0 +1,25 @@
+module.exports = Object.freeze({
+  resource: "items",
+  table: "items",
+  kinds: ["MATERIAL", "FINISHED_PRODUCT"],
+  createFields: [
+    "code",
+    "name",
+    "category_id",
+    "unit_id",
+    "kind",
+    "reference_price",
+    "is_sample",
+    "is_published",
+    "is_active",
+    "description",
+  ],
+  editFields: [
+    "name",
+    "reference_price",
+    "is_sample",
+    "is_published",
+    "is_active",
+    "description",
+  ],
+});

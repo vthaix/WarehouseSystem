@@ -1,43 +1,43 @@
 module.exports = (pool) => {
   const resources = ["warehouses", "warehouse-locations", "lots"];
-  const repository = new (require("../../services/shared/catalog/CatalogRepository"))(
+  const repository = new (require("../../modules/catalog/CatalogRepository"))(
     pool,
     resources,
   );
   const qualityCampaigns =
-    new (require("../../services/warehouse-service/modules/quality/QualityCampaignService"))(pool);
+    new (require("../../modules/quality/QualityCampaignService"))(pool);
   const stockRequests =
-    new (require("../../services/warehouse-service/modules/stock-requests/StockRequestService"))(pool);
-  const stocktakes = new (require("../../services/warehouse-service/modules/stocktakes/StocktakeService"))(
+    new (require("../../modules/stock-requests/StockRequestService"))(pool);
+  const stocktakes = new (require("../../modules/stocktakes/StocktakeService"))(
     pool,
     qualityCampaigns,
   );
   return {
-    catalog: new (require("../../services/shared/catalog/CatalogService"))(repository),
-    catalogWrite: new (require("../../services/shared/catalog/CatalogWriteService"))(
+    catalog: new (require("../../modules/catalog/CatalogService"))(repository),
+    catalogWrite: new (require("../../modules/catalog/CatalogWriteService"))(
       pool,
       repository,
       resources,
     ),
-    lots: new (require("../../services/warehouse-service/modules/warehouse/LotService"))(pool, repository),
+    lots: new (require("../../modules/warehouse/LotService"))(pool, repository),
     qualityCampaigns,
     stockRequests,
     stocktakes,
-    quality: new (require("../../services/warehouse-service/modules/quality/QualityService"))(pool),
+    quality: new (require("../../modules/quality/QualityService"))(pool),
     warehouseFlow:
-      new (require("../../services/warehouse-service/modules/warehouse/WarehouseFlowService"))(
+      new (require("../../modules/warehouse/WarehouseFlowService"))(
         pool,
         stockRequests,
       ),
     warehouseRecords:
-      new (require("../../services/warehouse-service/modules/warehouse/WarehouseRecordService"))(pool),
-    tasks: new (require("../../services/warehouse-service/modules/tasks/TaskService"))(pool),
-    exceptions: new (require("../../services/warehouse-service/modules/exceptions/ExceptionService"))(
+      new (require("../../modules/warehouse/WarehouseRecordService"))(pool),
+    tasks: new (require("../../modules/tasks/TaskService"))(pool),
+    exceptions: new (require("../../modules/exceptions/ExceptionService"))(
       pool,
       stocktakes,
     ),
     customerReturns:
-      new (require("../../services/warehouse-service/modules/returns/CustomerReturnService"))(
+      new (require("../../modules/returns/CustomerReturnService"))(
         pool,
         stocktakes,
       ),

@@ -22,10 +22,10 @@ const executablePath = ["C:/Program Files (x86)/Microsoft/Edge/Application/msedg
     assert.equal(await page.locator("h1").textContent(), "Đặt bánh");
     await page.waitForFunction(() => typeof api === "function" && !!user);
     const samples = (await page.evaluate(() => api("sample-items?per_page=100"))).data;
-    const cakes = ["TP-DEMO-01", "TP-DEMO-02", "TP-DEMO-03"].map(code => samples.find(p => p.code === code));
+    const cakes = ["TP-001", "TP-002", "TP-003"].map(code => samples.find(p => p.code === code));
     assert.ok(cakes.every(Boolean), "All three published demo cakes available");
     assert.equal(cakes[0].unit, "hộp");
-    assert.equal(cakes[1].unit, "gói");
+    assert.equal(cakes[1].unit, "cái");
     assert.equal(cakes[2].unit, "hộp");
     await page.locator("#order-address").fill("[TEST UC-02] Địa chỉ kiểm tra đặt bánh");
     const date = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
@@ -35,7 +35,8 @@ const executablePath = ["C:/Program Files (x86)/Microsoft/Edge/Application/msedg
     await page.locator(`#cake-${cakes[0].id}`).fill("2");
     await page.locator(`#cake-${cakes[1].id}`).fill("3");
     await page.locator(`#cake-note-${cakes[0].id}`).fill("Đóng gói riêng");
-    assert.match(await page.locator("#order-total").textContent(), /156\.000/);
+    const expectedTotal=2*Number(cakes[0].reference_price)+3*Number(cakes[1].reference_price);
+    assert.ok((await page.locator("#order-total").textContent()).includes(new Intl.NumberFormat('vi-VN').format(expectedTotal)));
     await page.locator("#order-note").fill("[TEST UC-02] Đơn mẫu để tiếp nhận sau kiểm tra giao diện");
     const response = page.waitForResponse(r => r.url().endsWith("/api/v1/customer-orders") && r.request().method() === "POST");
     await page.getByRole("button", { name: "Gửi đơn đặt hàng" }).click();
@@ -46,7 +47,7 @@ const executablePath = ["C:/Program Files (x86)/Microsoft/Edge/Application/msedg
     const order = (await page.evaluate(id => api("customer-orders/" + id), page.url().split("/").pop())).data;
     assert.equal(order.lines.length, 2);
     assert.equal(order.status, "SUBMITTED");
-    assert.equal(Number(order.quoted_total), 156000);
+    assert.equal(Number(order.quoted_total), expectedTotal);
     await page.goto(base + "/customer/orders");
     await page.waitForFunction(() => typeof editForm === "function" && !!user);
     const updated = await page.evaluate(async ({ order, cakeId }) => {

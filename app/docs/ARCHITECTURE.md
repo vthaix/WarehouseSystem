@@ -1,56 +1,67 @@
-# Kiến trúc hiện tại
+# Kiến trúc mono hiện tại
 
-Cập nhật 14/10/2026, đối chiếu working tree, cấu hình Compose và entrypoint thực tế. Đây là kiến trúc đang triển khai; phần độc lập dữ liệu hoàn toàn vẫn còn phải làm.
+Ứng dụng là modular monolith: một tiến trình Express chạy `src/server.js`, giao diện EJS và API trong cùng ứng dụng; các mô-đun gọi trực tiếp bằng hàm, không gọi HTTP nội bộ giữa service.
 
-## Service và quyền sở hữu
+| Cấu hình MySQL | Giá trị mặc định |
+| --- | --- |
+| Server trong Docker | `mysql:3306` |
+| Database duy nhất | `warehouse_db` |
+| Username | `warehouse` |
+| Password | `warehouse123` |
 
-| Process / Compose | Database mặc định | Trách nhiệm |
-| --- | --- | --- |
-| identity-service | KhoHang_Identity | Đăng nhập, người dùng, vai trò, phạm vi xưởng, hồ sơ nhân viên |
-| business-service | KhoHang_Business | Danh mục hàng/NCC, khách hàng, đơn hàng, kế hoạch, mua hàng, sản xuất và báo cáo sản xuất |
-| warehouse-service | KhoHang_Warehouse | Kho/vị trí, lô, QC, yêu cầu/phiếu kho, tồn/giữ chỗ, kiểm kê, ngoại lệ, công việc, hàng trả |
-| notification-service | KhoHang_Notification | Danh sách thông báo và trạng thái đọc |
-| reporting-service | KhoHang_Reporting | Hồ sơ và truy vấn báo cáo tổng hợp; chưa có projection riêng |
-| web-gateway / app | KhoHang_Gateway | EJS, assets, session, CSRF, chuyển API và gọi backend |
+Chạy ở thư mục gốc bằng `docker compose up -d --build --wait`, vào `http://localhost:3000`. Adminer: `http://localhost:8080`, hệ quản trị MySQL, server `mysql`, tài khoản và database theo bảng trên. Docker tải các image công khai, build ứng dụng, tạo schema và dữ liệu danh mục/tài khoản trên máy mới.
 
-Tám boundary logic nằm trong `src/boundaries`. Catalog, Sales, Production, Procurement cùng business-service; Warehouse & Quality cùng warehouse-service. Boundary không tương đương một process/container.
+## Cấu trúc đang chạy
 
-## Luồng xử lý
-
-```mermaid
-flowchart LR
-  Browser[Trình duyệt] --> Gateway[web-gateway: EJS / API]
-  Gateway --> Identity[identity-service]
-  Gateway --> Business[business-service]
-  Gateway --> Warehouse[warehouse-service]
-  Gateway --> Notification[notification-service]
-  Gateway --> Reporting[reporting-service]
-  Identity --> DB[(MySQL 8.4: sáu database)]
-  Business --> DB
-  Warehouse --> DB
-  Notification --> DB
-  Reporting --> DB
-  Gateway --> DB
+```text
+app/
+  src/
+    app.js, server.js
+    modules/        # auth, catalog, customer-orders, business-plans,
+                    # production, purchasing, warehouse, stock-requests,
+                    # quality, stocktakes, tasks, exceptions, returns,
+                    # notifications, reporting
+    boundaries/     # ghép các mô-đun trong cùng tiến trình
+    shared/         # router, session MySQL, migration và tiện ích dùng chung
+    config/         # môi trường, kết nối MySQL, phân quyền, danh mục
+    views/          # EJS
+    images/         # ảnh danh mục và ảnh báo cáo
+  public/           # CSS và JavaScript trình duyệt
+  database/
+    monolith/       # migration đang dùng
+    seeders/        # tạo dữ liệu demo ban đầu, không ghi đè mật khẩu đã đổi
+  Dockerfile        # một Dockerfile ứng dụng
+  docker-compose.yml
+  docker-compose.test.yml
+archive/microservices-20261029/project/ # bản microservice giữ riêng
 ```
 
-Mỗi service có `src/services/<service>/index.js`, `Dockerfile`, `compose.js` và module thuộc owner. Controller/route → service nghiệp vụ → SQL/repository vẫn áp dụng bên trong từng service; giao diện EJS chỉ do gateway phục vụ.
+`src/services/domain` và repository bộ nhớ còn phục vụ kiểm thử nghiệp vụ; không phải các tiến trình microservice. Runtime MySQL dùng các lớp tại `src/modules`.
 
-Gateway chọn owner theo `src/services/shared/contracts.js`; SSR dùng HTTP clients. Backend nhận request nội bộ có chữ ký HMAC ràng buộc audience/path/body/time/nonce, kiểm allowlist và lấy lại actor/quyền/session version từ Identity. Không tin vai trò truyền từ browser. Mutation không tự retry; timeout cần đối soát kết quả bằng chứng từ/idempotency key.
+## Mặt hàng và lô
 
-## CSDL và giới hạn
+- `MatHang` chứa thuộc tính chung và loại nguyên vật liệu/thành phẩm. `NguyenVatLieu.MaMatHang` và `ThanhPham.MaMatHang` vừa là khóa chính vừa tham chiếu mặt hàng cha. Thêm mặt hàng tự tạo dòng con đúng loại. Tiêu chuẩn nhập lưu tại nguyên vật liệu; hạn sử dụng mặc định theo ngày lưu tại thành phẩm. Các thuộc tính riêng là tùy chọn.
+- Không có bảng lô nguyên vật liệu và lô thành phẩm độc lập. `LoHang.LoaiLo` phân biệt nguyên vật liệu, thành phẩm, hàng trả. `ChiTietLo` lưu từng mặt hàng/phần giao nhận/ngày sản xuất/hạn dùng. Nhiều phần thành phẩm vẫn cùng đầu lô nhưng kiểm chất lượng và nhập kho riêng.
+- Hướng trả và chứng từ gốc vẫn được giữ để kiểm soát lượng hàng trả. Các bảng tồn, phiếu kho, QC, kiểm kê, phân công và lịch sử là dữ liệu nghiệp vụ riêng, không phải bản sao của mặt hàng.
+- Một số VIEW giữ tên báo cáo/chi tiết để dùng chung một bảng dữ liệu gốc; VIEW không tạo thêm bản sao dữ liệu. Danh sách SQL sinh từ migration ở `generated/DATABASE_OBJECTS.md`.
 
-Sáu database và tài khoản đã tách, bảng vật lý thuộc một owner. View tương thích, FK, JOIN, transaction và một số quyền ghi xuyên schema vẫn tồn tại. Vì vậy các database phải cùng MySQL server hiện tại; container riêng chưa đồng nghĩa độc lập triển khai dữ liệu.
+## Mua nguyên vật liệu bắt buộc duyệt
 
-Business còn ghi đăng ký lô/thông báo qua SQL; Reporting đọc dữ liệu nguồn trực tiếp; audit/idempotency dùng chung tạm thời. Chưa có broker, outbox/inbox, projections, source claims hoặc saga. Chi tiết quyền/migration: [SERVICE_DATABASES.md](SERVICE_DATABASES.md).
+Bộ phận lập kế hoạch lập kế hoạch mua, có thể lập trực tiếp hoặc từ báo cáo nhu cầu. Ban giám đốc phê duyệt. Bộ phận mua hàng chỉ tạo đơn từ kế hoạch mua đã duyệt, chọn nhà cung cấp và giá từng dòng; lượng và ngày nhận lấy đúng kế hoạch. Không còn mua trực tiếp hoặc mua thẳng từ báo cáo để bỏ qua phê duyệt. Giao diện, API và trigger MySQL đều kiểm điều kiện này. Kế hoạch mua trực tiếp đã duyệt không bị buộc phải có báo cáo sản xuất.
 
-Runtime legacy `src/server.js` và `start:legacy` còn để đối chiếu/test, không phải entrypoint Compose. `src/modules` cũ đã được chuyển sang `src/services/<owner>/modules`. Các helper và adapter dùng chung chưa được loại bỏ.
+## Dữ liệu và bản cũ
 
-## Bước tiếp theo
+Compose dùng `mono_mysql_data`, không dùng lại hoặc xóa volume microservice cũ. Migration không chạy lại seed để thay mật khẩu hoặc xóa giao dịch mỗi lần khởi động. Không dùng `down -v` khi cần giữ dữ liệu.
 
-1. Tách truy vấn/ghi xuyên owner thành hợp đồng API rõ ràng, giữ invariant nghiệp vụ.
-2. Thêm outbox/inbox và xử lý sự kiện idempotent cho thông báo, đăng ký lô và dữ liệu tổng hợp.
-3. Thiết kế claims/compensation cho nhu cầu, giữ chỗ và các thao tác liên service.
-4. Thay FK/view xuyên schema và thử các database trên server riêng.
-5. Nghiệm thu lỗi mạng, restart, cạnh tranh, migration/backup/restore và production.
+Ảnh trong Docker lưu ở volume `mono_images`, gắn tại `/app/src/images` của ứng dụng. Upload qua giao diện, không cần chép ảnh thủ công. Để sao lưu ảnh ra máy: `docker compose cp app:/app/src/images ./backups/images`. Chạy Node trực tiếp thì ảnh ở `app/src/images` trên máy.
 
-Tiến độ nghiệp vụ: [IMPLEMENTATION_PROGRESS.md](IMPLEMENTATION_PROGRESS.md). Kế hoạch chuyển tiếp: [MICROSERVICE_MIGRATION.md](MICROSERVICE_MIGRATION.md).
+Mã microservice, schema và tài liệu trước chuyển đổi nằm trong `../../archive/microservices-20261029/`. Bản có cấu hình riêng tư nằm trong ZIP tại `../../backups/mono-refactor-20261029/`, không đưa lên Git. Bản mã nguồn không thay thế bản sao dữ liệu MySQL; không tự nhận đã chuyển dữ liệu thật từ các database cũ. Chưa xóa volume cũ.
+
+## Kiểm thử an toàn
+
+```powershell
+docker compose -f app/docker-compose.yml -f app/docker-compose.test.yml -p warehouse-mono-review-20261029 up -d --build --wait
+docker compose -f app/docker-compose.yml -f app/docker-compose.test.yml -p warehouse-mono-review-20261029 exec -T -e ACCEPTANCE_MONOLITH=true app node scripts/monolith-acceptance.cjs
+```
+
+Bản kiểm thử dùng project và volume riêng; giao diện ở cổng 3310. Chỉ chạy các bộ kiểm thử ghi dữ liệu trên bản thử riêng này. Xem báo cáo thực thi để biết bộ nào đã chạy đạt; không coi có đặc tả hoặc có mã là đã kiểm thử mọi trường hợp.

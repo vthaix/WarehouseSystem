@@ -1,0 +1,23 @@
+-- Convert only the unchanged original demo catalog. Keep IDs, units and historical document values.
+UPDATE items SET name='Bột mì làm bánh', version=version+1 WHERE code='NVL-001' AND name='Thép tấm';
+UPDATE items SET name='Đường trắng làm bánh', version=version+1 WHERE code='NVL-002' AND name='Thép hộp 40 × 40';
+UPDATE items SET name='Bơ lạt làm bánh', version=version+1 WHERE code='NVL-003' AND name='Sơn tĩnh điện';
+UPDATE items SET name='Trứng gà', version=version+1 WHERE code='PK-001' AND name='Bu lông M8';
+UPDATE items SET name='Sữa bột nguyên kem', version=version+1 WHERE code='PK-002' AND name='Bộ chân tăng chỉnh';
+UPDATE items SET name='Thùng carton đựng bánh', version=version+1 WHERE code='BB-001' AND name='Thùng carton đóng kệ';
+UPDATE items SET name='Hộp giấy đựng bánh', version=version+1 WHERE code='BB-002' AND name='Hộp phụ kiện';
+UPDATE items SET name='Bánh quy bơ đóng gói 200 g', version=version+1 WHERE code='TP-001' AND name='Kệ kho tiêu chuẩn';
+UPDATE items SET name='Bánh bông lan vani đóng gói 120 g', version=version+1 WHERE code='TP-002' AND name='Kệ kho 4 tầng';
+UPDATE items SET name='Bánh quy chocolate đóng gói 200 g', version=version+1 WHERE code='TP-003' AND name='Bàn thao tác cơ khí';
+UPDATE items SET name='Bánh bông lan cuộn đóng gói 150 g', version=version+1 WHERE code='TP-004' AND name='Xe đẩy hàng 2 tầng';
+UPDATE items SET name='Bánh quy yến mạch thử nghiệm', version=version+1 WHERE code='TP-005' AND name='Kệ thử nghiệm nội bộ';
+UPDATE items SET name='Hương vani mẫu ngừng sử dụng', version=version+1 WHERE code='NVL-004' AND name='Vật liệu mẫu ngừng sử dụng';
+UPDATE categories SET name='Phụ liệu làm bánh' WHERE code='PHU-KIEN' AND name='Phụ kiện';
+UPDATE warehouses SET name='Kho nguyên liệu làm bánh' WHERE code='KHO-01' AND name='Kho trung tâm';
+UPDATE warehouses SET name='Kho bánh đóng gói' WHERE code='KHO-02' AND name='Kho thành phẩm';
+UPDATE warehouses SET name='Kho bao bì đóng gói bánh' WHERE code='KHO-03' AND name='Kho bao bì và phụ kiện';
+UPDATE suppliers SET name='Công ty Nguyên liệu Bánh Việt' WHERE code='NCC-01' AND name='Công ty Nguyên liệu Việt';
+UPDATE suppliers SET name='Nhà cung cấp Bơ sữa Đông Nam' WHERE code='NCC-03' AND name='Nhà cung cấp Phụ kiện Đông Nam';
+UPDATE suppliers SET name='Nhà cung cấp Bột và Đường Thành Công' WHERE code='NCC-04' AND name='Nhà cung cấp Sơn và Vật tư Thành Công';
+UPDATE workshops SET name='Xưởng bánh ngọt đóng gói' WHERE code='XUONG-01' AND name='Xưởng sản xuất 1';
+UPDATE workshops SET name='Xưởng nướng và đóng gói bánh' WHERE code='XUONG-02' AND name='Xưởng gia công và lắp ráp';

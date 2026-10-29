@@ -1,0 +1,355 @@
+// Content amendments to the immutable, user-authored Word document.
+// No application code or business data is changed by this script.
+const fs = require('node:fs');
+const path = require('node:path');
+const dir = path.resolve(__dirname, '../docs/review-20261029');
+fs.mkdirSync(dir, { recursive: true });
+const blocks = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../docs/review-20261028/original-blocks.json'), 'utf8').replace(/^\uFEFF/, ''));
+const amendments = {};
+function uc(id) {
+  const b = blocks.find(b => b.type === 'table' && b.rows[0][0].join('').startsWith('UC-' + id + ' '));
+  if (!b) throw Error(id);
+  return amendments[id] ||= { id: 'UC-' + id, block: b.index, cells: [], alternatives: [], exceptions: [] };
+}
+function cell(id, row, column, text) { uc(id).cells.push({ row, column, text }); }
+function alt(id, ...entries) { uc(id).alternatives.push(...entries); }
+function exc(id, ...entries) { uc(id).exceptions.push(...entries); }
+function flow(id, entries) { uc(id).flow = entries; }
+
+cell('29', 2, 1, 'Đơn hàng được chuyển sang trạng thái Đã tiếp nhận để Bộ phận lập kế hoạch lập kế hoạch sản xuất. Ban giám đốc phê duyệt kế hoạch sản xuất tại UC-31; không phê duyệt trực tiếp đơn hàng.');
+cell('29', 10, 1, '6. Cập nhật trạng thái đơn hàng thành Đã tiếp nhận.');
+exc('29', '5.1 Đơn hàng đã được tiếp nhận hoặc không còn được phép tiếp nhận\n1. Hệ thống thông báo không thể tiếp nhận lại đơn hàng.\n2. Bộ phận lập kế hoạch tải lại danh sách và chọn đơn hàng khác.');
+
+cell('06', 2, 1, 'Danh mục nguyên vật liệu hoặc thành phẩm được hiển thị; Quản lý kho có thể xem, thêm, sửa hoặc xóa danh mục theo quyền được cấp.');
+cell('06', 8, 1, '4. Hiển thị tên, nhóm nguyên vật liệu hoặc thành phẩm, mô tả, ảnh nếu có và danh sách mặt hàng thuộc danh mục đã chọn.');
+alt('06', '2.1 Chọn nhóm danh mục\n1. Quản lý kho chọn Nguyên vật liệu hoặc Thành phẩm trên thanh chức năng.\n2. Hệ thống hiển thị các danh mục của nhóm được chọn.\n3. Quay lại bước 3.');
+cell('06.1', 7, 1, '2. Hiển thị form thêm danh mục gồm tên danh mục, nhóm nguyên vật liệu hoặc thành phẩm, mô tả và ảnh nếu có.');
+cell('06.1', 11, 0, '3.1 Hủy trước khi xác nhận');
+cell('06.1', 12, 0, '1. Quản lý kho chọn Hủy; hệ thống không thêm danh mục.');
+cell('06.1', 13, 0, '2. Quay lại danh sách danh mục của UC-06.');
+cell('06.1', 21, 0, '4.3 Nhóm danh mục không hợp lệ');
+cell('06.1', 22, 0, '1. Hệ thống yêu cầu chọn nhóm Nguyên vật liệu hoặc Thành phẩm.');
+cell('06.1', 24, 0, '4.4 Ảnh không hợp lệ');
+cell('06.1', 25, 0, '1. Hệ thống thông báo ảnh không được chấp nhận và yêu cầu chọn lại ảnh.');
+cell('06.2', 2, 1, 'Danh mục đủ điều kiện được xóa; nếu hủy hoặc danh mục đang được sử dụng thì giữ nguyên danh mục.');
+cell('06.3', 7, 1, '2. Hiển thị form với tên danh mục, nhóm hàng, mô tả và ảnh hiện tại để chỉnh sửa theo các trường được phép.');
+cell('06.3', 20, 0, '5.2 Nhóm hàng không hợp lệ hoặc không được phép thay đổi');
+cell('06.3', 21, 0, '1. Hệ thống thông báo và yêu cầu chọn lại nhóm hàng hợp lệ.');
+cell('06.3', 23, 0, '5.3 Ảnh không hợp lệ');
+cell('06.3', 24, 0, '1. Hệ thống thông báo ảnh không được chấp nhận và yêu cầu chọn lại.');
+cell('06.3', 26, 0, '5.4 Thông tin bắt buộc bị bỏ trống');
+
+cell('07', 2, 1, 'Hiển thị dữ liệu thuộc danh mục được chọn; Quản lý kho có thể tìm kiếm, xem, thêm, sửa hoặc xóa dữ liệu theo điều kiện cho phép.');
+cell('07', 11, 0, '1. Quản lý kho nhập tên dữ liệu cần tìm.');
+cell('07.1', 7, 1, '2. Hiển thị form của loại dữ liệu đang thêm. Đối với mặt hàng, hiển thị tên, danh mục, đơn vị tính, giá, ảnh, mô tả và trạng thái theo các trường được phép nhập; mã và thời điểm tạo do hệ thống ghi nhận.');
+exc('07.1', '4.1 Đơn vị tính, danh mục hoặc dữ liệu liên quan không còn được sử dụng\n1. Hệ thống thông báo nội dung không hợp lệ.\n2. Quản lý kho chọn lại dữ liệu đang được sử dụng rồi xác nhận.');
+cell('07.3', 8, 0, '3. Chỉnh sửa các thông tin được phép của dữ liệu đang chọn, như tên mặt hàng, danh mục, đơn vị tính, giá, ảnh hoặc mô tả, rồi xác nhận.');
+cell('07.3', 9, 1, '5. Hệ thống lưu thông tin mới và thông báo chỉnh sửa thành công.');
+exc('07.3', '4.4 Thay đổi thông tin có ảnh hưởng đến dữ liệu đã sử dụng\n1. Hệ thống kiểm tra các chứng từ liên quan.\n2. Nếu thông tin không được phép thay đổi, hệ thống thông báo và giữ nguyên thông tin cũ.');
+cell('09', 11, 0, '1. Nhập mã phiếu để tìm kiếm phiếu xuất kho.');
+cell('09', 12, 0, '2. Hệ thống hiển thị các phiếu xuất kho phù hợp.');
+
+cell('13', 2, 1, 'Đợt kiểm kê được lưu thành công; những nhân viên QC/AC và Ban kiểm kê được chọn nhận thông báo, người được chỉ định lập biên bản nhận thông tin phân công.');
+flow('13', [
+ ['1. Chọn chức năng Lập đợt kiểm kê.', '2. Hiển thị form gồm tên đợt, mô tả, lô cần kiểm, thời gian, danh sách nhân viên và người lập biên bản.'],
+ ['3. Chọn lô nguyên vật liệu từ kế hoạch mua hoặc chọn lô thành phẩm và từng phần thành phẩm cần kiểm. Chọn thời gian, mô tả, từng nhân viên thuộc QC/AC, Ban kiểm kê và một người lập biên bản trong những người đã chọn.', '4. Hiển thị nhân viên theo hai nhóm QC/AC và Ban kiểm kê; cho phép chọn nhiều người của một nhóm hoặc cả hai nhóm. Kiểm tra lô, phần lô, ngày nhận và phân công.'],
+ ['5. Xác nhận lập đợt kiểm kê.', '6. Lưu đợt kiểm kê; thông báo đến từng người được giao; thông báo tạo thành công. Người thuộc QC/AC kiểm chất lượng, người thuộc Ban kiểm kê kiểm số lượng.']
+]);
+alt('13', '3.1 Chọn nhân viên\n1. Ban giám đốc mở danh sách nhân viên của nhóm QC/AC hoặc Ban kiểm kê.\n2. Hệ thống hiển thị thông tin nhân viên để lựa chọn.\n3. Ban giám đốc chọn từng người rồi xác nhận; hệ thống hiển thị tên dưới nhóm tương ứng.\n4. Tiếp tục bước 3.', '3.2 Chọn lô thành phẩm\n1. Ban giám đốc chọn lô thành phẩm.\n2. Hệ thống hiển thị các phần đã được tạo từ báo cáo thành phẩm của lô.\n3. Ban giám đốc chọn phần cần kiểm; không lấy lại tổng số lượng cả lô cho mỗi phần.\n4. Tiếp tục bước 3.', '3.3 Chọn lô nguyên vật liệu sắp nhận\n1. Ban giám đốc chọn kế hoạch mua phù hợp.\n2. Hệ thống lấy ngày nhận dự kiến làm ngày bắt đầu gợi ý.\n3. Chỉ khi đã ghi nhận phần hàng thực nhận mới chọn được phần lô đó để thực hiện kiểm tra.\n4. Tiếp tục bước 3.', '4.2 Cho phép kiểm tra sớm để thử nghiệm\n1. Khi chưa đến thời gian bắt đầu, người có quyền chọn ô xác nhận giả lập tại thao tác bắt đầu.\n2. Hệ thống cho phép bắt đầu sớm trong chế độ thử nghiệm.\n3. Nếu không chọn giả lập, giữ ràng buộc thời gian thông thường; việc giả lập không tạo thêm hàng thực nhận và không bỏ qua quyền phân công.');
+exc('13', '4.3 Chưa chọn nhân viên hoặc người lập biên bản không thuộc danh sách phân công\n1. Hệ thống yêu cầu chọn nhân viên thuộc QC/AC hoặc Ban kiểm kê và người lập biên bản hợp lệ.\n2. Quay lại bước 3.', '4.4 Ngày bắt đầu trước ngày nhận hàng hoặc thời gian kết thúc trước thời gian bắt đầu\n1. Hệ thống thông báo thời gian không hợp lệ.\n2. Ban giám đốc điều chỉnh thời gian rồi xác nhận lại.', '4.5 Lô hoặc phần lô không phù hợp, đã được kiểm tra hoặc đang thuộc một đợt còn hiệu lực\n1. Hệ thống thông báo không thể chọn phần lô này.\n2. Ban giám đốc chọn lại phạm vi kiểm.');
+
+cell('17', 1, 1, 'Chủ xưởng đã đăng nhập; có đề xuất xử lý ngoại lệ thuộc xưởng đang chờ phê duyệt.');
+cell('17', 9, 1, '6. Lưu quyết định phê duyệt và thông báo cho Quản lý kho. Việc phê duyệt không tự thay đổi số lượng tồn kho; Quản lý kho thực hiện phương án được chấp thuận ở bước xử lý riêng.');
+cell('17', 11, 0, '5.1 Không đồng ý phương án đề xuất');
+cell('17', 12, 0, '1. Chủ xưởng chọn Không đồng ý, nhập lý do và hướng xử lý theo ý kiến của chủ xưởng.');
+cell('17', 13, 0, '2. Hệ thống lưu quyết định, lý do và hướng xử lý; thông báo cho Quản lý kho để thực hiện.');
+cell('17', 15, 0, '5.2 Chưa nhập nội dung bắt buộc khi không đồng ý');
+cell('17', 16, 0, '1. Chủ xưởng chọn Không đồng ý nhưng chưa nhập lý do hoặc hướng xử lý bắt buộc.');
+cell('17', 17, 0, '2. Hệ thống yêu cầu bổ sung nội dung; chưa gửi quyết định.');
+
+cell('18', 1, 1, 'Ban giám đốc, Quản lý kho hoặc Chủ xưởng đã đăng nhập và có quyền xem tồn kho.');
+cell('18', 6, 0, 'Ban giám đốc / Quản lý kho / Chủ xưởng');
+for (const id of ['19', '20']) {
+ cell(id, 1, 1, 'Ban giám đốc, Quản lý kho hoặc Chủ xưởng đã đăng nhập và được xem hồ sơ kho trong phạm vi quyền hạn.');
+ cell(id, 3, 1, 'Ban giám đốc, Quản lý kho, Chủ xưởng');
+ cell(id, 6, 0, 'Ban giám đốc / Quản lý kho / Chủ xưởng');
+ alt(id, '3.1 Xem hồ sơ của xưởng\n1. Chủ xưởng chọn điều kiện xem hồ sơ.\n2. Hệ thống chỉ hiển thị phiếu thuộc xưởng mà tài khoản phụ trách.\n3. Quay lại bước 3.');
+}
+for (const id of ['18','19','20','21']) exc(id, '4.2 Không tải được báo cáo\n1. Hệ thống thông báo không thể tải file.\n2. Người dùng vẫn xem được dữ liệu trên màn hình nếu danh sách đã tải thành công; kiểm tra lại và thử tải file sau.');
+
+alt('25', '4.3 Xem công việc của nhân viên\n1. Nhân viên mở danh sách công việc được giao.\n2. Hệ thống hiển thị nội dung, thời gian, lô hoặc phần lô và các thao tác theo nhiệm vụ.\n3. Nhân viên không được sửa hoặc xóa công việc của Ban giám đốc.', '4.4 Lập đợt kiểm kê mới\n1. Ban giám đốc chuyển sang chức năng Lập đợt kiểm kê tại UC-13.\n2. Không tạo đợt kiểm kê hoặc đợt kiểm tra QC/AC mới trong chức năng Quản lý công việc.');
+cell('25.1', 8, 0, '3. Nhập thông tin muốn chỉnh sửa và chọn Xác nhận.');
+cell('25.1', 8, 1, '4. Hệ thống kiểm tra công việc còn được phép chỉnh sửa.');
+cell('25.1', 10, 1, '6. Kiểm tra nhân viên được giao, người lập biên bản và phạm vi lô khi có thay đổi; với đợt kiểm kê, chỉ chọn nhân viên QC/AC hoặc Ban kiểm kê.');
+cell('25.1', 29, 0, '6.1 Phân công không hợp lệ');
+cell('25.1', 30, 0, '1. Hệ thống yêu cầu chọn nhân viên đúng nhóm và người lập biên bản thuộc danh sách được giao.');
+exc('25.1', '5.5 Công việc không còn được phép chỉnh sửa\n1. Hệ thống thông báo và không lưu thay đổi.\n2. Ban giám đốc tải lại chi tiết để xem trạng thái mới; không đổi lô, nhân viên hoặc biên bản đã được ghi nhận trái điều kiện.');
+exc('25.2', '4.2 Công việc đã hoàn thành, bị hủy hoặc đã phát sinh kết quả không được phép xóa\n1. Hệ thống thông báo không thể xóa công việc.\n2. Giữ nguyên công việc và các kết quả đã ghi nhận.');
+
+cell('31', 0, 0, 'UC-31 Phê duyệt kế hoạch sản xuất');
+cell('31', 2, 1, 'Kế hoạch sản xuất được phê duyệt hoặc từ chối. Khi kế hoạch gắn với đơn hàng được phê duyệt, hệ thống cập nhật trạng thái đơn hàng tương ứng và thông báo cho xưởng phụ trách.');
+cell('31', 7, 0, '1. Chọn chức năng Phê duyệt kế hoạch sản xuất.');
+cell('31', 7, 1, '2. Hiển thị danh sách kế hoạch sản xuất đang chờ phê duyệt.');
+cell('31', 8, 0, '3. Chọn kế hoạch sản xuất để xem chi tiết.');
+cell('31', 9, 0, '5. Chọn Phê duyệt kế hoạch sản xuất.');
+cell('31', 9, 1, '6. Kiểm tra lại kế hoạch, ngày thực hiện và đơn hàng liên quan; lưu quyết định phê duyệt kế hoạch, cập nhật trạng thái đơn hàng theo quyết định và thông báo cho Bộ phận lập kế hoạch, Chủ xưởng phụ trách.');
+cell('31', 11, 0, '5.1 Từ chối kế hoạch sản xuất');
+cell('31', 12, 0, '1. Ban giám đốc chọn Từ chối và nhập lý do.');
+cell('31', 13, 0, '2. Hệ thống lưu kế hoạch bị từ chối cùng lý do, cập nhật thông tin liên quan và thông báo cho Bộ phận lập kế hoạch. Không coi việc từ chối một kế hoạch là hủy mọi kế hoạch hoặc chứng từ của đơn hàng.');
+cell('31', 16, 0, '2.1 Danh sách kế hoạch sản xuất chờ phê duyệt rỗng');
+cell('31', 17, 0, '1. Hệ thống thông báo không có kế hoạch sản xuất cần phê duyệt.\n2. Kết thúc UC.');
+cell('31', 18, 0, '4.1 Kế hoạch không còn chờ phê duyệt');
+cell('31', 19, 0, '1. Hệ thống thông báo kế hoạch không còn được phép phê duyệt.');
+alt('31', '5.2 Sản lượng dự kiến vượt số lượng đơn hàng\n1. Hệ thống hiển thị nội dung vượt số lượng để Ban giám đốc xem xét.\n2. Nếu chọn Tiếp tục, hệ thống kiểm tra các điều kiện còn lại và phê duyệt.\n3. Nếu chọn Quay lại, không phê duyệt và giữ nguyên kế hoạch.');
+exc('31', '5.3 Từ chối nhưng chưa nhập lý do\n1. Hệ thống yêu cầu nhập lý do.\n2. Ban giám đốc bổ sung rồi xác nhận lại.', '4.2 Ngày thực hiện không hợp lệ hoặc vượt ngày nhận hàng trễ nhất của đơn\n1. Hệ thống thông báo không thể phê duyệt.\n2. Bộ phận lập kế hoạch phải điều chỉnh kế hoạch trước khi trình duyệt lại.');
+
+alt('14', '2.1 Xem chi tiết đơn mua\n1. Bộ phận mua hàng chọn đơn mua.\n2. Hệ thống hiển thị từng nguyên vật liệu, nhà cung cấp, số lượng, đơn vị, đơn giá, ngày nhận, điều kiện giao hàng, kế hoạch nguồn nếu có và trạng thái.\n3. Quay lại danh sách.', '2.2 Ghi nhận hàng thực nhận\n1. Bộ phận mua hàng mở đơn mua còn lượng chưa nhận và chọn ghi nhận hàng về.\n2. Nhập từng mặt hàng, số lượng thực nhận, thông tin lô và ngày nhận.\n3. Hệ thống kiểm tra lượng đã nhận cộng lượng mới, lưu phần lô chờ kiểm tra chất lượng.\n4. Việc đặt mua hoặc đến ngày nhận dự kiến không tự tạo hàng thực nhận, không tự tăng tồn kho.');
+
+cell('23', 7, 1, '2. Hiển thị form chọn Nhập kho hoặc Xuất kho, mục đích, nguồn hàng, kho, Quản lý kho phụ trách, ngày giờ thực hiện và ghi chú. Xưởng mặc định là xưởng gắn với tài khoản Chủ xưởng.');
+cell('23', 8, 0, '3. Chọn nhập hoặc xuất, mục đích và nguồn phù hợp; xem các mặt hàng, phần lô và lượng còn được yêu cầu; chọn kho, Quản lý kho phụ trách, ngày giờ và ghi chú.');
+cell('23', 8, 1, '4. Hiển thị thông tin nguồn, xưởng phụ trách và danh sách mặt hàng của yêu cầu.');
+cell('23', 10, 1, '7. Kiểm tra quyền đối với xưởng, nguồn, phần lô, ngày giờ và lượng còn được phép; không tính lại lượng đã thực hiện hoặc đã nằm trong yêu cầu còn hiệu lực.');
+cell('23', 11, 1, '8. Lưu yêu cầu Chờ xử lý kèm nguồn đã chọn.');
+cell('23', 14, 1, '11. Hiển thị thông báo tạo yêu cầu thành công.');
+cell('23', 17, 0, '3.1 Yêu cầu nhập nguyên vật liệu');
+cell('23', 18, 0, '1. Chủ xưởng chọn Nhập kho, mục đích Nhập nguyên vật liệu từ kế hoạch mua.');
+cell('23', 19, 0, '2. Chọn kế hoạch mua có đơn mua và phần hàng thực nhận phù hợp.');
+cell('23', 20, 0, '3. Hệ thống hiển thị lô nguyên vật liệu, phần đạt chất lượng còn chưa nhập và số lượng được phép yêu cầu; phần lỗi hoặc đã trả nhà cung cấp không được tính vào lượng đạt.');
+cell('23', 21, 0, '4. Chủ xưởng xác nhận thông tin kho, ngày giờ và người nhận yêu cầu; tiếp tục bước 5 của luồng cơ bản.');
+cell('23', 22, 0, '3.2 Yêu cầu nhập thành phẩm\n1. Chủ xưởng chọn Nhập kho, mục đích Nhập thành phẩm, rồi chọn báo cáo thành phẩm đã gửi.\n2. Hệ thống hiển thị đúng phần thành phẩm của báo cáo, cùng mã lô sản xuất; lấy phần đạt chất lượng còn chưa nhập.\n3. Chủ xưởng hoàn thiện thông tin và tiếp tục bước 5.');
+cell('23', 23, 0, '3.3 Yêu cầu xuất nguyên vật liệu\n1. Chủ xưởng chọn Xuất kho, mục đích Xuất nguyên vật liệu để sản xuất, rồi chọn kế hoạch sản xuất của xưởng.\n2. Hệ thống lấy nhu cầu nguyên vật liệu, trừ lượng đã cấp và lượng đã được yêu cầu còn hiệu lực; không cộng thêm 10% lần nữa.\n3. Chủ xưởng hoàn thiện thông tin và tiếp tục bước 5.');
+cell('23', 24, 0, '3.4 Yêu cầu xuất thành phẩm\n1. Chủ xưởng chọn Xuất kho, mục đích Giao thành phẩm, rồi chọn kế hoạch sản xuất.\n2. Hệ thống đối chiếu đơn hàng, kế hoạch bán đã được duyệt, sản lượng hoàn tất và thành phẩm đạt chất lượng đã nhập kho còn có thể xuất.\n3. Chủ xưởng hoàn thiện thông tin và tiếp tục bước 5.\n3.5 Hủy trước khi gửi\n1. Chủ xưởng chọn Hủy.\n2. Không tạo yêu cầu; kết thúc UC.');
+cell('23', 27, 0, '1. Hệ thống thông báo không có nguồn hợp lệ để lập yêu cầu; không lưu yêu cầu.');
+cell('23', 29, 0, '3.2 Chưa có phần hàng thực nhận hoặc chưa có báo cáo thành phẩm đã gửi');
+cell('23', 30, 0, '1. Hệ thống thông báo chưa có dữ liệu nguồn phù hợp; không tự tạo lô chỉ vì đã có kế hoạch hoặc đến ngày dự kiến.');
+cell('23', 31, 0, '2. Chủ xưởng kiểm tra lại việc ghi nhận hàng về hoặc gửi báo cáo rồi thực hiện lại.');
+cell('23', 33, 0, '1. Hệ thống yêu cầu nhập đầy đủ thông tin và số lượng lớn hơn 0; không lưu yêu cầu.');
+cell('23', 36, 0, '1. Hệ thống thông báo yêu cầu không đủ điều kiện hoặc lượng đề nghị vượt lượng còn được phép; không lưu yêu cầu.');
+cell('23', 39, 0, '1. Xưởng được lấy từ tài khoản Chủ xưởng: Xưởng ahtor, Xưởng edxn hoặc Xưởng trnvnth. Chủ xưởng không tự chọn thay xưởng ngoài quyền phụ trách.');
+cell('23', 40, 0, '2. Thành phẩm được báo cáo từng phần; mỗi phần thuộc cùng lô sản xuất nhưng chỉ được yêu cầu nhập trong lượng của chính phần đó.');
+cell('23', 41, 0, '3. Báo cáo thành phẩm đã gửi là nguồn cho yêu cầu nhập phần thành phẩm. Xuất thành phẩm được đối chiếu với kế hoạch sản xuất, đơn hàng và kế hoạch bán theo điều kiện giao hàng.');
+cell('23', 42, 0, '4. Nhu cầu xuất nguyên vật liệu lấy từ kế hoạch sản xuất; nếu sử dụng báo cáo nhu cầu theo lựa chọn được cung cấp thì lấy đúng nhu cầu được phép của báo cáo. Không lấy lượng thiếu cần mua làm toàn bộ lượng xuất sản xuất.');
+cell('23', 43, 0, '5. Gửi yêu cầu chưa làm thay đổi tồn kho. Quản lý kho phân công nhân viên và phần lô thực hiện; Nhân viên kho ghi phiếu thực nhập hoặc thực xuất mới cập nhật tồn kho.');
+cell('24', 19, 0, '1.1 Tìm kiếm hoặc lọc không có kết quả phù hợp');
+exc('24.1', '6.2 Thay đổi vượt nhu cầu, nguồn không còn phù hợp hoặc yêu cầu đã được phân công\n1. Hệ thống thông báo không thể lưu nội dung sửa.\n2. Chủ xưởng tải lại yêu cầu và liên hệ Quản lý kho nếu cần điều chỉnh phần đã phân công.');
+cell('24.2', 4, 1, 'Quản lý kho nhận thông báo hủy yêu cầu.');
+cell('24.2', 2, 1, 'Yêu cầu đủ điều kiện được hủy, vẫn giữ lịch sử; các chứng từ đã ghi không bị xóa theo yêu cầu.');
+
+cell('27', 1, 1, 'Bộ phận mua hàng đã đăng nhập; có thể lập đơn trực tiếp hoặc theo kế hoạch mua nguyên vật liệu đã được duyệt, chưa có đơn mua theo chính sách một đơn mua cho mỗi kế hoạch.');
+cell('27', 7, 1, '2. Hiển thị hai hình thức Lập trực tiếp và Theo kế hoạch mua nguyên vật liệu.');
+cell('27', 8, 0, '3. Chọn Theo kế hoạch mua nguyên vật liệu và chọn kế hoạch đã được duyệt.');
+cell('27', 8, 1, '4. Hiển thị danh sách nguyên vật liệu, số lượng và ngày nhận mong muốn của kế hoạch; hiển thị báo cáo nguồn nếu kế hoạch có báo cáo.');
+cell('27', 9, 0, '5. Chọn nhà cung cấp cho từng nguyên vật liệu; kiểm tra đơn vị, nhập giá thỏa thuận, điều kiện giao hàng và ghi chú.');
+cell('27', 9, 1, '6. Kiểm tra mặt hàng, nhà cung cấp từng dòng, lượng mua, đơn giá, ngày nhận và kế hoạch nguồn. Ngày nhận của đơn theo kế hoạch được lấy từ kế hoạch mua.');
+cell('27', 10, 1, '8. Tạo đơn mua và các dòng nguyên vật liệu, nhà cung cấp tương ứng; ghi nhận kế hoạch và báo cáo nguồn nếu có; thông báo mua hàng thành công. Chưa tạo hàng thực nhận hoặc tăng tồn kho.');
+alt('27', '3.1 Lập đơn mua trực tiếp\n1. Bộ phận mua hàng chọn Lập trực tiếp.\n2. Chọn từng nguyên vật liệu, số lượng, nhà cung cấp, đơn giá, ngày nhận mong muốn, điều kiện giao hàng và ghi chú.\n3. Hệ thống kiểm tra dữ liệu; tiếp tục bước 7. Không bắt buộc có kế hoạch sản xuất hoặc báo cáo nhu cầu.', '5.1 Chọn nhà cung cấp và giá\n1. Bộ phận mua hàng chọn nhà cung cấp của từng dòng.\n2. Hệ thống gợi ý giá nếu đã có bảng giá phù hợp; người mua được nhập giá thỏa thuận.\n3. Một đơn có thể có các nhà cung cấp khác nhau ở các dòng; quay lại bước 5.');
+exc('27', '6.2 Kế hoạch chưa duyệt, sai loại, đã có đơn mua hoặc đã thay đổi\n1. Hệ thống thông báo không thể dùng kế hoạch này.\n2. Bộ phận mua hàng chọn lại kế hoạch phù hợp.', '6.3 Ngày nhận không hợp lệ, khác ngày của kế hoạch hoặc vượt giới hạn ngày giao liên quan\n1. Hệ thống yêu cầu sửa ngày hoặc điều chỉnh kế hoạch nguồn theo quyền.\n2. Chưa tạo đơn mua.', '6.4 Nguyên vật liệu trùng, nhà cung cấp không còn hoạt động, số lượng hoặc đơn giá không hợp lệ\n1. Hệ thống chỉ rõ thông tin cần sửa.\n2. Quay lại bước 5.');
+
+cell('04', 7, 1, '2. Hiển thị form lập kế hoạch với loại kế hoạch và nguồn phù hợp; đối với kế hoạch mua nguyên vật liệu, có hai hình thức Lập trực tiếp và Theo báo cáo sản xuất.');
+cell('04', 8, 0, '3. Chọn kế hoạch mua nguyên vật liệu, hình thức Theo báo cáo sản xuất và báo cáo nhu cầu đã gửi có nguyên vật liệu còn thiếu.');
+cell('04', 9, 0, '4. Hệ thống lấy danh sách nguyên vật liệu và lượng thiếu; Bộ phận lập kế hoạch kiểm tra lượng mua, đơn giá dự kiến, chọn ngày nhận mong muốn và nhập ghi chú. Không chọn nhà cung cấp ở bước lập kế hoạch.');
+cell('04', 11, 1, '8. Lưu kế hoạch và chi tiết, ghi nhận báo cáo nguồn nếu có, chuyển sang Chờ phê duyệt và thông báo thành công.');
+cell('04', 14, 0, '1. Chọn báo cáo thành phẩm đã gửi phù hợp; lấy thành phẩm thực tế, đối chiếu phần đạt chất lượng đã nhập kho và lượng còn có thể sử dụng, nhập lượng bán và ghi chú.');
+cell('04', 15, 0, '2. Kiểm tra và tính tổng tiền như bước 5 đến bước 6; khi xác nhận, lưu kế hoạch bán và các dòng, gắn với báo cáo thành phẩm nguồn, trạng thái Chờ phê duyệt.');
+cell('04', 18, 0, '2. Chọn xưởng, ngày bắt đầu, ngày kết thúc và ghi chú; hệ thống tính nguyên vật liệu dự kiến từ công thức và số lượng thành phẩm, cộng dự phòng 10% một lần cho từng loại. Đối chiếu lượng có thể cấp để hiển thị phần thiếu dự kiến; kế hoạch có cả danh sách thành phẩm và nguyên vật liệu.');
+cell('04', 19, 0, '3. Kiểm tra đơn hàng, xưởng, ngày bắt đầu, ngày kết thúc và lượng dự kiến; khi xác nhận, lưu kế hoạch sản xuất để Ban giám đốc phê duyệt tại UC-31. Kế hoạch sản xuất được lưu riêng với kế hoạch mua hoặc bán.');
+alt('04', '3.3 Lập kế hoạch mua trực tiếp\n1. Bộ phận lập kế hoạch chọn loại Mua nguyên vật liệu và hình thức Lập trực tiếp.\n2. Chọn nguyên vật liệu, nhập lượng cần mua, giá dự kiến, ngày nhận mong muốn và ghi chú.\n3. Không bắt buộc chọn báo cáo sản xuất; không chọn nhà cung cấp.\n4. Tiếp tục kiểm tra và xác nhận như bước 5 đến bước 8.', '3.4 Lập từ chi tiết báo cáo sản xuất\n1. Bộ phận lập kế hoạch mở báo cáo nhu cầu đã nhận và chọn Tạo kế hoạch mua nguyên vật liệu.\n2. Hệ thống mở form đã chọn báo cáo và điền các nguyên vật liệu còn thiếu.\n3. Tiếp tục bước 4.', '5.4 Số lượng dự kiến vượt nguồn\n1. Hệ thống hiển thị cảnh báo phần vượt so với đơn hàng hoặc báo cáo nguồn.\n2. Nếu chọn Tiếp tục, hệ thống kiểm tra các điều kiện còn lại rồi lưu; nếu chọn Quay lại thì chưa lưu.\n3. Xác nhận này không cho phép bỏ qua điều kiện chất lượng hoặc xuất quá tồn thực tế.', '7.1 Hủy trước khi xác nhận\n1. Bộ phận lập kế hoạch chọn Hủy.\n2. Hệ thống không tạo kế hoạch; kết thúc UC.');
+exc('04', '5.5 Ngày kế hoạch hoặc ngày nhận nằm trong quá khứ\n1. Hệ thống yêu cầu chọn lại ngày hợp lệ.\n2. Quay lại bước nhập ngày.', '5.6 Lịch sản xuất không hợp lệ\n1. Nếu ngày kết thúc trước ngày bắt đầu, hoặc lịch vượt ngày nhận trễ nhất của đơn hàng, hệ thống không lưu.\n2. Bộ phận lập kế hoạch điều chỉnh lịch và xác nhận lại.', '5.7 Báo cáo sai mục đích, chưa gửi hoặc không còn là nguồn được phép\n1. Hệ thống thông báo không thể dùng báo cáo này.\n2. Chọn lại báo cáo nhu cầu để mua hoặc báo cáo thành phẩm phù hợp để bán.', '5.8 Chọn trùng mặt hàng, thiếu thông tin, số lượng không dương hoặc đơn giá âm\n1. Hệ thống chỉ rõ dòng cần sửa.\n2. Bộ phận lập kế hoạch sửa rồi xác nhận lại.');
+cell('05', 2, 1, 'Danh sách kế hoạch sản xuất, kế hoạch mua hoặc bán được hiển thị theo chức năng đang chọn; có thể tìm kiếm và thực hiện thao tác được phép.');
+cell('05', 7, 1, '2. Hiển thị các kế hoạch của chức năng đang chọn cùng trạng thái và nguồn liên quan.');
+cell('05', 8, 1, '4. Hiển thị kế hoạch và các dòng chi tiết; kế hoạch sản xuất có đơn hàng, xưởng và nguyên vật liệu; kế hoạch mua hoặc bán có báo cáo nguồn nếu được lập từ báo cáo.');
+alt('05.1', '4.2 Lượng dự kiến sau khi sửa vượt nguồn\n1. Hệ thống hiển thị cảnh báo và yêu cầu xác nhận phần vượt.\n2. Nếu đồng ý, tiếp tục kiểm tra và lưu; nếu không đồng ý, giữ nguyên kế hoạch cũ.');
+exc('05.1', '4.3 Kế hoạch đã được duyệt hoặc thực hiện\n1. Hệ thống thông báo không thể sửa.\n2. Giữ nguyên kế hoạch.', '4.4 Ngày, nguồn hoặc dòng mặt hàng không hợp lệ\n1. Hệ thống yêu cầu điều chỉnh, giữ nguyên các điều kiện ngày và nguồn như khi lập mới.\n2. Quay lại bước 3.');
+
+cell('10', 1, 1, 'Nhân viên kho đã đăng nhập, được Quản lý kho phân công nhập hàng; phần hàng đạt chất lượng và còn lượng được phép nhập; kho, vị trí phù hợp.');
+cell('10', 7, 1, '2. Hiển thị công việc nhập kho được giao, yêu cầu nguồn, lô hoặc phần lô và lượng còn được thực hiện.');
+cell('10', 8, 0, '3. Chọn công việc, đối chiếu giấy tờ thực nhập; kiểm tra lượng hệ thống gợi ý và điều chỉnh lượng thực nhập, vị trí, ngày nhập hoặc ghi chú theo thực tế.');
+cell('10', 8, 1, '4. Kiểm tra đúng người được phân công, kho, vị trí, dòng lô và lượng nhập không vượt lượng được giao hoặc phần đạt chất lượng còn chưa nhập.');
+cell('10', 9, 1, '6. Ghi phiếu nhập kho, tăng tồn theo lượng thực nhập, cập nhật lượng đã thực hiện và trạng thái công việc; thông báo thành công. Hồ sơ được cung cấp cho người có quyền xem.');
+cell('10', 11, 0, '3.1 Chỉ nhập một phần số lượng được phân công');
+cell('10', 12, 0, '1. Nhân viên kho điều chỉnh lượng thực nhập trong giới hạn còn được nhập và ghi chú thực tế nếu cần.');
+cell('10', 13, 0, '2. Hệ thống ghi nhận đúng lượng thực nhập; lượng còn lại chưa được coi là đã nhập.');
+cell('10', 14, 0, '3. Tiếp tục bước 5; phần còn lại thực hiện bằng lần ghi nhận sau khi còn đủ điều kiện.');
+exc('10', '4.2 Hàng chưa đạt chất lượng, đã nhập hết, bị cách ly hoặc lượng nhập vượt phân công\n1. Hệ thống thông báo không thể nhập lượng đã chọn.\n2. Nhân viên kho kiểm tra lại hoặc liên hệ Quản lý kho.', '4.3 Kho đang bị khóa để kiểm kê hoặc vị trí không thuộc kho\n1. Hệ thống không ghi phiếu và không tăng tồn.\n2. Nhân viên chọn vị trí hợp lệ hoặc chờ kho đủ điều kiện.');
+cell('11', 1, 1, 'Nhân viên kho đã đăng nhập, được phân công thực hiện yêu cầu xuất kho còn hiệu lực.');
+cell('11', 7, 1, '2. Hiển thị công việc xuất kho được giao gồm xuất nguyên vật liệu để sản xuất hoặc xuất thành phẩm để giao hàng.');
+for (const id of ['11.01','11.02']) {
+ cell(id, 7, 1, '2. Hiển thị các công việc xuất đúng mục đích được giao cho nhân viên, còn lượng chưa thực hiện.');
+ cell(id, 8, 0, '3. Chọn công việc và đối chiếu giấy tờ thực xuất; kiểm tra số lượng gợi ý, nhập lượng thực xuất và ghi chú thực tế.');
+ cell(id, 8, 1, id === '11.01' ? '4. Hiển thị yêu cầu xuất cho kế hoạch sản xuất hoặc nguồn nhu cầu được phép, cùng lô, vị trí và lượng Quản lý kho đã phân công. Kiểm tra lượng chưa cấp; không tự phân bổ lại lô thay Quản lý kho.' : '4. Hiển thị yêu cầu, đơn hàng, kế hoạch sản xuất, kế hoạch bán và các phần thành phẩm đạt chất lượng mà Quản lý kho đã phân công. Kiểm tra điều kiện hoàn tất sản xuất, ngày giao và lượng còn được giao.');
+ cell(id, 14, 0, '3.1 Chưa thể xuất theo thực tế');
+ cell(id, 15, 0, '1. Nhân viên kho không xác nhận xuất khi thiếu hàng hoặc phát hiện hàng không đủ điều kiện; liên hệ Quản lý kho để kiểm tra và điều chỉnh theo quyền.');
+ cell(id, 16, 0, '2. Khi chưa ghi phiếu, hệ thống không trừ tồn. Nếu cần xử lý ngoại lệ, Quản lý kho thực hiện tại UC-16; không tự tạo đề xuất hoặc tự đổi yêu cầu sang Chờ duyệt lại.');
+ alt(id, '3.2 Xuất một phần lượng được giao\n1. Nhân viên kho nhập lượng thực xuất nhỏ hơn lượng còn được phép.\n2. Hệ thống cập nhật đúng lượng thực xuất, giữ phần chưa xuất để xử lý tiếp.\n3. Tiếp tục bước 5.');
+ exc(id, '6.2 Sai người thực hiện, lô hoặc vị trí ngoài phân công, hàng hết hạn hoặc đang cách ly\n1. Hệ thống thông báo không thể xuất.\n2. Không tạo phiếu và không trừ tồn.', '6.3 Kho đang bị khóa kiểm kê hoặc dữ liệu đã thay đổi\n1. Hệ thống dừng ghi phiếu.\n2. Nhân viên tải lại công việc hoặc liên hệ Quản lý kho; không cố xuất lại bằng thông tin cũ.');
+}
+cell('11.01', 1, 1, 'Nhân viên kho được phân công xuất nguyên vật liệu cho kế hoạch sản xuất hoặc báo cáo nhu cầu hợp lệ của xưởng; nguồn, lô, vị trí và lượng còn đủ điều kiện.');
+
+cell('35', 1, 1, 'Chủ xưởng đã đăng nhập; kế hoạch sản xuất đã được phê duyệt, thuộc xưởng phụ trách, chưa chốt hoàn tất và có thành phẩm mới hoàn thành cần báo cáo.');
+cell('35', 2, 1, 'Báo cáo thành phẩm được lưu; khi gửi sẽ ghi nhận phần thành phẩm trong cùng lô sản xuất để kiểm tra chất lượng và yêu cầu nhập kho. Gửi báo cáo chưa làm tăng tồn kho. Báo cáo đợt cuối đủ điều kiện hoàn tất kế hoạch và làm căn cứ bước bán hàng.');
+cell('35', 7, 1, '2. Hiển thị kế hoạch, xưởng, số lượng thành phẩm theo kế hoạch, đã báo cáo, còn lại và nguyên vật liệu đã xuất cho sản xuất.');
+cell('35', 8, 0, '3. Nhập lượng thành phẩm mới hoàn thành của phần này, thông tin phần lô, ngày sản xuất, hạn dùng nếu có và ghi chú. Khi báo cáo đợt cuối, kiểm tra và nhập lượng nguyên vật liệu thực tế đã dùng.');
+cell('35', 8, 1, '4. Cập nhật lượng còn lại theo lượng đang nhập; kiểm tra tổng các phần thành phẩm, lô, ngày và lượng nguyên vật liệu sử dụng. Các phần của cùng kế hoạch dùng chung mã lô sản xuất nhưng có thông tin phần riêng.');
+cell('35', 9, 1, '6. Lưu và gửi báo cáo thành phẩm; ghi nhận phần lô tương ứng, thông báo cho người nhận. Chỉ đợt cuối đủ điều kiện mới hoàn tất kế hoạch; không tự nhập tồn hoặc tự kết luận chất lượng.');
+alt('35', '3.1 Điền lượng còn lại\n1. Chủ xưởng chọn ô điền lượng còn lại của mặt hàng.\n2. Hệ thống điền lượng chưa báo cáo vào số lượng của phần này, đồng thời cập nhật cột Còn lại về 0.\n3. Chủ xưởng vẫn có thể điều chỉnh lượng theo thực tế.', '3.2 Đợt cuối\n1. Khi lượng còn lại của tất cả thành phẩm bằng 0, hệ thống tự chọn Đợt cuối.\n2. Khi chọn Đợt cuối, hệ thống gợi ý lượng nguyên vật liệu chưa quyết toán từ tổng lượng đã xuất, trừ lượng đã báo sử dụng ở các phần trước.\n3. Chủ xưởng kiểm tra và sửa lượng thực dùng rồi tiếp tục bước 5.', '3.3 Còn nguyên vật liệu chưa dùng\n1. Ví dụ đã xuất 5.000, thực dùng 4.900 thì báo cáo ghi đúng 4.900; phần 100 còn dư phải được đối chiếu riêng.\n2. Báo cáo không tự tạo phiếu nhập trả 100 và không tự tăng tồn kho.', '5.2 Lưu nháp\n1. Chủ xưởng lưu báo cáo để kiểm tra lại.\n2. Báo cáo chưa gửi chưa được coi là phần hàng đã sẵn sàng cho các bước tiếp theo.\n3. Khi đủ thông tin, Chủ xưởng mở lại và gửi.');
+exc('35', '4.2 Lượng báo cáo vượt sản lượng còn được báo cáo, mặt hàng ngoài kế hoạch hoặc lô không phù hợp\n1. Hệ thống không lưu hoặc gửi báo cáo không hợp lệ.\n2. Chủ xưởng điều chỉnh lượng và nguồn.', '4.3 Chọn đợt cuối khi chưa đủ điều kiện hoặc kế hoạch đã có báo cáo chốt cuối\n1. Hệ thống thông báo không thể chốt.\n2. Chủ xưởng kiểm tra lại các phần trước và lượng còn lại.', '4.4 Lượng nguyên vật liệu sử dụng vượt lượng đã xuất còn được quyết toán\n1. Hệ thống yêu cầu đối chiếu lại phiếu xuất và lượng đã báo sử dụng.\n2. Chưa xác nhận lượng sử dụng không có căn cứ.', '4.5 Ngày sản xuất, ngày hoàn thành hoặc hạn dùng không hợp lệ\n1. Hệ thống yêu cầu chọn lại ngày.\n2. Không tự sửa lịch sử của phần lô đã ghi.', '5.3 Báo cáo đã gửi\n1. Hệ thống không cho sửa đè hoặc xóa báo cáo đã làm căn cứ cho bước tiếp theo.\n2. Chủ xưởng xem lại báo cáo đã gửi để tránh lập trùng.');
+
+cell('01', 19, 0, '1. Hệ thống không cho đăng nhập bằng tài khoản không hoạt động; hiển thị thông báo tên đăng nhập hoặc mật khẩu không đúng. Người dùng liên hệ quản trị viên để kiểm tra tài khoản.');
+exc('01', '4.2 Đăng nhập sai nhiều lần liên tiếp\n1. Hệ thống thông báo tạm thời chưa thể tiếp tục đăng nhập.\n2. Người dùng chờ hết thời gian giới hạn rồi thử lại; không được vào hệ thống trong thời gian bị chặn.');
+cell('12', 18, 0, '4.2 Xem kết quả đã ghi nhận');
+cell('12', 19, 0, '1. Kết quả đã ghi không được xóa; nếu sai, thực hiện điều chỉnh tại UC-12.2 để giữ lịch sử. UC-12.3 không còn được sử dụng để xóa kết quả.');
+cell('12', 10, 0, '1.1 Tìm kiếm hoặc lọc kết quả theo những điều kiện được hiển thị trên màn hình');
+cell('12', 11, 0, '1. Nhân viên nhập điều kiện tìm kiếm hoặc lọc kết quả.');
+cell('12.1', 1, 1, 'Nhân viên QC/AC được phân công trong đợt đã bắt đầu; có phần lô nguyên vật liệu hoặc thành phẩm thực tế chưa được ghi kết quả kiểm tra.');
+cell('12.1', 7, 1, '2. Hiển thị các đợt được phân công và từng phần lô còn chờ kiểm tra; gợi ý lượng cần kiểm.');
+cell('12.1', 8, 1, '4. Kiểm tra lượng đạt cộng lượng lỗi bằng toàn bộ lượng phải kiểm của từng dòng; lưu kết quả và cập nhật tiến độ đợt. Nguyên vật liệu lỗi được ghi nhận trả nhà cung cấp theo kết luận; phần đạt chưa tăng tồn, phải có yêu cầu và phiếu nhập. Thành phẩm lỗi được xử lý theo kết luận và ngoại lệ nếu cần.');
+alt('12.1', '3.2 Toàn bộ đạt hoặc toàn bộ không đạt\n1. Nếu toàn bộ đạt, nhập lượng lỗi bằng 0. Nếu toàn bộ không đạt, nhập lượng đạt bằng 0.\n2. Nếu có lượng lỗi, nhập mô tả lỗi.\n3. Tiếp tục kiểm tra và lưu ở bước 4.', '3.3 Đợt có cả QC/AC và Ban kiểm kê\n1. QC/AC ghi phần chất lượng; Ban kiểm kê ghi phần số lượng riêng.\n2. Đợt chỉ hoàn tất khi đủ các nội dung được phân công; kết quả được tổng hợp vào một biên bản tại UC-28.');
+exc('12.1', '2.1 Chưa có phần lô thực tế hoặc đợt chưa bắt đầu\n1. Hệ thống thông báo chưa có dữ liệu hoặc chưa đến thời gian thực hiện.\n2. Kiểm tra lại ghi nhận hàng về và thời gian đợt; giả lập chỉ cho phép bắt đầu sớm khi được xác nhận, không tạo phần lô.', '4.1 Tổng số đạt và lỗi không bằng lượng kiểm, kiểm chưa đủ lượng của dòng hoặc dòng đã có kết quả\n1. Hệ thống thông báo và không ghi kết quả trùng hoặc không đủ.\n2. Nhân viên kiểm tra lại số lượng và dòng lô.');
+cell('12.2', 1, 1, 'Nhân viên QC/AC đã lập kết quả gốc đăng nhập; kết quả còn đủ điều kiện điều chỉnh và chưa có chứng từ liên quan ngăn việc điều chỉnh trực tiếp.');
+cell('12.2', 2, 1, 'Kết quả được điều chỉnh bằng chứng từ ghi lại số trước, số sau và lý do; vẫn giữ lịch sử kết quả ban đầu.');
+cell('12.2', 7, 0, '1. Chọn kết quả cần điều chỉnh và mở Chứng từ bù QC.');
+cell('12.2', 7, 1, '2. Hiển thị dòng lô, số lượng đạt, số lượng lỗi và nội dung lỗi hiện tại.');
+cell('12.2', 8, 0, '3. Nhập số đạt, số lỗi mới, mô tả lỗi nếu có và lý do điều chỉnh; xác nhận. Số nhập là kết quả mới, không phải số chênh lệch.');
+cell('12.2', 8, 1, '4. Kiểm tra người lập, dòng lô và tổng lượng không đổi; lưu chứng từ điều chỉnh và kết quả mới nếu đủ điều kiện. Không sửa phiếu kho hoặc tự thay đổi tồn kho.');
+exc('12.2', '4.1 Kết quả đã dùng để nhập kho, phân công hàng, trả hàng hoặc xử lý ngoại lệ\n1. Hệ thống thông báo không thể điều chỉnh trực tiếp.\n2. Người dùng liên hệ Quản lý kho để xử lý theo chứng từ và phê duyệt tương ứng; không xóa kết quả cũ.', '4.2 Không phải người lập kết quả gốc hoặc thiếu lý do\n1. Hệ thống không ghi điều chỉnh.\n2. Người có quyền bổ sung đúng nội dung và thực hiện lại.');
+cell('12.3', 1, 1, 'Chức năng xóa kết quả QC/AC đã ghi không còn được sử dụng; giữ bảng đặc tả này để đối chiếu với tài liệu ban đầu.');
+cell('12.3', 2, 1, 'Không xóa kết quả đã ghi; nếu cần sửa sai, thực hiện UC-12.2 theo điều kiện cho phép.');
+flow('12.3', [['1. Mở chi tiết kết quả kiểm tra.', '2. Hệ thống hiển thị kết quả đã ghi và không cung cấp thao tác xóa kết quả như một bước thực hiện thành công.'], ['', '3. Người dùng cần sửa sai chuyển sang điều chỉnh kết quả tại UC-12.2.'], ['', '4. Kết thúc UC; giữ nguyên kết quả và lịch sử.']]);
+uc('12.3').replaceAlternatives = ['2.1 Cần sửa sai kết quả\n1. QC/AC thực hiện UC-12.2 nếu đủ điều kiện.\n2. Nếu kết quả đã gắn với hàng nhập kho hoặc chứng từ khác, phải xử lý theo luồng điều chỉnh có liên quan; không xóa lịch sử.'];
+uc('12.3').replaceExceptions = ['2.2 Yêu cầu xóa kết quả đã ghi\n1. Hệ thống thông báo không xóa kết quả QC đã ghi.\n2. Không thay đổi kết quả hoặc tồn kho.'];
+
+cell('34', 2, 1, 'Báo cáo được lưu nháp hoặc gửi theo lựa chọn. Khi gửi, Ban giám đốc luôn nhận được; báo cáo nhu cầu còn thiếu nguyên vật liệu được gửi thêm Bộ phận lập kế hoạch. Báo cáo tiến độ hoặc sự cố không tự tạo phần lô hay tăng tồn kho.');
+cell('34', 9, 0, '3. Chọn kế hoạch sản xuất và mục đích báo cáo: tiến độ, sự cố hoặc nhu cầu nguyên vật liệu.');
+cell('34', 10, 1, '4. Hiển thị kế hoạch, xưởng và các nội dung phù hợp với mục đích báo cáo. Với báo cáo nhu cầu, lấy lượng nguyên vật liệu ước lượng từ kế hoạch.');
+cell('34', 11, 1, '5. Với báo cáo nhu cầu, hiển thị lượng tồn khả dụng từ hệ thống; không coi toàn bộ lượng đã dành cho nhu cầu khác là lượng còn có thể cấp.');
+cell('34', 14, 1, '8. Với báo cáo nhu cầu, đối chiếu lượng có thể cấp với lượng ước lượng cần dùng.');
+cell('34', 15, 1, '9. Tính lượng thiếu của từng nguyên vật liệu, không nhỏ hơn 0; xác định đủ hoặc thiếu. Báo cáo tiến độ hoặc sự cố không bắt buộc phải có dòng nguyên vật liệu.');
+cell('34', 17, 0, '11. Chọn gửi thêm Bộ phận lập kế hoạch nếu cần. Với báo cáo nhu cầu còn thiếu nguyên vật liệu, hệ thống tự gửi thêm bộ phận này.');
+cell('34', 20, 1, '14. Lưu báo cáo sản xuất với thời gian lập, mục đích, tiến độ và mô tả, liên kết kế hoạch sản xuất và xưởng.');
+cell('34', 21, 1, '15. Đối với báo cáo nhu cầu, lưu từng nguyên vật liệu, lượng có thể cấp, lượng cần dùng và lượng còn thiếu.');
+cell('34', 23, 1, '17. Gửi thêm Bộ phận lập kế hoạch nếu Chủ xưởng đã chọn hoặc nếu là báo cáo nhu cầu còn thiếu nguyên vật liệu.');
+alt('34', '3.1 Báo cáo tiến độ hoặc sự cố\n1. Chủ xưởng chọn mục đích phù hợp, nhập tiến độ, mô tả tình hình hoặc sự cố, ghi chú và ảnh minh họa nếu có.\n2. Không bắt buộc kê nguyên vật liệu; báo cáo luôn gửi Ban giám đốc khi xác nhận gửi.\n3. Không dùng báo cáo này để tạo phần thành phẩm; phần thành phẩm thực hiện tại UC-35.', '3.2 Báo cáo từ đối chiếu nguyên vật liệu\n1. Chủ xưởng mở đối chiếu tồn từ kế hoạch và chọn lập báo cáo nhu cầu.\n2. Hệ thống điền lượng cần dùng, lượng có thể cấp và lượng thiếu.\n3. Chủ xưởng kiểm tra, bổ sung mô tả hoặc ảnh rồi tiếp tục bước 12.', '12.2 Lưu nháp\n1. Chủ xưởng chọn Lưu nháp.\n2. Hệ thống lưu báo cáo chưa gửi, cho phép mở lại để hoàn thiện.\n3. Chưa thông báo cho người nhận như một báo cáo đã gửi.');
+exc('34', '13.4 Đã có báo cáo nhu cầu đang hiệu lực cho kế hoạch\n1. Hệ thống không tạo báo cáo nhu cầu trùng.\n2. Chủ xưởng xem lại báo cáo đang hiệu lực.', '13.5 Ảnh không hợp lệ hoặc không tải được ảnh\n1. Hệ thống thông báo ảnh chưa được chấp nhận.\n2. Chủ xưởng chọn lại ảnh phù hợp hoặc bỏ ảnh trước khi gửi.', '13.6 Báo cáo đã gửi hoặc đã được sử dụng làm nguồn\n1. Hệ thống không cho sửa đè báo cáo.\n2. Chủ xưởng xem lại báo cáo đã gửi; không tự thay đổi thông tin mà kế hoạch sau đang sử dụng.');
+
+cell('15', 1, 1, 'Nhân viên Ban kiểm kê đã đăng nhập, được phân công trong đợt đã bắt đầu và còn phần việc kiểm số lượng chưa hoàn tất.');
+cell('15', 7, 1, '2. Hiển thị các công việc được giao; khi chọn công việc, hiển thị toàn bộ lô hoặc phần lô phải kiểm cùng mặt hàng, đơn vị và lượng hệ thống để đối chiếu.');
+cell('15', 8, 0, '3. Chọn công việc và nhập lượng thực đếm của từng dòng; có thể chọn Đạt ở một dòng hoặc Đạt tất cả để điền lượng bằng lượng hệ thống.');
+cell('15', 8, 1, '4. Hiển thị chênh lệch theo số lượng vừa nhập; vẫn cho sửa lượng đã điền để đúng thực tế. Nút Đạt chỉ hỗ trợ kiểm số lượng, không thay kết luận chất lượng của QC/AC.');
+cell('15', 9, 0, '5. Xác nhận lưu kết quả kiểm số lượng của công việc.');
+cell('15', 9, 1, '6. Kiểm tra đủ dòng và quyền phân công; lưu số đếm, người đếm, thời điểm và tiến độ. Nếu đợt có QC/AC, vẫn chờ phần chất lượng hoàn tất. Không tự điều chỉnh tồn kho theo số đếm.');
+cell('15', 11, 0, '3.1 Điền nhanh số lượng đạt');
+cell('15', 12, 0, '1. Nhân viên chọn Đạt ở dòng cần điền hoặc Đạt tất cả.');
+cell('15', 13, 0, '2. Hệ thống điền lượng đối chiếu cho dòng chưa ghi nhận; không ghi đè các dòng đã có kết quả hoàn tất.');
+cell('15', 14, 0, '3. Nhân viên kiểm tra và điều chỉnh số thực đếm, sau đó tiếp tục bước 5.');
+cell('15', 17, 0, '1. Hệ thống thông báo lỗi kết nối. Khi có kết nối trở lại, nhân viên mở danh sách kiểm tra lần ghi trước đã thành công chưa; chỉ nhập và xác nhận lại phần chưa được ghi nhận.');
+exc('15', '4.1 Thiếu số đếm, số âm hoặc số không hợp lệ\n1. Hệ thống yêu cầu bổ sung hoặc sửa đúng số lượng.\n2. Chưa xác nhận hoàn tất phần kiểm số lượng.', '4.2 Công việc chưa bắt đầu, đã hoàn tất hoặc nhân viên không được giao kiểm số lượng\n1. Hệ thống không cho ghi số đếm.\n2. Nhân viên kiểm tra lại thời gian, phân công và trạng thái công việc.');
+
+cell('28', 1, 1, 'Đợt đã hoàn tất các nội dung được giao; người lập biên bản là nhân viên QC/AC hoặc Ban kiểm kê được Ban giám đốc chỉ định; chưa có biên bản đã gửi.');
+cell('28', 2, 1, 'Lưu nháp hoặc gửi một biên bản chung tổng hợp kết quả của đợt. Khi gửi, Ban giám đốc nhận thông tin; nếu có ngoại lệ, Quản lý kho thấy nội dung cần xử lý.');
+cell('28', 7, 1, '2. Hiển thị công việc và kết quả đã hoàn tất. Đợt có cả QC/AC và Ban kiểm kê tổng hợp cả chất lượng và số đếm; đợt chỉ có một nhóm chỉ yêu cầu kết quả của nhóm được giao.');
+cell('28', 8, 0, '3. Người được chỉ định nhập kết luận, nhận xét; chọn Không có ngoại lệ hoặc Nhập mô tả ngoại lệ; nếu có ngoại lệ thì nhập nội dung, xem lại và gửi biên bản.');
+cell('28', 8, 1, '4. Kiểm tra người lập và kết quả đợt; lưu biên bản chung, nội dung ngoại lệ nếu có và gửi thông báo. Biên bản đã gửi giữ nguyên kết quả được tổng hợp tại thời điểm gửi.');
+alt('28', '2.1 Nhân viên không phải người được chỉ định\n1. Nhân viên vẫn mở được giao diện và xem dữ liệu trong phạm vi được phép.\n2. Hệ thống không cho tạo, sửa hoặc gửi biên bản thay người được phân công.\n3. Người được phân công thấy thông tin nhiệm vụ lập biên bản.', '3.2 Nhập ngoại lệ\n1. Chọn Nhập mô tả ngoại lệ.\n2. Hệ thống hiển thị ô mô tả; nhân viên nhập vấn đề và gửi cùng biên bản.\n3. QC/AC và Ban kiểm kê không xử lý ngoại lệ tại đây; Quản lý kho xử lý tại UC-16.', '3.3 Gửi biên bản nháp\n1. Người lập mở bản nháp, kiểm tra và sửa nội dung được phép.\n2. Chọn Gửi.\n3. Hệ thống kiểm tra lại điều kiện rồi lưu bản gửi và thông báo.');
+cell('28', 16, 0, '1. Hệ thống thông báo còn nội dung kiểm số lượng hoặc chất lượng được giao chưa hoàn tất; chưa cho lập biên bản chung.');
+exc('28', '3.1 Chọn có ngoại lệ nhưng chưa mô tả, thiếu kết luận hoặc thiếu thông tin bắt buộc\n1. Hệ thống yêu cầu bổ sung nội dung.\n2. Người lập sửa rồi xác nhận lại.', '4.1 Biên bản đã được gửi, đã có người tạo hoặc phân công đã thay đổi\n1. Hệ thống thông báo không thể tạo hoặc sửa theo thông tin cũ.\n2. Nhân viên tải lại đợt và kiểm tra biên bản, phân công hiện tại.');
+
+cell('32', 8, 1, '4. Hiển thị kế hoạch, các dòng, ngày nhận hoặc ngày bán và nguồn nếu có. Kế hoạch mua trực tiếp không bắt buộc có báo cáo; kế hoạch mua theo báo cáo lấy nhu cầu nguyên vật liệu; kế hoạch bán đối chiếu báo cáo thành phẩm và lượng đạt chất lượng còn có thể sử dụng.');
+cell('32', 23, 0, '4.2 Kế hoạch không còn ở trạng thái chờ phê duyệt');
+alt('32', '5.3 Lượng dự kiến vượt nguồn\n1. Hệ thống hiển thị cảnh báo phần vượt.\n2. Ban giám đốc chọn Tiếp tục để duyệt sau khi các điều kiện còn lại hợp lệ, hoặc chọn Quay lại để chưa duyệt.\n3. Xác nhận vượt dự kiến không thay thế điều kiện tồn kho và chất lượng khi thực hiện.');
+exc('32', '4.3 Nguồn hoặc lịch kế hoạch không hợp lệ\n1. Hệ thống thông báo chưa thể phê duyệt.\n2. Bộ phận lập kế hoạch điều chỉnh nguồn hoặc ngày rồi trình lại.');
+
+cell('02', 8, 0, '3. Chọn một hoặc nhiều mặt hàng, nhập số lượng theo đơn vị hiển thị, ghi chú từng dòng nếu có; nhập địa chỉ, ngày nhận trễ nhất và ghi chú chung.');
+cell('02', 9, 1, '5. Kiểm tra hàng còn được đặt, các mặt hàng không trùng, số lượng dương, địa chỉ và ngày nhận; lấy giá hiện hành của mặt hàng để tính tiền tham khảo.');
+cell('02', 10, 1, '6. Lưu một đơn hàng với các dòng đã chọn, trạng thái Chờ tiếp nhận; thông báo đặt thành công và gửi thông báo cho Bộ phận lập kế hoạch. Đặt hàng chưa tạo lô hàng vật lý.');
+exc('02', '5.3 Mặt hàng ngừng sử dụng, không còn được đặt hoặc bị chọn trùng\n1. Hệ thống yêu cầu chọn lại mặt hàng hợp lệ và gộp số lượng của cùng mặt hàng vào một dòng.\n2. Quay lại bước 3.', '5.4 Số lượng hoặc ghi chú vượt giới hạn nhập\n1. Hệ thống chỉ rõ nội dung cần sửa.\n2. Khách hàng điều chỉnh rồi xác nhận lại.');
+cell('03.1', 2, 1, 'Thông tin đơn hàng được cập nhật khi còn được phép sửa; giữ trạng thái xử lý hiện tại, không tự chuyển đơn thành Chờ phê duyệt. Ban giám đốc phê duyệt kế hoạch sản xuất tại UC-31.');
+cell('03.1', 10, 1, '6. Cập nhật thông tin đơn hàng hợp lệ, giữ trạng thái xử lý hiện tại.');
+cell('03.1', 11, 1, '7. Thông báo cập nhật đơn hàng thành công.');
+cell('03.1', 16, 0, '1. Hệ thống yêu cầu xác nhận việc thay đổi số lượng; khách hàng kiểm tra lại số lượng và ngày nhận mong muốn.');
+cell('03.1', 20, 0, '1. Hệ thống yêu cầu khách hàng kiểm tra và xác nhận việc giảm số lượng.');
+exc('03.1', '5.2 Giảm lượng thấp hơn tổng đã lập kế hoạch hoặc chọn ngày nhận trước ngày kết thúc kế hoạch đã lập\n1. Hệ thống thông báo nội dung sửa không phù hợp với kế hoạch hiện có.\n2. Khách hàng sửa lại hoặc liên hệ Bộ phận lập kế hoạch.', '5.3 Ngày nhận mới trong quá khứ hoặc mặt hàng không hợp lệ\n1. Hệ thống yêu cầu chỉnh sửa.\n2. Quay lại bước 3.');
+cell('22', 1, 1, 'Quản lý kho hoặc Chủ xưởng đã đăng nhập và có quyền tra cứu kho.');
+cell('22', 6, 0, 'Quản lý kho / Chủ xưởng');
+alt('22', '3.1 Tra cứu theo sơ đồ vị trí\n1. Người dùng chọn kho hoặc nhóm hàng.\n2. Hệ thống hiển thị các vị trí, phân biệt vị trí có hàng, trống và đang chọn.\n3. Chọn một vị trí để xem mặt hàng, phần lô, đơn vị, lượng tồn và lượng còn có thể sử dụng; vị trí trống hiển thị chưa có hàng.', '3.2 Đối chiếu nguyên vật liệu từ kế hoạch sản xuất\n1. Chủ xưởng chọn kế hoạch của xưởng và mở đối chiếu tồn kho.\n2. Hệ thống lấy nhu cầu theo công thức và sản lượng, gồm dự phòng 10% một lần; đối chiếu lượng có thể cấp sau khi trừ phần đã dành cho nhu cầu khác.\n3. Hiển thị lượng cần dùng, có thể cấp và còn thiếu theo từng nguyên vật liệu, đúng đơn vị.\n4. Chủ xưởng có thể chuyển sang lập báo cáo nhu cầu tại UC-34.');
+
+cell('16', 1, 1, 'Quản lý kho đã đăng nhập; có biên bản đã gửi ghi ngoại lệ hoặc kết quả chênh lệch đủ điều kiện xử lý trong phạm vi được quản lý.');
+cell('16', 2, 1, 'Vấn đề được ghi nhận cách xử lý, chuyển Chủ xưởng phê duyệt khi cần, hoặc được thực hiện theo phương án đủ điều kiện. Ghi mô tả xử lý không tự thay đổi tồn kho.');
+cell('16', 7, 1, '2. Tự hiển thị các ngoại lệ từ biên bản đã gửi và các chênh lệch cần xử lý; không yêu cầu Quản lý kho tự tạo lại vấn đề đã có.');
+cell('16', 8, 0, '3. Chọn vấn đề cần xử lý.');
+cell('16', 8, 1, '4. Hiển thị biên bản, kết quả số lượng hoặc chất lượng, mặt hàng, lô, lượng liên quan và mô tả ngoại lệ; mở form xử lý.');
+cell('16', 9, 0, '5. Nhập cách xử lý; nếu cần xin ý kiến, chọn gửi đề xuất cho Chủ xưởng và nhập nội dung đề nghị.');
+cell('16', 10, 0, '6. Xác nhận nội dung xử lý.');
+cell('16', 10, 1, '7. Lưu cách xử lý hoặc gửi đề xuất chờ Chủ xưởng phê duyệt. Vấn đề đơn giản có thể xác nhận xử lý trực tiếp bằng mô tả; nếu cần điều chỉnh tồn kho, phải thực hiện bước chứng từ và phê duyệt tương ứng, không chỉ sửa số tồn bằng ghi chú.');
+cell('16', 12, 0, '5.1 Gửi đề xuất cho Chủ xưởng');
+cell('16', 13, 0, '1. Quản lý kho chọn gửi phê duyệt, nhập cách xử lý đề xuất và nội dung cần Chủ xưởng xem xét.');
+cell('16', 14, 0, '2. Hệ thống lưu đề xuất Chờ phê duyệt, thông báo cho Chủ xưởng đúng xưởng; thực hiện quyết định tại UC-17.');
+alt('16', '5.2 Chủ xưởng đã cho ý kiến\n1. Quản lý kho mở vấn đề để xem quyết định.\n2. Nếu đồng ý, thực hiện phương án được duyệt; nếu không đồng ý, xem lý do và hướng xử lý thay thế của Chủ xưởng.\n3. Ghi nhận kết quả theo quyền; không tự coi việc phê duyệt là đã thực hiện xong.', '5.3 Điều chỉnh chênh lệch tồn kho theo phiếu kiểm kê kho\n1. Quản lý kho lập đề xuất điều chỉnh từ kết quả đã chốt.\n2. Ban giám đốc xem xét quyết định theo luồng điều chỉnh tồn.\n3. Quản lý kho chỉ áp dụng điều chỉnh được duyệt tại bước riêng; hệ thống ghi nhận thay đổi và giữ căn cứ.\n4. Không nhầm luồng này với việc Chủ xưởng cho ý kiến về mô tả ngoại lệ của biên bản lô.');
+exc('16', '6.1 Thiếu cách xử lý, thiếu nội dung đề xuất hoặc vấn đề đã xử lý\n1. Hệ thống thông báo và không ghi trùng kết quả.\n2. Quản lý kho bổ sung nội dung hoặc tải lại chi tiết.', '6.2 Phương án làm thay đổi tồn kho chưa được duyệt hoặc không còn đủ điều kiện\n1. Hệ thống không áp dụng thay đổi số lượng.\n2. Quản lý kho kiểm tra lại chứng từ, quyết định và tồn kho hiện tại.');
+
+// Keep existing UC text except the precise amendments above. Additional conditions
+// are written inside each UC's existing flow cells, never in an external appendix.
+const common = [
+ 'Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác\n1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền.\n2. Không thực hiện thay đổi chưa được cho phép.',
+ 'Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại\n1. Hệ thống thông báo và không lưu đè thông tin cũ.\n2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.',
+ 'Nếu không kết nối được khi xác nhận\n1. Hệ thống thông báo thao tác chưa có kết quả xác định.\n2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.'
+];
+for (const b of blocks.filter(b => b.type === 'table')) {
+ const id = b.rows[0][0].join('').match(/^UC-([\d.]+)\s/)[1];
+ const p = uc(id);
+ const altRow = b.rows.findIndex(r => r[0].join('').startsWith('Alternative flow'));
+ const actorSteps = b.rows.slice(7, altRow).flatMap(r => [...r[0].join('').matchAll(/(?:^|\n)(\d+)\.\s/g)].map(m => Number(m[1])));
+ const anchor = actorSteps.at(-1) || 1;
+ const existing = b.rows.flat(2).join('\n') + '\n' + JSON.stringify(p);
+ let suffix = Math.max(0, ...[...existing.matchAll(new RegExp(`(?:^|[^0-9])${anchor}\\.(\\d+)\\s`, 'g'))].map(m => Number(m[1]))) + 1;
+ p.exceptions.push(...common.map(s => `${anchor}.${suffix++} ${s}`));
+}
+const added = [];
+function extra(id, title, actor, pre, post, basic, alternatives, exceptions) { added.push({ id, title: id + ' ' + title, actor, pre, post, basic, alternatives, exceptions }); }
+extra('UC-BS01', 'Quản lý tài khoản và phân quyền', 'Quản trị viên', 'Quản trị viên đã đăng nhập và có quyền quản lý tài khoản.', 'Tài khoản được thêm, sửa, ngừng sử dụng hoặc đổi quyền theo thao tác hợp lệ; không xóa các chứng từ mà tài khoản đã thực hiện.', [
+ ['1. Mở Quản lý tài khoản.', '2. Hiển thị danh sách tài khoản, tên người dùng, trạng thái và quyền được cấp.'],
+ ['3. Chọn thêm tài khoản, nhập tên đăng nhập, họ tên, mật khẩu, quyền; nếu là Chủ xưởng thì chọn đúng một xưởng.', '4. Kiểm tra thông tin, tên đăng nhập và quyền; lưu tài khoản hợp lệ, thông báo thành công.'],
+ ['5. Mở tài khoản cần xem.', '6. Hiển thị chi tiết và thao tác được phép.']
+], ['3.1 Sửa hoặc phân quyền\n1. Chọn tài khoản rồi Sửa.\n2. Chỉnh thông tin, trạng thái hoặc quyền được phép rồi xác nhận.\n3. Hệ thống kiểm tra và lưu; thay đổi quyền, mật khẩu hoặc khóa tài khoản có thể yêu cầu người đang đăng nhập bằng tài khoản đó đăng nhập lại.', '3.2 Xóa tài khoản\n1. Chọn Xóa và xác nhận.\n2. Hệ thống ngừng sử dụng tài khoản theo điều kiện, giữ lịch sử chứng từ; không xóa dữ liệu nghiệp vụ liên quan.', '3.3 Hủy\n1. Chọn Hủy trước khi lưu hoặc không đồng ý xóa.\n2. Hệ thống giữ nguyên dữ liệu.'], ['4.1 Thiếu thông tin, tên đăng nhập trùng hoặc quyền không hợp lệ\n1. Hệ thống yêu cầu sửa.\n2. Chưa lưu tài khoản.', '4.2 Chủ xưởng chưa được gắn đúng một xưởng, xưởng không hoạt động hoặc đã có người phụ trách theo điều kiện áp dụng\n1. Hệ thống không lưu phân công không hợp lệ.\n2. Quản trị viên chọn lại xưởng.', '4.3 Thao tác làm mất tài khoản quản trị cuối cùng hoặc vi phạm điều kiện bảo vệ\n1. Hệ thống từ chối.\n2. Giữ nguyên tài khoản và quyền.']);
+extra('UC-BS02', 'Quản lý đơn vị tính và giá nguyên vật liệu theo nhà cung cấp', 'Quản lý kho, Bộ phận mua hàng', 'Người dùng đã đăng nhập và có quyền đối với danh mục hoặc bảng giá đang thao tác.', 'Đơn vị tính hoặc giá được lưu theo quyền, phục vụ chọn mặt hàng và gợi ý giá mua; không đổi giá của chứng từ đã ghi.', [
+ ['1. Mở danh mục đơn vị tính hoặc bảng giá nguyên vật liệu theo nhà cung cấp.', '2. Hiển thị dữ liệu hiện tại và các thao tác theo quyền.'],
+ ['3. Chọn thêm; nhập tên đơn vị, hoặc chọn nguyên vật liệu, nhà cung cấp, đơn giá và thông tin hiệu lực được yêu cầu.', '4. Kiểm tra dữ liệu, lưu nếu hợp lệ và thông báo thành công.'],
+ ['5. Xem lại dữ liệu đã lưu.', '6. Hiển thị đúng đơn vị hoặc giá và nhà cung cấp tương ứng.']
+], ['3.1 Sửa hoặc ngừng sử dụng\n1. Mở dòng đã có, chọn thao tác được phép rồi xác nhận.\n2. Hệ thống kiểm tra dữ liệu liên quan trước khi lưu.', '3.2 Chọn giá khi đặt mua\n1. Bộ phận mua hàng chọn nguyên vật liệu và nhà cung cấp.\n2. Hệ thống gợi ý giá phù hợp nếu có; người mua nhập giá thỏa thuận tại UC-27.', '3.3 Hủy\n1. Chọn Hủy.\n2. Giữ nguyên dữ liệu cũ.'], ['4.1 Đơn vị trùng, giá âm, nguyên vật liệu hoặc nhà cung cấp không hợp lệ\n1. Hệ thống yêu cầu chỉnh sửa.\n2. Không lưu dữ liệu sai.', '4.2 Đơn vị đang được sử dụng hoặc thay đổi không được phép\n1. Hệ thống thông báo không thể thực hiện.\n2. Giữ đúng đơn vị của mặt hàng và chứng từ hiện có.']);
+extra('UC-BS03', 'Phân công thực hiện yêu cầu nhập hoặc xuất kho', 'Quản lý kho', 'Quản lý kho đã đăng nhập; được giao xử lý yêu cầu còn hiệu lực.', 'Lưu phân công cho Nhân viên kho; phần xuất được dành đúng lượng theo điều kiện; chỉ phiếu thực nhập hoặc xuất mới thay đổi tồn kho.', [
+ ['1. Mở yêu cầu nhập hoặc xuất đang chờ xử lý.', '2. Hiển thị nguồn, xưởng, kho, ngày giờ đề nghị, các phần lô và lượng còn phải thực hiện.'],
+ ['3. Chọn Nhân viên kho, lô hoặc phần lô, vị trí và lượng phân công; xác nhận.', '4. Kiểm tra người được giao, nguồn, chất lượng, lượng chưa thực hiện và lượng còn có thể cấp.'],
+ ['5. Xem kết quả phân công.', '6. Lưu công việc và thông báo cho nhân viên; với xuất kho, ghi nhận phần hàng đã dành để tránh cấp trùng.']
+], ['3.1 Phân công một phần\n1. Quản lý kho chọn lượng nhỏ hơn lượng còn phải thực hiện.\n2. Hệ thống ghi đúng phần phân công; phần chưa giao vẫn còn để xử lý tiếp.', '3.2 Hủy phân công chưa thực hiện hết\n1. Quản lý kho chọn hủy phần còn được phép và xác nhận.\n2. Hệ thống giải phóng phần hàng chưa xuất đã dành; không xóa phiếu đã ghi và không hoàn tác lượng đã xuất.', '3.3 Hủy form\n1. Chọn Hủy trước khi lưu.\n2. Không tạo công việc hoặc dành hàng.'], ['4.1 Thiếu hàng, sai vị trí, lô không đạt chất lượng, hết hạn hoặc bị cách ly\n1. Hệ thống không lưu phân công không hợp lệ.\n2. Quản lý kho chọn lại dữ liệu.', '4.2 Vượt lượng yêu cầu, nguồn thay đổi, nhân viên không hợp lệ hoặc kho bị khóa kiểm kê\n1. Hệ thống thông báo không thể phân công.\n2. Quản lý kho tải lại dữ liệu và điều chỉnh.']);
+extra('UC-BS04', 'Ghi nhận nguyên vật liệu thực nhận', 'Bộ phận mua hàng', 'Có đơn mua còn lượng được nhận; người dùng có quyền ghi nhận hàng về.', 'Lưu phần hàng thực nhận và lô chờ kiểm tra chất lượng; chưa tăng tồn kho.', [
+ ['1. Mở đơn mua và chọn ghi nhận hàng về.', '2. Hiển thị mặt hàng, lượng đã đặt, lượng đã nhận, lượng còn nhận và nhà cung cấp.'],
+ ['3. Nhập lượng thực nhận, mã lô, ngày nhận và thông tin ngày sản xuất, hạn dùng nếu được yêu cầu.', '4. Kiểm tra lượng, lô và ngày; lưu phần hàng thực nhận phù hợp.'],
+ ['5. Xem thông tin phần hàng đã nhận.', '6. Hiển thị phần lô chờ kiểm tra chất lượng để lựa chọn trong đợt kiểm kê.']
+], ['3.1 Nhận nhiều lần\n1. Mỗi lần giao nhập đúng lượng thực nhận mới.\n2. Hệ thống cộng dồn lượng đã nhận; không nhập lại lượng của lần trước.', '3.2 Hủy\n1. Chọn Hủy trước khi xác nhận.\n2. Không tạo phần hàng hoặc lô mới.'], ['4.1 Tổng lượng nhận vượt lượng còn được nhận, mặt hàng không thuộc đơn hoặc mã lô không hợp lệ\n1. Hệ thống không ghi phần hàng.\n2. Người dùng kiểm tra và sửa.', '4.2 Ngày hoặc hạn dùng không hợp lệ, thiếu thông tin bắt buộc\n1. Hệ thống yêu cầu nhập lại.\n2. Chưa ghi nhận hàng.', '2.1 Chưa ghi nhận hàng về\n1. Chỉ có đơn mua hoặc đã đến ngày dự kiến chưa đủ tạo lô thực nhận.\n2. Người dùng ghi nhận hàng giao thực tế trước khi chọn phần lô để kiểm tra.']);
+extra('UC-BS05', 'Ghi nhận thành phẩm khách trả và cách ly', 'Quản lý kho, Nhân viên kho được phân công', 'Có dòng phiếu giao thành phẩm đã ghi và còn lượng đủ điều kiện nhận trả; có kho nhận phù hợp.', 'Ghi nhận hàng trả theo dòng giao gốc; nhận hàng vào khu cách ly theo đúng bước, giữ lịch sử giao và không tự hoàn tiền hoặc giao bù.', [
+ ['1. Mở chức năng ghi nhận khách trả hàng.', '2. Hiển thị nguồn giao hàng được phép lựa chọn.'],
+ ['3. Chọn dòng giao gốc, nhập lượng trả, lý do và kho nhận; xác nhận.', '4. Kiểm tra nguồn, lượng đã trả và lượng còn được trả; lưu hồ sơ hàng trả.'],
+ ['5. Người được phân công xác nhận thực nhận hàng trả theo hồ sơ.', '6. Ghi nhận hàng vào khu cách ly; chưa đưa vào lượng có thể xuất bán.']
+], ['3.1 Nhận trả một phần\n1. Nhập đúng lượng khách trả của lần này.\n2. Hệ thống cộng dồn các lần trả để đối chiếu dòng giao gốc.', '5.1 Kiểm tra chất lượng sau nhận trả\n1. Giao kiểm tra chất lượng theo phân công.\n2. Dù kết quả đạt, hàng vẫn cần bước xử lý cho phép trước khi được xuất lại; không tự giải phóng hàng cách ly.', '3.2 Hủy hồ sơ chưa thực nhận\n1. Người có quyền chọn hủy và xác nhận.\n2. Hệ thống chỉ hủy khi còn đủ điều kiện, không tự xóa hàng trả đã nhận.'], ['4.1 Lượng trả vượt lượng đã giao còn được trả, nguồn sai khách hoặc sai dòng\n1. Hệ thống từ chối ghi nhận.\n2. Kiểm tra lại phiếu giao gốc.', '6.1 Hàng trả đã được nhận, xử lý hoặc hồ sơ không còn hiệu lực\n1. Hệ thống không nhận hoặc hủy trùng.\n2. Người dùng xem lại trạng thái trước khi thao tác.']);
+extra('UC-BS06', 'Điều chỉnh chất lượng hàng đã nhập và xử lý hàng cách ly', 'Quản lý kho, Ban giám đốc, nhân viên QC/AC được giao', 'Hàng đã nhập hoặc đang cách ly; có kết quả và căn cứ xử lý phù hợp; người dùng có quyền thực hiện bước tương ứng.', 'Đề xuất, quyết định, xác nhận chất lượng và thay đổi hàng được lưu riêng theo từng bước; giữ lịch sử và không tự giải phóng hàng chỉ vì đã duyệt.', [
+ ['1. Quản lý kho mở hồ sơ hàng cần điều chỉnh hoặc xử lý cách ly, lập phương án và gửi duyệt.', '2. Hiển thị lô, lượng, kết quả chất lượng, vị trí và chứng từ nguồn; kiểm tra phương án.'],
+ ['3. Ban giám đốc xem phương án và phê duyệt khi đủ điều kiện.', '4. Lưu quyết định, thông báo cho người thực hiện; chưa tự thay đổi tồn kho.'],
+ ['5. Nhân viên QC/AC xác nhận phần chất lượng khi được yêu cầu; Quản lý kho áp dụng phương án được duyệt.', '6. Kiểm tra lại quyết định, lượng và kết quả; ghi chứng từ điều chỉnh hoặc xử lý đúng bước, giữ lịch sử.']
+], ['3.1 Không đồng ý\n1. Ban giám đốc chọn Từ chối và nhập lý do.\n2. Hệ thống lưu quyết định, chưa áp dụng phương án.', '5.1 Xử lý hàng cách ly\n1. Người có quyền chọn hướng xử lý được cung cấp như trả hoặc chuyển trạng thái sử dụng khi đủ điều kiện.\n2. Hệ thống chỉ áp dụng đúng lượng và đúng phương án đã duyệt.', '1.1 Hủy trước khi gửi\n1. Người lập hủy form.\n2. Chưa tạo quyết định hoặc thay đổi hàng.'], ['2.1 Thiếu căn cứ, thiếu lý do hoặc lượng vượt phần được xử lý\n1. Hệ thống yêu cầu chỉnh sửa.\n2. Không áp dụng thay đổi.', '6.1 Chưa duyệt, chưa có xác nhận chất lượng bắt buộc, đã áp dụng hoặc dữ liệu nguồn thay đổi\n1. Hệ thống dừng thao tác.\n2. Người dùng đối chiếu lại hồ sơ; không áp dụng hai lần.']);
+extra('UC-BS07', 'Xem thông báo và số việc mới', 'Người dùng đã đăng nhập', 'Người dùng có tài khoản hoạt động và quyền xem chức năng liên quan.', 'Hiển thị thông báo và số việc mới trong phạm vi; đánh dấu đã đọc không thay cho việc thực hiện công việc.', [
+ ['1. Vào hệ thống hoặc mở phần thông báo.', '2. Hiển thị thông báo của tài khoản và số việc mới ở chức năng liên quan bằng vòng tròn đỏ, số trắng.'],
+ ['3. Chọn thông báo hoặc chức năng có số mới.', '4. Mở chi tiết đối tượng liên quan nếu còn quyền; hiển thị nội dung và thao tác được phép.'],
+ ['5. Xem hoặc đánh dấu thông báo đã đọc theo thao tác được cung cấp.', '6. Cập nhật tình trạng đọc của tài khoản; không tự duyệt kế hoạch, hoàn thành công việc hoặc ghi phiếu kho.']
+], ['2.1 Không có thông báo mới\n1. Hệ thống hiển thị trạng thái không có thông báo mới, không hiển thị số đếm gây hiểu nhầm.', '3.1 Tải lại danh sách\n1. Người dùng tải lại hoặc quay lại chức năng.\n2. Hệ thống lấy số liệu mới trong phạm vi tài khoản.'], ['4.1 Đối tượng đã thay đổi, bị hủy hoặc người dùng không còn quyền\n1. Hệ thống thông báo không thể mở đối tượng.\n2. Không cấp quyền chỉ vì người dùng có thông báo cũ.', '2.2 Chưa tải được thông báo\n1. Hệ thống thông báo lỗi nếu có.\n2. Người dùng thử tải lại; không tự coi lỗi tải là không có việc mới.']);
+extra('UC-BS08', 'Xóa dữ liệu nghiệp vụ để thử nghiệm', 'Người dùng trong môi trường thử nghiệm được bật chức năng', 'Đã đăng nhập; chức năng xóa dữ liệu thử nghiệm được bật và được phép dùng trong môi trường hiện tại.', 'Dữ liệu nghiệp vụ thử nghiệm được xóa khi xác nhận hợp lệ; giữ tài khoản và dữ liệu danh mục theo phạm vi công cụ. Đây là chức năng tạm, không phải nghiệp vụ chính thức.', [
+ ['1. Chọn nút Xóa dữ liệu gần Đăng xuất.', '2. Hiển thị phạm vi dữ liệu bị xóa và yêu cầu xác nhận rõ ràng.'],
+ ['3. Nhập nội dung xác nhận theo yêu cầu rồi đồng ý.', '4. Kiểm tra quyền sử dụng, điều kiện môi trường và sao lưu cần thiết trước khi xóa.'],
+ ['5. Chờ thông báo kết quả và tải lại màn hình.', '6. Xóa các đơn hàng, kế hoạch, báo cáo, phiếu và công việc trong phạm vi công cụ; giữ danh mục và tài khoản; thông báo kết quả.']
+], ['3.1 Hủy\n1. Người dùng chọn Hủy hoặc đóng form trước xác nhận.\n2. Không xóa dữ liệu.', '2.1 Chức năng đã tắt\n1. Giao diện không cho sử dụng thao tác xóa.\n2. Không dùng công cụ này làm thao tác xóa dữ liệu khi vận hành chính thức.'], ['4.1 Nội dung xác nhận sai, chức năng không được bật hoặc không đáp ứng điều kiện môi trường\n1. Hệ thống từ chối xóa.\n2. Giữ nguyên dữ liệu.', '4.2 Không hoàn tất điều kiện sao lưu hoặc xảy ra lỗi trong quá trình thực hiện\n1. Hệ thống thông báo thất bại hoặc cần kiểm tra lại.\n2. Không thông báo đã xóa thành công khi chưa xác định kết quả; kiểm tra bản sao lưu và trạng thái trước khi thử lại.']);
+
+const notes = [
+ 'Các UC bổ sung được trình bày dưới đây, mỗi UC trong một bảng theo mẫu của tài liệu gốc.',
+ 'UC-12.3 Xóa kết quả kiểm tra QC/AC không còn được sử dụng để xóa kết quả đã ghi. Bảng cũ vẫn được giữ nguyên vị trí; sửa sai theo UC-12.2 để bảo toàn lịch sử.',
+ 'UC-31 đổi nội dung từ phê duyệt trực tiếp đơn hàng sang phê duyệt kế hoạch sản xuất. Đơn hàng được cập nhật theo kế hoạch được duyệt; không tạo thêm một bước duyệt đơn hàng riêng.'
+];
+fs.writeFileSync(path.join(dir, 'noi-dung-sua.json'), JSON.stringify({ originals: Object.values(amendments), added, notes }, null, 2));
+console.log(`Prepared ${Object.keys(amendments).length} original tables and ${added.length} additional UC tables.`);

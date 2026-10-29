@@ -394,7 +394,7 @@ Danh sách rỗng vẫn trả kết quả hợp lệ. Sai dữ liệu, sai ngu�
 
 ### Luồng cơ bản
 
-1. Bộ phận mua chọn nguồn PLAN/MANUAL hoặc mở đơn mua.
+1. Bộ phận mua chọn kế hoạch mua nguyên vật liệu đã duyệt hoặc mở đơn mua hiện có.
 2. Xem nguồn, các dòng mua, lượng nhận/trả và trạng thái đơn.
 3. Server kiểm đúng loại báo cáo, hạn mức dùng chung và giá trị tiền; chưa tự mua bù khi trả NCC.
 
@@ -487,7 +487,7 @@ Danh sách rỗng vẫn trả kết quả hợp lệ. Sai dữ liệu, sai ngu�
 
 ## UC-27 Mua hàng
 
-Cập nhật: chỉ PLAN/MANUAL, mỗi dòng NVL chọn NCC riêng. PLAN tự lấy ngày mong nhận và lượng từ MUA đã duyệt; xem [MUA_NVL_VA_RANG_BUOC_NGAY.md](MUA_NVL_VA_RANG_BUOC_NGAY.md).
+Cập nhật: chỉ tạo đơn theo kế hoạch mua nguyên vật liệu đã duyệt; mỗi dòng chọn nhà cung cấp riêng. Ngày nhận và lượng lấy từ kế hoạch; không có đường mua trực tiếp bỏ qua duyệt. Xem [MONOLITH.md](MONOLITH.md).
 
 **Actor chính:** Bộ phận mua hàng
 
@@ -495,8 +495,8 @@ Cập nhật: chỉ PLAN/MANUAL, mỗi dòng NVL chọn NCC riêng. PLAN tự l�
 
 ### Luồng cơ bản
 
-1. Bộ phận mua chọn nguồn PLAN/MANUAL hoặc mở đơn mua.
-2. PLAN từ MUA đã duyệt, một đơn/kế hoạch; nhập ngày/lượng từ kế hoạch, chọn NCC riêng từng NVL và giá/điều kiện mua. MANUAL tự nhập không có nguồn giả.
+1. Bộ phận mua chọn kế hoạch mua nguyên vật liệu đã duyệt hoặc mở đơn mua hiện có.
+2. Tạo tối đa một đơn cho mỗi kế hoạch; lấy ngày và lượng từ kế hoạch, chọn nhà cung cấp riêng từng nguyên vật liệu, nhập giá và điều kiện mua. Chưa duyệt, từ chối, sai loại kế hoạch hoặc không có kế hoạch đều không được đặt mua.
 3. Server kiểm đúng loại báo cáo, hạn mức dùng chung và giá trị tiền; chưa tự mua bù khi trả NCC.
 
 **Hậu điều kiện:** đọc trả dữ liệu trong phạm vi; ghi thành công cập nhật version/trạng thái và lịch sử theo service. Hủy form không tạo mutation; hủy chứng từ tuân thủ trạng thái/nguồn.

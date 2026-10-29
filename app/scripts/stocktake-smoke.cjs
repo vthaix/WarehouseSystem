@@ -34,7 +34,7 @@ function client() {
   };
 }
 (async () => {
-  if (!/^KhoHang_Acceptance_\d{8}(?:_Gateway)?$/.test(process.env.DB_NAME || ""))
+  if (!(process.env.ACCEPTANCE_MONOLITH === "true" && process.env.DB_NAME === "warehouse_db"))
     throw Error("Use isolated acceptance DB for count fixture.");
   const pool = getPool(),
     director = client(),

@@ -4,12 +4,9 @@ const { closePool } = require("./config/database");
 async function start() {
   loadEnv();
   const config = env();
-  let runtime;
-  if (config.storage === "mysql")
-    runtime = await require("./shared/runtime").createRuntime();
-  else if (config.storage !== "memory")
-    throw new Error("STORAGE_DRIVER chỉ nhận mysql hoặc memory.");
-  const app = createApp(runtime ? { runtime } : {}),
+  if (config.storage !== 'mysql')throw new Error('Ứng dụng mono yêu cầu STORAGE_DRIVER=mysql.');
+  const runtime = await require('./shared/runtime').createRuntime();
+  const app = createApp({ runtime }),
     server = app.listen(config.port, config.host, () =>
       console.log(
         JSON.stringify({
@@ -17,7 +14,7 @@ async function start() {
           host: config.host,
           port: config.port,
           storage: config.storage,
-          stage: runtime ? "foundation" : "demo",
+          stage: "monolith",
         }),
       ),
     );

@@ -28,8 +28,8 @@ test('customers with identical names keep distinct readable codes', async () => 
 
 test('older orders and plans receive the same readable references in API responses', () => {
   const user = { id: '7', roles: ['PLANNER'], workshop_ids: [] };
-  const OrderService = require('../../src/services/business-service/modules/customer-orders/OrderService');
-  const ProductionPlanService = require('../../src/services/business-service/modules/production/ProductionPlanService');
+  const OrderService = require('../../src/modules/customer-orders/OrderService');
+  const ProductionPlanService = require('../../src/modules/production/ProductionPlanService');
   const order = new OrderService({}).present(user, {id: 6, customer_id: 2, customer_name: 'Trần Văn A', customer_user_id: 7, order_sequence: 2, code: 'DH-7EAE62C6D16CCE32', status: 'APPROVED'});
   const plan = new ProductionPlanService({}).present(user, {id: 5, customer_order_id: 6, workshop_id: 1, created_by: 2, customer_name: 'Trần Văn A', order_sequence: 2, plan_sequence: 1, code: 'KSX-B1059C67896A0487', status: 'IN_PROGRESS'});
   assert.equal(order.display_code, 'DH-TRANVANA-02');

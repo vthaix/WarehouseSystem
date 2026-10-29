@@ -1,5 +1,5 @@
 const assert=require('node:assert/strict'),crypto=require('node:crypto');
-if(!/^KhoHang_Acceptance_\d{8}_Gateway$/.test(process.env.DB_NAME||''))throw Error('Isolated acceptance DB only.');
+if (!(process.env.ACCEPTANCE_MONOLITH === "true" && process.env.DB_NAME === "warehouse_db"))throw Error('Isolated acceptance DB only.');
 require('../src/config/env').loadEnv();
 const {getPool,closePool}=require('../src/config/database'),C=require('../src/services/domain/core');
 function client(){let cookie='',csrf='';return {async call(path,method='GET',body,key=crypto.randomUUID()){const r=await fetch('http://127.0.0.1:3000/api/v1/'+path,{method,headers:{'Content-Type':'application/json',Cookie:cookie,'X-CSRF-Token':csrf,'Idempotency-Key':key},...(body?{body:JSON.stringify(body)}:{})});if(r.headers.get('set-cookie'))cookie=r.headers.get('set-cookie').split(';')[0];return {status:r.status,...await r.json()};},async login(username){csrf=(await this.call('auth/csrf')).data.csrf_token;const r=await this.call('auth/login','POST',{username,password:process.env.DEMO_PASSWORD});assert.equal(r.status,200);csrf=r.data.csrf_token;}};}

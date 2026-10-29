@@ -7,16 +7,7 @@ test("test reset requires development, opt-in, authentication, CSRF and exact co
   process.env.ENABLE_TEST_RESET = "true";
   process.env.INTERNAL_SECRET = "test-reset-unit-secret-32-characters-long";
   let called = 0;
-  const helper = express();
-  helper.use(express.json({ verify: (req, _res, b) => { req.rawBody = b.toString(); } }));
-  helper.post("/internal/v1/reset", require("../../src/services/shared/transport").verifier("test-reset"), (_req, res) => {
-    called++;
-    res.json({ data: { cleared_tables: 46, backup: "/backup/unit", message: "done" } });
-  });
-  const helperServer = helper.listen(0, "127.0.0.1");
-  await new Promise(resolve => helperServer.once("listening", resolve));
-  process.env.TEST_RESET_URL = "http://127.0.0.1:" + helperServer.address().port;
-  const app = express(), reset = routes();
+  const app = express(), reset = routes(async () => {called++;return {cleared_tables:46,backup:'/backup/unit',message:'done'}});
   let releaseWrite, startedWrite;
   const writing = new Promise(r => { startedWrite = r; });
   app.use(reset.gate, express.json(), (req, _res, next) => {
@@ -65,7 +56,7 @@ test("test reset requires development, opt-in, authentication, CSRF and exact co
     assert.equal((await call("CUSTOMER")).status, 404);
     assert.equal(called, 10);
   } finally {
-    await Promise.all([new Promise(r => server.close(r)), new Promise(r => helperServer.close(r))]);
+    await new Promise(r => server.close(r));
     for (const key of Object.keys(process.env)) if (!(key in before)) delete process.env[key];
     Object.assign(process.env, before);
   }

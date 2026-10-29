@@ -1,11 +1,11 @@
 const test = require("node:test"),
   assert = require("node:assert/strict");
 const { boundaries, ownerOf } = require("../../src/boundaries/ownership");
-const Repository = require("../../src/services/shared/catalog/CatalogRepository");
-const Writer = require("../../src/services/shared/catalog/CatalogWriteService");
+const Repository = require("../../src/modules/catalog/CatalogRepository");
+const Writer = require("../../src/modules/catalog/CatalogWriteService");
 test("all registered resources have one logical owner; plans require a type", () => {
   assert.equal(Object.keys(boundaries).length, 8);
-  for (const m of require("../../src/services/shared/registry"))
+  for (const m of require("../../src/modules"))
     for (const r of m.resources) {
       if (r === "business-plans") {
         assert.equal(ownerOf(r, "SALE"), "sales");

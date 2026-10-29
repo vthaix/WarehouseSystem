@@ -1,96 +1,67 @@
-# Cấu hình kết nối CSDL và chuyển MySQL lên host
+# Kiến trúc mono hiện tại
 
-Đối chiếu code ngày 17/10/2026. Đây là hướng dẫn vị trí cấu hình; chưa thay đổi kết nối đang chạy.
+Ứng dụng là modular monolith: một tiến trình Express chạy `src/server.js`, giao diện EJS và API trong cùng ứng dụng; các mô-đun gọi trực tiếp bằng hàm, không gọi HTTP nội bộ giữa service.
 
-## Cần mở file nào?
-
-| File | Vai trò / khi nào chỉnh |
+| Cấu hình MySQL | Giá trị mặc định |
 | --- | --- |
-| `app/docker-compose.yml` | Cấu hình đang dùng khi chạy Docker: host/port chung trong `x-service-env`, database/user/password riêng ở `environment` của sáu service |
-| `docker-compose.yml` ở thư mục gốc | Đặt tên project và include Compose của app; không chứa cấu hình kết nối chi tiết |
-| `app/.env.example` | Mẫu biến môi trường; sửa file này không làm thay đổi kết nối thực tế |
-| `app/.env` | Được `src/config/env.js` đọc khi chạy Node trực tiếp; giữ ngoài Git |
-| `app/src/config/database.js` | Tạo pool mysql2 từ DB_HOST/DB_PORT/DB_NAME/DB_USER/DB_PASSWORD; chỉ sửa khi cần bổ sung khả năng kết nối như TLS |
-| `app/src/config/env.js` | Đọc `.env` và các biến `*_FILE` chứa secret |
-| `app/src/config/service-credentials.js` | Mặc định user/password của từng service và hỗ trợ ghi đè bằng biến môi trường |
-| `app/src/config/service-databases.js` | Ánh xạ tên schema/owner, dùng cho truy vấn liên schema; không phải nơi điền host/password |
-| `app/database/services/migrations/` | Migration cấu trúc CSDL; không dùng thay cấu hình host |
+| Server trong Docker | `mysql:3306` |
+| Database duy nhất | `warehouse_db` |
+| Username | `warehouse` |
+| Password | `warehouse123` |
 
-## Khi vẫn chạy ứng dụng bằng Docker
+Chạy ở thư mục gốc bằng `docker compose up -d --build --wait`, vào `http://localhost:3000`. Adminer: `http://localhost:8080`, hệ quản trị MySQL, server `mysql`, tài khoản và database theo bảng trên. Docker tải các image công khai, build ứng dụng, tạo schema và dữ liệu danh mục/tài khoản trên máy mới.
 
-Hiện `app/docker-compose.yml` ghi cố định:
+## Cấu trúc đang chạy
 
-```yaml
-x-service-env: &service-env
-  DB_HOST: mysql
-  DB_PORT: "3306"
+```text
+app/
+  src/
+    app.js, server.js
+    modules/        # auth, catalog, customer-orders, business-plans,
+                    # production, purchasing, warehouse, stock-requests,
+                    # quality, stocktakes, tasks, exceptions, returns,
+                    # notifications, reporting
+    boundaries/     # ghép các mô-đun trong cùng tiến trình
+    shared/         # router, session MySQL, migration và tiện ích dùng chung
+    config/         # môi trường, kết nối MySQL, phân quyền, danh mục
+    views/          # EJS
+    images/         # ảnh danh mục và ảnh báo cáo
+  public/           # CSS và JavaScript trình duyệt
+  database/
+    monolith/       # migration đang dùng
+    seeders/        # tạo dữ liệu demo ban đầu, không ghi đè mật khẩu đã đổi
+  Dockerfile        # một Dockerfile ứng dụng
+  docker-compose.yml
+  docker-compose.test.yml
+archive/microservices-20261029/project/ # bản microservice giữ riêng
 ```
 
-Vì vậy **chỉ thêm DB_HOST vào .env chưa đổi được host của container**. Khi triển khai DB ngoài Docker, sửa hai dòng thành biến môi trường hoặc ghi đè chúng bằng cấu hình Compose triển khai:
+`src/services/domain` và repository bộ nhớ còn phục vụ kiểm thử nghiệp vụ; không phải các tiến trình microservice. Runtime MySQL dùng các lớp tại `src/modules`.
 
-```yaml
-  DB_HOST: ${DB_HOST:-mysql}
-  DB_PORT: ${DB_PORT:-3306}
-```
+## Mặt hàng và lô
 
-File mẫu có sẵn tại `deploy.env.example` ở thư mục gốc WarehouseSystem. Tạo file cấu hình riêng bằng PowerShell tại thư mục gốc:
+- `MatHang` chứa thuộc tính chung và loại nguyên vật liệu/thành phẩm. `NguyenVatLieu.MaMatHang` và `ThanhPham.MaMatHang` vừa là khóa chính vừa tham chiếu mặt hàng cha. Thêm mặt hàng tự tạo dòng con đúng loại. Tiêu chuẩn nhập lưu tại nguyên vật liệu; hạn sử dụng mặc định theo ngày lưu tại thành phẩm. Các thuộc tính riêng là tùy chọn.
+- Không có bảng lô nguyên vật liệu và lô thành phẩm độc lập. `LoHang.LoaiLo` phân biệt nguyên vật liệu, thành phẩm, hàng trả. `ChiTietLo` lưu từng mặt hàng/phần giao nhận/ngày sản xuất/hạn dùng. Nhiều phần thành phẩm vẫn cùng đầu lô nhưng kiểm chất lượng và nhập kho riêng.
+- Hướng trả và chứng từ gốc vẫn được giữ để kiểm soát lượng hàng trả. Các bảng tồn, phiếu kho, QC, kiểm kê, phân công và lịch sử là dữ liệu nghiệp vụ riêng, không phải bản sao của mặt hàng.
+- Một số VIEW giữ tên báo cáo/chi tiết để dùng chung một bảng dữ liệu gốc; VIEW không tạo thêm bản sao dữ liệu. Danh sách SQL sinh từ migration ở `generated/DATABASE_OBJECTS.md`.
+
+## Mua nguyên vật liệu bắt buộc duyệt
+
+Bộ phận lập kế hoạch lập kế hoạch mua, có thể lập trực tiếp hoặc từ báo cáo nhu cầu. Ban giám đốc phê duyệt. Bộ phận mua hàng chỉ tạo đơn từ kế hoạch mua đã duyệt, chọn nhà cung cấp và giá từng dòng; lượng và ngày nhận lấy đúng kế hoạch. Không còn mua trực tiếp hoặc mua thẳng từ báo cáo để bỏ qua phê duyệt. Giao diện, API và trigger MySQL đều kiểm điều kiện này. Kế hoạch mua trực tiếp đã duyệt không bị buộc phải có báo cáo sản xuất.
+
+## Dữ liệu và bản cũ
+
+Compose dùng `mono_mysql_data`, không dùng lại hoặc xóa volume microservice cũ. Migration không chạy lại seed để thay mật khẩu hoặc xóa giao dịch mỗi lần khởi động. Không dùng `down -v` khi cần giữ dữ liệu.
+
+Ảnh trong Docker lưu ở volume `mono_images`, gắn tại `/app/src/images` của ứng dụng. Upload qua giao diện, không cần chép ảnh thủ công. Để sao lưu ảnh ra máy: `docker compose cp app:/app/src/images ./backups/images`. Chạy Node trực tiếp thì ảnh ở `app/src/images` trên máy.
+
+Mã microservice, schema và tài liệu trước chuyển đổi nằm trong `../../archive/microservices-20261029/`. Bản có cấu hình riêng tư nằm trong ZIP tại `../../backups/mono-refactor-20261029/`, không đưa lên Git. Bản mã nguồn không thay thế bản sao dữ liệu MySQL; không tự nhận đã chuyển dữ liệu thật từ các database cũ. Chưa xóa volume cũ.
+
+## Kiểm thử an toàn
 
 ```powershell
-Copy-Item deploy.env.example deploy.env
+docker compose -f app/docker-compose.yml -f app/docker-compose.test.yml -p warehouse-mono-review-20261029 up -d --build --wait
+docker compose -f app/docker-compose.yml -f app/docker-compose.test.yml -p warehouse-mono-review-20261029 exec -T -e ACCEPTANCE_MONOLITH=true app node scripts/monolith-acceptance.cjs
 ```
 
-Sau đó mở `deploy.env` và điền thông tin host thực tế. File này được Git bỏ qua để không commit mật khẩu. Đây là mẫu chuẩn bị cấu hình, chưa phải cấu hình deploy hoàn chỉnh; vẫn cần các thay đổi Compose được mô tả bên dưới.
-
-Ví dụ nội dung file môi trường riêng `deploy.env`:
-
-```dotenv
-DB_HOST=mysql.example.com
-DB_PORT=3306
-DB_NAME=KhoHang
-IDENTITY_DB_USER=identity_db
-IDENTITY_DB_PASSWORD=replace-with-host-password
-BUSINESS_DB_USER=business_db
-BUSINESS_DB_PASSWORD=replace-with-host-password
-WAREHOUSE_DB_USER=warehouse_db
-WAREHOUSE_DB_PASSWORD=replace-with-host-password
-NOTIFICATION_DB_USER=notification_db
-NOTIFICATION_DB_PASSWORD=replace-with-host-password
-REPORTING_DB_USER=reporting_db
-REPORTING_DB_PASSWORD=replace-with-host-password
-GATEWAY_DB_USER=gateway_db
-GATEWAY_DB_PASSWORD=replace-with-host-password
-```
-
-Khi đọc file để thay biến Compose, dùng tùy chọn rõ ràng `docker compose --env-file deploy.env ...`. Đường dẫn `app/.env` tự động được Node đọc không đồng nghĩa mọi cách gọi Compose đều lấy cùng file. Không thêm mật khẩu host vào `.env.example` hay file tài khoản demo.
-
-Trong Compose, `DB_NAME=KhoHang` là **tiền tố**: sáu service tự dùng KhoHang_Identity, KhoHang_Business, KhoHang_Warehouse, KhoHang_Notification, KhoHang_Reporting và KhoHang_Gateway. Nếu host cấp tên khác, cần đối chiếu quy tắc suffix và mapping trước khi thay, không điền một tên DB duy nhất cho cả sáu service.
-
-**Chưa thể chỉ đổi hai dòng rồi chạy Compose hiện tại như production:** cấu hình còn phụ thuộc MySQL nội bộ, job migrate/split và secret/provisioning. Cần cấu hình deploy riêng để chuyển dependency/job sang đúng DB ngoài; không chạy job cấp quyền/cắt chuyển bằng thông tin DB mới khi chưa kiểm tra phạm vi tác động. Cấu hình Adminer cũng cần chọn server ngoài nếu muốn xem DB host.
-
-## Khi chạy Node trực tiếp trên host
-
-Mỗi tiến trình service cần cấu hình riêng, ví dụ warehouse-service:
-
-```dotenv
-STORAGE_DRIVER=mysql
-SERVICE_DB_LAYOUT=split
-DB_HOST=mysql.example.com
-DB_PORT=3306
-DB_NAME=KhoHang_Warehouse
-DB_USER=warehouse_db
-DB_PASSWORD=replace-with-host-password
-```
-
-Các tiến trình khác dùng database/tài khoản tương ứng. Các URL service và secret xác thực nội bộ vẫn phải cấu hình theo môi trường deploy. Không dùng một `app/.env` với DB_NAME của Warehouse cho tất cả tiến trình.
-
-Nếu dùng `DB_PASSWORD` trực tiếp, không đồng thời đặt `DB_PASSWORD_FILE`. Loader từ chối khi cả hai cùng được cấu hình. Các service split trong Compose hiện đã xóa giá trị DB_PASSWORD_FILE để nhận mật khẩu riêng.
-
-## Điều kiện của host MySQL
-
-- Runtime hiện dùng **sáu schema trên cùng một MySQL server**, có JOIN/FK/view và quyền truy cập liên schema. Host cần hỗ trợ mô hình này; không thể chuyển tùy ý thành sáu server độc lập bằng cách đổi host.
-- Cần chuyển cả schema, dữ liệu, migration/checkpoint và cấp đúng quyền cho sáu tài khoản; thay host không tự chuyển dữ liệu. Thư mục seed không phải bản sao dữ liệu đang sử dụng.
-- `database.js` hiện chưa cấu hình TLS/CA. Nếu nhà cung cấp bắt buộc TLS, phải bổ sung tùy chọn kết nối phù hợp và cấu hình CA trước khi kết nối.
-- Kiểm tra host/port truy cập được từ nơi chạy service, tên schema thực tế và quyền tài khoản. Shared hosting chỉ cho một database hoặc cấm truy vấn liên schema có thể không phù hợp với cấu trúc hiện tại.
-- Sao lưu/khôi phục dữ liệu trước cắt chuyển. Ảnh danh mục nằm ở volume riêng, không nằm trong bản dump MySQL; cần chuyển ảnh nếu chuyển cả ứng dụng.
-
-Sau khi chuẩn bị cấu hình deploy và chuyển dữ liệu, kiểm tra health của các service, đăng nhập, đọc danh mục/tồn và chạy luồng [kiểm tra thực tế](LUONG_KIEM_TRA_THUC_TE.md). Xem thêm [SERVICE_DATABASES.md](SERVICE_DATABASES.md) và [PRODUCTION.md](PRODUCTION.md).
+Bản kiểm thử dùng project và volume riêng; giao diện ở cổng 3310. Chỉ chạy các bộ kiểm thử ghi dữ liệu trên bản thử riêng này. Xem báo cáo thực thi để biết bộ nào đã chạy đạt; không coi có đặc tả hoặc có mã là đã kiểm thử mọi trường hợp.

@@ -12,10 +12,10 @@ COPY --chown=node:node src ./src
 COPY --chown=node:node public ./public
 COPY --chown=node:node database ./database
 COPY --chown=node:node scripts ./scripts
-RUN mkdir -p /var/lib/warehouse-app-secrets /var/lib/warehouse-mysql-secrets && chown node:node /var/lib/warehouse-app-secrets /var/lib/warehouse-mysql-secrets
+RUN mkdir -p /var/lib/warehouse-app-secrets /var/lib/warehouse-mysql-secrets /var/backups/warehouse && chown node:node /var/lib/warehouse-app-secrets /var/lib/warehouse-mysql-secrets /var/backups/warehouse
 USER node
 EXPOSE 3000
-CMD ["node", "src/services/web-gateway/index.js"]
+CMD ["node", "src/server.js"]
 
 FROM runtime AS test
 USER root

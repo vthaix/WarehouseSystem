@@ -152,7 +152,7 @@ function client() {
     const [[supplier]] = await pool.execute(
       "SELECT id FROM suppliers WHERE is_active=1 LIMIT 1",
     );
-    await require('./import-purchase-flow.cjs')({pool,client,reportId:productionId,materialId:String(materials[0].id),finishedItemId:item.id,supplierId:String(supplier.id),date:delivery,planner,customer});
+    await require('./approved-purchase-flow.cjs')({pool,client,reportId:productionId,materialId:String(materials[0].id),finishedItemId:item.id,supplierId:String(supplier.id),date:delivery,planner,customer});
     const payload = {
       type: "PURCHASE",
       supplier_id: String(supplier.id),

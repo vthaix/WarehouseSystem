@@ -9,7 +9,7 @@
       const [categories,units]=itemOptions,select=document.querySelector('#f-kind'),category=document.querySelector('#f-category_id');
       if(!select||!category)return;const selectedCategory=params.get('category_id');
       const sync=()=>{const currentValue=category.value;category.innerHTML=categories.filter(c=>!c.catalog_kind||c.catalog_kind===select.value).map(c=>'<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>').join('');if([...category.options].some(o=>o.value===currentValue))category.value=currentValue;};
-      select.value=kind;select.addEventListener('change',sync);sync();if(selectedCategory&&[...category.options].some(o=>o.value===selectedCategory))category.value=selectedCategory;
+      select.value=kind;select.dispatchEvent(new Event('change'));select.addEventListener('change',sync);sync();if(selectedCategory&&[...category.options].some(o=>o.value===selectedCategory))category.value=selectedCategory;
       const suggestUnit=()=>{const c=categories.find(c=>c.id===category.value),code=({'BOT':'KG','DUONG-MUOI':'KG','BO-SUA-TRUNG':'KG','MEN-NO':'G','NHAN':'KG','TRANG-TRI':'LIT','BAO-BI':'CAI','BANH-MI':'O','BONG-LAN':'CAI','BANH-QUY':'HOP','BANH-KEM':'CAI','BANH-NHAN':'CAI'})[c?.code]||(select.value==='MATERIAL'?'KG':'CAI');const unit=units.find(u=>u.code===code);if(unit)document.querySelector('#f-unit_id').value=unit.id;};category.addEventListener('change',suggestUnit);select.addEventListener('change',suggestUnit);suggestUnit();
     }
   };

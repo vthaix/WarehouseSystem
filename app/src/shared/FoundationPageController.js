@@ -128,6 +128,7 @@ class FoundationPageController {
       csrf: req.session.csrf,
       canCreate:
         current !== "warehouse-records" &&
+          current !== "stock-documents" &&
         current !== "tasks" &&
         (P.create[current] || []).some((role) => user.roles.includes(role)) &&
         supported,

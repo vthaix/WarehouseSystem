@@ -1,0 +1,9 @@
+{
+  "authority": "DOCX_CONTENT_PROOF.json: exact editorial strings present in generated Word XML",
+  "renderOpenedSuccessfully": true,
+  "renderer": "LibreOffice 7.4",
+  "continuousStringPdfCheck": "Not reliable: -layout interleaves cells; -raw emits Vietnamese accented glyphs separately. Raw extraction diagnostics retained.",
+  "visualSamples": "first pages and UC-31/35/28, added UC tables",
+  "everyPageVisuallyInspected": false,
+  "exactMicrosoftWordLayoutCertified": false
+}

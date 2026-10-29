@@ -20,19 +20,15 @@ function provision(appDir, mysqlDir, env = process.env) {
     fs.writeFileSync(file, value, { flag: "wx", mode: 0o600 });
     return value;
   }
-  const password = secret(path.join(appDir, "db_password"), env.DB_PASSWORD);
+  const password = secret(path.join(appDir, "db_password"), env.DB_PASSWORD, 8);
   const mysqlFile = path.join(mysqlDir, "db_password");
-  secret(mysqlFile, password);
+  secret(mysqlFile, password, 8);
   fs.chmodSync(mysqlFile, 0o444);
   const rootFile = path.join(mysqlDir, "root_password");
-  secret(rootFile, env.MYSQL_ROOT_PASSWORD);
+  secret(rootFile, env.MYSQL_ROOT_PASSWORD, 8);
   fs.chmodSync(rootFile, 0o444);
   secret(path.join(appDir, "session_secret"), env.SESSION_SECRET, 32);
   secret(path.join(appDir, "internal_secret"), env.INTERNAL_SECRET, 32);
-  for (const service of Object.keys(
-    require("../database/services/ownership.json"),
-  ))
-    secret(path.join(appDir, service + "_db_password"), undefined, 32);
   const demoPasswordFile = path.join(appDir, "demo_password");
   secret(
     demoPasswordFile,

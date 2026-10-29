@@ -1,54 +1,67 @@
-# Clone và chạy trên máy mới
+# Kiến trúc mono hiện tại
 
-Cập nhật 24/10/2026. Cấu hình mặc định phục vụ chạy thử cục bộ.
+Ứng dụng là modular monolith: một tiến trình Express chạy `src/server.js`, giao diện EJS và API trong cùng ứng dụng; các mô-đun gọi trực tiếp bằng hàm, không gọi HTTP nội bộ giữa service.
 
-## Chuẩn bị một lần
+| Cấu hình MySQL | Giá trị mặc định |
+| --- | --- |
+| Server trong Docker | `mysql:3306` |
+| Database duy nhất | `warehouse_db` |
+| Username | `warehouse` |
+| Password | `warehouse123` |
 
-Cài Git và Docker Desktop, mở Docker Desktop và đợi engine chạy. Trên Windows dùng Linux containers, hoàn tất WSL 2/ảo hóa theo hướng dẫn của Docker Desktop nếu được yêu cầu. Dùng Docker Compose hiện hành đi kèm Docker Desktop; cấu hình root sử dụng `include`. Máy cần Internet để tải image/package ở lần đầu, đủ dung lượng trống và cổng 3000 còn trống.
+Chạy ở thư mục gốc bằng `docker compose up -d --build --wait`, vào `http://localhost:3000`. Adminer: `http://localhost:8080`, hệ quản trị MySQL, server `mysql`, tài khoản và database theo bảng trên. Docker tải các image công khai, build ứng dụng, tạo schema và dữ liệu danh mục/tài khoản trên máy mới.
 
-Compose tải phần mềm bên trong container; không tự cài Docker Desktop, Git hoặc bật ảo hóa của máy. Không cần cài Node.js/npm/MySQL riêng, import SQL, tạo secret hoặc sao chép `node_modules`.
+## Cấu trúc đang chạy
 
-## Một lệnh khởi động
-
-```powershell
-git clone https://github.com/vthaix/WarehouseSystem.git
-cd WarehouseSystem
-docker compose up -d --build --wait
+```text
+app/
+  src/
+    app.js, server.js
+    modules/        # auth, catalog, customer-orders, business-plans,
+                    # production, purchasing, warehouse, stock-requests,
+                    # quality, stocktakes, tasks, exceptions, returns,
+                    # notifications, reporting
+    boundaries/     # ghép các mô-đun trong cùng tiến trình
+    shared/         # router, session MySQL, migration và tiện ích dùng chung
+    config/         # môi trường, kết nối MySQL, phân quyền, danh mục
+    views/          # EJS
+    images/         # ảnh danh mục và ảnh báo cáo
+  public/           # CSS và JavaScript trình duyệt
+  database/
+    monolith/       # migration đang dùng
+    seeders/        # tạo dữ liệu demo ban đầu, không ghi đè mật khẩu đã đổi
+  Dockerfile        # một Dockerfile ứng dụng
+  docker-compose.yml
+  docker-compose.test.yml
+archive/microservices-20261029/project/ # bản microservice giữ riêng
 ```
 
-Mở http://localhost:3000. Không cần `.env` hay `deploy.env`: cấu hình có giá trị mặc định cho môi trường demo. Không copy cấu hình DB host cũ sang máy mới nếu muốn dùng MySQL Docker cục bộ.
+`src/services/domain` và repository bộ nhớ còn phục vụ kiểm thử nghiệp vụ; không phải các tiến trình microservice. Runtime MySQL dùng các lớp tại `src/modules`.
 
-Compose tự thực hiện:
+## Mặt hàng và lô
 
-1. Build image các service từ source và lockfile; tải base image Node/package npm khi cache chưa có.
-2. Tạo secret ngẫu nhiên trong volume; giữ secret đã có ở lần chạy sau.
-3. Tải và khởi tạo MySQL 8.4 trong volume mới.
-4. Chạy migration nguồn, tách sáu CSDL/service user và áp dụng migration service.
-5. Chạy backend rồi gateway sau khi các phụ thuộc healthy.
-6. Khởi tạo tài khoản/danh mục demo. Bộ chứng từ UC tùy chọn dùng `SEED_WORKFLOWS=true`; mặc định chưa bật.
+- `MatHang` chứa thuộc tính chung và loại nguyên vật liệu/thành phẩm. `NguyenVatLieu.MaMatHang` và `ThanhPham.MaMatHang` vừa là khóa chính vừa tham chiếu mặt hàng cha. Thêm mặt hàng tự tạo dòng con đúng loại. Tiêu chuẩn nhập lưu tại nguyên vật liệu; hạn sử dụng mặc định theo ngày lưu tại thành phẩm. Các thuộc tính riêng là tùy chọn.
+- Không có bảng lô nguyên vật liệu và lô thành phẩm độc lập. `LoHang.LoaiLo` phân biệt nguyên vật liệu, thành phẩm, hàng trả. `ChiTietLo` lưu từng mặt hàng/phần giao nhận/ngày sản xuất/hạn dùng. Nhiều phần thành phẩm vẫn cùng đầu lô nhưng kiểm chất lượng và nhập kho riêng.
+- Hướng trả và chứng từ gốc vẫn được giữ để kiểm soát lượng hàng trả. Các bảng tồn, phiếu kho, QC, kiểm kê, phân công và lịch sử là dữ liệu nghiệp vụ riêng, không phải bản sao của mặt hàng.
+- Một số VIEW giữ tên báo cáo/chi tiết để dùng chung một bảng dữ liệu gốc; VIEW không tạo thêm bản sao dữ liệu. Danh sách SQL sinh từ migration ở `generated/DATABASE_OBJECTS.md`.
 
-Các image ứng dụng nội bộ dùng `pull_policy: build`, không pull từ registry riêng. Các helper setup/migrate/split/reset/fixtures đều có build definition đầy đủ. MySQL/Adminer dùng image công khai và tải khi thiếu. Cache Docker giúp những lần build sau nhanh hơn; lần đầu có thể mất vài phút.
+## Mua nguyên vật liệu bắt buộc duyệt
 
-Tài khoản: [DEMO_ACCOUNTS.md](DEMO_ACCOUNTS.md). Admin `admin` / `123456`; ba chủ xưởng `workshop`, `workshop2`, `workshop3` / `123456` trên CSDL mới. Không ghi đè mật khẩu đã chỉnh trên CSDL hiện hữu.
+Bộ phận lập kế hoạch lập kế hoạch mua, có thể lập trực tiếp hoặc từ báo cáo nhu cầu. Ban giám đốc phê duyệt. Bộ phận mua hàng chỉ tạo đơn từ kế hoạch mua đã duyệt, chọn nhà cung cấp và giá từng dòng; lượng và ngày nhận lấy đúng kế hoạch. Không còn mua trực tiếp hoặc mua thẳng từ báo cáo để bỏ qua phê duyệt. Giao diện, API và trigger MySQL đều kiểm điều kiện này. Kế hoạch mua trực tiếp đã duyệt không bị buộc phải có báo cáo sản xuất.
 
-## Dùng lại và cập nhật
+## Dữ liệu và bản cũ
+
+Compose dùng `mono_mysql_data`, không dùng lại hoặc xóa volume microservice cũ. Migration không chạy lại seed để thay mật khẩu hoặc xóa giao dịch mỗi lần khởi động. Không dùng `down -v` khi cần giữ dữ liệu.
+
+Ảnh trong Docker lưu ở volume `mono_images`, gắn tại `/app/src/images` của ứng dụng. Upload qua giao diện, không cần chép ảnh thủ công. Để sao lưu ảnh ra máy: `docker compose cp app:/app/src/images ./backups/images`. Chạy Node trực tiếp thì ảnh ở `app/src/images` trên máy.
+
+Mã microservice, schema và tài liệu trước chuyển đổi nằm trong `../../archive/microservices-20261029/`. Bản có cấu hình riêng tư nằm trong ZIP tại `../../backups/mono-refactor-20261029/`, không đưa lên Git. Bản mã nguồn không thay thế bản sao dữ liệu MySQL; không tự nhận đã chuyển dữ liệu thật từ các database cũ. Chưa xóa volume cũ.
+
+## Kiểm thử an toàn
 
 ```powershell
-docker compose up -d
-git pull
-docker compose up -d --build --wait
-docker compose ps -a
-docker compose down
+docker compose -f app/docker-compose.yml -f app/docker-compose.test.yml -p warehouse-mono-review-20261029 up -d --build --wait
+docker compose -f app/docker-compose.yml -f app/docker-compose.test.yml -p warehouse-mono-review-20261029 exec -T -e ACCEPTANCE_MONOLITH=true app node scripts/monolith-acceptance.cjs
 ```
 
-`ps` chỉ xem trạng thái. Setup/migrate/split chạy xong có trạng thái Exited (0) là bình thường. `down` giữ dữ liệu. Không dùng `down -v` hoặc xóa volume nếu cần giữ CSDL, ảnh và secret. Git chỉ mang mã nguồn/migration/seed; dữ liệu phát sinh và ảnh upload trên máy tác giả không tự xuất hiện ở máy clone. Muốn chuyển dữ liệu thực phải backup/restore riêng.
-
-## Khi gặp lỗi
-
-- Không tìm thấy Docker engine/pipe: mở Docker Desktop, đợi engine chạy rồi chạy lại lệnh.
-- Không tải được image/npm: kiểm tra Internet/proxy/VPN hoặc dung lượng Docker, chạy lại; không cần cài npm trên host.
-- Cổng 3000 đang dùng: đặt `APP_PORT=3001` trong `.env` tại root rồi mở http://localhost:3001.
-- Build không thấy source/lockfile/migration: người gửi cần commit và push đầy đủ file nguồn, không chỉ Compose. Kiểm tra `git status` trước khi push.
-- Service không healthy: xem `docker compose logs --tail=100 setup mysql migrate split-databases app`.
-
-Adminer tùy chọn: `docker compose --profile dev up -d adminer`, mở http://localhost:8080; server `mysql`. Thông tin DB trong [DEMO_ACCOUNTS.md](DEMO_ACCOUNTS.md).
+Bản kiểm thử dùng project và volume riêng; giao diện ở cổng 3310. Chỉ chạy các bộ kiểm thử ghi dữ liệu trên bản thử riêng này. Xem báo cáo thực thi để biết bộ nào đã chạy đạt; không coi có đặc tả hoặc có mã là đã kiểm thử mọi trường hợp.

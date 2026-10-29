@@ -1,0 +1,27 @@
+const {chromium}=require('@playwright/test'),assert=require('node:assert/strict'),fs=require('node:fs');
+const base=process.env.APP_URL||'http://127.0.0.1:3000',executablePath=['C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe','C:/Program Files/Google/Chrome/Application/chrome.exe'].find(p=>fs.existsSync(p));
+(async()=>{const browser=await chromium.launch({headless:true,...(executablePath?{executablePath}:{})});try{
+  async function login(username){const context=await browser.newContext(),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(base+'/login');await page.locator('#username').fill(username);await page.locator('#password').fill('123456');await page.locator('#login-form button').click();await page.waitForURL('**/dashboard');return {context,page,errors};}
+  async function capture(page,path,method){let body;await page.route('**/api/v1/'+path,r=>{if(r.request().method()===method){body=r.request().postDataJSON();return r.fulfill({status:method==='POST'?201:200,json:{data:{id:'999999'}}});}return r.continue();});await page.locator('#data-form [type=submit]').click();await page.waitForFunction(()=>!document.querySelector('#modal').open);assert.ok(body);return body;}
+  {
+    const {context,page,errors}=await login('admin');assert.equal(await page.locator('.nav-link[data-nav="accounts"]').count(),1);assert.equal(await page.locator('.nav-link[data-nav="production-plans"]').count(),0);
+    assert.equal((await page.goto(base+'/admin/accounts')).status(),200);await page.locator('#create').click();await page.locator('#f-username').fill('browser.account');await page.locator('#f-full_name').fill('Tài khoản kiểm thử giao diện');await page.locator('#f-password').fill('123456');await page.locator('[data-account-role][value="QC_INSPECTOR"]').check();
+    const create=await capture(page,'accounts','POST');assert.deepEqual(create.roles,['QC_INSPECTOR']);assert.deepEqual(create.workshop_ids,[]);
+    const accounts=(await page.evaluate(()=>api('accounts?per_page=100'))).data,target=accounts.find(r=>r.username==='qc');await page.evaluate(r=>editForm(r),target);assert.equal(await page.locator('[data-account-role][value="QC_INSPECTOR"]').isChecked(),true);
+    await page.locator('[data-account-role][value="QC_INSPECTOR"]').uncheck();await page.locator('[data-account-role][value="WAREHOUSE_STAFF"]').check();const edit=await capture(page,'accounts/'+target.id,'PATCH');assert.deepEqual(edit.roles,['WAREHOUSE_STAFF']);assert.equal(edit.version,target.version);assert.deepEqual(errors,[]);await context.close();
+  }
+  {
+    const {context,page,errors}=await login('manager');await page.locator('.catalog-submenu summary').click();assert.equal(await page.locator('.catalog-submenu>a').count(),2);
+    await page.locator('.catalog-submenu>a[href*="kind=MATERIAL"]').click();await page.locator('.catalog-category-card').first().waitFor();assert.equal(await page.locator('.catalog-category-card').count(),7);
+    await page.locator('.catalog-category-card>a').filter({has:page.locator('h2',{hasText:/^Bột$/})}).click();await page.waitForURL('**/catalog/data?**');assert.equal(await page.locator('#table tbody tr').count(),3);
+    const category=new URL(page.url()).searchParams.get('category_id');await page.locator('#create').click();assert.equal(await page.locator('#f-category_id').inputValue(),category);assert.equal(await page.locator('#f-kind').inputValue(),'MATERIAL');const unit=await page.locator('#f-unit_id option:checked').textContent();assert.ok(unit.includes('kg'));await page.locator('#cancel').click();
+    await page.goto(base+'/catalog/material-prices');const materials=(await page.evaluate(()=>api('material-prices?per_page=100'))).data,material=materials.find(m=>m.code==='NVL-001');await page.evaluate(r=>detail(r),material);
+    const input=page.locator('[data-supplier-price]').first();await input.fill('18500,25');assert.equal(await input.evaluate(el=>Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').get.call(el)),'18500,25');
+    const price=await capture(page,'material-prices/'+material.id,'PATCH');assert.equal(price.supplier_prices[0].unit_price,'18500.25');assert.deepEqual(errors,[]);await context.close();
+  }
+  {
+    const {context,page,errors}=await login('purchaser');await page.goto(base+'/purchases');await page.locator('#create').click();await page.locator('#f-source_mode').selectOption('MANUAL');
+    const supplier=page.locator('#purchase-lines [data-key="supplier_id"]').first();await supplier.selectOption({index:1});const price=page.locator('#purchase-lines [data-key="unit_price"]').first();assert.ok(Number((await price.inputValue()).replace(',','.'))>0);await page.locator('#purchase-lines [data-key="quantity"]').first().fill('1,25');assert.equal(await page.locator('#purchase-lines [data-key="quantity"]').first().inputValue(),'1,25');assert.equal(await page.locator('#purchase-lines [data-key="quantity"]').first().evaluate(el=>el.value),'1.25');assert.deepEqual(errors,[]);await context.close();
+  }
+  console.log('ACCOUNTS/CATALOG BROWSER PASS: admin-only screen, role assignment forms, two sidebar branches, category products/default units, comma rendering/canonical payload and supplier price suggestions. Writes mocked.');
+}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

@@ -1,0 +1,139 @@
+[
+  {
+    "case": "READ inventory",
+    "expected": 200,
+    "actual": 200,
+    "status": "PASS"
+  },
+  {
+    "case": "CSV with format inventory",
+    "expected": 200,
+    "actual": 200,
+    "type": "text/csv; charset=utf-8",
+    "status": "PASS"
+  },
+  {
+    "id": "R-04",
+    "case": "Export as current UI query inventory",
+    "expected": "CSV download from UI",
+    "actual": 422,
+    "error": {
+      "code": "VALIDATION_ERROR",
+      "message": "Chỉ hỗ trợ CSV.",
+      "fields": {}
+    },
+    "status": "CONFIRMED_DEFECT"
+  },
+  {
+    "case": "Customer forbidden inventory",
+    "expected": 403,
+    "actual": 403,
+    "status": "PASS"
+  },
+  {
+    "case": "READ stock-documents",
+    "expected": 200,
+    "actual": 200,
+    "status": "PASS"
+  },
+  {
+    "case": "CSV with format stock-documents",
+    "expected": 200,
+    "actual": 200,
+    "type": "text/csv; charset=utf-8",
+    "status": "PASS"
+  },
+  {
+    "id": "R-04",
+    "case": "Export as current UI query stock-documents",
+    "expected": "CSV download from UI",
+    "actual": 422,
+    "error": {
+      "code": "VALIDATION_ERROR",
+      "message": "Chỉ hỗ trợ CSV.",
+      "fields": {}
+    },
+    "status": "CONFIRMED_DEFECT"
+  },
+  {
+    "case": "Customer forbidden stock-documents",
+    "expected": 403,
+    "actual": 403,
+    "status": "PASS"
+  },
+  {
+    "case": "READ stocktakes",
+    "expected": 200,
+    "actual": 200,
+    "status": "PASS"
+  },
+  {
+    "case": "CSV with format stocktakes",
+    "expected": 200,
+    "actual": 200,
+    "type": "text/csv; charset=utf-8",
+    "status": "PASS"
+  },
+  {
+    "id": "R-04",
+    "case": "Export as current UI query stocktakes",
+    "expected": "CSV download from UI",
+    "actual": 422,
+    "error": {
+      "code": "VALIDATION_ERROR",
+      "message": "Chỉ hỗ trợ CSV.",
+      "fields": {}
+    },
+    "status": "CONFIRMED_DEFECT"
+  },
+  {
+    "case": "Customer forbidden stocktakes",
+    "expected": 403,
+    "actual": 403,
+    "status": "PASS"
+  },
+  {
+    "case": "reports/stock-documents?from=2040-02-01&to=2040-01-01",
+    "expected": 422,
+    "actual": 422,
+    "error": {
+      "code": "VALIDATION_ERROR",
+      "message": "Khoảng ngày không hợp lệ.",
+      "fields": {}
+    },
+    "status": "PASS"
+  },
+  {
+    "case": "reports/inventory?as_of=2999-01-01T00:00:00Z",
+    "expected": 422,
+    "actual": 422,
+    "error": {
+      "code": "VALIDATION_ERROR",
+      "message": "Mốc thời gian không hợp lệ.",
+      "fields": {}
+    },
+    "status": "PASS"
+  },
+  {
+    "case": "reports/inventory?quality_bucket=BAD",
+    "expected": 422,
+    "actual": 422,
+    "error": {
+      "code": "VALIDATION_ERROR",
+      "message": "Nhóm chất lượng không hợp lệ.",
+      "fields": {}
+    },
+    "status": "PASS"
+  },
+  {
+    "case": "reports/inventory/export?format=xlsx",
+    "expected": 422,
+    "actual": 422,
+    "error": {
+      "code": "VALIDATION_ERROR",
+      "message": "Chỉ hỗ trợ CSV.",
+      "fields": {}
+    },
+    "status": "PASS"
+  }
+]

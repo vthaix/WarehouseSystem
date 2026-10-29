@@ -1,0 +1,36 @@
+CREATE TABLE NguyenVatLieu (
+ MaMatHang BIGINT UNSIGNED PRIMARY KEY,
+ TieuChuanNhap VARCHAR(1000) NULL,
+ CONSTRAINT FK_NguyenVatLieu_MatHang FOREIGN KEY (MaMatHang) REFERENCES MatHang(MaBanGhi) ON DELETE CASCADE
+) ENGINE=InnoDB;
+-- statement-end
+CREATE TABLE ThanhPham (
+ MaMatHang BIGINT UNSIGNED PRIMARY KEY,
+ HanSuDungMacDinhNgay INT UNSIGNED NULL,
+ CONSTRAINT FK_ThanhPham_MatHang FOREIGN KEY (MaMatHang) REFERENCES MatHang(MaBanGhi) ON DELETE CASCADE,
+ CONSTRAINT CK_ThanhPham_HanSuDung CHECK (HanSuDungMacDinhNgay IS NULL OR HanSuDungMacDinhNgay>0)
+) ENGINE=InnoDB;
+-- statement-end
+INSERT INTO NguyenVatLieu(MaMatHang) SELECT MaBanGhi FROM MatHang WHERE Loai='MATERIAL';
+-- statement-end
+INSERT INTO ThanhPham(MaMatHang) SELECT MaBanGhi FROM MatHang WHERE Loai='FINISHED_PRODUCT';
+-- statement-end
+CREATE TRIGGER TaoChiTietMatHang AFTER INSERT ON MatHang FOR EACH ROW
+BEGIN
+ IF NEW.Loai='MATERIAL' THEN INSERT INTO NguyenVatLieu(MaMatHang) VALUES (NEW.MaBanGhi);
+ ELSE INSERT INTO ThanhPham(MaMatHang) VALUES (NEW.MaBanGhi); END IF;
+END;
+-- statement-end
+CREATE TRIGGER KiemLoaiNguyenVatLieu BEFORE INSERT ON NguyenVatLieu FOR EACH ROW
+BEGIN
+ IF (SELECT Loai FROM MatHang WHERE MaBanGhi=NEW.MaMatHang)<>'MATERIAL' THEN
+ SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Mat hang khong phai nguyen vat lieu';
+ END IF;
+END;
+-- statement-end
+CREATE TRIGGER KiemLoaiThanhPham BEFORE INSERT ON ThanhPham FOR EACH ROW
+BEGIN
+ IF (SELECT Loai FROM MatHang WHERE MaBanGhi=NEW.MaMatHang)<>'FINISHED_PRODUCT' THEN
+ SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Mat hang khong phai thanh pham';
+ END IF;
+END;

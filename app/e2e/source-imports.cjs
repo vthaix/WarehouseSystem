@@ -177,7 +177,7 @@ const executablePath =
       const reportPath=require('../src/config/navigation').modules.find(m=>m[0]==='production-reports')[5];
       await page.goto(base+reportPath+'?module=production-reports');
       await page.evaluate(()=>detail({id:'8801',code:'BC-NHU-CAU-UI',status:'SUBMITTED',report_purpose:'NHU_CAU',send_to_planner:true,actions:[]}));
-      await page.getByRole('button',{name:'Tạo kế hoạch mua NVL',exact:true}).click();
+      await page.getByRole('button',{name:'Tạo kế hoạch mua nguyên vật liệu',exact:true}).click();
       await page.waitForURL(url=>url.searchParams.get('module')==='business-plans');
       await page.waitForFunction(()=>document.querySelector('#f-production_report_id')?.value==='8801');
       assert.equal(await page.locator('#purchase-plan-mode').inputValue(),'REPORT');
@@ -319,30 +319,16 @@ const executablePath =
         }),
       );
       await page.evaluate(() => createForm());
-      assert.deepEqual(await page.locator('#f-source_mode option').evaluateAll(opts=>opts.map(o=>o.value)),['MANUAL','PLAN']);
+      assert.deepEqual(await page.locator('#f-source_mode option').evaluateAll(opts=>opts.map(o=>o.value)),['PLAN']);
       await page.locator('#f-source_mode').selectOption('PLAN');
       await page.locator('#f-business_plan_id').selectOption('902');
       await page.waitForFunction(()=>document.querySelector('[data-key=unit_price]')?.value==='10');
       assert.equal(await page.locator('[data-key=item_id]').inputValue(),material.id);
       assert.equal(await page.locator('[data-key=business_plan_line_id]').inputValue(),'903');
-      assert.equal(await page.locator('#f-expected_delivery_date').evaluate(el=>el.readOnly),true);      await page.locator("#f-source_mode").selectOption("MANUAL");
-      await page.waitForFunction(
-        () => document.querySelector("[data-key=quantity]")?.value === "1",
-      );
-      await page.locator("[data-key=item_id]").selectOption(material.id);
-      await page.locator("[data-key=quantity]").fill("2");
-      await page.locator("[data-key=unit_price]").fill("3.4567");
+      assert.equal(await page.locator('#f-expected_delivery_date').evaluate(el=>el.readOnly),true);
+      assert.equal(await page.locator('[data-key=quantity]').evaluate(el=>el.readOnly),true);
+      assert.equal(await page.locator('[data-key=item_id]').isDisabled(),true);
       const suppliers = (await page.evaluate(()=>api("lookup/suppliers"))).data;
-      await page.locator("[data-key=supplier_id]").selectOption(suppliers[0].id);
-      await page.locator("#f-expected_delivery_date").fill(new Date().toLocaleDateString("en-CA",{timeZone:"Asia/Ho_Chi_Minh"}));
-      await page.locator("#f-delivery_terms").fill("Manual buying");
-      const submit = await capture(page, "purchase-orders");
-      const body = await submit();
-      assert.equal(body.source_mode, "MANUAL");
-      assert.equal(body.production_report_id, undefined);
-      assert.equal(body.business_plan_id, undefined);
-      assert.equal(body.lines[0].quantity, "2");
-      assert.equal(body.lines[0].supplier_id,suppliers[0].id);
       await page.evaluate(()=>createForm());
       await page.locator('#f-source_mode').selectOption('PLAN');
       await page.locator('#f-business_plan_id').selectOption('902');

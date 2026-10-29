@@ -1,0 +1,20 @@
+CREATE TRIGGER GiuLoaiMatHang BEFORE UPDATE ON MatHang FOR EACH ROW
+BEGIN
+ IF OLD.Loai<>NEW.Loai THEN
+ SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Khong doi loai mat hang da tao';
+ END IF;
+END;
+-- statement-end
+CREATE TRIGGER KiemSuaNguyenVatLieu BEFORE UPDATE ON NguyenVatLieu FOR EACH ROW
+BEGIN
+ IF (SELECT Loai FROM MatHang WHERE MaBanGhi=NEW.MaMatHang)<>'MATERIAL' THEN
+ SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Mat hang khong phai nguyen vat lieu';
+ END IF;
+END;
+-- statement-end
+CREATE TRIGGER KiemSuaThanhPham BEFORE UPDATE ON ThanhPham FOR EACH ROW
+BEGIN
+ IF (SELECT Loai FROM MatHang WHERE MaBanGhi=NEW.MaMatHang)<>'FINISHED_PRODUCT' THEN
+ SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Mat hang khong phai thanh pham';
+ END IF;
+END;

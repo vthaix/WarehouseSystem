@@ -1,0 +1,6 @@
+<% if(Array.isArray(value)){ %>
+<% value.forEach((entry,index)=>{ %><div class="panel content"><h3>Dòng <%= index+1 %></h3><% if(entry&&typeof entry==='object'){ %><%- include('fields',{value:entry}) %><% }else{ %><p><%= format(entry) %></p><% } %></div><% }) %>
+<% }else{ %>
+<dl><% Object.entries(value).filter(([k,v])=>k!=='actions'&&k!=='id'&&k!=='version'&&!k.endsWith('_id')&&k!=='created_by'&&fieldNames[k]&&(v===null||typeof v!=='object'||v instanceof Date)).forEach(([k,v])=>{ %><dt><%= fieldNames[k] %></dt><dd><% if(k==="image_path" && v){ %><img class="category-detail-image" src="<%= v %>" alt="Ảnh danh mục"><% }else{ %><%= k==='status'?statusLabel(v):format(v,k,value) %><% } %></dd><% }) %></dl>
+<% Object.entries(value).filter(([k,v])=>k!=='actions'&&fieldNames[k]&&v&&typeof v==='object'&&!(v instanceof Date)).forEach(([k,v])=>{ %><h2><%= fieldNames[k] %></h2><% if(k==='roles'){ %><p><%= format(v,k) %></p><% }else{ %><%- include('fields',{value:v}) %><% } %><% }) %>
+<% } %>

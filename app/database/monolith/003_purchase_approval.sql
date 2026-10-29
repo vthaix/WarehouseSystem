@@ -1,0 +1,7 @@
+CREATE TRIGGER KiemDuyetDonMua BEFORE INSERT ON DonMuaHang FOR EACH ROW
+BEGIN
+ IF NEW.LoaiNguonDonMua<>'PLAN' OR NEW.MaKeHoachKinhDoanh IS NULL OR
+ NOT EXISTS (SELECT 1 FROM KeHoachMuaBan WHERE MaBanGhi=NEW.MaKeHoachKinhDoanh AND Kieu='PURCHASE' AND TrangThai='APPROVED') THEN
+ SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Chi mua NVL tu ke hoach da duoc phe duyet';
+ END IF;
+END;

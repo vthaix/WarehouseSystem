@@ -1,0 +1,35 @@
+[
+  {
+    "id": "R-04",
+    "module": "reports/inventory",
+    "status": 422,
+    "request": "/api/v1/reports/inventory/export?as_of=2026-10-28T15%3A16%3A32.542Z&page=1&per_page=20",
+    "error": {
+      "code": "VALIDATION_ERROR",
+      "message": "Chỉ hỗ trợ CSV.",
+      "fields": {}
+    }
+  },
+  {
+    "id": "R-04",
+    "module": "reports/stock-documents",
+    "status": 422,
+    "request": "/api/v1/reports/stock-documents/export?page=1&per_page=20",
+    "error": {
+      "code": "VALIDATION_ERROR",
+      "message": "Chỉ hỗ trợ CSV.",
+      "fields": {}
+    }
+  },
+  {
+    "id": "R-04",
+    "module": "reports/stocktakes",
+    "status": 422,
+    "request": "/api/v1/reports/stocktakes/export?page=1&per_page=20",
+    "error": {
+      "code": "VALIDATION_ERROR",
+      "message": "Chỉ hỗ trợ CSV.",
+      "fields": {}
+    }
+  }
+]

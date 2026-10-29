@@ -9,7 +9,7 @@ const executablePath=process.env.BROWSER_PATH||['C:/Program Files (x86)/Microsof
   await page.locator('#login-form button').click();await page.waitForURL('**/dashboard');
   assert.equal(await page.locator('.summary-card').count(),3);
   assert.equal(await page.locator('.sidebar').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(255, 255, 255)');
-  await page.locator('#nav-search').fill('kiem ke');await page.locator('#nav-search-results a').first().waitFor();
+  await page.locator('#nav-search').fill('mat hang');await page.locator('#nav-search-results a').first().waitFor();
   assert.ok((await page.locator('#nav-search-results a').allTextContents()).length>0);
   await page.locator('#nav-search').press('Escape');assert.equal(await page.locator('#nav-search-results').isVisible(),false);
   await page.locator('#sidebar-toggle').click();assert.equal(await page.locator('.sidebar').isVisible(),false);await page.locator('#sidebar-toggle').click();

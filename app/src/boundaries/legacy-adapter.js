@@ -1,4 +1,4 @@
-const CatalogService = require("../services/shared/catalog/CatalogService");
+const CatalogService = require("../modules/catalog/CatalogService");
 const { ownerOf } = require("./ownership");
 const C = require("../services/domain/core");
 // Compatibility for existing routes/EJS while each resource gains an owner.
@@ -57,6 +57,7 @@ module.exports = function legacyAdapter(composition) {
     ...b.reporting,
     orders: b.sales.orders,
     purchaseOrders: b.procurement.purchaseOrders,
+    materialCatalog: new (require('../modules/purchasing/MaterialCatalogService'))(composition.planImplementation.pool),
     businessPlans,
     catalog: new CatalogService(repository),
     catalogWrite,

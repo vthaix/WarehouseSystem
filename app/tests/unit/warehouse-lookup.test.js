@@ -1,5 +1,5 @@
 const test=require('node:test'),assert=require('node:assert/strict');
-const lookup=require('../../src/services/reporting-service/modules/reporting/warehouse-lookup');
+const lookup=require('../../src/modules/reporting/warehouse-lookup');
 const C=require('../../src/services/domain/core');
 test('warehouse map denies non-UC actors before querying stock',async()=>{
   for(const role of ['DIRECTOR','QC_INSPECTOR','STOCKTAKER','CUSTOMER','WAREHOUSE_STAFF','PLANNER','PURCHASER'])await assert.rejects(lookup({execute(){throw Error('SQL must not run');}},{roles:[role]}),e=>e.status===403);

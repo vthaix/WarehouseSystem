@@ -3,9 +3,8 @@ const { enabled } = require("../config/reset-tools");
 const C = require("../services/domain/core");
 const { csrf } = require("../middlewares/csrf.middleware");
 const { requireApiAuth } = require("../middlewares/auth.middleware");
-const { headers } = require("../services/shared/transport");
 const { ok } = require("../utils/response");
-module.exports = () => {
+module.exports = (execute = require('./reset-monolith').reset) => {
   const router = express.Router();
   let busy = false, pending = 0;
   function gate(req, res, next) {
@@ -32,18 +31,11 @@ module.exports = () => {
       const deadline = Date.now() + 20000;
       while (pending > 0 && Date.now() < deadline) await new Promise(resolve => setTimeout(resolve, 100));
       C.fail(pending > 0, "TEST_RESET_BUSY", "Còn thao tác đang chạy; chưa xóa dữ liệu. Vui lòng thử lại sau.", 409);
-      const url = "/internal/v1/reset";
-      const body = JSON.stringify({ key, actor: { id: req.user.id, session_version: req.user.session_version } });
       uncertain = true;
-      const response = await fetch((process.env.TEST_RESET_URL || "http://test-reset:3000") + url, {
-        method: "POST", headers: headers("test-reset", "POST", url, body), body,
-        signal: AbortSignal.timeout(120000),
-      });
-      const result = await response.json();
-      uncertain = response.status >= 500 || result.error?.code === "TEST_RESET_UNCERTAIN";
-      C.fail(!response.ok, result.error?.code || "TEST_RESET_FAILED", result.error?.message || "Chưa xác định kết quả xóa. Kiểm tra trước khi thao tác lại.", response.status);
+      const result = await execute({key,actor:{id:req.user.id,session_version:req.user.session_version}});
+      uncertain = false;
       await new Promise((resolve, reject) => req.session.destroy(e => e ? reject(e) : resolve()));
-      ok(req, res, result.data);
+      ok(req, res, result);
     } finally { if (!uncertain) busy = false; }
   });
   return { router, gate };

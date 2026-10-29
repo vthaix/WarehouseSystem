@@ -1,0 +1,80 @@
+[
+  {
+    "name": "ssr",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 1816
+  },
+  {
+    "name": "accounts-catalog",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 2895
+  },
+  {
+    "name": "admin-theme",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 1402
+  },
+  {
+    "name": "category-images",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 1228
+  },
+  {
+    "name": "customer-order",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 1931
+  },
+  {
+    "name": "inspection-workflow",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 21868
+  },
+  {
+    "name": "planning-confirmation",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 1525
+  },
+  {
+    "name": "preproduction",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 2513
+  },
+  {
+    "name": "source-imports",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 8681
+  },
+  {
+    "name": "warehouse-exceptions",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 1513
+  },
+  {
+    "name": "warehouse-lookup",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 5647
+  },
+  {
+    "name": "warehouse-request-workflow",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 2512
+  },
+  {
+    "name": "reset-data",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 5330
+  }
+]

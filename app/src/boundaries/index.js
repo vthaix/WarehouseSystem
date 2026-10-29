@@ -1,12 +1,12 @@
 const { ownerOf } = require("./ownership");
 module.exports = function composeBoundaries(pool) {
-  const business = require("../services/business-service/compose")(pool);
+  const business = require("../modules/compose-business")(pool);
   const contexts = {
-    identity: require("../services/identity-service/compose")(pool),
+    identity: require("./identity")(pool),
     ...business.contexts,
-    "warehouse-quality": require("../services/warehouse-service/compose")(pool),
-    notification: require("../services/notification-service/compose")(pool),
-    reporting: require("../services/reporting-service/compose")(pool),
+    "warehouse-quality": require("./warehouse-quality")(pool),
+    notification: require("./notification")(pool),
+    reporting: require("./reporting")(pool),
   };
   return { contexts, planImplementation: business.planImplementation, ownerOf };
 };

@@ -1,6 +1,6 @@
 const assert = require("node:assert/strict"),
   crypto = require("node:crypto");
-if (!/^KhoHang_Acceptance_\d{8}_Gateway$/.test(process.env.DB_NAME || ""))
+if (!(process.env.ACCEPTANCE_MONOLITH === "true" && process.env.DB_NAME === "warehouse_db"))
   throw Error("Use an isolated split acceptance database.");
 require("../src/config/env").loadEnv();
 const { getPool, closePool } = require("../src/config/database"),

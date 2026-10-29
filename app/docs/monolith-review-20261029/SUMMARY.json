@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-29",
+  "architecture": "modular-monolith",
+  "database": "warehouse_db",
+  "database_user": "warehouse",
+  "unit": {
+    "passed": 73,
+    "failed": 0
+  },
+  "sql": {
+    "suites": 12,
+    "passed": 12
+  },
+  "browser": {
+    "suites": 13,
+    "passed": 13
+  },
+  "ui": {
+    "actorScreens": 122,
+    "accounts": 18,
+    "unexpectedFailures": 0,
+    "unsupportedCreateForms": 0
+  },
+  "csv": {
+    "passed": 3
+  },
+  "demoFixtures": 36,
+  "fixtureResetAndRebuild": "PASS",
+  "allPossibleInputsCertified": false,
+  "microserviceArchive": "archive/microservices-20261029/project",
+  "originalDatabaseVolumes": "preserved, not imported into fresh mono database"
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "R-04",
+    "module": "reports/inventory",
+    "status": 200,
+    "request": "/api/v1/reports/inventory/export?format=csv&as_of=2026-10-29T14%3A32%3A43.294Z&page=1&per_page=20"
+  },
+  {
+    "id": "R-04",
+    "module": "reports/stock-documents",
+    "status": 200,
+    "request": "/api/v1/reports/stock-documents/export?format=csv&page=1&per_page=20"
+  },
+  {
+    "id": "R-04",
+    "module": "reports/stocktakes",
+    "status": 200,
+    "request": "/api/v1/reports/stocktakes/export?format=csv&page=1&per_page=20"
+  }
+]

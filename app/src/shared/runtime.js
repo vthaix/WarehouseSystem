@@ -14,11 +14,11 @@ async function createRuntime() {
   }
   if (!connected) throw new Error("CSDL chưa sẵn sàng.");
   if (process.env.AUTO_MIGRATE === "true")
-    await require("./migrations").migrate(pool);
+    await require("./monolith-migrations").migrate(pool);
   await pool.query("SELECT name FROM schema_migrations");
   await require("../../database/seeders/foundation").seedRoles(pool);
   if (process.env.SEED_DEMO === "true")
-    await require("../../database/seeders/foundation").seedDemo(pool);
+    await require("../../database/seeders/monolith").seed(pool);
   await pool.query(
     "INSERT IGNORE INTO NhanVien (MaNguoiDung,MaNhanVien) SELECT DISTINCT u.id,CONCAT('NV-',u.id) FROM users u JOIN user_roles ur ON ur.user_id=u.id JOIN roles r ON r.id=ur.role_id WHERE r.code<>'CUSTOMER'",
   );

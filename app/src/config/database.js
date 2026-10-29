@@ -20,9 +20,7 @@ function getPool() {
       timezone: "Z",
       connectTimeout: 5000,
     }),
-    process.env.SERVICE_DB_LAYOUT === "split"
-      ? require("./service-databases").tableNames(process.env.DB_NAME)
-      : {},
+    {},
   ));
 }
 async function withTransaction(work) {

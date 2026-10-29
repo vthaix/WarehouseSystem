@@ -1,82 +1,67 @@
-# WarehouseSystem
+# Kiến trúc mono hiện tại
 
-Máy mới chỉ cần **Git, Docker Desktop đã mở (Linux containers)** và Internet cho lần build đầu. Không cần cài Node.js, npm, MySQL hoặc tự tạo file `.env`/`deploy.env`.
+Ứng dụng là modular monolith: một tiến trình Express chạy `src/server.js`, giao diện EJS và API trong cùng ứng dụng; các mô-đun gọi trực tiếp bằng hàm, không gọi HTTP nội bộ giữa service.
 
-```powershell
-git clone https://github.com/vthaix/WarehouseSystem.git
-cd WarehouseSystem
-docker compose up -d --build --wait
+| Cấu hình MySQL | Giá trị mặc định |
+| --- | --- |
+| Server trong Docker | `mysql:3306` |
+| Database duy nhất | `warehouse_db` |
+| Username | `warehouse` |
+| Password | `warehouse123` |
+
+Chạy ở thư mục gốc bằng `docker compose up -d --build --wait`, vào `http://localhost:3000`. Adminer: `http://localhost:8080`, hệ quản trị MySQL, server `mysql`, tài khoản và database theo bảng trên. Docker tải các image công khai, build ứng dụng, tạo schema và dữ liệu danh mục/tài khoản trên máy mới.
+
+## Cấu trúc đang chạy
+
+```text
+app/
+  src/
+    app.js, server.js
+    modules/        # auth, catalog, customer-orders, business-plans,
+                    # production, purchasing, warehouse, stock-requests,
+                    # quality, stocktakes, tasks, exceptions, returns,
+                    # notifications, reporting
+    boundaries/     # ghép các mô-đun trong cùng tiến trình
+    shared/         # router, session MySQL, migration và tiện ích dùng chung
+    config/         # môi trường, kết nối MySQL, phân quyền, danh mục
+    views/          # EJS
+    images/         # ảnh danh mục và ảnh báo cáo
+  public/           # CSS và JavaScript trình duyệt
+  database/
+    monolith/       # migration đang dùng
+    seeders/        # tạo dữ liệu demo ban đầu, không ghi đè mật khẩu đã đổi
+  Dockerfile        # một Dockerfile ứng dụng
+  docker-compose.yml
+  docker-compose.test.yml
+archive/microservices-20261029/project/ # bản microservice giữ riêng
 ```
 
-Mở **http://localhost:3000**. Compose tự tải image Node/MySQL còn thiếu, cài dependency trong image, tạo secret, khởi tạo/migrate CSDL và tạo tài khoản/danh mục mẫu. Image ứng dụng được build từ mã nguồn, không cần đăng nhập registry riêng. Danh sách tài khoản mới nhất: [DEMO_ACCOUNTS.md](app/docs/DEMO_ACCOUNTS.md), gồm `admin`, `workshop`, `workshop2`, `workshop3`; mật khẩu mẫu `123456`.
+`src/services/domain` và repository bộ nhớ còn phục vụ kiểm thử nghiệp vụ; không phải các tiến trình microservice. Runtime MySQL dùng các lớp tại `src/modules`.
 
-Lần sau chạy `docker compose up -d`; sau `git pull` dùng lại lệnh có `--build`. Các image nội bộ có chính sách build nên `up` cũng kiểm tra build cache. Dữ liệu nằm trong volume trên từng máy, không tự đồng bộ dữ liệu đang dùng qua Git. `docker compose down` giữ dữ liệu; không dùng `down -v` nếu muốn giữ CSDL. Hướng dẫn máy mới và xử lý lỗi: [KHOI_DONG_MAY_MOI.md](app/docs/KHOI_DONG_MAY_MOI.md).
+## Mặt hàng và lô
 
-Máy mới chỉ cần **Git, Docker Desktop đã mở (Linux containers)** và Internet cho lần build đầu. Không cần cài Node.js, npm, MySQL hoặc tự tạo file `.env`/`deploy.env`.
+- `MatHang` chứa thuộc tính chung và loại nguyên vật liệu/thành phẩm. `NguyenVatLieu.MaMatHang` và `ThanhPham.MaMatHang` vừa là khóa chính vừa tham chiếu mặt hàng cha. Thêm mặt hàng tự tạo dòng con đúng loại. Tiêu chuẩn nhập lưu tại nguyên vật liệu; hạn sử dụng mặc định theo ngày lưu tại thành phẩm. Các thuộc tính riêng là tùy chọn.
+- Không có bảng lô nguyên vật liệu và lô thành phẩm độc lập. `LoHang.LoaiLo` phân biệt nguyên vật liệu, thành phẩm, hàng trả. `ChiTietLo` lưu từng mặt hàng/phần giao nhận/ngày sản xuất/hạn dùng. Nhiều phần thành phẩm vẫn cùng đầu lô nhưng kiểm chất lượng và nhập kho riêng.
+- Hướng trả và chứng từ gốc vẫn được giữ để kiểm soát lượng hàng trả. Các bảng tồn, phiếu kho, QC, kiểm kê, phân công và lịch sử là dữ liệu nghiệp vụ riêng, không phải bản sao của mặt hàng.
+- Một số VIEW giữ tên báo cáo/chi tiết để dùng chung một bảng dữ liệu gốc; VIEW không tạo thêm bản sao dữ liệu. Danh sách SQL sinh từ migration ở `app/docs/generated/DATABASE_OBJECTS.md`.
+
+## Mua nguyên vật liệu bắt buộc duyệt
+
+Bộ phận lập kế hoạch lập kế hoạch mua, có thể lập trực tiếp hoặc từ báo cáo nhu cầu. Ban giám đốc phê duyệt. Bộ phận mua hàng chỉ tạo đơn từ kế hoạch mua đã duyệt, chọn nhà cung cấp và giá từng dòng; lượng và ngày nhận lấy đúng kế hoạch. Không còn mua trực tiếp hoặc mua thẳng từ báo cáo để bỏ qua phê duyệt. Giao diện, API và trigger MySQL đều kiểm điều kiện này. Kế hoạch mua trực tiếp đã duyệt không bị buộc phải có báo cáo sản xuất.
+
+## Dữ liệu và bản cũ
+
+Compose dùng `mono_mysql_data`, không dùng lại hoặc xóa volume microservice cũ. Migration không chạy lại seed để thay mật khẩu hoặc xóa giao dịch mỗi lần khởi động. Không dùng `down -v` khi cần giữ dữ liệu.
+
+Ảnh trong Docker lưu ở volume `mono_images`, gắn tại `/app/src/images` của ứng dụng. Upload qua giao diện, không cần chép ảnh thủ công. Để sao lưu ảnh ra máy: `docker compose cp app:/app/src/images ./backups/images`. Chạy Node trực tiếp thì ảnh ở `app/src/images` trên máy.
+
+Mã microservice, schema và tài liệu trước chuyển đổi nằm trong `../../archive/microservices-20261029/`. Bản có cấu hình riêng tư nằm trong ZIP tại `../../backups/mono-refactor-20261029/`, không đưa lên Git. Bản mã nguồn không thay thế bản sao dữ liệu MySQL; không tự nhận đã chuyển dữ liệu thật từ các database cũ. Chưa xóa volume cũ.
+
+## Kiểm thử an toàn
 
 ```powershell
-git clone https://github.com/vthaix/WarehouseSystem.git
-cd WarehouseSystem
-docker compose up -d --build --wait
+docker compose -f app/docker-compose.yml -f app/docker-compose.test.yml -p warehouse-mono-review-20261029 up -d --build --wait
+docker compose -f app/docker-compose.yml -f app/docker-compose.test.yml -p warehouse-mono-review-20261029 exec -T -e ACCEPTANCE_MONOLITH=true app node scripts/monolith-acceptance.cjs
 ```
 
-Mở **http://localhost:3000**. Compose tự tải image Node/MySQL còn thiếu, cài dependency trong image, tạo secret, khởi tạo/migrate CSDL và tạo tài khoản/danh mục mẫu. Image ứng dụng được build từ mã nguồn, không cần đăng nhập registry riêng. Danh sách tài khoản mới nhất: [DEMO_ACCOUNTS.md](app/docs/DEMO_ACCOUNTS.md), gồm `admin`, `workshop`, `workshop2`, `workshop3`; mật khẩu mẫu `123456`.
-
-Lần sau chạy `docker compose up -d`; sau `git pull` dùng lại lệnh có `--build`. Các image nội bộ có chính sách build nên `up` cũng kiểm tra build cache. Dữ liệu nằm trong volume trên từng máy, không tự đồng bộ dữ liệu đang dùng qua Git. `docker compose down` giữ dữ liệu; không dùng `down -v` nếu muốn giữ CSDL. Hướng dẫn máy mới và xử lý lỗi: [KHOI_DONG_MAY_MOI.md](app/docs/KHOI_DONG_MAY_MOI.md).
-
-Ứng dụng quản lý kho và sản xuất bánh đóng gói, Express + EJS + MySQL. Cập nhật kiến trúc ngày 14/10/2026: **5 backend HTTP và 1 web gateway**, mỗi service có entrypoint/Dockerfile và database/tài khoản riêng. Sáu database vẫn nằm trên cùng MySQL 8.4 và còn phụ thuộc SQL xuyên schema.
-
-# Tui không deploy database nên muốn xem trực tiếp phải chạy adminer của docker á
-
-```powershell
-docker compose --profile dev up -d adminer 
-```
-
-# Đăng nhập vào adminer bằng cái này nhé
-
-| Service / mục đích | Database | Username (tài khoản) | Password (mật khẩu mặc định) |
-| --- | --- | --- | --- |
-| Identity — tài khoản và xác thực | `KhoHang_Identity` | `identity_db` | `identity123` |
-| Business — đơn hàng, kế hoạch, sản xuất, mua hàng | `KhoHang_Business` | `business_db` | `business123` |
-| Warehouse — kho, QC, nhập/xuất, kiểm kê | `KhoHang_Warehouse` | `warehouse_db` | `warehouse123` |
-| Notification — thông báo | `KhoHang_Notification` | `notification_db` | `notification123` |
-| Reporting — báo cáo | `KhoHang_Reporting` | `reporting_db` | `reporting123` |
-| Web gateway — phiên đăng nhập | `KhoHang_Gateway` | `gateway_db` | `gateway123` |
-| Database nguồn cũ / khởi tạo migration | `KhoHang` | `warehouse_app` | Không cố định; được lưu trong secret `db_password` |
-
-# Danh sách tài khoản nhé
-
-| Tài khoản | Mật khẩu mẫu | Vai trò | Mã vai trò |
-| --- | --- | --- | --- |
-| `customer` | `123456` | Khách hàng | `CUSTOMER` |
-| `customer2` | `123456` | Khách hàng thứ hai | `CUSTOMER` |
-| `planner` | `123456` | Bộ phận lập kế hoạch | `PLANNER` |
-| `purchaser` | `123456` | Bộ phận mua hàng | `PURCHASER` |
-| `manager` | `123456` | Quản lý kho | `WAREHOUSE_MANAGER` |
-| `staff` | `123456` | Nhân viên kho | `WAREHOUSE_STAFF` |
-| `staff2` | `123456` | Nhân viên kho thứ hai | `WAREHOUSE_STAFF` |
-| `qc` | `123456` | Bộ phận QC/AC | `QC_INSPECTOR` |
-| `stocktaker` | `123456` | Ban kiểm kê | `STOCKTAKER` |
-| `workshop` | `123456` | Chủ xưởng | `WORKSHOP_OWNER` |
-| `director` | `123456` | Ban giám đốc | `DIRECTOR` |
-
-
-Giao diện: http://localhost:3000. Adminer: http://localhost:8080 khi bật profile dev. Backend và MySQL không publish cổng ra host. Không cần cài Node/MySQL riêng để chạy Docker.
-
-## Quy ước mã chứng từ
-
-Mã sinh mới gồm loại chứng từ, tên khách hàng hoặc nguồn liên quan đã bỏ dấu, và số thứ tự. Ví dụ đơn hàng thứ hai của Trần Văn A là `DH-TRANVANA-02`; kế hoạch sản xuất đầu tiên cho đơn đó là `KHSX-TRANVANA-02`. Nếu một đơn có nhiều kế hoạch, kế hoạch tiếp theo thêm số thứ tự kế hoạch, như `KHSX-TRANVANA-02-02`. Báo cáo sản xuất dùng `BCSX`, báo cáo thành phẩm dùng `BCTP`; các phiếu kho, kiểm kê, QC và công việc có tiền tố nghiệp vụ và phần nhận diện nguồn.
-
-Giao diện trình bày mã dễ đọc cho các đơn hàng, kế hoạch và báo cáo cũ. Mã lưu trong lịch sử cũ được giữ nguyên để các thông báo và chứng từ đã phát hành vẫn đối chiếu được.
-
-Tài khoản demo: customer, customer2, planner, purchaser, manager, staff, staff2, qc, stocktaker, workshop, director; mật khẩu mặc định 123456 khi khởi tạo mới. Dữ liệu lưu trong Docker volumes; `docker compose down` giữ dữ liệu. Build lại không reset database hoặc seed đè dữ liệu đang dùng.
-
-- [Kiến trúc và giới hạn hiện tại](app/docs/ARCHITECTURE.md)
-- [CSDL theo service](app/docs/SERVICE_DATABASES.md)
-- [Chạy Docker](app/docs/DOCKER.md)
-- [Tiến độ triển khai](app/docs/IMPLEMENTATION_PROGRESS.md)
-- [Việc còn thiếu](app/docs/IMPLEMENTATION_BACKLOG.md)
-- [Đặc tả nghiệp vụ](app/docs/SRS.md)
-- [Danh mục tài liệu](app/docs/README.md)
-
-Chưa công nhận hoàn thành toàn bộ UC hoặc sẵn sàng production. Runtime legacy còn trong mã để đối chiếu/test; Compose mặc định chạy các service riêng.
+Bản kiểm thử dùng project và volume riêng; giao diện ở cổng 3310. Chỉ chạy các bộ kiểm thử ghi dữ liệu trên bản thử riêng này. Xem báo cáo thực thi để biết bộ nào đã chạy đạt; không coi có đặc tả hoặc có mã là đã kiểm thử mọi trường hợp.

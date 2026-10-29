@@ -1,29 +1,16 @@
-# Dữ liệu dựng sẵn để test từng UC độc lập
+# Dữ liệu test từng UC của bản mono
 
-Cập nhật 17/10/2026. Script `scripts/seed-demo-workflows.cjs` dựng **36 bộ dữ liệu theo trạng thái**, thông qua API thật sau khi các service đã sẵn sàng. Không cần làm lại toàn bộ luồng chỉ để thử tiếp nhận đơn, phê duyệt, QC hay nhập/xuất.
-
-## Cách khởi tạo trên máy mới
-
-Hiệu chỉnh đơn vị bánh mẫu: `TP-001`…`TP-005` là gói; `TP-DEMO-01` và `TP-DEMO-03` là hộp; `TP-DEMO-02` là gói. Job demo chỉ sửa nhãn đơn vị `cái` bị gán sai của các mã này, không quy đổi lượng và không thay đơn vị người dùng đã chỉnh sang loại khác. Phần tạo chứng từ vẫn giữ checkpoint như trước.
-
-Bổ sung 22/10/2026: job demo tạo ba mặt hàng đang công bố để khách thử UC-02: `TP-DEMO-01` bánh quy bơ hộp 200g (45.000đ), `TP-DEMO-02` bánh bông lan đóng gói 120g (22.000đ), `TP-DEMO-03` bánh quy cacao hộp 200g (49.000đ). Mở **Đặt hàng** trên menu khách hàng hoặc `/customer/orders/create`. Các mặt hàng được tạo qua API, có checkpoint chống tạo lại; không ghi đè dữ liệu đã chỉnh sửa. Công thức trong `src/config/production-recipes.json` chỉ minh họa phục vụ kiểm thử kế hoạch SX, cần xác nhận định lượng thực tế trước sử dụng chính thức.
-
-Tại thư mục gốc:
+Mặc định máy mới có tài khoản, 3 xưởng và danh mục bánh. Các chứng từ mẫu chỉ được tạo khi chủ động chạy:
 
 ```powershell
-$env:SEED_WORKFLOWS="true"
-docker compose logs --tail=60 demo-fixtures
+docker compose exec -T -e SEED_DEMO=true app node scripts/seed-demo-workflows.cjs
+docker compose exec -T app node scripts/verify-demo-fixtures.cjs
 ```
 
-Đợi log **DEMO WORKFLOWS READY: 36 independent fixtures**. Service `demo-fixtures` chỉ báo healthy sau khi dựng xong, vì vậy `--wait` chờ cả dữ liệu sẵn sàng. Sau đó tiến trình chờ nhẹ để duy trì trạng thái health, không tiếp tục ghi hoặc reset dữ liệu.
+Công cụ dựng 36 bộ trạng thái bằng API thật. Đơn mua mẫu cũng phải có kế hoạch mua đã được duyệt. Chạy lại dùng checkpoint, không tự đặt lại trạng thái đã test. Nút xóa dữ liệu test sao lưu rồi xóa các chứng từ và chuyển checkpoint sang thư mục lưu; giữ tài khoản, danh mục và đơn vị hiện có.
 
-Nếu cần chạy job bằng tay khi ứng dụng đã sẵn sàng:
+Công cụ không đổi đơn vị của các mặt hàng đã có. Ba mặt hàng TP-DEMO tùy chọn dùng đơn vị hộp hoặc gói theo tên sản phẩm. Ảnh danh mục nằm trong `app/src/images/categories`; ảnh báo cáo trong `app/src/images/production-reports`.
 
-```powershell
-docker compose run --rm --no-deps -T -e SEED_DEMO=true demo-fixtures node scripts/seed-demo-workflows.cjs
-```
-
-Từ 22/10/2026, chứng từ mẫu mặc định TẮT (`SEED_WORKFLOWS=false`) để test từ đầu. Chỉ bật `SEED_WORKFLOWS=true` khi chủ động cần 36 bộ chứng từ. `SEED_DEMO` của migrate vẫn dùng cho tài khoản/danh mục nền. Nếu SEED_DEMO=false hoặc NODE_ENV=production thì bỏ qua và vẫn báo ready. Sau khi tạo thành công, chạy lại giữ nguyên dữ liệu đã test, không reset trạng thái hoặc tạo lại bản đã xóa. Checkpoint nằm trong volume database_backups, theo định danh lần khởi tạo CSDL.
 
 ## Chọn bộ dữ liệu theo UC
 
@@ -80,7 +67,7 @@ Các kho kiểm kê là kho riêng DEMO-KK-…; những đợt đang mở khóa 
 
 ## Kiểm chứng dữ liệu khởi tạo
 
-Đã chạy trên CSDL hiện có và một project Docker/volume mới độc lập: tạo đủ 36 nhóm, kiểm tra trạng thái nguồn, phiếu/tồn và chênh lệch kiểm kê. Chạy lại trên volume mới không thay đổi số dòng các bảng nghiệp vụ Business/Warehouse. Bộ nghiệm thu MySQL microservice và 51 test tự động tiếp tục đạt.
+Đã dựng đủ 36 nhóm trên project mono thử nghiệm, kiểm tra trạng thái nguồn, phiếu/tồn và chênh lệch kiểm kê. Chạy lại không tăng số dòng chứng từ nghiệp vụ; bộ đếm phiên, đăng nhập, nhật ký và thông báo được tách khỏi phép so sánh số chứng từ. Kết quả mới xem MONOLITH_TEST_RESULTS.md.
 
 Ngay sau khi khởi tạo, trước khi tự thay đổi fixture, có thể kiểm tra:
 
@@ -88,7 +75,7 @@ Ngay sau khi khởi tạo, trước khi tự thay đổi fixture, có thể ki�
 docker compose exec -T demo-fixtures node scripts/verify-demo-fixtures.cjs
 ```
 
-Nếu đã tiếp nhận/duyệt/xóa chứng từ mẫu, verifier có thể báo khác trạng thái ban đầu; đó không phải lệnh reset. Trong quá trình dựng fixture đã sửa TaskService để khóa lịch bằng advisory lock và đọc dữ liệu Identity với quyền SELECT, thay cho khóa FOR UPDATE cần quyền ghi lên Identity; không cấp thêm quyền sửa tài khoản cho Warehouse.
+Nếu đã tiếp nhận, duyệt hoặc xóa chứng từ mẫu, verifier có thể báo khác trạng thái ban đầu; đây không phải lệnh reset. Mỗi nhóm chỉ được dựng khi chưa có checkpoint của nhóm đó. Sau khi xóa dữ liệu test, công cụ tái sử dụng danh mục còn giữ thay vì tạo trùng mã danh mục.
 
 ## Ảnh upload ở đâu?
 
@@ -97,8 +84,8 @@ Nếu đã tiếp nhận/duyệt/xóa chứng từ mẫu, verifier có thể bá
 | Cách chạy | Nơi lưu file đã upload |
 | --- | --- |
 | Node trực tiếp | `app/src/images/categories/` mặc định; có thể cấu hình CATEGORY_IMAGE_DIR |
-| Docker Compose | `/app/src/images/categories/` bên trong gateway, được lưu lâu dài trong named volume `warehouse-system_category_images` theo tên project mặc định |
+| Docker Compose | `/app/src/images/categories/` trong ứng dụng mono, lưu tại volume `mono_images` |
 
-Khi chạy Docker, ảnh không tự xuất hiện trong thư mục source trên Windows vì đó là named volume. Tên ảnh được hệ thống tạo ngẫu nhiên; đường dẫn lưu trên danh mục là `/images/categories/<tên-file>`. Chỉ nhận PNG/JPEG/WebP tối đa 5 MB. Business mount ảnh ở chế độ đọc để xác nhận file tồn tại.
+Ảnh tải lên trong Docker được lưu ở volume; dùng `docker compose cp app:/app/src/images ./backups/images` nếu muốn chép ra máy. Tên ảnh được hệ thống tạo ngẫu nhiên; đường dẫn trên danh mục là `/images/categories/<tên-file>`. Chỉ nhận PNG/JPEG/WebP tối đa 5 MB. Ứng dụng kiểm tra file trước khi lưu liên kết vào danh mục.
 
 Không tự điền đường dẫn `C:\...` vào thuộc tính ảnh và không chỉ chép ảnh tùy tên vào thư mục rồi coi là đã liên kết với danh mục. Muốn máy khác có cùng ảnh đã upload, cần chuyển volume/bản sao ảnh riêng; Git chỉ giữ `.gitkeep`. Xem [CATEGORY_IMAGES.md](CATEGORY_IMAGES.md).

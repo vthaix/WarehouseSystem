@@ -1,0 +1,198 @@
+﻿docker :  Image warehouse-monolith:local Building 
+At line:2 char:1
++ docker compose up -d --build --wait --wait-timeout 240 *> backups/mon ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( Image warehous...local Building :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ Image warehouse-monolith:local Building 
+ Image warehouse-monolith:local Building 
+ Image warehouse-monolith:local Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 2.23kB done
+#1 DONE 0.0s
+
+#2 [migrate internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.03kB done
+#2 DONE 0.0s
+
+#3 [seed internal] load metadata for docker.io/library/node:24-bookworm-slim
+#3 DONE 0.9s
+
+#4 [seed internal] load .dockerignore
+#4 transferring context: 301B done
+#4 DONE 0.0s
+
+#5 [setup dependencies 1/4] FROM docker.io/library/node:24-bookworm-slim@sha256:c86ecead9e55a5210ac1727de38a4ca840bf03dcaf34dc9749addbf383b1920c
+#5 resolve docker.io/library/node:24-bookworm-slim@sha256:c86ecead9e55a5210ac1727de38a4ca840bf03dcaf34dc9749addbf383b1920c 0.0s done
+#5 DONE 0.0s
+
+#6 [app internal] load build context
+#6 transferring context: 24.83kB 0.0s done
+#6 DONE 0.0s
+
+#7 [migrate runtime 6/9] COPY --chown=node:node public ./public
+#7 CACHED
+
+#8 [migrate dependencies 4/4] RUN npm ci --omit=dev --ignore-scripts && npm cache clean --force
+#8 CACHED
+
+#9 [migrate dependencies 3/4] COPY package.json package-lock.json ./
+#9 CACHED
+
+#10 [migrate runtime 3/9] COPY --from=dependencies --chown=node:node /app/node_modules ./node_modules
+#10 CACHED
+
+#11 [migrate runtime 4/9] COPY --chown=node:node package.json package-lock.json ./
+#11 CACHED
+
+#12 [migrate runtime 5/9] COPY --chown=node:node src ./src
+#12 CACHED
+
+#13 [migrate dependencies 2/4] WORKDIR /app
+#13 CACHED
+
+#14 [migrate runtime 7/9] COPY --chown=node:node database ./database
+#14 CACHED
+
+#15 [setup runtime 8/9] COPY --chown=node:node scripts ./scripts
+#15 DONE 0.0s
+
+#15 [app runtime 8/9] COPY --chown=node:node scripts ./scripts
+#15 DONE 0.0s
+
+#16 [seed runtime 9/9] RUN mkdir -p /var/lib/warehouse-app-secrets /var/lib/warehouse-mysql-secrets /var/backups/warehouse && chown node:node /var/lib/warehouse-app-secrets /var/lib/warehouse-mysql-secrets /var/backups/warehouse
+#16 DONE 0.2s
+
+#16 [migrate runtime 9/9] RUN mkdir -p /var/lib/warehouse-app-secrets /var/lib/warehouse-mysql-secrets /var/backups/warehouse && chown node:node /var/lib/warehouse-app-secrets /var/lib/warehouse-mysql-secrets /var/backups/warehouse
+#16 DONE 0.2s
+
+#17 [seed] exporting to image
+#17 exporting layers
+#17 exporting layers 0.2s done
+#17 exporting manifest sha256:70a52e795e883de3e8eff721e84c046babbe8acf2c34903d1cb24310fb16a275 0.1s done
+#17 exporting config sha256:60dee7a3ea207517122e22f8292f8aecc3c8c67742f36cbe42147e82eabe418a
+#17 exporting config sha256:60dee7a3ea207517122e22f8292f8aecc3c8c67742f36cbe42147e82eabe418a 0.1s done
+#17 exporting attestation manifest sha256:b3a5bef99fa1db0538627a6ff211be69a5be9b10a5854a2fb2cba2ccdcfc4cd6
+#17 exporting attestation manifest sha256:b3a5bef99fa1db0538627a6ff211be69a5be9b10a5854a2fb2cba2ccdcfc4cd6 0.1s done
+#17 exporting manifest list sha256:5b767e8ce2369a549b1187144ea5e33a91959c411f565820d42e19eedda8a14e 0.1s done
+#17 naming to docker.io/library/warehouse-monolith:local
+#17 naming to docker.io/library/warehouse-monolith:local 0.0s done
+#17 unpacking to docker.io/library/warehouse-monolith:local 0.1s done
+#17 DONE 0.6s
+
+#18 [setup] exporting to image
+#18 exporting layers 0.2s done
+#18 exporting manifest sha256:a6b6a33d59be019742c5fc2d7453e2f577096f35a470d81e11ce322def22e71a 0.1s done
+#18 exporting config sha256:4f44e0ba72bcae799eb75fadf38c509de470fa32e26aad39848c98639a617b5e 0.1s done
+#18 exporting attestation manifest sha256:0ecaba73be9ecef92f10d77356f81a6ac4332ac4c6e62c991ca9e7fa3dd8c52a 0.1s done
+#18 exporting manifest list sha256:6a0d7d977f75644ac54b40eea4091d59216eb7e52b3e5675c2fbc7e23b9332a5 0.1s done
+#18 naming to docker.io/library/warehouse-monolith:local 0.0s done
+#18 unpacking to docker.io/library/warehouse-monolith:local 0.1s done
+#18 DONE 0.6s
+
+#19 [app] exporting to image
+#19 exporting layers 0.2s done
+#19 exporting manifest sha256:1fbe8b3928dcda77bc5de8c896a021cf6310d7e2d4b102a24c8d01fd6de835aa 0.1s done
+#19 exporting config sha256:cd7d93ff527bcf441f9cab6ae63025a8f14b356c2334b0e189939713df811919 0.1s done
+#19 exporting attestation manifest sha256:0bd7657d4d56da69ec64158d8a45dd405736a506667528ad6918e7e86356686f 0.1s done
+#19 exporting manifest list sha256:6ff131d80dbab61ee9bd7c84b068e07ba0eaa0d626451ec166a8aef53b4edb86 0.1s done
+#19 naming to docker.io/library/warehouse-monolith:local 0.0s done
+#19 unpacking to docker.io/library/warehouse-monolith:local 0.1s done
+#19 DONE 0.6s
+
+#20 [migrate] exporting to image
+#20 exporting layers 0.2s done
+#20 exporting manifest sha256:ac7e843a82df8f745b436c0c5a45971002586ef39df99dcc7caee26c96537ce7 0.1s done
+#20 exporting config sha256:6d004d65b5e1a5d3c3922cad3173ab02677efa012177ff4833e7c7ddde73b5fa 0.1s done
+#20 exporting attestation manifest sha256:3b045842a79657ee38d0c54d8df1e5de4c129a56cb8062dffed5a745f10f0417 0.1s done
+#20 exporting manifest list sha256:ddb89c85ac093cb989236232237acfe1b34ba53daeb30bd1b6437cb099d492dc 0.1s done
+#20 naming to docker.io/library/warehouse-monolith:local 0.0s done
+#20 unpacking to docker.io/library/warehouse-monolith:local 0.1s done
+#20 DONE 0.7s
+
+#21 [seed] resolving provenance for metadata file
+#21 ...
+
+#22 [app] resolving provenance for metadata file
+#22 DONE 0.1s
+
+#23 [setup] resolving provenance for metadata file
+#23 DONE 0.1s
+
+#21 [seed] resolving provenance for metadata file
+#21 DONE 0.2s
+
+#24 [migrate] resolving provenance for metadata file
+#24 DONE 0.0s
+ Image warehouse-monolith:local Built 
+ Image warehouse-monolith:local Built 
+ Image warehouse-monolith:local Built 
+ Image warehouse-monolith:local Built 
+ Volume warehouse-mono_mono_backups Creating 
+ Volume warehouse-mono_mono_secrets Creating 
+ Volume warehouse-mono_mono_mysql_data Creating 
+ Volume warehouse-mono_mono_mysql_secrets Creating 
+ Volume warehouse-mono_mono_backups Creating 
+ Volume warehouse-mono_mono_mysql_secrets Creating 
+ Volume warehouse-mono_mono_mysql_data Creating 
+ Volume warehouse-mono_mono_secrets Creating 
+ Network warehouse-mono_default Creating 
+ Network warehouse-mono_default Creating 
+ Volume warehouse-mono_mono_mysql_data Created 
+ Volume warehouse-mono_mono_mysql_data Created 
+ Volume warehouse-mono_mono_mysql_secrets Created 
+ Volume warehouse-mono_mono_mysql_secrets Created 
+ Volume warehouse-mono_mono_backups Created 
+ Volume warehouse-mono_mono_backups Created 
+ Volume warehouse-mono_mono_secrets Created 
+ Volume warehouse-mono_mono_secrets Created 
+ Container warehouse-mono-setup-1 Creating 
+ Network warehouse-mono_default Created 
+ Network warehouse-mono_default Created 
+ Container warehouse-mono-setup-1 Created 
+ Container warehouse-mono-mysql-1 Creating 
+ Container warehouse-mono-mysql-1 Created 
+ Container warehouse-mono-adminer-1 Creating 
+ Container warehouse-mono-migrate-1 Creating 
+ Container warehouse-mono-migrate-1 Created 
+ Container warehouse-mono-seed-1 Creating 
+ Container warehouse-mono-adminer-1 Created 
+ Container warehouse-mono-seed-1 Created 
+ Container warehouse-mono-app-1 Creating 
+ Container warehouse-mono-app-1 Created 
+ Container warehouse-mono-setup-1 Starting 
+ Container warehouse-mono-setup-1 Started 
+ Container warehouse-mono-setup-1 Waiting 
+ Container warehouse-mono-setup-1 Exited 
+ Container warehouse-mono-mysql-1 Starting 
+ Container warehouse-mono-mysql-1 Started 
+ Container warehouse-mono-mysql-1 Waiting 
+ Container warehouse-mono-mysql-1 Waiting 
+ Container warehouse-mono-mysql-1 Healthy 
+ Container warehouse-mono-migrate-1 Starting 
+ Container warehouse-mono-mysql-1 Healthy 
+ Container warehouse-mono-adminer-1 Starting 
+ Container warehouse-mono-migrate-1 Started 
+ Container warehouse-mono-migrate-1 Waiting 
+ Container warehouse-mono-adminer-1 Started 
+ Container warehouse-mono-migrate-1 Exited 
+ Container warehouse-mono-seed-1 Starting 
+ Container warehouse-mono-seed-1 Started 
+ Container warehouse-mono-seed-1 Waiting 
+ Container warehouse-mono-seed-1 Exited 
+ Container warehouse-mono-app-1 Starting 
+ Container warehouse-mono-app-1 Started 
+ Container warehouse-mono-migrate-1 Waiting 
+ Container warehouse-mono-seed-1 Waiting 
+ Container warehouse-mono-app-1 Waiting 
+ Container warehouse-mono-adminer-1 Waiting 
+ Container warehouse-mono-setup-1 Waiting 
+ Container warehouse-mono-mysql-1 Waiting 
+ Container warehouse-mono-seed-1 Exited 
+ Container warehouse-mono-mysql-1 Healthy 
+ Container warehouse-mono-migrate-1 Exited 
+ Container warehouse-mono-setup-1 Exited 
+ Container warehouse-mono-adminer-1 Healthy 
+ Container warehouse-mono-app-1 Healthy 
+

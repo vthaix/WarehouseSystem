@@ -1,6 +1,6 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
-const Service=require('../../src/services/warehouse-service/modules/quality/QualityCampaignService');
+const Service=require('../../src/modules/quality/QualityCampaignService');
 function fixture(hasLots=true){
   const writes=[];
   const c={beginTransaction:async()=>{},commit:async()=>{},rollback:async()=>{},release:()=>{},execute:async(sql,args)=>{

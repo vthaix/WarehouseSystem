@@ -1,0 +1,12 @@
+node_modules/
+.env
+.runtime/
+coverage/
+*.log
+backups/
+public/uploads/*
+!public/uploads/.gitkeep
+src/images/categories/*
+!src/images/categories/.gitkeep
+src/images/production-reports/*
+!src/images/production-reports/.gitkeep

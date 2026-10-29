@@ -1,0 +1,316 @@
+# Local application images are built from this checkout, never fetched from a
+# private registry. All helper jobs use the same self-contained build definition.
+x-local-app: &local-app
+  image: warehouse-system-app:${APP_IMAGE_TAG:-local}
+  pull_policy: build
+  build:
+    context: .
+    dockerfile: src/services/web-gateway/Dockerfile
+    target: runtime
+x-db-credentials: &db-credentials
+  IDENTITY_DB_USER: ${IDENTITY_DB_USER:-identity_db}
+  IDENTITY_DB_PASSWORD: ${IDENTITY_DB_PASSWORD:-identity123}
+  BUSINESS_DB_USER: ${BUSINESS_DB_USER:-business_db}
+  BUSINESS_DB_PASSWORD: ${BUSINESS_DB_PASSWORD:-business123}
+  WAREHOUSE_DB_USER: ${WAREHOUSE_DB_USER:-warehouse_db}
+  WAREHOUSE_DB_PASSWORD: ${WAREHOUSE_DB_PASSWORD:-warehouse123}
+  NOTIFICATION_DB_USER: ${NOTIFICATION_DB_USER:-notification_db}
+  NOTIFICATION_DB_PASSWORD: ${NOTIFICATION_DB_PASSWORD:-notification123}
+  REPORTING_DB_USER: ${REPORTING_DB_USER:-reporting_db}
+  REPORTING_DB_PASSWORD: ${REPORTING_DB_PASSWORD:-reporting123}
+  GATEWAY_DB_USER: ${GATEWAY_DB_USER:-gateway_db}
+  GATEWAY_DB_PASSWORD: ${GATEWAY_DB_PASSWORD:-gateway123}
+x-service-env: &service-env
+  NODE_ENV: ${NODE_ENV:-development}
+  HOST: 0.0.0.0
+  PORT: "3000"
+  STORAGE_DRIVER: mysql
+  DB_HOST: mysql
+  DB_PORT: "3306"
+  DB_NAME: ${DB_NAME:-KhoHang}
+  DB_USER: ${DB_USER:-warehouse_app}
+  DB_PASSWORD_FILE: /run/warehouse-app-secrets/db_password
+  INTERNAL_SECRET_FILE: /run/warehouse-app-secrets/internal_secret
+  IDENTITY_SERVICE_URL: http://identity-service:3000
+  BUSINESS_SERVICE_URL: http://business-service:3000
+  WAREHOUSE_SERVICE_URL: http://warehouse-service:3000
+  NOTIFICATION_SERVICE_URL: http://notification-service:3000
+  REPORTING_SERVICE_URL: http://reporting-service:3000
+  SERVICE_TIMEOUT_MS: "15000"
+  AUTO_MIGRATE: "false"
+  SEED_DEMO: "false"
+  SERVICE_DB_LAYOUT: split
+x-backend: &backend
+  pull_policy: build
+  init: true
+  environment: *service-env
+  volumes:
+    - app_secrets:/run/warehouse-app-secrets:ro
+  depends_on:
+    split-databases:
+      condition: service_completed_successfully
+  healthcheck:
+    test: ["CMD", "node", "scripts/healthcheck.cjs"]
+    interval: 10s
+    timeout: 5s
+    retries: 6
+    start_period: 30s
+  networks: [backend]
+  restart: unless-stopped
+  stop_grace_period: 20s
+services:
+  setup:
+    <<: *local-app
+    command: ["node", "scripts/setup-secrets.cjs"]
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD:-}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-}
+      SESSION_SECRET: ${SESSION_SECRET:-}
+      INTERNAL_SECRET: ${INTERNAL_SECRET:-}
+      DEMO_PASSWORD: ${DEMO_PASSWORD:-}
+    volumes:
+      - app_secrets:/var/lib/warehouse-app-secrets
+      - mysql_secrets:/var/lib/warehouse-mysql-secrets
+    restart: "no"
+    network_mode: none
+  mysql:
+    image: mysql:8.4
+    pull_policy: missing
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--default-time-zone=+00:00", "--log-bin-trust-function-creators=1"]
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-KhoHang}
+      MYSQL_USER: ${DB_USER:-warehouse_app}
+      MYSQL_PASSWORD_FILE: /run/warehouse-mysql-secrets/db_password
+      MYSQL_ROOT_PASSWORD_FILE: /run/warehouse-mysql-secrets/root_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - mysql_secrets:/run/warehouse-mysql-secrets:ro
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=$$(cat /run/warehouse-mysql-secrets/db_password) mysql --protocol=TCP -h 127.0.0.1 -u\"$$MYSQL_USER\" -D\"$$MYSQL_DATABASE\" -e 'SELECT 1' >/dev/null"]
+      interval: 5s
+      timeout: 5s
+      retries: 24
+      start_period: 40s
+    networks: [backend]
+    restart: unless-stopped
+  migrate:
+    <<: *local-app
+    command: ["node", "scripts/bootstrap-database.cjs"]
+    environment:
+      <<: *service-env
+      DEMO_PASSWORD_FILE: /run/warehouse-app-secrets/demo_password
+      SEED_DEMO: ${SEED_DEMO:-true}
+      SERVICE_DB_LAYOUT: legacy
+    volumes:
+      - app_secrets:/run/warehouse-app-secrets:ro
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks: [backend]
+    restart: "no"
+  split-databases:
+    <<: *local-app
+    user: "0:0"
+    command: ["node", "scripts/split-service-databases.cjs"]
+    environment:
+      <<: [*service-env, *db-credentials]
+      MYSQL_ROOT_PASSWORD_FILE: /run/warehouse-mysql-secrets/root_password
+      SEED_DEMO: ${SEED_DEMO:-true}
+      DEMO_PASSWORD_FILE: /run/warehouse-app-secrets/demo_password
+    volumes:
+      - app_secrets:/run/warehouse-app-secrets:ro
+      - mysql_secrets:/run/warehouse-mysql-secrets:ro
+      - database_backups:/var/backups/warehouse
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    networks: [backend]
+    restart: "no"
+  identity-service:
+    <<: *backend
+    environment:
+      <<: *service-env
+      DB_NAME: ${DB_NAME:-KhoHang}_Identity
+      DB_USER: ${IDENTITY_DB_USER:-identity_db}
+      DB_PASSWORD: ${IDENTITY_DB_PASSWORD:-identity123}
+      DB_PASSWORD_FILE: ""
+    image: warehouse-system-identity-service:${APP_IMAGE_TAG:-local}
+    build:
+      context: .
+      dockerfile: src/services/identity-service/Dockerfile
+      target: runtime
+
+  business-service:
+    <<: *backend
+    volumes:
+      - app_secrets:/run/warehouse-app-secrets:ro
+      - category_images:/app/src/images:ro
+    environment:
+      <<: *service-env
+      DB_NAME: ${DB_NAME:-KhoHang}_Business
+      DB_USER: ${BUSINESS_DB_USER:-business_db}
+      DB_PASSWORD: ${BUSINESS_DB_PASSWORD:-business123}
+      DB_PASSWORD_FILE: ""
+    image: warehouse-system-business-service:${APP_IMAGE_TAG:-local}
+    build:
+      context: .
+      dockerfile: src/services/business-service/Dockerfile
+      target: runtime
+
+  warehouse-service:
+    <<: *backend
+    environment:
+      <<: *service-env
+      DB_NAME: ${DB_NAME:-KhoHang}_Warehouse
+      DB_USER: ${WAREHOUSE_DB_USER:-warehouse_db}
+      DB_PASSWORD: ${WAREHOUSE_DB_PASSWORD:-warehouse123}
+      DB_PASSWORD_FILE: ""
+    image: warehouse-system-warehouse-service:${APP_IMAGE_TAG:-local}
+    build:
+      context: .
+      dockerfile: src/services/warehouse-service/Dockerfile
+      target: runtime
+
+  notification-service:
+    <<: *backend
+    environment:
+      <<: *service-env
+      DB_NAME: ${DB_NAME:-KhoHang}_Notification
+      DB_USER: ${NOTIFICATION_DB_USER:-notification_db}
+      DB_PASSWORD: ${NOTIFICATION_DB_PASSWORD:-notification123}
+      DB_PASSWORD_FILE: ""
+    image: warehouse-system-notification-service:${APP_IMAGE_TAG:-local}
+    build:
+      context: .
+      dockerfile: src/services/notification-service/Dockerfile
+      target: runtime
+
+  reporting-service:
+    <<: *backend
+    environment:
+      <<: *service-env
+      DB_NAME: ${DB_NAME:-KhoHang}_Reporting
+      DB_USER: ${REPORTING_DB_USER:-reporting_db}
+      DB_PASSWORD: ${REPORTING_DB_PASSWORD:-reporting123}
+      DB_PASSWORD_FILE: ""
+    image: warehouse-system-reporting-service:${APP_IMAGE_TAG:-local}
+    build:
+      context: .
+      dockerfile: src/services/reporting-service/Dockerfile
+      target: runtime
+  app:
+    <<: *backend
+    volumes:
+      - app_secrets:/run/warehouse-app-secrets:ro
+      - category_images:/app/src/images
+    image: warehouse-system-app:${APP_IMAGE_TAG:-local}
+    build:
+      context: .
+      dockerfile: src/services/web-gateway/Dockerfile
+      target: runtime
+    environment:
+      <<: *service-env
+      DB_NAME: ${DB_NAME:-KhoHang}_Gateway
+      DB_USER: ${GATEWAY_DB_USER:-gateway_db}
+      DB_PASSWORD: ${GATEWAY_DB_PASSWORD:-gateway123}
+      DB_PASSWORD_FILE: ""
+      SESSION_SECRET_FILE: /run/warehouse-app-secrets/session_secret
+      DEMO_PASSWORD_FILE: /run/warehouse-app-secrets/demo_password
+      SEED_DEMO: ${SEED_DEMO:-true}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      ENABLE_TEST_RESET: ${ENABLE_TEST_RESET:-true}
+      TEST_RESET_URL: http://test-reset:3000
+      TRUST_PROXY: ${TRUST_PROXY:-0}
+    ports:
+      - "${APP_BIND_ADDRESS:-127.0.0.1}:${APP_PORT:-3000}:3000"
+    depends_on:
+      test-reset:
+        condition: service_healthy
+      identity-service:
+        condition: service_healthy
+      business-service:
+        condition: service_healthy
+      warehouse-service:
+        condition: service_healthy
+      notification-service:
+        condition: service_healthy
+      reporting-service:
+        condition: service_healthy
+    networks: [backend, frontend]
+  test-reset:
+    <<: *local-app
+    user: "0:0"
+    command: ["node", "scripts/reset-tools-server.cjs"]
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      ENABLE_TEST_RESET: ${ENABLE_TEST_RESET:-true}
+      DB_NAME: ${DB_NAME:-KhoHang}
+      DB_HOST: mysql
+      INTERNAL_SECRET_FILE: /run/warehouse-app-secrets/internal_secret
+    volumes:
+      - app_secrets:/run/warehouse-app-secrets:ro
+      - mysql_secrets:/run/warehouse-mysql-secrets:ro
+      - database_backups:/var/backups/warehouse
+    depends_on:
+      split-databases:
+        condition: service_completed_successfully
+    networks: [backend]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+  demo-fixtures:
+    <<: *local-app
+    user: "0:0"
+    command: ["node", "scripts/seed-demo-workflows.cjs", "--serve"]
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      SEED_DEMO: ${SEED_WORKFLOWS:-false}
+      DB_NAME: ${DB_NAME:-KhoHang}
+      DB_HOST: mysql
+      DEMO_API_URL: http://app:3000
+      DEMO_PASSWORD_FILE: /run/warehouse-app-secrets/demo_password
+    volumes:
+      - app_secrets:/run/warehouse-app-secrets:ro
+      - mysql_secrets:/run/warehouse-mysql-secrets:ro
+      - database_backups:/var/backups/warehouse
+    depends_on:
+      app:
+        condition: service_healthy
+    networks: [backend]
+    restart: "no"
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('node:fs').accessSync('/tmp/warehouse-demo-ready')"]
+      interval: 2s
+      timeout: 2s
+      start_period: 120s
+      retries: 30
+  adminer:
+    image: adminer:5
+    pull_policy: missing
+    profiles: [dev]
+    environment:
+      ADMINER_DEFAULT_SERVER: mysql
+    ports:
+      - "127.0.0.1:${ADMINER_PORT:-8080}:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks: [backend, frontend]
+    restart: unless-stopped
+networks:
+  backend:
+    internal: true
+  frontend:
+volumes:
+  mysql_data:
+  app_secrets:
+  mysql_secrets:
+  database_backups:
+
+  category_images:

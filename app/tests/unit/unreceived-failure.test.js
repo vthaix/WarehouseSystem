@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { validate } = require('../../src/services/warehouse-service/modules/exceptions/unreceived-failure');
+const { validate } = require('../../src/modules/exceptions/unreceived-failure');
 
 function connection(passed, receipts) {
   let calls = 0;

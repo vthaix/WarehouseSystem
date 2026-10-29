@@ -1,35 +1,21 @@
 {
-  "format": 1,
-  "architecture": "five-backends-and-web-gateway",
-  "databaseIsolation": "shared-mysql-with-cross-schema-dependencies",
+  "format": 2,
+  "architecture": "modular-monolith",
+  "databaseIsolation": "single-mysql-database",
   "serviceMigrations": [
-    "001_split_existing",
-    "002_qualified_views",
-    "003_auto_increment",
-    "004_partial_receipts",
-    "005_quarantine_disposition",
-    "006_stock_qc_correction",
-    "007_category_images",
-    "008_purchase_line_suppliers",
-    "009_planned_qc_sources",
-    "010_finished_report_parts",
-    "011_inspection_assignment_scope",
-    "012_inspection_minutes",
-    "013_minute_exceptions",
-    "014_stock_request_execution_time",
-    "015_inspection_minute_author",
-    "016_workshop_display_names",
-    "017_admin_accounts",
-    "018_bakery_catalog",
-    "019_workshop_accounts"
+    "001_schema.sql",
+    "002_item_inheritance.sql",
+    "003_purchase_approval.sql",
+    "004_item_type_integrity.sql",
+    "005_material_supplier_prices.sql"
   ],
   "services": [
     {
-      "name": "identity-service",
-      "database": "KhoHang_Identity",
-      "user": "identity_db",
-      "entrypoint": "src/services/identity-service/index.js",
-      "dockerfile": "src/services/identity-service/Dockerfile",
+      "name": "warehouse-app",
+      "database": "warehouse_db",
+      "user": "warehouse",
+      "entrypoint": "src/server.js",
+      "dockerfile": "Dockerfile",
       "objects": [
         {
           "name": "NguoiDung",
@@ -228,16 +214,7 @@
               "definition": "int unsigned NOT NULL"
             }
           ]
-        }
-      ]
-    },
-    {
-      "name": "business-service",
-      "database": "KhoHang_Business",
-      "user": "business_db",
-      "entrypoint": "src/services/business-service/index.js",
-      "dockerfile": "src/services/business-service/Dockerfile",
-      "objects": [
+        },
         {
           "name": "KhachHang",
           "kind": "TABLE",
@@ -487,10 +464,6 @@
             {
               "name": "NgayCapNhat",
               "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
-            },
-            {
-              "name": "BangGiaNCC",
-              "definition": "json DEFAULT NULL"
             }
           ]
         },
@@ -1096,155 +1069,6 @@
             }
           ]
         },
-        {
-          "name": "BaoCaoSanXuat",
-          "kind": "VIEW",
-          "columns": []
-        },
-        {
-          "name": "BaoCaoThanhPham",
-          "kind": "VIEW",
-          "columns": []
-        },
-        {
-          "name": "ChiTietNhuCauSanXuat",
-          "kind": "VIEW",
-          "columns": []
-        },
-        {
-          "name": "NguyenLieuSuDung",
-          "kind": "VIEW",
-          "columns": []
-        },
-        {
-          "name": "ThanhPhamKeHoachTuongThich",
-          "kind": "VIEW",
-          "columns": []
-        },
-        {
-          "name": "ChiTietNguyenLieuKeHoachSanXuat",
-          "kind": "VIEW",
-          "columns": []
-        },
-        {
-          "name": "LuuTruBaoCaoThanhPhamTruoc012",
-          "kind": "TABLE",
-          "columns": [
-            {
-              "name": "MaBanGhi",
-              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
-            },
-            {
-              "name": "Ma",
-              "definition": "varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL"
-            },
-            {
-              "name": "MaKeHoachSanXuat",
-              "definition": "bigint unsigned NOT NULL"
-            },
-            {
-              "name": "MaNguoiTao",
-              "definition": "bigint unsigned NOT NULL"
-            },
-            {
-              "name": "NgayHoanThanh",
-              "definition": "date NOT NULL"
-            },
-            {
-              "name": "GhiChu",
-              "definition": "text COLLATE utf8mb4_unicode_ci"
-            },
-            {
-              "name": "TrangThai",
-              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL"
-            },
-            {
-              "name": "NgayGui",
-              "definition": "datetime(6) DEFAULT NULL"
-            },
-            {
-              "name": "PhienBan",
-              "definition": "int NOT NULL"
-            },
-            {
-              "name": "NgayTao",
-              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
-            },
-            {
-              "name": "NgayCapNhat",
-              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
-            }
-          ]
-        },
-        {
-          "name": "LuuTruNguyenLieuKeHoachTruoc009",
-          "kind": "TABLE",
-          "columns": [
-            {
-              "name": "MaBanGhi",
-              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
-            },
-            {
-              "name": "MaKeHoachSanXuat",
-              "definition": "bigint unsigned NOT NULL"
-            },
-            {
-              "name": "MaMatHang",
-              "definition": "bigint unsigned NOT NULL"
-            },
-            {
-              "name": "SoLuongCan",
-              "definition": "decimal(18,3) NOT NULL"
-            },
-            {
-              "name": "NgayTao",
-              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
-            },
-            {
-              "name": "NgayCapNhat",
-              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
-            }
-          ]
-        },
-        {
-          "name": "LuuTruNguyenLieuSuDungTruoc012",
-          "kind": "TABLE",
-          "columns": [
-            {
-              "name": "MaBanGhi",
-              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
-            },
-            {
-              "name": "MaBaoCaoThanhPham",
-              "definition": "bigint unsigned NOT NULL"
-            },
-            {
-              "name": "MaMatHang",
-              "definition": "bigint unsigned NOT NULL"
-            },
-            {
-              "name": "SoLuongSuDung",
-              "definition": "decimal(18,3) NOT NULL"
-            },
-            {
-              "name": "NgayTao",
-              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
-            },
-            {
-              "name": "NgayCapNhat",
-              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "warehouse-service",
-      "database": "KhoHang_Warehouse",
-      "user": "warehouse_db",
-      "entrypoint": "src/services/warehouse-service/index.js",
-      "dockerfile": "src/services/warehouse-service/Dockerfile",
-      "objects": [
         {
           "name": "Kho",
           "kind": "TABLE",
@@ -2130,11 +1954,6 @@
           ]
         },
         {
-          "name": "BienBanKiemKe",
-          "kind": "VIEW",
-          "columns": []
-        },
-        {
           "name": "PhanCongKetLuanKiemKe",
           "kind": "TABLE",
           "columns": [
@@ -2727,61 +2546,6 @@
           ]
         },
         {
-          "name": "LuuTruBienBanKiemKeTruoc015",
-          "kind": "TABLE",
-          "columns": [
-            {
-              "name": "MaBanGhi",
-              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
-            },
-            {
-              "name": "Ma",
-              "definition": "varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL"
-            },
-            {
-              "name": "MaKhoKiemKe",
-              "definition": "bigint unsigned NOT NULL"
-            },
-            {
-              "name": "MaNguoiTao",
-              "definition": "bigint unsigned NOT NULL"
-            },
-            {
-              "name": "TrangThai",
-              "definition": "varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL"
-            },
-            {
-              "name": "NhanXet",
-              "definition": "text COLLATE utf8mb4_unicode_ci NOT NULL"
-            },
-            {
-              "name": "NgayGui",
-              "definition": "datetime(6) DEFAULT NULL"
-            },
-            {
-              "name": "PhienBan",
-              "definition": "int NOT NULL"
-            },
-            {
-              "name": "NgayTao",
-              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
-            },
-            {
-              "name": "NgayCapNhat",
-              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "notification-service",
-      "database": "KhoHang_Notification",
-      "user": "notification_db",
-      "entrypoint": "src/services/notification-service/index.js",
-      "dockerfile": "src/services/notification-service/Dockerfile",
-      "objects": [
-        {
           "name": "ThongBao",
           "kind": "TABLE",
           "columns": [
@@ -2826,60 +2590,7 @@
               "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
             }
           ]
-        }
-      ]
-    },
-    {
-      "name": "reporting-service",
-      "database": "KhoHang_Reporting",
-      "user": "reporting_db",
-      "entrypoint": "src/services/reporting-service/index.js",
-      "dockerfile": "src/services/reporting-service/Dockerfile",
-      "objects": [
-        {
-          "name": "HoSoKho",
-          "kind": "VIEW",
-          "columns": []
         },
-        {
-          "name": "LuuTruHoSoKhoTruoc013",
-          "kind": "TABLE",
-          "columns": [
-            {
-              "name": "MaBanGhi",
-              "definition": "bigint unsigned NOT NULL AUTO_INCREMENT"
-            },
-            {
-              "name": "MaYeuCauKho",
-              "definition": "bigint unsigned NOT NULL"
-            },
-            {
-              "name": "MaNguoiPhuTrach",
-              "definition": "bigint unsigned NOT NULL"
-            },
-            {
-              "name": "GhiChu",
-              "definition": "text COLLATE utf8mb4_unicode_ci"
-            },
-            {
-              "name": "NgayTao",
-              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)"
-            },
-            {
-              "name": "NgayCapNhat",
-              "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "web-gateway",
-      "database": "KhoHang_Gateway",
-      "user": "gateway_db",
-      "entrypoint": "src/services/web-gateway/index.js",
-      "dockerfile": "src/services/web-gateway/Dockerfile",
-      "objects": [
         {
           "name": "PhienDangNhap",
           "kind": "TABLE",
@@ -2897,6 +2608,78 @@
               "definition": "json NOT NULL"
             }
           ]
+        },
+        {
+          "name": "BaoCaoSanXuat",
+          "kind": "VIEW",
+          "columns": []
+        },
+        {
+          "name": "BaoCaoThanhPham",
+          "kind": "VIEW",
+          "columns": []
+        },
+        {
+          "name": "ChiTietNhuCauSanXuat",
+          "kind": "VIEW",
+          "columns": []
+        },
+        {
+          "name": "NguyenLieuSuDung",
+          "kind": "VIEW",
+          "columns": []
+        },
+        {
+          "name": "ThanhPhamKeHoachTuongThich",
+          "kind": "VIEW",
+          "columns": []
+        },
+        {
+          "name": "ChiTietNguyenLieuKeHoachSanXuat",
+          "kind": "VIEW",
+          "columns": []
+        },
+        {
+          "name": "BienBanKiemKe",
+          "kind": "VIEW",
+          "columns": []
+        },
+        {
+          "name": "HoSoKho",
+          "kind": "VIEW",
+          "columns": []
+        },
+        {
+          "name": "NguyenVatLieu",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaMatHang",
+              "definition": "BIGINT UNSIGNED PRIMARY KEY"
+            },
+            {
+              "name": "TieuChuanNhap",
+              "definition": "VARCHAR(1000) NULL"
+            },
+            {
+              "name": "BangGiaNCC",
+              "definition": "JSON NULL"
+            }
+          ]
+        },
+        {
+          "name": "ThanhPham",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaMatHang",
+              "definition": "BIGINT UNSIGNED PRIMARY KEY"
+            },
+            {
+              "name": "HanSuDungMacDinhNgay",
+              "definition": "INT UNSIGNED NULL"
+            }
+          ]
         }
       ]
     }
@@ -2905,991 +2688,991 @@
     {
       "method": "GET",
       "path": "/auth/csrf",
-      "owner": "web-gateway / identity-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/auth/login",
-      "owner": "web-gateway / identity-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/auth/me",
-      "owner": "web-gateway / identity-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/auth/logout",
-      "owner": "web-gateway / identity-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/material-price-options",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/material-prices",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/material-prices/:id",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "PATCH",
       "path": "/material-prices/:id",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/account-options",
-      "owner": "identity-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/accounts",
-      "owner": "identity-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/accounts/:id",
-      "owner": "identity-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/accounts",
-      "owner": "identity-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "PATCH",
       "path": "/accounts/:id",
-      "owner": "identity-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "DELETE",
       "path": "/accounts/:id",
-      "owner": "identity-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/warehouse-lookup",
-      "owner": "reporting-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/stock-request-workflow-sources",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/source-imports/purchase-report-options",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/source-imports/:target",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/customer-return-deliveries",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/customer-returns",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/customer-returns/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/customer-returns",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/customer-returns/:id/receive",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/customer-returns/:id/cancel",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/lot-headers",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/lot-headers/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/function-badges",
-      "owner": "notification-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/inspection-counts",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/inspection-counts/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/tasks/:id/minute-author",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/tasks",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/tasks/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/tasks",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "PATCH",
       "path": "/tasks/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "DELETE",
       "path": "/tasks/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/tasks/:id/progress",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/catalog-data",
-      "owner": "reporting-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/modules",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/sample-items",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/lookup/:resource",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/customer-orders",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/customer-orders/:id",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/customer-orders",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "PATCH",
       "path": "/customer-orders/:id",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/customer-orders/:id/receive",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/customer-orders/:id/review",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/production-plans",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/production-plans/:id/material-comparison",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/production-plans/recipe-estimate",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/production-plans/:id",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/production-plans",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/production-plans/:id/cancel",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "PATCH",
       "path": "/production-plans/:id",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/production-plans/:id/review",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/business-plans",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/business-plans/:id",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/business-plans",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "PATCH",
       "path": "/business-plans/:id",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "DELETE",
       "path": "/business-plans/:id",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/business-plans/:id/review",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/purchase-orders",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/purchase-orders/:id",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/purchase-orders",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/production-reports",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/production-reports/:id",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/production-reports",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "PATCH",
       "path": "/production-reports/:id",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/production-reports/:id/submit",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/finished-reports",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/finished-reports/:id",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/finished-reports",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "PATCH",
       "path": "/finished-reports/:id",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/finished-reports/:id/submit",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/reports/inventory",
-      "owner": "reporting-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/reports/inventory/export",
-      "owner": "reporting-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/reports/stock-documents",
-      "owner": "reporting-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/reports/stock-documents/export",
-      "owner": "reporting-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/reports/stocktakes",
-      "owner": "reporting-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/reports/stocktakes/export",
-      "owner": "reporting-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/quality-campaigns",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/quality-campaign-sources",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/task-inspection-sources",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/quality-campaigns/:id/bind-lots",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/quality-campaigns/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/quality-campaigns",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/quality-campaigns/:id/start",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/quality-campaigns/:id/close",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/stocktakes",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/qc-inspections/:id/correct",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/tasks/:id/cancelAllocation",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/stocktakes",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/stocktakes/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/stocktakes/:id/start",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/stocktakes/:id/close",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/stocktake-minutes",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/stocktake-minutes/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/stocktake-minutes",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "PATCH",
       "path": "/stocktake-minutes/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/stocktake-minutes/:id/submit",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/exception-proposals",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/exception-proposals/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/exception-proposals",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/exception-proposals/:id/review",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/exception-proposals/:id/apply",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/exception-proposals/:id/reinspect",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/stocktake-differences",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/stocktakes/:id/warehouses/:warehouse/lines",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "PATCH",
       "path": "/stocktakes/:id/warehouses/:warehouse/counts",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/stocktakes/:id/warehouses/:warehouse/complete",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/qc-inspections",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/qc-inspections/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/qc-inspections",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "PATCH",
       "path": "/qc-inspections/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "DELETE",
       "path": "/qc-inspections/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/stock-requests",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/stock-requests/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/stock-requests",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "PATCH",
       "path": "/stock-requests/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "DELETE",
       "path": "/stock-requests/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/stock-requests/:id/allocations",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/stock-requests/:id/dispatch",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/stock-documents",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/stock-documents/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/stock-documents",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/warehouse-records",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/warehouse-records/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/warehouse-records",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/categories",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/categories/:id",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/categories",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "PATCH",
       "path": "/categories/:id",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "DELETE",
       "path": "/categories/:id",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/warehouses",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/warehouses/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/warehouses",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "PATCH",
       "path": "/warehouses/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "DELETE",
       "path": "/warehouses/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/warehouse-locations",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/warehouse-locations/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/warehouse-locations",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "PATCH",
       "path": "/warehouse-locations/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "DELETE",
       "path": "/warehouse-locations/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/suppliers",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/suppliers/:id",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/suppliers",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "PATCH",
       "path": "/suppliers/:id",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "DELETE",
       "path": "/suppliers/:id",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/items",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/items/:id",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/items",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "PATCH",
       "path": "/items/:id",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "DELETE",
       "path": "/items/:id",
-      "owner": "business-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/lots",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/lots/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/lots",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "PATCH",
       "path": "/lots/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "DELETE",
       "path": "/lots/:id",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/notifications",
-      "owner": "notification-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/notifications/:id",
-      "owner": "notification-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "PATCH",
       "path": "/notifications/:id/read",
-      "owner": "notification-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/tasks/:id/postTask",
-      "owner": "warehouse-service",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/test-data/reset",
-      "owner": "web-gateway / development test-reset utility",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/production-report-images",
-      "owner": "web-gateway",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "GET",
       "path": "/production-reports/:id/images/:file",
-      "owner": "web-gateway",
+      "owner": "warehouse-app",
       "pending": false
     },
     {
       "method": "POST",
       "path": "/category-images",
-      "owner": "web-gateway",
+      "owner": "warehouse-app",
       "pending": false
     }
   ],

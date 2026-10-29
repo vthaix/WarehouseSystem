@@ -1,0 +1,35 @@
+[
+  {
+    "id": "R-01",
+    "uc": [
+      "UC-04",
+      "UC-27"
+    ],
+    "case": "MUA lập trực tiếp đã duyệt → đơn mua theo kế hoạch",
+    "expected": "201, không bắt buộc báo cáo khi nguồn MUA trực tiếp",
+    "actual": 409,
+    "error": {
+      "code": "INVALID_STATE",
+      "message": "Kế hoạch mua thiếu báo cáo nguồn.",
+      "fields": {}
+    },
+    "status": "CONFIRMED_DEFECT"
+  },
+  {
+    "id": "R-02",
+    "uc": [
+      "UC-04",
+      "UC-32",
+      "UC-27"
+    ],
+    "case": "MUA vượt nguồn đã xác nhận khi lập và duyệt → đơn mua",
+    "expected": "201 theo kế hoạch đã duyệt, hoặc cơ chế xác nhận hợp lệ có giao diện tại purchaser",
+    "actual": 409,
+    "error": {
+      "code": "PLAN_CONFIRMATION_REQUIRED",
+      "message": "Kế hoạch mua vượt nhu cầu nguyên liệu của nguồn. Bạn có muốn tiếp tục với số lượng này không?",
+      "fields": {}
+    },
+    "status": "CONFIRMED_DEFECT"
+  }
+]

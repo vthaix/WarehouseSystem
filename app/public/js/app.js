@@ -230,7 +230,7 @@ async function render() {
   };
   if (report)
     document.querySelector("#export").onclick = () => {
-      location.href = "/api/v1/" + current + "/export?" + filterParams();
+      location.href = "/api/v1/" + current + "/export?format=csv&" + filterParams();
     };
   await loadTable();
 }
@@ -522,7 +522,7 @@ window.addEventListener("DOMContentLoaded", () => {
   });
   document.querySelector("#export")?.addEventListener("click", (e) => {
     e.preventDefault();
-    location.href = "/api/v1/" + current + "/export?" + filterParams();
+    location.href = "/api/v1/" + current + "/export?format=csv&" + filterParams();
   });
   const prev = document.querySelector("#prev"),
     next = document.querySelector("#next");

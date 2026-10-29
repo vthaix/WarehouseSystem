@@ -1,0 +1,11 @@
+﻿{
+    "addedTables":  8,
+    "templateHash":  "2BAE513CB5E275812E8A2AEE32EC10FA3FAD57FED7A9F76801476A48B02F1693",
+    "outputHash":  "77D41D270E67973DA66946BEFCB04323D6E82660532AFA167F7BB98D8949D978",
+    "originalTables":  50,
+    "originalBlocks":  101,
+    "changedPackageEntries":  [
+                                  "word/document.xml"
+                              ],
+    "originalStructureUnchanged":  true
+}

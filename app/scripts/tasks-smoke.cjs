@@ -2,7 +2,7 @@ const assert = require("node:assert/strict"),
   crypto = require("node:crypto");
 require("../src/config/env").loadEnv();
 const { getPool, closePool } = require("../src/config/database");
-const TaskService = require("../src/services/warehouse-service/modules/tasks/TaskService");
+const TaskService = require("../src/modules/tasks/TaskService");
 (async () => {
   if (process.env.NODE_ENV === "production" || process.env.SEED_DEMO !== "true")
     throw Error("Demo only");

@@ -1,0 +1,1467 @@
+[
+    {
+        "title":  null,
+        "id":  "UC-29",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-06",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-06.1",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-06.2",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-06.3",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-07",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-07.1",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-07.2",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-07.3",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-08",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-09",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-13",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-17",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-18",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-19",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-20",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-21",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-25",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-25.1",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-25.2",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "UC-31 Phê duyệt kế hoạch sản xuất",
+        "id":  "UC-31",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-14",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-23",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-24",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-24.1",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-24.2",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-27",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "UC-04 Lập kế hoạch mua/bán/sản xuất",
+        "id":  "UC-04",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-05",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-05.1",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-05.2",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-10",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-11",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-11.01",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-11.02",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-35",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "UC-01 Đăng nhập",
+        "id":  "UC-01",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-12",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-12.1",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "UC-12.2 Điều chỉnh kết quả kiểm tra QC/AC bằng chứng từ bù",
+        "id":  "UC-12.2",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "UC-12.3 Xóa kết quả kiểm tra QC/AC — NGỪNG SỬ DỤNG",
+        "id":  "UC-12.3",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-34",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-15",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-28",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-32",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-02",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-03",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-03.1",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-22",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  null,
+        "id":  "UC-16",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Ghi chú đối soát, UC thay đổi/ngừng dùng và giới hạn kiểm chứng",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục G — Luồng thay thế và ngoại lệ dùng chung",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-001 — app.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-002 — legacy-adapter.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-003 — ownership.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-004 — plan-port.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-005 — category-images.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-006 — database.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-007 — env.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-008 — production-report-images.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-009 — service-credentials.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-010 — service-databases.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-011 — InventoryApiController.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-012 — RecordController.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-013 — auth.middleware.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-014 — csrf.middleware.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-015 — role.middleware.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-016 — ProductRepository.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-017 — web.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-018 — server.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-019 — AuthService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-020 — BusinessPlanService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-021 — BusinessPlanService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-022 — BusinessPlanService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-023 — BusinessPlanService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-024 — BusinessPlanService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-025 — BusinessPlanService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-026 — BusinessPlanService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-027 — BusinessPlanService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-028 — BusinessPlanService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-029 — OrderService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-030 — OrderService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-031 — OrderService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-032 — OrderService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-033 — OrderService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-034 — finished-report-progress.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-035 — FinishedReportService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-036 — FinishedReportService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-037 — FinishedReportService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-038 — FinishedReportService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-039 — FinishedReportService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-040 — FinishedReportService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-041 — FinishedReportService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-042 — FinishedReportService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-043 — ProductionPlanService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-044 — ProductionPlanService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-045 — ProductionPlanService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-046 — ProductionPlanService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-047 — ProductionPlanService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-048 — ProductionPlanService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-049 — ProductionPlanService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-050 — ProductionPlanService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-051 — ProductionReportService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-052 — ProductionReportService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-053 — ProductionReportService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-054 — ProductionReportService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-055 — ProductionReportService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-056 — MaterialCatalogService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-057 — MaterialCatalogService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-058 — MaterialCatalogService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-059 — PurchaseOrderService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-060 — PurchaseOrderService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-061 — PurchaseOrderService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-062 — PurchaseOrderService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-063 — business-flow.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-064 — business-flow.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-065 — business-flow.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-066 — business-flow.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-067 — business-flow.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-068 — business-flow.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-069 — business-flow.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-070 — business-flow.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-071 — business-flow.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-072 — business-flow.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-073 — dispatch.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-074 — dispatch.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-075 — dispatch.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-076 — editing.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-077 — editing.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-078 — inventory.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-079 — inventory.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-080 — inventory.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-081 — inventory.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-082 — inventory.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-083 — inventory.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-084 — inventory.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-085 — lookup.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-086 — service.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-087 — service.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-088 — service.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-089 — workflows.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-090 — workflows.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-091 — workflows.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-092 — workflows.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-093 — workflows.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-094 — workflows.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-095 — workflows.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-096 — workflows.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-097 — workflows.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-098 — workflows.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-099 — workflows.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-100 — workflows.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-101 — workflows.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-102 — workflows.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-103 — workflows.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-104 — workflows.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-105 — workflows.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-106 — AccountService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-107 — AccountService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-108 — AccountService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-109 — AuthService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-110 — UserRepository.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-111 — NotificationService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-112 — PageService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-113 — ProductService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-114 — ReportService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-115 — ReportService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-116 — warehouse-lookup.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-117 — CatalogRepository.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-118 — CatalogService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-119 — CatalogWriteService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-120 — CatalogWriteService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-121 — CatalogWriteService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-122 — CatalogWriteService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-123 — host.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-124 — host.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-125 — runtime.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-126 — transport.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-127 — StockInService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-128 — StockOutService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-129 — ExceptionService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-130 — ExceptionService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-131 — ExceptionService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-132 — ExceptionService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-133 — ExceptionService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-134 — ExceptionService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-135 — ExceptionService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-136 — ExceptionService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-137 — minute-exceptions.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-138 — minute-exceptions.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-139 — minute-exceptions.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-140 — quarantine.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-141 — quarantine.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-142 — quarantine.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-143 — quarantine.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-144 — quarantine.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-145 — remaining-failure.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-146 — unreceived-failure.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-147 — campaign-sources.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-148 — QualityCampaignService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-149 — QualityCampaignService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-150 — QualityCampaignService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-151 — QualityCampaignService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-152 — QualityCampaignService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-153 — QualityService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-154 — QualityService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-155 — QualityService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-156 — QualityService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-157 — QualityService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-158 — QualityService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-159 — CustomerReturnService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-160 — CustomerReturnService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-161 — CustomerReturnService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-162 — CustomerReturnService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-163 — CustomerReturnService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-164 — partial-progress.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-165 — partial-receipt.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-166 — partial-receipt.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-167 — partial-receipt.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-168 — request-workflow.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-169 — request-workflow.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-170 — sale-readiness.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-171 — StockRequestService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-172 — StockRequestService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-173 — StockRequestService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-174 — StockRequestService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-175 — StockRequestService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-176 — StockRequestService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-177 — StockRequestService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-178 — inspection-minutes.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-179 — inspection-minutes.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-180 — StocktakeService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-181 — StocktakeService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-182 — StocktakeService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-183 — StocktakeService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-184 — StocktakeService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-185 — StocktakeService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-186 — StocktakeService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-187 — inspection-scope.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-188 — inspection-task.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-189 — TaskService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-190 — TaskService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-191 — TaskService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-192 — TaskService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-193 — TaskService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-194 — LotService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-195 — LotService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-196 — LotService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-197 — LotService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-198 — LotService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-199 — WarehouseFlowService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-200 — WarehouseFlowService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-201 — WarehouseFlowService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-202 — WarehouseFlowService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-203 — WarehouseFlowService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-204 — WarehouseFlowService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-205 — WarehouseFlowService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-206 — WarehouseFlowService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-207 — WarehouseFlowService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-208 — WarehouseFlowService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-209 — WarehouseFlowService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-210 — WarehouseRecordService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-211 — WarehouseRecordService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-212 — available-stock.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-213 — CategoryImageRoutes.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-214 — create-mysql-app.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-215 — FoundationPageController.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-216 — FoundationWebRoutes.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-217 — migrations.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-218 — ModuleRoutes.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-219 — ModuleRoutes.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-220 — ModuleRoutes.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-221 — planning-confirmation.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-222 — planning-dates.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-223 — production-recipes.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-224 — ProductionReportImageRoutes.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-225 — qc-schedule-dates.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-226 — runtime.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-227 — SourceImportService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-228 — SourceImportService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-229 — SourceImportService.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-230 — TestResetRoutes.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-231 — pagination.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-232 — inventory.validator.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "Phụ lục BR-233 — product.validator.js",
+        "id":  null,
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "UC-BS-01 Quản lý tài khoản và phân quyền",
+        "id":  "UC-BS-01",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "UC-BS-02 Quản lý đơn vị và giá NVL theo nhà cung cấp",
+        "id":  "UC-BS-02",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "UC-BS-03 Điều phối yêu cầu và phân công kho",
+        "id":  "UC-BS-03",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "UC-BS-04 Ghi nhận lô NVL thực nhận",
+        "id":  "UC-BS-04",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "UC-BS-05 Ghi nhận hàng khách trả và nhận cách ly",
+        "id":  "UC-BS-05",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "UC-BS-06 Điều chỉnh QC hàng đã nhập và xử lý hàng cách ly",
+        "id":  "UC-BS-06",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "UC-BS-07 Xem thông báo và huy hiệu công việc",
+        "id":  "UC-BS-07",
+        "allExpectedContentPresent":  true
+    },
+    {
+        "title":  "UC-BS-08 Xóa dữ liệu thử nghiệm — CHỨC NĂNG TẠM",
+        "id":  "UC-BS-08",
+        "allExpectedContentPresent":  true
+    }
+]

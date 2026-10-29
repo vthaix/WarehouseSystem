@@ -211,7 +211,7 @@
         const suppliers = await options('suppliers');
         const plans = (await options('business-plans')).filter(p => p.type === 'PURCHASE');
         openModal('Mua nguyên vật liệu', formWrap(
-          field('source_mode','select',true,[{id:'MANUAL',name:'Tự nhập nguyên vật liệu cần mua'},{id:'PLAN',name:'Lấy từ kế hoạch mua nguyên vật liệu đã duyệt'}]) +
+          field('source_mode','select',true,[{id:'PLAN',name:'Theo kế hoạch mua nguyên vật liệu đã duyệt'}]) +
           pick('business_plan_id',plans,'Chọn kế hoạch mua nguyên vật liệu') + field('expected_delivery_date','date') +
           field('delivery_terms','textarea') + '<div class="span2" id="import-info"></div><div class="span2" id="import-lines"></div>'
         ));

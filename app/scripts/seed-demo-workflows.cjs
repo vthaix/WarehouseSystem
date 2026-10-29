@@ -4,7 +4,7 @@ const path = require("node:path");
 const crypto = require("node:crypto");
 const mysql = require("mysql2/promise");
 const { wrapSql } = require("../src/config/vietnamese-sql");
-const { tableNames, identifier } = require("../src/config/service-databases");
+const identifier = value => { if(!/^[A-Za-z][A-Za-z0-9_]*$/.test(value))throw Error("Invalid database"); return "`"+value+"`"; };
 require("../src/config/env").loadEnv();
 
 async function main() {
@@ -17,20 +17,17 @@ async function main() {
     );
     return;
   }
-  const source = process.env.DB_NAME || "KhoHang";
+  const source = process.env.DB_NAME || "warehouse_db";
   identifier(source);
   const connection = await mysql.createConnection({
     host: process.env.DB_HOST || "mysql",
     port: Number(process.env.DB_PORT || 3306),
-    user: "root",
-    password: fs
-      .readFileSync("/run/warehouse-mysql-secrets/root_password", "utf8")
-      .trim(),
+    user: process.env.DB_USER, password: process.env.DB_PASSWORD, database: process.env.DB_NAME,
     supportBigNumbers: true,
     bigNumberStrings: true,
     dateStrings: true,
   });
-  const db = wrapSql(connection, tableNames(source + "_Gateway"));
+  const db = wrapSql(connection);
   let locked = false;
   try {
     const [[lock]] = await connection.execute("SELECT GET_LOCK(?,30) n", [
@@ -151,6 +148,15 @@ async function main() {
       });
       saved.body = body;
       save();
+      const catalogTable={categories:'categories',items:'items',warehouses:'warehouses','warehouse-locations':'warehouse_locations'}[endpoint];
+      if(method==='POST'&&catalogTable&&body.code){
+        const [existing]=await db.execute(`SELECT id FROM ${catalogTable} WHERE code=?`+(endpoint==='warehouse-locations'?' AND warehouse_id=?':''),endpoint==='warehouse-locations'?[body.code,body.warehouse_id]:[body.code]);
+        if(existing.length){
+          saved.result=await raw(user,endpoint+'/'+existing[0].id);
+          if(endpoint==='categories'&&body.catalog_kind&&!saved.result.catalog_kind)saved.result=await raw(user,endpoint+'/'+existing[0].id,'PATCH',{catalog_kind:body.catalog_kind});
+          save();return saved.result;
+        }
+      }
       saved.result = await raw(
         saved.user,
         saved.endpoint,
@@ -219,12 +225,14 @@ async function main() {
       async () => {
         const category = await op("cat", "manager", "categories", {
           code: "DEMO-UC",
+          catalog_kind:'FINISHED_PRODUCT',
           name: "Danh mục thử UC",
           description: "Dữ liệu kiểm thử riêng",
           is_active: true,
         });
         const disposable = await op("cat-delete", "manager", "categories", {
           code: "DEMO-XOA",
+          catalog_kind:'FINISHED_PRODUCT',
           name: "Danh mục thử xóa",
           is_active: true,
         });
@@ -267,12 +275,6 @@ async function main() {
     await db.query("INSERT INTO units (code,name) VALUES ('GOI','gói') ON DUPLICATE KEY UPDATE id=id");
     const [saleUnits] = await db.query("SELECT id,code FROM units WHERE code IN ('HOP','GOI')");
     const saleUnitIds = Object.fromEntries(saleUnits.map(u => [u.code, String(u.id)]));
-    const [packagedCakes] = await db.query("SELECT id,code,unit_id FROM items WHERE code IN ('TP-001','TP-002','TP-003','TP-004','TP-005')");
-    for (const item of packagedCakes) {
-      if (String(item.unit_id) === saleUnitIds.GOI) continue;
-      await db.query("UPDATE items SET unit_id=?,version=version+1 WHERE id=? AND unit_id IN (SELECT id FROM units WHERE name='cái')",
-        [saleUnitIds.GOI, item.id]);
-    }
     for (const [code, name, price] of [
       ["TP-DEMO-01", "Bánh quy bơ hộp 200g", "45000.0000"],
       ["TP-DEMO-02", "Bánh bông lan đóng gói 120g", "22000.0000"],
@@ -362,17 +364,20 @@ async function main() {
       return { ...p, report: r, buyPlan: b };
     }
     async function materialLot(name, stage = "QC_PENDING") {
+      let approved=await op(name+':material-plan','planner','business-plans',{type:'PURCHASE',planned_date:date,note:note(name),lines:[{item_id:mat,quantity:'20.000',unit_price:'25000.0000'}]});
+      approved=await op(name+':material-plan-approve','director',`business-plans/${approved.id}/review`,{version:approved.version,decision:'APPROVE'});
       const purchase = await op(
         name + ":purchase",
         "purchaser",
         "purchase-orders",
         {
-          source_mode: "MANUAL",
+          source_mode: "PLAN",
+          business_plan_id: approved.id,
           supplier_id: ncc,
           expected_delivery_date: date,
           delivery_terms: note(name),
           lines: [
-            { item_id: mat, quantity: "20.000", unit_price: "25000.0000" },
+            { business_plan_line_id: approved.lines[0].id, supplier_id:ncc, quantity: "20.000", unit_price: "25000.0000" },
           ],
         },
       );

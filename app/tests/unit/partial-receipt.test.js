@@ -1,5 +1,5 @@
 const test=require('node:test'),assert=require('node:assert/strict');
-const {create}=require('../../src/services/warehouse-service/modules/stock-requests/partial-receipt');
+const {create}=require('../../src/modules/stock-requests/partial-receipt');
 const C=require('../../src/services/domain/core');
 const valid={purpose:'PRODUCTION_RECEIPT',production_source_mode:'MANUAL',production_plan_id:'1',workshop_id:'1',warehouse_id:'1',manager_id:'1',requested_date:C.today(),receipt_key:'1234567890123456',lines:[{item_id:'1',quantity:'1.000',manufactured_date:C.today()}]};
 const service={pool:{getConnection:()=>{throw Error('SQL must not be called');}}};

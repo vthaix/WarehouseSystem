@@ -1,3 +1,3 @@
-name: warehouse-system
+name: warehouse-mono
 include:
   - app/docker-compose.yml

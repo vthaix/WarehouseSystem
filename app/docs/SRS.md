@@ -12,7 +12,7 @@ Express + EJS, năm backend HTTP và web-gateway; sáu database/tài khoản MyS
 
 1. Khách đặt đơn; planner tiếp nhận và lập KHSX cho xưởng. BGĐ duyệt KHSX; đơn hàng liên quan tự chuyển sang đã phê duyệt.
 2. Chủ xưởng mở KHSX đã duyệt để đối chiếu NVL với tồn khả dụng. Khi đang sản xuất, có thể gửi tiến độ/sự cố cho BGĐ; báo cáo NHU_CAU còn thiếu NVL tự gửi thêm planner. Có thể chụp bảng đối chiếu hoặc dán ảnh vào mô tả báo cáo.
-3. Mua bổ sung từ MUA đã duyệt hoặc tự nhập MANUAL, chọn NCC theo từng NVL. Nhận hàng tạo lô/dòng lô, QC; phần đạt lập yêu cầu nhập, quản lý phân công, nhân viên ghi phiếu. QC không tự tạo tồn.
+3. Mua nguyên vật liệu chỉ từ kế hoạch MUA đã được phê duyệt, chọn nhà cung cấp theo từng dòng. Kế hoạch mua có thể lập trực tiếp hoặc theo báo cáo nhu cầu nhưng đều phải được duyệt trước khi mua. Nhận hàng tạo lô/dòng lô, QC; phần đạt lập yêu cầu nhập, quản lý phân công, nhân viên ghi phiếu. QC không tự tạo tồn.
 4. Xuất NVL lấy KHSX PLAN hoặc báo cáo NHU_CAU REPORT; kiểm nhu cầu cộng dồn, giữ chỗ và lô thực xuất.
 5. Thành phẩm hoàn thành phần nào, chủ xưởng lập báo cáo thành phẩm UC-35 cho phần đó; mỗi báo cáo tạo một phần trong cùng đầu lô/KHSX, có các dòng lô riêng. Báo cáo tiến độ UC-34 không tạo phần lô. Giám đốc lập Công việc, chọn loại kiểm tra thành phẩm → lô → phần theo báo cáo đã gửi → nhân viên. QC đạt mới lập yêu cầu và phiếu nhập phần đạt.
 6. Có thể lập nhiều báo cáo thành phẩm cho KHSX; mỗi báo cáo chỉ ghi lượng phần mới. Phần thường giữ KHSX IN_PROGRESS; chỉ báo cáo phần cuối có xác nhận hoàn tất mới chuyển COMPLETED. Không tạo phiếu/tồn kho trùng; NVL dùng cộng dồn không vượt đã cấp. Chi tiết [CONG_VIEC_KIEM_TRA_LO.md](CONG_VIEC_KIEM_TRA_LO.md).
@@ -27,7 +27,7 @@ Express + EJS, năm backend HTTP và web-gateway; sáu database/tài khoản MyS
 | BR-02 | KHSX gồm dòng thành phẩm/NVL chung ChiTietKeHoachSanXuat. NVL gốc tính theo công thức cấu hình × lượng từng bánh rồi cộng gộp, hoặc nhập tay; cộng 10% đúng một lần, làm tròn lên 3 chữ số thập phân. Công thức minh họa cần xác nhận trước dùng chính thức. |
 | BR-03 | Một báo cáo nhu cầu hiệu lực/KHSX. Nguồn đã gửi/đã sử dụng bất biến; tồn/thiếu lấy hệ thống, không tự khai tồn. |
 | BR-04 | Planner lập kế hoạch MUA bằng nhập tay hoặc import báo cáo SAN_XUAT mục đích NHU_CAU đã gửi cho planner; kế hoạch BAN lấy tổng kết THANH_PHAM. Không dùng tiến độ/sự cố làm nguồn nhu cầu. |
-| BR-05 | Đơn mua mới chỉ PLAN/MANUAL; PLAN tối đa một đơn/kế hoạch, ngày nhận lấy từ MUA đã duyệt. Planner không chọn NCC; purchaser chọn NCC riêng từng NVL. REPORT lịch sử giữ nguyên, không tạo mới. MANUAL không tự đáp ứng báo cáo. |
+| BR-05 | Đơn mua mới chỉ theo kế hoạch MUA đã duyệt, tối đa một đơn/kế hoạch; ngày nhận và lượng lấy từ kế hoạch. Bộ phận lập kế hoạch không chọn nhà cung cấp; bộ phận mua hàng chọn riêng từng nguyên vật liệu. Không tạo đơn mua trực tiếp hoặc thẳng từ báo cáo để bỏ qua phê duyệt. |
 | BR-06 | LoHang là đầu lô, ChiTietLo là dòng hàng. QC kiểm toàn bộ mỗi dòng, kiểm=đạt+lỗi; chỉ phần đạt được nhập AVAILABLE. Lỗi NVL trước nhập ghi trả NCC theo kết luận. |
 | BR-07 | Ngoại lệ: lập → giám đốc duyệt/từ chối → quản lý áp dụng riêng; người lập không tự duyệt. Điều chỉnh hàng đã nhập cần xác nhận QC và chứng từ bù, giữ phiếu gốc. |
 | BR-08 | Yêu cầu NVL PLAN hoặc REPORT; tổng yêu cầu/cấp đối chiếu cùng KHSX. Nếu đã có báo cáo nhu cầu gửi, PLAN không vượt nhu cầu thực tế. Yêu cầu không có bước duyệt riêng. |

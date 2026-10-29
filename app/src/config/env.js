@@ -19,7 +19,7 @@ function env() {
     throw new Error("PORT không hợp lệ.");
   return {
     port,
-    storage: process.env.STORAGE_DRIVER || "memory",
+    storage: process.env.STORAGE_DRIVER || "mysql",
     password: process.env.DEMO_PASSWORD,
     host: process.env.HOST || "127.0.0.1",
   };

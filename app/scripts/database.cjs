@@ -5,14 +5,10 @@ const { getPool, closePool } = require("../src/config/database");
   try {
     const command = process.argv[2],
       pool = getPool();
-    if (process.env.SERVICE_DB_LAYOUT === "split" && command !== "status")
-      throw new Error(
-        "Use docker compose run --rm split-databases. Legacy migrate/seed/roles are disabled after database cutover.",
-      );
     if (command === "migrate")
-      await require("../src/shared/migrations").migrate(pool);
+      await require("../src/shared/monolith-migrations").migrate(pool);
     else if (command === "seed")
-      await require("../database/seeders/foundation").seedDemo(pool);
+      await require("../database/seeders/monolith").seed(pool);
     else if (command === "roles")
       await require("../database/seeders/foundation").seedRoles(pool);
     else if (command === "status")

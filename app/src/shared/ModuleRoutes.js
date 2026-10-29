@@ -3,7 +3,7 @@ const C = require("../services/domain/core");
 const P = require("../services/domain/policy");
 const role = require("../middlewares/role.middleware");
 const { ok } = require("../utils/response");
-const registry = require("../services/shared/registry");
+const registry = require("../modules");
 const reportRoles = {
   "reports/inventory": ["DIRECTOR", "WAREHOUSE_MANAGER", "WORKSHOP_OWNER"],
   "reports/stock-documents": ["DIRECTOR", "WORKSHOP_OWNER"],
@@ -20,7 +20,7 @@ function pending(req, res, next) {
 }
 module.exports = (runtime) => {
   const router = express.Router(),
-    catalog = require("../services/shared/catalog/ApiController")(runtime.catalog);
+    catalog = require("../modules/catalog/ApiController")(runtime.catalog);
   const sourceImports = new (require('./SourceImportService'))(runtime);
   router.get('/material-price-options',role(['WAREHOUSE_MANAGER','PURCHASER']),async(req,res)=>ok(req,res,await runtime.materialCatalog.metadata(req.user)));
   router.get('/material-prices',role(['WAREHOUSE_MANAGER','PURCHASER']),async(req,res)=>{const r=await runtime.materialCatalog.list(req.user,req.query);ok(req,res,r.data,200,r.meta);});

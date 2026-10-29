@@ -1,10 +1,10 @@
-# Đối tượng SQL theo owner
+# Đối tượng SQL trong warehouse_db
 
-Sinh từ ownership.json và snapshot DDL. TABLE là bảng vật lý; VIEW là đối tượng suy ra/tương thích. Bảng LuuTru giữ lịch sử, không phải entity hoạt động. Các view cùng tên tại owner khác không phải bản sao dữ liệu.
+Sinh từ migration mono. TABLE là bảng vật lý; VIEW là cách đọc dữ liệu gốc, không tạo thêm bộ dữ liệu riêng. Toàn bộ đối tượng thuộc một database.
 
-## identity-service — KhoHang_Identity
+## warehouse-app — warehouse_db
 
-Tài khoản runtime: `identity_db`.
+Tài khoản runtime: `warehouse`.
 
 | Đối tượng | Loại | Cột vật lý |
 | --- | --- | --- |
@@ -15,19 +15,12 @@ Tài khoản runtime: `identity_db`.
 | BoPhan | TABLE | `MaBanGhi`, `Ma`, `Ten`, `MoTa` |
 | NhanVien | TABLE | `MaNguoiDung`, `MaNhanVien`, `MaBoPhan`, `ChucVu` |
 | LanThuDangNhap | TABLE | `KhoaLanThu`, `BatDauCuaSo`, `SoLan` |
-
-## business-service — KhoHang_Business
-
-Tài khoản runtime: `business_db`.
-
-| Đối tượng | Loại | Cột vật lý |
-| --- | --- | --- |
 | KhachHang | TABLE | `MaBanGhi`, `MaNguoiDung`, `Ma`, `Ten`, `SoDienTho`, `DiaChi`, `NgayTao`, `NgayCapNhat` |
 | Xuong | TABLE | `MaBanGhi`, `Ma`, `Ten`, `DiaChi`, `ConHoatDong`, `NgayTao`, `NgayCapNhat` |
 | NhaCungCap | TABLE | `MaBanGhi`, `Ma`, `Ten`, `SoDienTho`, `ThuDienTu`, `DiaChi`, `MaSoThue`, `ConHoatDong`, `NgayTao`, `NgayCapNhat` |
 | LoaiHang | TABLE | `MaBanGhi`, `Ma`, `Ten`, `MoTa`, `ConHoatDong`, `NgayTao`, `NgayCapNhat`, `DuongDanAnh`, `LoaiDanhMuc` |
 | DonViTinh | TABLE | `MaBanGhi`, `Ma`, `Ten`, `NgayTao`, `NgayCapNhat` |
-| MatHang | TABLE | `MaBanGhi`, `MaLoaiHang`, `MaDonViTinh`, `Ma`, `Ten`, `Loai`, `MoTa`, `DonGiaThamKhao`, `LaHangMau`, `DuongDanAnh`, `DaCongBo`, `ConHoatDong`, `PhienBan`, `NgayTao`, `NgayCapNhat`, `BangGiaNCC` |
+| MatHang | TABLE | `MaBanGhi`, `MaLoaiHang`, `MaDonViTinh`, `Ma`, `Ten`, `Loai`, `MoTa`, `DonGiaThamKhao`, `LaHangMau`, `DuongDanAnh`, `DaCongBo`, `ConHoatDong`, `PhienBan`, `NgayTao`, `NgayCapNhat` |
 | DonHang | TABLE | `MaBanGhi`, `Ma`, `MaKhachHang`, `DiaChiGiaoHang`, `NgayGiaoChamNhat`, `GhiChu`, `TrangThai`, `MaNguoiTiepNhan`, `NgayTiepNhan`, `MaNguoiDuyet`, `NgayDuyet`, `LyDoTuChoi`, `TongTienBaoGia`, `PhienBan`, `NgayTao`, `NgayCapNhat` |
 | ChiTietDonHang | TABLE | `MaBanGhi`, `MaDonHang`, `MaMatHang`, `SoLuong`, `DonGia`, `GhiChu`, `NgayTao`, `NgayCapNhat` |
 | KeHoachMuaBan | TABLE | `MaBanGhi`, `Ma`, `Kieu`, `MaNhaCungCap`, `MaKhachHang`, `MaDonHang`, `NgayDuKien`, `GhiChu`, `TrangThai`, `MaNguoiTao`, `MaNguoiDuyet`, `NgayDuyet`, `LyDoTuChoi`, `TongTien`, `PhienBan`, `NgayTao`, `NgayCapNhat`, `MaYeuCauNguon`, `MaKeHoachSanXuat`, `MaBaoCaoSanXuat`, `MaBaoCaoThanhPham` |
@@ -39,22 +32,6 @@ Tài khoản runtime: `business_db`.
 | BanBaoCaoSanXuat | TABLE | `MaBanGhi`, `Ma`, `MaKeHoachSanXuat`, `MaNguoiTao`, `GhiChu`, `TrangThai`, `NgayGui`, `PhienBan`, `NgayTao`, `NgayCapNhat`, `LoaiBaoCao`, `NgayHoanThanh`, `MaThanhPhamCu`, `MucDichBaoCao`, `PhanTramTienDo`, `GuiBoPhanLapKeHoach`, `XacNhanHoanTat`, `KieuThanhPham` |
 | ChiTietBaoCaoSanXuat | TABLE | `MaBanGhi`, `MaBaoCaoSanXuat`, `MaMatHang`, `SoLuongHienCo`, `SoLuongCan`, `NgayTao`, `NgayCapNhat`, `LoaiChiTiet`, `SoLuong`, `SoLuongSuDung` |
 | ChiTietLoBaoCaoSanXuat | TABLE | `MaBanGhi`, `MaBaoCaoThanhPham`, `MaChiTietLo`, `SoLuong`, `NgayTao`, `NgayCapNhat`, `MaChiTietBaoCao` |
-| BaoCaoSanXuat | VIEW |  |
-| BaoCaoThanhPham | VIEW |  |
-| ChiTietNhuCauSanXuat | VIEW |  |
-| NguyenLieuSuDung | VIEW |  |
-| ThanhPhamKeHoachTuongThich | VIEW |  |
-| ChiTietNguyenLieuKeHoachSanXuat | VIEW |  |
-| LuuTruBaoCaoThanhPhamTruoc012 | TABLE | `MaBanGhi`, `Ma`, `MaKeHoachSanXuat`, `MaNguoiTao`, `NgayHoanThanh`, `GhiChu`, `TrangThai`, `NgayGui`, `PhienBan`, `NgayTao`, `NgayCapNhat` |
-| LuuTruNguyenLieuKeHoachTruoc009 | TABLE | `MaBanGhi`, `MaKeHoachSanXuat`, `MaMatHang`, `SoLuongCan`, `NgayTao`, `NgayCapNhat` |
-| LuuTruNguyenLieuSuDungTruoc012 | TABLE | `MaBanGhi`, `MaBaoCaoThanhPham`, `MaMatHang`, `SoLuongSuDung`, `NgayTao`, `NgayCapNhat` |
-
-## warehouse-service — KhoHang_Warehouse
-
-Tài khoản runtime: `warehouse_db`.
-
-| Đối tượng | Loại | Cột vật lý |
-| --- | --- | --- |
 | Kho | TABLE | `MaBanGhi`, `Ma`, `Ten`, `DiaChi`, `ConHoatDong`, `NgayTao`, `NgayCapNhat` |
 | ViTriKho | TABLE | `MaBanGhi`, `MaKho`, `Ma`, `Ten`, `ConHoatDong`, `NgayTao`, `NgayCapNhat` |
 | LoHang | TABLE | `MaBanGhi`, `Ma`, `LoaiLo`, `NgayTao`, `GhiChu`, `HuongTra`, `TrangThaiTra`, `PhienBanTra`, `MaNguoiNhanTra`, `MaKhoNhanTra`, `MaNguoiLapTra`, `MaKeHoachNhapThanhPham` |
@@ -71,7 +48,6 @@ Tài khoản runtime: `warehouse_db`.
 | PhieuKiemKe | TABLE | `MaBanGhi`, `MaDotKiemKe`, `MaKho`, `TrangThai`, `NgayChotSo`, `NgayHoanTat`, `PhienBan`, `NgayTao`, `NgayCapNhat`, `NhanXet`, `TrangThaiBienBan`, `NgayGui`, `MaNguoiTao` |
 | PhanCongKiemKe | TABLE | `MaBanGhi`, `MaKhoKiemKe`, `MaNguoiDung`, `NgayTao`, `NgayCapNhat` |
 | ChiTietPhieuKiemKe | TABLE | `MaBanGhi`, `MaKhoKiemKe`, `MaChiTietLo`, `MaViTriKho`, `NhomChatLuong`, `SoLuongHeThong`, `SoLuongThucTe`, `MaNguoiDem`, `NgayDem`, `NguyenNhan`, `TrangThaiXuLy`, `PhienBan`, `NgayTao`, `NgayCapNhat` |
-| BienBanKiemKe | VIEW |  |
 | PhanCongKetLuanKiemKe | TABLE | `MaBanGhi`, `MaPhieuKiemKe`, `MaNguoiDung` |
 | BanDeXuatXuLyNgoaiLe | TABLE | `MaBanGhi`, `Ma`, `Kieu`, `MaChiTietKiemTraChatLuong`, `MaChiTietKiemKe`, `MaNguoiTao`, `HanhDong`, `SoLuong`, `LyDo`, `GhiChuXuLy`, `TrangThai`, `MaNguoiDuyet`, `NgayDuyet`, `LyDoTuChoi`, `NgayApDung`, `PhienBan`, `NgayTao`, `NgayCapNhat` |
 | KetQuaXuLyNgoaiLe | TABLE | `MaBanGhi`, `MaDeXuatXuLy`, `PhienBanDeXuat`, `QuyetDinh`, `MaNguoiDuyet`, `LyDo`, `NgayDuyet` |
@@ -86,29 +62,15 @@ Tài khoản runtime: `warehouse_db`.
 | PhanCongKho | TABLE | `MaBanGhi`, `MaYeuCauKho`, `MaCongViec`, `MaChiTietYeuCauKho`, `MaNguoiDung`, `MaChiTietLo`, `MaViTriKho`, `NhomChatLuong`, `SoLuong`, `SoLuongDaGhi`, `NgayTao`, `NgayCapNhat` |
 | YeuCauChongLap | TABLE | `MaBanGhi`, `MaNguoiDung`, `ThaoTac`, `KhoaChongLap`, `MaBamYeuCau`, `MaPhanHoi`, `NoiDungPhanHoi`, `HetHanLuc`, `NgayTao`, `NgayCapNhat` |
 | NhatKyHeThong | TABLE | `MaBanGhi`, `MaNguoiThucHien`, `LoaiTaiNguyen`, `MaTaiNguyen`, `HanhDong`, `DuLieuTruoc`, `DuLieuSau`, `MaYeuCau`, `NgayTao`, `NgayCapNhat` |
-| LuuTruBienBanKiemKeTruoc015 | TABLE | `MaBanGhi`, `Ma`, `MaKhoKiemKe`, `MaNguoiTao`, `TrangThai`, `NhanXet`, `NgayGui`, `PhienBan`, `NgayTao`, `NgayCapNhat` |
-
-## notification-service — KhoHang_Notification
-
-Tài khoản runtime: `notification_db`.
-
-| Đối tượng | Loại | Cột vật lý |
-| --- | --- | --- |
 | ThongBao | TABLE | `MaBanGhi`, `MaNguoiDung`, `TieuDeThongBao`, `NoiDung`, `LoaiTaiNguyen`, `MaTaiNguyen`, `NgayDoc`, `KhoaThongBao`, `NgayTao`, `NgayCapNhat` |
-
-## reporting-service — KhoHang_Reporting
-
-Tài khoản runtime: `reporting_db`.
-
-| Đối tượng | Loại | Cột vật lý |
-| --- | --- | --- |
-| HoSoKho | VIEW |  |
-| LuuTruHoSoKhoTruoc013 | TABLE | `MaBanGhi`, `MaYeuCauKho`, `MaNguoiPhuTrach`, `GhiChu`, `NgayTao`, `NgayCapNhat` |
-
-## web-gateway — KhoHang_Gateway
-
-Tài khoản runtime: `gateway_db`.
-
-| Đối tượng | Loại | Cột vật lý |
-| --- | --- | --- |
 | PhienDangNhap | TABLE | `MaPhien`, `HetHanLuc`, `DuLieu` |
+| BaoCaoSanXuat | VIEW |  |
+| BaoCaoThanhPham | VIEW |  |
+| ChiTietNhuCauSanXuat | VIEW |  |
+| NguyenLieuSuDung | VIEW |  |
+| ThanhPhamKeHoachTuongThich | VIEW |  |
+| ChiTietNguyenLieuKeHoachSanXuat | VIEW |  |
+| BienBanKiemKe | VIEW |  |
+| HoSoKho | VIEW |  |
+| NguyenVatLieu | TABLE | `MaMatHang`, `TieuChuanNhap`, `BangGiaNCC` |
+| ThanhPham | TABLE | `MaMatHang`, `HanSuDungMacDinhNgay` |

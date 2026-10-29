@@ -1,0 +1,114 @@
+[
+  {
+    "name": "browser",
+    "start": "2026-10-28T13:25:10.068Z",
+    "end": "2026-10-28T13:26:15.272Z",
+    "status": "FAIL",
+    "exit": 1,
+    "error": null
+  },
+  {
+    "name": "ssr",
+    "start": "2026-10-28T13:26:15.273Z",
+    "end": "2026-10-28T13:26:16.852Z",
+    "status": "PASS",
+    "exit": 0,
+    "error": null
+  },
+  {
+    "name": "accounts-catalog",
+    "start": "2026-10-28T13:26:16.852Z",
+    "end": "2026-10-28T13:26:19.979Z",
+    "status": "PASS",
+    "exit": 0,
+    "error": null
+  },
+  {
+    "name": "admin-theme",
+    "start": "2026-10-28T13:26:19.980Z",
+    "end": "2026-10-28T13:26:51.113Z",
+    "status": "FAIL",
+    "exit": 1,
+    "error": null
+  },
+  {
+    "name": "category-images",
+    "start": "2026-10-28T13:26:51.113Z",
+    "end": "2026-10-28T13:26:52.306Z",
+    "status": "PASS",
+    "exit": 0,
+    "error": null
+  },
+  {
+    "name": "customer-order",
+    "start": "2026-10-28T13:26:52.306Z",
+    "end": "2026-10-28T13:26:53.332Z",
+    "status": "FAIL",
+    "exit": 1,
+    "error": null
+  },
+  {
+    "name": "inspection-workflow",
+    "start": "2026-10-28T13:26:53.332Z",
+    "end": "2026-10-28T13:27:15.186Z",
+    "status": "PASS",
+    "exit": 0,
+    "error": null
+  },
+  {
+    "name": "planning-confirmation",
+    "start": "2026-10-28T13:27:15.187Z",
+    "end": "2026-10-28T13:27:16.701Z",
+    "status": "PASS",
+    "exit": 0,
+    "error": null
+  },
+  {
+    "name": "preproduction",
+    "start": "2026-10-28T13:27:16.702Z",
+    "end": "2026-10-28T13:27:19.239Z",
+    "status": "PASS",
+    "exit": 0,
+    "error": null
+  },
+  {
+    "name": "reset-data",
+    "start": "2026-10-28T13:27:19.239Z",
+    "end": "2026-10-28T13:27:24.460Z",
+    "status": "PASS",
+    "exit": 0,
+    "error": null
+  },
+  {
+    "name": "source-imports",
+    "start": "2026-10-28T13:27:24.460Z",
+    "end": "2026-10-28T13:27:33.369Z",
+    "status": "PASS",
+    "exit": 0,
+    "error": null
+  },
+  {
+    "name": "warehouse-exceptions",
+    "start": "2026-10-28T13:27:33.369Z",
+    "end": "2026-10-28T13:27:34.832Z",
+    "status": "PASS",
+    "exit": 0,
+    "error": null
+  },
+  {
+    "name": "warehouse-lookup",
+    "start": "2026-10-28T13:27:34.832Z",
+    "end": "2026-10-28T13:27:40.304Z",
+    "status": "PASS",
+    "exit": 0,
+    "error": null
+  },
+  {
+    "name": "warehouse-request-workflow",
+    "start": "2026-10-28T13:27:40.304Z",
+    "end": "2026-10-28T13:27:42.720Z",
+    "status": "PASS",
+    "exit": 0,
+    "error": null
+  }
+]

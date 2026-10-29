@@ -209,6 +209,8 @@ async function createForm() {
         f("category_id", "select", true, await options("categories")) +
         f("unit_id", "select", true, await options("units")) +
         f("reference_price", "number") +
+        f("material_quality_standard", "textarea", false) +
+        f("default_shelf_life_days", "number", false) +
         f("is_sample", "select", true, [
           { id: "false", name: "Không" },
           { id: "true", name: "Có" },
@@ -219,6 +221,8 @@ async function createForm() {
         ]);
       builder = (d) => ({
         ...d,
+        material_quality_standard: d.kind === 'MATERIAL' ? d.material_quality_standard || null : null,
+        default_shelf_life_days: d.kind === 'FINISHED_PRODUCT' && d.default_shelf_life_days ? Number(d.default_shelf_life_days) : null,
         is_sample: d.is_sample === "true",
         is_published: d.is_published === "true",
         is_active: true,
@@ -485,6 +489,12 @@ async function createForm() {
     openModal("Tạo mới · " + moduleInfo()[1], formWrap(html));
     editors.forEach((e) => e.mount());
     bindForm(builder, current);
+    if(current==='items'){
+      const kind=document.querySelector('#f-kind');
+      const syncSubtype=()=>{const material=kind.value==='MATERIAL';document.querySelector('#f-material_quality_standard').parentElement.hidden=!material;document.querySelector('#f-default_shelf_life_days').parentElement.hidden=material;};
+      kind.addEventListener('change',syncSubtype);syncSubtype();
+      const days=document.querySelector('#f-default_shelf_life_days');days.min='1';days.max='36500';days.step='1';
+    }
     if (current === "business-plans") {
       const sync = () => {
         const purchase = document.querySelector("#f-type").value === "PURCHASE";
@@ -751,7 +761,7 @@ async function editForm(r) {
         warehouses: ["name", "address"],
         "warehouse-locations": ["name"],
         suppliers: ["name", "phone", "email", "address", "tax_code"],
-        items: ["name", "description", "reference_price"],
+        items: ["name", "description", "reference_price", ...(r.kind==='MATERIAL'?['material_quality_standard']:['default_shelf_life_days'])],
         lots: ["manufactured_date", "expiry_date"],
       }[current];
       html = fields
@@ -760,7 +770,7 @@ async function editForm(r) {
             k,
             k.includes("date")
               ? "date"
-              : k === "reference_price"
+              : ['reference_price','default_shelf_life_days'].includes(k)
                 ? "number"
                 : k === "description"
                   ? "textarea"
@@ -809,7 +819,7 @@ async function editForm(r) {
         ...Object.fromEntries(
           Object.entries(d)
             .filter(([k, v]) => v !== "" || !k.includes("date"))
-            .map(([k, v]) => [k, k.startsWith("is_") ? v === "true" : v]),
+            .map(([k, v]) => [k, k==='default_shelf_life_days'?(v===''?null:Number(v)):k.startsWith("is_") ? v === "true" : v]),
         ),
       });
     } else if (current === "customer-orders") {

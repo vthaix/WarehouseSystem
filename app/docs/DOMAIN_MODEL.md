@@ -6,7 +6,7 @@ Hợp nhất 14/10/2026. Mô hình nghiệp vụ và bảng vật lý không ph�
 
 Cập nhật 22/10/2026: KHSX hỗ trợ định lượng tính từ công thức cấu hình theo mã bánh và số lượng, lưu vào ChiTietKeHoachSanXuat hiện có. Chủ xưởng đối chiếu định lượng đã lưu với tồn khả dụng từ chi tiết KHSX; UC-34 lưu liên kết ảnh trong ghi chú, file nằm ở volume ảnh và đọc theo quyền báo cáo. Không tạo bảng/cột mới cho đợt này; xem [LUONG_DAT_HANG_TIEN_SAN_XUAT.md](LUONG_DAT_HANG_TIEN_SAN_XUAT.md). Các bản domain cũ đã khôi phục giữ nguyên.
 
-Identity giữ người dùng/vai trò/phạm vi; Business giữ khách/xưởng/danh mục hàng, đơn, kế hoạch, mua và báo cáo SX; Warehouse giữ kho/lô/QC/yêu cầu/phiếu/tồn/kiểm kê/ngoại lệ/công việc; Notification giữ thông báo; Reporting giữ view/hồ sơ đọc; Gateway giữ session. Sáu database vẫn cùng MySQL và còn FK/view/transaction xuyên schema.
+Hiện tại các nhóm xác thực, danh mục, đơn hàng, sản xuất, mua hàng, kho, QC, kiểm kê, công việc và báo cáo là mô-đun trong cùng ứng dụng Express. Tất cả dùng một database `warehouse_db`; không còn gọi service qua mạng hoặc khóa ngoại xuyên schema. Bản microservice trước chuyển đổi được giữ riêng tại `archive/microservices-20261029/project` ở gốc repository.
 
 ## Quan hệ chính
 
@@ -14,6 +14,8 @@ Cập nhật lịch QC 22/10/2026: `DotKiemKe` loại QUALITY_CHECK có hai FK n
 
 ```mermaid
 erDiagram
+  MatHang ||--o| NguyenVatLieu : thuoc_tinh_rieng_NVL
+  MatHang ||--o| ThanhPham : thuoc_tinh_rieng_TP
   DonHang ||--|{ ChiTietDonHang : gom
   DonHang ||--o{ KeHoachSanXuat : dinh_huong
   KeHoachSanXuat ||--|{ ChiTietKeHoachSanXuat : thanh_pham_va_NVL
@@ -50,7 +52,7 @@ Sơ đồ thể hiện quan hệ nghiệp vụ chính; FK và NULL thực tế �
 
 1. Khách đặt đơn; planner tiếp nhận và lập KHSX cho xưởng. BGĐ duyệt KHSX; đơn hàng liên quan tự chuyển sang đã phê duyệt.
 2. Chủ xưởng tra cứu tồn khả dụng. Khi đang sản xuất, có thể gửi tiến độ/sự cố cho BGĐ; nếu có nhu cầu NVL thì gửi báo cáo NHU_CAU và chọn thêm planner.
-3. Mua bổ sung từ MUA đã duyệt hoặc tự nhập MANUAL, chọn NCC theo từng NVL. Nhận hàng tạo lô/dòng lô, QC; phần đạt lập yêu cầu nhập, quản lý phân công, nhân viên ghi phiếu. QC không tự tạo tồn.
+3. Mua nguyên vật liệu chỉ từ kế hoạch MUA đã được phê duyệt, chọn nhà cung cấp theo từng nguyên vật liệu. Kế hoạch mua có thể lập trực tiếp hoặc từ báo cáo nhu cầu nhưng đều phải được duyệt trước khi đặt mua. Nhận hàng tạo lô/dòng lô, QC; phần đạt lập yêu cầu nhập, quản lý phân công, nhân viên ghi phiếu. QC không tự tạo tồn.
 4. Xuất NVL lấy KHSX PLAN hoặc báo cáo NHU_CAU REPORT; kiểm nhu cầu cộng dồn, giữ chỗ và lô thực xuất.
 5. Chủ xưởng lập báo cáo thành phẩm UC-35 theo từng phần hoàn thành. Mỗi báo cáo tạo một phần gồm các dòng ChiTietLo riêng trong cùng LoHang của KHSX. Báo cáo tiến độ UC-34 không tạo phần. Giám đốc chọn loại công việc → lô → các phần theo báo cáo thành phẩm → nhân viên.
 6. Nhiều báo cáo phần được phép; mỗi báo cáo ghi lượng phần mới. QC xong mới yêu cầu nhập đúng phần đạt, không cộng tồn bằng báo cáo. Báo cáo phần cuối có xác nhận hoàn tất mới chuyển KHSX COMPLETED. NVL dùng cộng dồn không vượt đã cấp. Migration 010 thêm KieuThanhPham để giữ tương thích báo cáo tổng kết cũ.
@@ -59,9 +61,9 @@ Sơ đồ thể hiện quan hệ nghiệp vụ chính; FK và NULL thực tế �
 
 ## Thuộc tính và ràng buộc vật lý
 
-Danh mục toàn bộ owner, TABLE/VIEW và cột: [generated/DATABASE_OBJECTS.md](generated/DATABASE_OBJECTS.md). DDL: database/services/schemas/<service>/001_schema.sql; alias: database/adminer/identifiers.json. Các FK/grants xuyên schema còn có chủ đích, không suy độc lập server từ tên owner.
+Danh mục bảng, VIEW và cột: [generated/DATABASE_OBJECTS.md](generated/DATABASE_OBJECTS.md). Migration đang dùng: `database/monolith`; bản SQL import: `database/schema.sql`; ánh xạ tên SQL: `database/adminer/identifiers.json`. Mỗi mặt hàng có đúng một dòng con theo loại; bảng giá nhà cung cấp nằm tại `NguyenVatLieu`, hạn dùng mặc định nằm tại `ThanhPham`. Các dòng chứng từ vẫn tham chiếu mặt hàng chung. Không tách bảng lô nguyên vật liệu/thành phẩm: dùng `LoHang` với loại lô và `ChiTietLo` cho từng phần thực tế.
 
 Quy tắc: [SRS.md](SRS.md), [BUSINESS_DECISIONS.md](BUSINESS_DECISIONS.md). API và enum tiếng Anh giữ tương thích, discriminator vật lý khác tên UI phải qua adapter.
 
 
-Ảnh danh mục: LoaiHang.DuongDanAnh / image_path, chọn/xem trước/bỏ ảnh, PNG/JPEG/WebP ≤5 MB. Migration service 007; file ở src/images/categories, Docker lưu volume category_images. Chi tiết: [CATEGORY_IMAGES.md](CATEGORY_IMAGES.md).
+Ảnh danh mục: LoaiHang.DuongDanAnh / image_path, chọn/xem trước/bỏ ảnh, PNG/JPEG/WebP ≤5 MB. File ở `src/images/categories`, Compose dùng volume `mono_images` gắn tại `/app/src/images`; không còn gateway riêng. Chi tiết: [CATEGORY_IMAGES.md](CATEGORY_IMAGES.md).

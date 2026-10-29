@@ -1,0 +1,17 @@
+node_modules
+src/images/production-reports/*
+!src/images/production-reports/.gitkeep
+.runtime
+.env
+.env.*
+!.env.example
+.git
+coverage
+artifacts
+*.log
+docs
+e2e
+public/uploads/*
+!public/uploads/.gitkeep
+src/images/categories/*
+!src/images/categories/.gitkeep

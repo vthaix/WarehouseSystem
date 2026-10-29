@@ -4,23 +4,20 @@ const fs = require("node:fs"),
   assert = require("node:assert/strict");
 const mysql = require("mysql2/promise");
 const { wrapSql } = require("../src/config/vietnamese-sql");
-const { tableNames, identifier } = require("../src/config/service-databases");
+const identifier = value => { if(!/^[A-Za-z][A-Za-z0-9_]*$/.test(value))throw Error("Invalid database"); return "`"+value+"`"; };
 require("../src/config/env").loadEnv();
 (async () => {
   assert.notEqual(process.env.NODE_ENV, "production");
-  const source = process.env.DB_NAME || "KhoHang";
+  const source = process.env.DB_NAME || "warehouse_db";
   identifier(source);
   const c = await mysql.createConnection({
     host: process.env.DB_HOST || "mysql",
-    user: "root",
-    password: fs
-      .readFileSync("/run/warehouse-mysql-secrets/root_password", "utf8")
-      .trim(),
+    user: process.env.DB_USER, password: process.env.DB_PASSWORD, database: process.env.DB_NAME,
     dateStrings: true,
     supportBigNumbers: true,
     bigNumberStrings: true,
   });
-  const db = wrapSql(c, tableNames(source + "_Gateway"));
+  const db = wrapSql(c);
   try {
     const [[customer]] = await db.query(
       "SELECT id,created_at FROM users WHERE username='customer'",
@@ -38,22 +35,18 @@ require("../src/config/env").loadEnv();
     );
     assert.equal(Object.keys(state.scenarios).length, 36);
     if (process.argv.includes("--counts")) {
-      const ownership = require("../database/services/ownership.json");
       const counts = [];
-      for (const [service, suffix] of [
-        ["business-service", "Business"],
-        ["warehouse-service", "Warehouse"],
-      ]) {
-        for (const table of ownership[service].objects) {
+      const [tables]=await c.query("SELECT TABLE_NAME name FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_TYPE='BASE TABLE' ORDER BY TABLE_NAME");
+        for (const {name:table} of tables) {
+          // A rerun authenticates to read existing fixtures. Session/login,
+          // audit and notification counts are operational, not new documents.
+          if(['PhienDangNhap','LanThuDangNhap','NhatKyHeThong','ThongBao','LichSuCSDL'].includes(table))continue;
           const [[row]] = await c.query(
             "SELECT COUNT(*) AS n FROM " +
-              identifier(source + "_" + suffix) +
-              "." +
               identifier(table),
           );
-          counts.push([service, table, String(row.n)]);
+          counts.push([source, table, String(row.n)]);
         }
-      }
       console.log(
         crypto
           .createHash("sha256")

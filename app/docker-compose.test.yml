@@ -1,0 +1,9 @@
+services:
+  app:
+    environment:
+      ACCEPTANCE_MONOLITH: "true"
+    ports: !override
+      - "3310:3000"
+  adminer:
+    ports: !override
+      - "127.0.0.1:8310:8080"

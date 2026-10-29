@@ -44,7 +44,7 @@ function ok(r, status = 200) {
   return r.data;
 }
 (async () => {
-  assert.match(process.env.DB_NAME, /^KhoHang_Acceptance_\d{8}(?:_Gateway)?$/);
+  assert.equal(process.env.ACCEPTANCE_MONOLITH, "true"); assert.equal(process.env.DB_NAME, "warehouse_db");
   const customer = client(),
     planner = client(),
     director = client(),
@@ -241,9 +241,9 @@ function ok(r, status = 200) {
   const purchaseBody={source_mode:'PLAN',business_plan_id:buy.id,delivery_terms:'NCC theo tung NVL',
     lines:buy.lines.map((line,i)=>({business_plan_line_id:line.id,unit_price:'1000.0000',supplier_id:String(suppliers[i].id)}))};
   assert.equal((await purchaser.call('purchase-orders','POST',{...purchaseBody,expected_delivery_date:shiftDay(1)})).status,422);
-  assert.equal((await purchaser.call('purchase-orders','POST',{source_mode:'REPORT',production_report_id:report.id})).status,422);
+  assert.equal((await purchaser.call('purchase-orders','POST',{source_mode:'REPORT',production_report_id:report.id})).status,409);
   assert.equal((await purchaser.call('purchase-orders','POST',{...purchaseBody,lines:purchaseBody.lines.map((l,i)=>i?{...l,supplier_id:'999999999999'}:l)})).status,422);
-  assert.equal((await purchaser.call('purchase-orders','POST',{source_mode:'MANUAL',expected_delivery_date:shiftDay(-1),delivery_terms:'Past date rejected',lines:[{item_id:comparison.lines[0].item_id,quantity:'1',unit_price:'1',supplier_id:String(suppliers[0].id)}]})).status,422);
+  assert.equal((await purchaser.call('purchase-orders','POST',{source_mode:'MANUAL',expected_delivery_date:shiftDay(-1),delivery_terms:'Past date rejected',lines:[{item_id:comparison.lines[0].item_id,quantity:'1',unit_price:'1',supplier_id:String(suppliers[0].id)}]})).status,409);
   const bought=ok(await purchaser.call('purchase-orders','POST',purchaseBody),201);
   assert.equal(bought.supplier_id,null);
   assert.equal(bought.expected_delivery_date,date);

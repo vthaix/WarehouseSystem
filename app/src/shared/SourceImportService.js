@@ -20,7 +20,7 @@ class SourceImportService {
   async purchaseReports(user) {
     P.role(user, ["PURCHASER"]);
     const [rows] = await this.pool.execute(
-      "SELECT id,code FROM production_reports WHERE status='SUBMITTED' AND report_purpose='NHU_CAU' AND send_to_planner=1 ORDER BY id DESC LIMIT 100",
+      "SELECT id,code FROM business_plans WHERE type='PURCHASE' AND status='APPROVED' ORDER BY id DESC LIMIT 100",
     );
     return rows.map((r) => ({ ...r, id: String(r.id), name: r.code }));
   }
@@ -41,7 +41,7 @@ class SourceImportService {
     const id = body.source_id;
     if(body.workflow_source!==undefined){
       C.fail(target!=='stock-requests'||body.workflow_source!=='true','VALIDATION_ERROR','Nguồn luồng nhập/xuất không hợp lệ.');
-      const helper=require('../services/warehouse-service/modules/stock-requests/request-workflow');
+      const helper=require('../modules/stock-requests/request-workflow');
       const source=await helper.resolve(this.pool,user,body.purpose,id,body.workshop_id,body.sale_plan_id);
       const field=body.purpose==='PURCHASE_RECEIPT'?'purchase_order_id':body.purpose==='SALE_ISSUE'?'business_plan_id':body.purpose==='PRODUCTION_ISSUE'?'production_plan_id':'production_report_id';
       const result=await this.preview(user,target,{source_id:source[field],purpose:body.purpose,production_source_mode:source.production_source_mode,workshop_id:body.workshop_id,...(body.warehouse_id?{warehouse_id:body.warehouse_id}:{})});
@@ -104,36 +104,22 @@ class SourceImportService {
     }
     if (target === "purchase-orders") {
       P.role(user, ["PURCHASER"]);
-      const [[report]] = await this.pool.execute(
-        "SELECT id,code FROM production_reports WHERE id=? AND status='SUBMITTED' AND report_purpose='NHU_CAU' AND send_to_planner=1",
-        [id],
-      );
-      C.fail(!report, "NOT_FOUND", "Không có báo cáo nhu cầu đã gửi.", 404);
-      const [lines] = await this.pool.execute(
-        "SELECT l.item_id,i.name AS item_name,GREATEST(l.required_quantity-l.available_quantity,0) AS quantity FROM production_report_lines l JOIN items i ON i.id=l.item_id WHERE l.production_report_id=?",
-        [id],
-      );
-      const [held] = await this.pool.execute(
-        "SELECT l.item_id,l.quantity FROM business_plan_lines l JOIN business_plans p ON p.id=l.business_plan_id WHERE p.production_report_id=? AND p.type='PURCHASE' AND p.status NOT IN ('REJECTED','CANCELLED') UNION ALL SELECT l.item_id,l.quantity FROM purchase_order_lines l JOIN purchase_orders p ON p.id=l.purchase_order_id WHERE p.production_report_id=? AND p.source_mode='REPORT' AND p.status<>'CANCELLED'",
-        [id, id],
-      );
-      const used = sum(held);
+      const plan=await this.r.businessPlans.get(user,id);
+      C.fail(plan.type!=='PURCHASE'||plan.status!=='APPROVED','PURCHASE_APPROVAL_REQUIRED','Chỉ chọn kế hoạch mua nguyên vật liệu đã được phê duyệt.',409);
       return {
-        source_code: report.code,
-        production_report_id: String(id),
-        lines: positive(
-          lines.map((l) => ({
+        source_code: plan.code,
+        business_plan_id: String(id),
+        expected_delivery_date:plan.planned_date,
+        lines:
+          plan.lines.map((l) => ({
             item_id: String(l.item_id),
             item_name: l.item_name,
-            quantity: remaining(
-              q(l.quantity),
-              used.get(String(l.item_id)) || 0n,
-            ),
-            unit_price: "0",
+            business_plan_line_id:String(l.id),
+            quantity:l.quantity,
+            unit_price: l.unit_price,
           })),
-        ),
         warnings: [
-          "Chỉ lấy phần thiếu chưa dành cho kế hoạch hoặc đơn mua khác. Bổ sung nhà cung cấp và đơn giá.",
+          "Số lượng và ngày nhận theo kế hoạch đã duyệt. Chọn nhà cung cấp cho từng nguyên vật liệu.",
         ],
       };
     }

@@ -1,5 +1,5 @@
 const test=require('node:test'),assert=require('node:assert/strict');
-const AccountService=require('../../src/services/identity-service/modules/auth/AccountService'),{canonical}=require('../../public/js/decimal-inputs');
+const AccountService=require('../../src/modules/auth/AccountService'),{canonical}=require('../../public/js/decimal-inputs');
 const body={username:'tester',full_name:'Người thử nghiệm',email:'',password:'123456',roles:['CUSTOMER'],workshop_ids:[],status:'ACTIVE'};
 test('account validation rejects unknown fields, duplicate roles, missing workshop and short passwords',()=>{
   const s=new AccountService({});s.validate(body,true);s.validate({...body,roles:['WORKSHOP_OWNER'],workshop_ids:['1']},true);
