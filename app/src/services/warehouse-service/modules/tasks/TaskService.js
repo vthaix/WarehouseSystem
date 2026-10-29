@@ -1,7 +1,7 @@
-const crypto = require("node:crypto");
 const C = require("../../../domain/core");
 const P = require("../../../domain/policy");
 const paginate = require("../../../../utils/pagination");
+const recordCode = require("../../../../shared/record-code");
 const isId = (v) => /^[1-9]\d*$/.test(String(v));
 class TaskService {
   constructor(pool) {
@@ -265,7 +265,7 @@ class TaskService {
       const [created] = await c.execute(
         "INSERT INTO tasks (code,title,description,priority,start_at,end_at,status,created_by,version) VALUES (?,?,?,?,?,?,'PLANNED',?,1)",
         [
-          "CV-" + crypto.randomBytes(8).toString("hex"),
+          await recordCode.next(c, 'tasks', 'CV', b.title),
           b.title,
           b.description || null,
           b.priority,

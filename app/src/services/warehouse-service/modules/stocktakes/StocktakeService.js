@@ -1,7 +1,7 @@
-const crypto = require("node:crypto");
 const C = require("../../../domain/core");
 const P = require("../../../domain/policy");
 const paginate = require("../../../../utils/pagination");
+const recordCode = require("../../../../shared/record-code");
 const id = (v) => /^[1-9]\d*$/.test(String(v));
 const normalize = (row) =>
   Object.fromEntries(
@@ -220,7 +220,7 @@ class StocktakeService {
       const [created] = await c.execute(
         "INSERT INTO stocktakes(code,created_by,planned_date,start_at,end_at,item_kind,status,note,version,campaign_type) VALUES (?,?,?,?,?,?,'PLANNED',?,1,'COUNT')",
         [
-          "KK-" + crypto.randomBytes(8).toString("hex"),
+          await recordCode.next(c, 'stocktakes', 'KK', b.planned_date),
           u.id,
           b.planned_date,
           start,
@@ -428,7 +428,7 @@ class StocktakeService {
   minuteDTO(u, r) {
     return {
       ...normalize(r),
-      code: "BB-" + r.id,
+      code: "BB-" + (r.stocktake_code || r.stocktake_id) + "-" + (r.warehouse_code || r.warehouse_id),
       status: r.conclusion_status,
       actions:
         u.roles.some(role=>["STOCKTAKER","QC_INSPECTOR"].includes(role)) && r.conclusion_status === "DRAFT"
@@ -440,7 +440,7 @@ class StocktakeService {
     if(/^LOT-[1-9]\d*$/.test(String(minute)))return require('./inspection-minutes').get(this,u,String(minute).slice(4));
     P.role(u, P.read["stocktake-minutes"]);
     const [[r]] = await this.pool.execute(
-      "SELECT * FROM stocktake_warehouses WHERE id=? AND remarks IS NOT NULL",
+      "SELECT w.*,s.code AS stocktake_code,k.code AS warehouse_code FROM stocktake_warehouses w JOIN stocktakes s ON s.id=w.stocktake_id JOIN warehouses k ON k.id=w.warehouse_id WHERE w.id=? AND w.remarks IS NOT NULL",
       [minute],
     );
     C.fail(!r, "NOT_FOUND", "Không tìm thấy kết luận.", 404);

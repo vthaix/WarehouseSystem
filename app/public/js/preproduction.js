@@ -20,7 +20,7 @@
     button.type = "button";
     button.className = "button";
     button.id = "recalculate-plan-recipe";
-    button.textContent = "Tính lại NVL theo công thức sau khi đổi lượng bánh";
+    button.textContent = "Tính lại nguyên vật liệu theo công thức sau khi đổi lượng bánh";
     document.querySelector("#data-form .form-actions").prepend(button);
     button.onclick = async () => {
       button.disabled = true;
@@ -34,7 +34,7 @@
           (i) => i.kind === "MATERIAL",
         );
         const editor = lineEditor(
-          "NVL gốc theo công thức — khi lưu cộng dự phòng một lần",
+          "nguyên vật liệu gốc theo công thức — khi lưu cộng dự phòng một lần",
           items,
           "materials",
           ["required_quantity"],
@@ -62,7 +62,7 @@
     `/api/v1/production-reports/${encodeURIComponent(id)}/images/${encodeURIComponent(name)}`;
   function comparisonTable(data) {
     return (
-      `<p>${esc(data.notice)}</p><p>Thời điểm đối chiếu: ${esc(format(data.checked_at))}</p><div class="table-scroll"><table id="material-comparison-table"><thead><tr><th>NVL</th><th>ĐVT</th><th>Nhu cầu KHSX</th><th>Tồn khả dụng</th><th>Còn thiếu</th></tr></thead><tbody>${data.lines.map((l) => `<tr><td>${esc(l.item_name)}</td><td>${esc(l.unit)}</td><td>${esc(l.required_quantity)}</td><td>${esc(l.available_quantity)}</td><td>${esc(l.shortage_quantity)}</td></tr>`).join("")}</tbody></table></div>` +
+      `<p>${esc(data.notice)}</p><p>Thời điểm đối chiếu: ${esc(format(data.checked_at))}</p><div class="table-scroll"><table id="material-comparison-table"><thead><tr><th>nguyên vật liệu</th><th>ĐVT</th><th>Nhu cầu KHSX</th><th>Tồn khả dụng</th><th>Còn thiếu</th></tr></thead><tbody>${data.lines.map((l) => `<tr><td>${esc(l.item_name)}</td><td>${esc(l.unit)}</td><td>${esc(l.required_quantity)}</td><td>${esc(l.available_quantity)}</td><td>${esc(l.shortage_quantity)}</td></tr>`).join("")}</tbody></table></div>` +
       (data.recipe
         ? "<details><summary>Công thức minh họa hiện tại</summary><p>" +
           esc(data.recipe.description) +
@@ -88,7 +88,7 @@
     ctx.fillRect(0, 0, c.width, c.height);
     ctx.fillStyle = "#111";
     ctx.font = "bold 22px Arial";
-    ctx.fillText("ĐỐI CHIẾU NVL — " + data.production_plan_code, 25, 35);
+    ctx.fillText("ĐỐI CHIẾU nguyên vật liệu — " + data.production_plan_code, 25, 35);
     ctx.font = "16px Arial";
     ctx.fillText(format(data.checked_at), 25, 65);
     const xs = [25, 470, 590, 765, 940];
@@ -225,7 +225,7 @@
       const button = document.createElement("button");
       button.className = "button primary";
       button.id = "compare-plan-stock";
-      button.textContent = "Đối chiếu tồn kho NVL";
+      button.textContent = "Đối chiếu tồn kho nguyên vật liệu";
       modalBody.append(button);
       button.onclick = async () => {
         try {
@@ -233,7 +233,7 @@
             await api(`production-plans/${record.id}/material-comparison`)
           ).data;
           openModal(
-            "Đối chiếu NVL — " + data.production_plan_code,
+            "Đối chiếu nguyên vật liệu — " + data.production_plan_code,
             comparisonTable(data) +
               (user.roles.includes("WORKSHOP_OWNER")
                 ? '<button class="button primary" id="report-from-comparison">Lập báo cáo từ đối chiếu</button>'

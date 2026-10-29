@@ -167,7 +167,7 @@ createForm = async function () {
               ]) +
               f("location") +
               employeePicker(users, [], ['QC_INSPECTOR']) +
-              '<div class="field"><label for="qc-source-mode">Nguồn hàng kiểm tra</label><select id="qc-source-mode"><option value="ACTUAL">Lô / đợt hàng đã ghi nhận</option><option value="PURCHASE_PLAN">NVL dự kiến từ kế hoạch mua</option><option value="PRODUCTION_PLAN">Thành phẩm dự kiến từ KHSX</option></select></div><div class="field" id="qc-plan-field"><label for="qc-source-plan">Kế hoạch nguồn</label><select id="qc-source-plan"></select></div><div class="span2 field" id="qc-actual-field"><label for="f-lot_ids">Chọn từng dòng lô / đợt thành phẩm thực tế</label><select id="f-lot_ids" multiple size="6"></select><small>Cùng mã lô tổng vẫn có thể chọn riêng từng đợt. Giữ Ctrl để chọn nhiều đợt.</small></div><div class="span2 notice" id="qc-source-info"></div>'
+              '<div class="field"><label for="qc-source-mode">Nguồn hàng kiểm tra</label><select id="qc-source-mode"><option value="ACTUAL">Lô / đợt hàng đã ghi nhận</option><option value="PURCHASE_PLAN">nguyên vật liệu dự kiến từ kế hoạch mua</option><option value="PRODUCTION_PLAN">Thành phẩm dự kiến từ KHSX</option></select></div><div class="field" id="qc-plan-field"><label for="qc-source-plan">Kế hoạch nguồn</label><select id="qc-source-plan"></select></div><div class="span2 field" id="qc-actual-field"><label for="f-lot_ids">Chọn từng dòng lô / đợt thành phẩm thực tế</label><select id="f-lot_ids" multiple size="6"></select><small>Cùng mã lô tổng vẫn có thể chọn riêng từng đợt. Giữ Ctrl để chọn nhiều đợt.</small></div><div class="span2 notice" id="qc-source-info"></div>'
             : f("item_kind", "select", false, [
                 { id: "", name: "Tất cả" },
                 { id: "MATERIAL", name: "Nguyên liệu" },
@@ -354,9 +354,9 @@ createForm = async function () {
         "Lập yêu cầu theo nguồn",
         formWrap(
           f("purpose", "select", true, [
-            { id: "MATERIAL_PURCHASE", name: "Bổ sung NVL / yêu cầu mua" },
-            { id: "PURCHASE_RECEIPT", name: "Nhập NVL đạt QC từ đơn mua" },
-            { id: "PRODUCTION_ISSUE", name: "Cấp NVL cho sản xuất" },
+            { id: "MATERIAL_PURCHASE", name: "Bổ sung nguyên vật liệu / yêu cầu mua" },
+            { id: "PURCHASE_RECEIPT", name: "Nhập nguyên vật liệu đạt QC từ đơn mua" },
+            { id: "PRODUCTION_ISSUE", name: "Cấp nguyên vật liệu cho sản xuất" },
             { id: "PRODUCTION_RECEIPT", name: "Nhập thành phẩm đạt QC" },
             { id: "SALE_ISSUE", name: "Xuất thành phẩm giao khách" },
           ]) +
@@ -502,7 +502,7 @@ createForm = async function () {
         ),
         items = (await options("items")).filter((i) => i.kind === "MATERIAL"),
         e = lineEditor(
-          "Nhu cầu NVL thực tế — tồn khả dụng do hệ thống tính",
+          "Nhu cầu nguyên vật liệu thực tế — tồn khả dụng do hệ thống tính",
           items,
           "lines",
           isMysql
@@ -510,7 +510,7 @@ createForm = async function () {
             : ["available_quantity", "required_quantity"],
         );
       openModal(
-        "Báo cáo nhu cầu NVL",
+        "Báo cáo nhu cầu nguyên vật liệu",
         formWrap(
           f("production_plan_id", "select", true, plans) +
             f("note", "textarea", false) +
@@ -556,7 +556,7 @@ createForm = async function () {
       const grid = document.querySelector("#data-form .form-grid");
       grid.insertAdjacentHTML(
         "afterbegin",
-        '<div class="field" id="purchase-plan-mode-field"><label for="purchase-plan-mode">Hình thức lập kế hoạch mua NVL</label><select id="purchase-plan-mode"><option value="MANUAL">Lập kế hoạch trực tiếp</option><option value="REPORT">Lập từ báo cáo sản xuất</option></select></div>' +
+        '<div class="field" id="purchase-plan-mode-field"><label for="purchase-plan-mode">Hình thức lập kế hoạch mua nguyên vật liệu</label><select id="purchase-plan-mode"><option value="MANUAL">Lập kế hoạch trực tiếp</option><option value="REPORT">Lập từ báo cáo sản xuất</option></select></div>' +
         (isMysql
           ? f("finished_report_id", "select", false, [
               { id: "", name: "Chọn báo cáo thành phẩm nguồn" },
@@ -576,7 +576,7 @@ createForm = async function () {
               ])
             : "") +
           f("source_request_id", "select", false, [
-            { id: "", name: "Chọn yêu cầu bổ sung NVL" },
+            { id: "", name: "Chọn yêu cầu bổ sung nguyên vật liệu" },
             ...requests,
           ]),
       );
@@ -620,7 +620,7 @@ createForm = async function () {
         for (const name of ['production_report_id','production_plan_id','source_request_id']) {
           const input = document.querySelector('#f-' + name); if (input) input.value = '';
         }
-        const editor = lineEditor('NVL cần mua', purchaseItems, 'lines', ['quantity','unit_price']);
+        const editor = lineEditor('nguyên vật liệu cần mua', purchaseItems, 'lines', ['quantity','unit_price']);
         document.querySelector('#lines-rows').closest('.form-section')?.remove();
         document.querySelector('#data-form .form-grid').insertAdjacentHTML('beforeend', editor.html);
         editor.mount();
@@ -683,7 +683,7 @@ createForm = async function () {
                 unit_price: "0",
               }));
             lineEditor(
-              "NVL thiếu thực tế",
+              "nguyên vật liệu thiếu thực tế",
               lines.map((l) => ({
                 id: l.item_id,
                 name: l.item_name || l.item_id,
@@ -707,7 +707,7 @@ createForm = async function () {
           }
           document.querySelector("#lines-rows").innerHTML = "";
           const e = lineEditor(
-            "NVL cần mua",
+            "nguyên vật liệu cần mua",
             req.lines.map((l) => ({ id: l.item_id, name: l.item_name })),
             "lines",
             ["quantity", "unit_price"],
@@ -879,7 +879,7 @@ detail = function (r) {
   if (current === 'production-reports' && has(['PLANNER']) && r.status === 'SUBMITTED' && r.report_purpose === 'NHU_CAU' && r.send_to_planner) {
     const button = document.createElement('button');
     button.className = 'button primary';
-    button.textContent = 'Tạo kế hoạch mua NVL';
+    button.textContent = 'Tạo kế hoạch mua nguyên vật liệu';
     button.onclick = async () => {
       const module = modules.find(m=>m[0]==='business-plans');
       location.assign(module[5]+'?module=business-plans#purchase_report='+encodeURIComponent(r.id));

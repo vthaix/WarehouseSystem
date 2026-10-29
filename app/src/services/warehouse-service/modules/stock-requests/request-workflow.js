@@ -36,7 +36,7 @@ async function resolve(c,u,purpose,sourceId,workshopId,salePlanId){
     return {production_report_id:report.id,production_source_mode:'REPORT'};
   }
   const plan=sources.production_plans.find(p=>p.id===String(sourceId)&&p.workshop_id===String(workshopId));C.fail(!plan,'NOT_FOUND','Không tìm thấy KHSX thuộc xưởng.',404);
-  if(purpose==='PRODUCTION_ISSUE'){C.fail(plan.status==='COMPLETED','INVALID_STATE','KHSX đã hoàn tất, không xuất thêm NVL.',409);return {production_plan_id:plan.id,production_source_mode:'PLAN'};}
+  if(purpose==='PRODUCTION_ISSUE'){C.fail(plan.status==='COMPLETED','INVALID_STATE','KHSX đã hoàn tất, không xuất thêm nguyên vật liệu.',409);return {production_plan_id:plan.id,production_source_mode:'PLAN'};}
   C.fail(purpose!=='SALE_ISSUE','VALIDATION_ERROR','Chọn đúng một trong bốn nhánh nhập/xuất.');
   const sales=sources.sale_plans.filter(s=>s.production_plan_id===plan.id);
   const sale=salePlanId?sales.find(s=>s.id===String(salePlanId)):sales.length===1?sales[0]:null;

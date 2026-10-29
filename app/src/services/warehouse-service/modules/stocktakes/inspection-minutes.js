@@ -59,7 +59,7 @@ async function list(service,u,q){
   if(!director)params.push(u.id,u.id);
   const modern=director?'':' AND EXISTS(SELECT 1 FROM quality_campaign_assignments a WHERE a.campaign_id=s.id AND a.user_id=?)';
   if(!director)params.push(u.id);
-  let base=" FROM (SELECT CAST(w.id AS CHAR) AS id,w.id AS sort_id,CONCAT('BB-',w.id) AS code,w.conclusion_status AS status FROM stocktake_warehouses w WHERE w.remarks IS NOT NULL"+legacy+" UNION ALL SELECT CONCAT('LOT-',s.id) AS id,s.id AS sort_id,CONCAT('BB-',s.code) AS code,s.BienBanTrangThai AS status FROM stocktakes s WHERE s.campaign_type='QUALITY_CHECK' AND s.BienBanKetLuan IS NOT NULL"+modern+') minutes WHERE 1=1';
+  let base=" FROM (SELECT CAST(w.id AS CHAR) AS id,w.id AS sort_id,CONCAT('BB-',s.code,'-',k.code) AS code,w.conclusion_status AS status FROM stocktake_warehouses w JOIN stocktakes s ON s.id=w.stocktake_id JOIN warehouses k ON k.id=w.warehouse_id WHERE w.remarks IS NOT NULL"+legacy+" UNION ALL SELECT CONCAT('LOT-',s.id) AS id,s.id AS sort_id,CONCAT('BB-',s.code) AS code,s.BienBanTrangThai AS status FROM stocktakes s WHERE s.campaign_type='QUALITY_CHECK' AND s.BienBanKetLuan IS NOT NULL"+modern+') minutes WHERE 1=1';
   if(q.q){C.text(q.q,'q',150);base+=' AND code LIKE ?';params.push('%'+q.q+'%');}
   if(q.status){base+=' AND status=?';params.push(q.status);}
   const [[n]]=await service.pool.execute('SELECT COUNT(*) AS total'+base,params);

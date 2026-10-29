@@ -149,7 +149,7 @@ module.exports = function install(Service) {
       C.fail(
         b.materials !== undefined && !Array.isArray(b.materials),
         "VALIDATION_ERROR",
-        "Danh sách NVL không hợp lệ.",
+        "Danh sách nguyên vật liệu không hợp lệ.",
       );
       const row = baseCreate.call(this, u, n, {
         ...b,
@@ -222,7 +222,7 @@ module.exports = function install(Service) {
         created_by: u.id,
         source_code: report.code,
       });
-      this.notify(["PLANNER"], `Yêu cầu bổ sung NVL ${row.code}`, {
+      this.notify(["PLANNER"], `Yêu cầu bổ sung nguyên vật liệu ${row.code}`, {
         resource: n,
         id: row.id,
       });
@@ -232,7 +232,7 @@ module.exports = function install(Service) {
       C.fail(
         b.type !== "PURCHASE",
         "VALIDATION_ERROR",
-        "Nguồn bổ sung NVL chỉ áp dụng kế hoạch mua.",
+        "Nguồn bổ sung nguyên vật liệu chỉ áp dụng kế hoạch mua.",
       );
       const req = this.get(u, "stock-requests", b.source_request_id);
       C.fail(
@@ -259,7 +259,7 @@ module.exports = function install(Service) {
         C.fail(
           !src || reserved + C.qty(l.quantity) > C.qty(src.quantity),
           "SOURCE_LIMIT_EXCEEDED",
-          "Kế hoạch mua vượt yêu cầu bổ sung NVL.",
+          "Kế hoạch mua vượt yêu cầu bổ sung nguyên vật liệu.",
         );
       }
       row.workshop_id = req.workshop_id;
@@ -603,7 +603,7 @@ module.exports = function install(Service) {
           });
       }
       p.version++;
-      this.notify(["PLANNER"], `Nhu cầu NVL ${r.code}`, {
+      this.notify(["PLANNER"], `Nhu cầu nguyên vật liệu ${r.code}`, {
         resource: n,
         id: r.id,
       });
@@ -956,7 +956,7 @@ module.exports = function install(Service) {
     C.fail(
       req.purpose === "MATERIAL_PURCHASE",
       "INVALID_STATE",
-      "Yêu cầu bổ sung NVL chưa phải yêu cầu ghi phiếu.",
+      "Yêu cầu bổ sung nguyên vật liệu chưa phải yêu cầu ghi phiếu.",
       409,
     );
     const task = task_id

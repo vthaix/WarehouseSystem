@@ -51,8 +51,8 @@ class CatalogRepository {
       );
     }
     const clause = where.length ? " WHERE " + where.join(" AND ") : "";
-    const select = resource === "items" ? "t.*,u.name AS unit" : "t.*",
-      join = resource === "items" ? " JOIN units u ON u.id = t.unit_id" : "";
+    const select = resource === "items" ? "t.*,u.name AS unit" : resource === "lots" ? "t.*,i.name AS item_name" : "t.*",
+      join = resource === "items" ? " JOIN units u ON u.id = t.unit_id" : resource === "lots" ? " JOIN items i ON i.id=t.item_id" : "";
     const [[count]] = await this.pool.execute(
       "SELECT COUNT(*) AS total FROM " + tables[resource] + " t" + clause,
       values,
@@ -92,7 +92,7 @@ class CatalogRepository {
       404,
     );
     const [rows] = await this.pool.execute(
-      "SELECT * FROM " + tables[resource] + " WHERE id = ?",
+      resource === "lots" ? "SELECT t.*,i.name AS item_name FROM lots t JOIN items i ON i.id=t.item_id WHERE t.id=?" : "SELECT * FROM " + tables[resource] + " WHERE id = ?",
       [id],
     );
     C.fail(!rows.length, "NOT_FOUND", "Không tìm thấy dữ liệu.", 404);

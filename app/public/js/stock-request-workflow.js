@@ -1,7 +1,7 @@
 (()=>{
   const previousCreate=createForm,previousEdit=editForm,previousPost=postForm;
   const value=k=>document.querySelector('#f-'+k)?.value;
-  const purposes={IN:[{id:'PURCHASE_RECEIPT',name:'Nhập nguyên vật liệu từ kế hoạch mua'},{id:'PRODUCTION_RECEIPT',name:'Nhập thành phẩm từ báo cáo thành phẩm'}],OUT:[{id:'PRODUCTION_ISSUE',name:'Xuất NVL để sản xuất'},{id:'SALE_ISSUE',name:'Xuất thành phẩm để giao hàng'}]};
+  const purposes={IN:[{id:'PURCHASE_RECEIPT',name:'Nhập nguyên vật liệu từ kế hoạch mua'},{id:'PRODUCTION_RECEIPT',name:'Nhập thành phẩm từ báo cáo thành phẩm'}],OUT:[{id:'PRODUCTION_ISSUE',name:'Xuất nguyên vật liệu để sản xuất'},{id:'SALE_ISSUE',name:'Xuất thành phẩm để giao hàng'}]};
   createForm=async function(){
     if(!isMysql||current!=='stock-requests')return previousCreate();
     try{
@@ -22,7 +22,7 @@
         const previousSale=sale.value;sale.innerHTML=(sales.length>1?'<option value="">Chọn kế hoạch bán cần giao</option>':'')+sales.map(s=>'<option value="'+esc(s.id)+'">'+esc(s.code)+'</option>').join('');
         if(sales.some(s=>s.id===previousSale))sale.value=previousSale;
         const showSale=value('purpose')==='SALE_ISSUE'&&sales.length>1;sale.closest('.field').hidden=!showSale;sale.disabled=!showSale;sale.required=showSale;
-        if(!source){document.querySelector('#request-source-info').innerHTML='<p class="notice">Chưa có nguồn phù hợp. Nhập NVL cần đơn mua; nhập thành phẩm cần báo cáo đã gửi.</p>';return;}
+        if(!source){document.querySelector('#request-source-info').innerHTML='<p class="notice">Chưa có nguồn phù hợp. Nhập nguyên vật liệu cần đơn mua; nhập thành phẩm cần báo cáo đã gửi.</p>';return;}
         if(value('purpose')==='SALE_ISSUE'&&!sales.length){document.querySelector('#request-source-info').innerHTML='<p class="notice">KHSX chưa có kế hoạch bán đã duyệt liên quan.</p>';return;}
         if(showSale&&!sale.value)return;
         try{
@@ -38,7 +38,7 @@
       };
       const chooseSource=()=>{
         const options=candidates();document.querySelector('#f-workflow_source_id').innerHTML=options.map(s=>'<option value="'+esc(s.id)+'">'+esc(s.code)+'</option>').join('');
-        document.querySelector('label[for="f-workflow_source_id"]').textContent=(value('purpose')==='PURCHASE_RECEIPT'?'Kế hoạch mua NVL':value('purpose')==='PRODUCTION_RECEIPT'?'Báo cáo thành phẩm':'Kế hoạch sản xuất')+' *';return load();
+        document.querySelector('label[for="f-workflow_source_id"]').textContent=(value('purpose')==='PURCHASE_RECEIPT'?'Kế hoạch mua nguyên vật liệu':value('purpose')==='PRODUCTION_RECEIPT'?'Báo cáo thành phẩm':'Kế hoạch sản xuất')+' *';return load();
       };
       document.querySelector('#f-request_direction').onchange=()=>{document.querySelector('#f-purpose').innerHTML=purposes[value('request_direction')].map(p=>'<option value="'+p.id+'">'+p.name+'</option>').join('');return chooseSource();};
       document.querySelector('#f-purpose').onchange=chooseSource;document.querySelector('#f-workflow_source_id').onchange=load;

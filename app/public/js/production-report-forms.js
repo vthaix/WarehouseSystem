@@ -24,7 +24,7 @@
             [
               { id: "TIEN_DO", name: "Báo cáo tiến độ" },
               { id: "SU_CO", name: "Báo cáo sự cố" },
-              { id: "NHU_CAU", name: "Báo cáo thiếu / nhu cầu NVL" },
+              { id: "NHU_CAU", name: "Báo cáo thiếu / nhu cầu nguyên vật liệu" },
             ],
             record?.report_purpose ||
               (initial?.has_shortage ? "NHU_CAU" : "TIEN_DO"),
@@ -43,11 +43,11 @@
             [],
             record?.note ||
               (initial
-                ? "Đối chiếu NVL kế hoạch " +
+                ? "Đối chiếu nguyên vật liệu kế hoạch " +
                   initial.production_plan_code +
                   (initial.has_shortage
-                    ? ": còn thiếu NVL."
-                    : ": đủ NVL theo thời điểm đối chiếu.")
+                    ? ": còn thiếu nguyên vật liệu."
+                    : ": đủ nguyên vật liệu theo thời điểm đối chiếu.")
                 : ""),
           ) +
           inputField(
@@ -60,7 +60,7 @@
             ],
             String(record?.send_to_planner ?? initial?.has_shortage ?? false),
           ) +
-          '<div class="span2 notice">Ban giám đốc luôn nhận khi gửi báo cáo. Báo cáo nhu cầu còn thiếu NVL sẽ tự gửi thêm Bộ phận lập kế hoạch. Sự cố/tiến độ không bắt nhập NVL. Báo cáo thành phẩm được lập riêng khi hoàn tất toàn bộ.</div><div class="span2" id="report-materials"></div>',
+          '<div class="span2 notice">Ban giám đốc luôn nhận khi gửi báo cáo. Báo cáo nhu cầu còn thiếu nguyên vật liệu sẽ tự gửi thêm Bộ phận lập kế hoạch. Sự cố/tiến độ không bắt nhập nguyên vật liệu. Báo cáo thành phẩm được lập riêng khi hoàn tất toàn bộ.</div><div class="span2" id="report-materials"></div>',
       ),
     );
     const progress = document.querySelector("#f-progress_percentage");
@@ -100,7 +100,7 @@
       }
       if (token !== seq) return;
       const editor = lineEditor(
-        "Nhu cầu NVL ước lượng — tồn khả dụng do hệ thống đối chiếu",
+        "Nhu cầu nguyên vật liệu ước lượng — tồn khả dụng do hệ thống đối chiếu",
         materials,
         "lines",
         ["required_quantity"],

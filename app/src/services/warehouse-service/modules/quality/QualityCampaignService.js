@@ -1,7 +1,7 @@
-const crypto = require("node:crypto");
 const C = require("../../../domain/core");
 const P = require("../../../domain/policy");
 const paginate = require("../../../../utils/pagination");
+const recordCode = require("../../../../shared/record-code");
 
 const isId = (v) => /^[1-9]\d*$/.test(String(v));
 const Sources=require('./campaign-sources');
@@ -112,7 +112,7 @@ class QualityCampaignService {
         const [scheduled] = await connection.execute("SELECT q.campaign_id FROM quality_campaign_lots q JOIN stocktakes s ON s.id=q.campaign_id WHERE q.lot_id=? AND s.status IN ('PLANNED','IN_PROGRESS')", [lot.id]);
         C.fail(scheduled.length, "DUPLICATE", "Lô đã có lịch QC đang hoạt động.", 409);
       }
-      const code = "LQC-" + crypto.randomBytes(8).toString("hex").toUpperCase();
+      const code = await recordCode.next(connection, 'stocktakes', 'LQC', planned?.code || `${body.quality_kind}-${body.planned_date}`);
       const [created] = await connection.execute("INSERT INTO stocktakes (code,created_by,planned_date,start_at,end_at,item_kind,status,note,version,campaign_type,quality_kind,location) VALUES (?,?,?,?,?,?,'PLANNED',?,1,'QUALITY_CHECK',?,?)", [code, user.id, body.planned_date, new Date(start), new Date(end), body.quality_kind, body.note || null, body.quality_kind, body.location.trim()]);
       id = created.insertId;
       if(planned)await connection.execute('UPDATE stocktakes SET MaKeHoachMuaQC=?,MaKeHoachSanXuatQC=? WHERE id=?',[mode==='PURCHASE_PLAN'?planned.id:null,mode==='PRODUCTION_PLAN'?planned.id:null,id]);

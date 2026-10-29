@@ -66,7 +66,7 @@
           orders = await options("customer-orders"),
           workshops = await options("workshops");
         const mat = lineEditor(
-          "NVL dự kiến (nhập lượng gốc, hệ thống cộng 10% một lần)",
+          "nguyên vật liệu dự kiến (nhập lượng gốc, hệ thống cộng 10% một lần)",
           items.filter((i) => i.kind === "MATERIAL"),
           "materials",
           ["required_quantity"],
@@ -79,13 +79,13 @@
               field("start_date", "date") +
               field("end_date", "date") +
               field("material_source", "select", true, [
-                { id: "RECIPE", name: "Tự tính NVL theo công thức bánh" },
+                { id: "RECIPE", name: "Tự tính nguyên vật liệu theo công thức bánh" },
                 { id: "MANUAL", name: "Nhập định lượng gốc thủ công" },
               ]) +
               '<div class="span2" id="import-info"></div><div class="span2" id="import-outputs"></div>' +
               '<div class="span2" id="manual-recipe">' +
               mat.html +
-              '</div><div class="span2"><button type="button" class="button" id="recipe-estimate">Xem NVL theo công thức</button><div id="recipe-result"></div></div>',
+              '</div><div class="span2"><button type="button" class="button" id="recipe-estimate">Xem nguyên vật liệu theo công thức</button><div id="recipe-result"></div></div>',
           ),
         );
         mat.mount();
@@ -194,7 +194,7 @@
             document.querySelector("#import-info").innerHTML = notice(r);
             rowsAt(
               "import-lines",
-              "Nhu cầu NVL thực tế — có thể điều chỉnh",
+              "Nhu cầu nguyên vật liệu thực tế — có thể điều chỉnh",
               items,
               "lines",
               ["required_quantity"],
@@ -211,17 +211,17 @@
         const suppliers = await options('suppliers');
         const plans = (await options('business-plans')).filter(p => p.type === 'PURCHASE');
         openModal('Mua nguyên vật liệu', formWrap(
-          field('source_mode','select',true,[{id:'MANUAL',name:'Tự nhập NVL cần mua'},{id:'PLAN',name:'Lấy từ kế hoạch mua NVL đã duyệt'}]) +
-          pick('business_plan_id',plans,'Chọn kế hoạch mua NVL') + field('expected_delivery_date','date') +
+          field('source_mode','select',true,[{id:'MANUAL',name:'Tự nhập nguyên vật liệu cần mua'},{id:'PLAN',name:'Lấy từ kế hoạch mua nguyên vật liệu đã duyệt'}]) +
+          pick('business_plan_id',plans,'Chọn kế hoạch mua nguyên vật liệu') + field('expected_delivery_date','date') +
           field('delivery_terms','textarea') + '<div class="span2" id="import-info"></div><div class="span2" id="import-lines"></div>'
         ));
         function mountPurchaseLines(lines, planMode) {
-          document.querySelector('#import-lines').innerHTML = '<h3>NVL cần mua — chọn nhà cung cấp cho từng loại</h3><div id="purchase-lines"></div>' + (planMode ? '' : '<button type="button" class="button small" id="add-purchase-line">＋ Thêm NVL</button>');
+          document.querySelector('#import-lines').innerHTML = '<h3>nguyên vật liệu cần mua — chọn nhà cung cấp cho từng loại</h3><div id="purchase-lines"></div>' + (planMode ? '' : '<button type="button" class="button small" id="add-purchase-line">＋ Thêm nguyên vật liệu</button>');
           function add(l = {}) {
             const row = document.createElement('div'); row.className='form-section'; row.dataset.section='lines';
             row.innerHTML = '<div class="form-grid"><div class="field"><label>Nguyên vật liệu / đơn vị *</label><select data-key="item_id" aria-label="Nguyên vật liệu" '+(planMode?'disabled':'')+'>'+items.map(i=>'<option value="'+esc(i.id)+'" '+(String(i.id)===String(l.item_id)?'selected':'')+'>'+esc(i.name+' · '+(i.unit || i.unit_name || ''))+'</option>').join('')+'</select></div>' +
               '<div class="field"><label>Số lượng *</label><input aria-label="Số lượng" data-key="quantity" type="number" min="0.001" step="0.001" required '+(planMode?'readonly':'')+' value="'+esc(numericInputValue(l.quantity || '1'))+'"></div>' +
-              '<div class="field"><label>Nhà cung cấp *</label><select aria-label="Nhà cung cấp" data-key="supplier_id" required><option value="">Chọn NCC cho NVL này</option>'+suppliers.map(s=>'<option value="'+esc(s.id)+'">'+esc(optionLabel(s))+'</option>').join('')+'</select></div>' +
+              '<div class="field"><label>Nhà cung cấp *</label><select aria-label="Nhà cung cấp" data-key="supplier_id" required><option value="">Chọn NCC cho nguyên vật liệu này</option>'+suppliers.map(s=>'<option value="'+esc(s.id)+'">'+esc(optionLabel(s))+'</option>').join('')+'</select></div>' +
               '<div class="field"><label>Đơn giá mua *</label><input aria-label="Đơn giá mua" data-key="unit_price" type="number" min="0" step="0.0001" required value="'+esc(numericInputValue(l.unit_price || '0'))+'"></div></div>' +
               (planMode ? '<input type="hidden" data-key="business_plan_line_id" value="'+esc(l.id)+'">' : '<button class="button small danger" type="button">Xóa dòng</button>');
             if (!planMode) row.querySelector('button').onclick=()=>{row.remove();retryKey=crypto.randomUUID();};
@@ -239,7 +239,7 @@
           const p=(await api('business-plans/'+select.value)).data;
           if(!fresh())return;
           date.value=p.planned_date;
-          document.querySelector('#import-info').innerHTML='<div class="notice">Số lượng và ngày mong nhận NVL lấy từ kế hoạch '+esc(p.code)+'. Bộ phận mua hàng chọn NCC và giá cho từng dòng.</div>';
+          document.querySelector('#import-info').innerHTML='<div class="notice">Số lượng và ngày mong nhận nguyên vật liệu lấy từ kế hoạch '+esc(p.code)+'. Bộ phận mua hàng chọn NCC và giá cho từng dòng.</div>';
           mountPurchaseLines(p.lines,true);
         },['import-info','import-lines']);
         document.querySelector('#f-source_mode').onchange=()=>{document.querySelector('#f-business_plan_id').value='';document.querySelector('#f-expected_delivery_date').value='';return sync();};
@@ -261,7 +261,7 @@
             ).values(),
           ];
         openModal(
-          "Nhận NVL theo đơn mua",
+          "Nhận nguyên vật liệu theo đơn mua",
           formWrap(
             pick("purchase_order_id", orders, "Chọn đơn mua") +
               field("code") +
@@ -323,15 +323,15 @@
         "Nhập / xuất kho theo nguồn",
         formWrap(
           field("purpose", "select", true, [
-            { id: "PRODUCTION_ISSUE", name: "Xuất NVL để sản xuất" },
+            { id: "PRODUCTION_ISSUE", name: "Xuất nguyên vật liệu để sản xuất" },
             { id: "SALE_ISSUE", name: "Xuất thành phẩm để bán" },
-            { id: "PURCHASE_RECEIPT", name: "Nhập NVL đạt QC từ đơn mua" },
+            { id: "PURCHASE_RECEIPT", name: "Nhập nguyên vật liệu đạt QC từ đơn mua" },
             { id: "PRODUCTION_RECEIPT", name: "Nhập thành phẩm đạt QC" },
             {
               id: "PARTIAL_PRODUCTION_RECEIPT",
               name: "Nhập thành phẩm từng phần — tự ghi số lượng",
             },
-            { id: "MATERIAL_PURCHASE", name: "Yêu cầu mua bổ sung NVL" },
+            { id: "MATERIAL_PURCHASE", name: "Yêu cầu mua bổ sung nguyên vật liệu" },
           ]) +
             field("production_source_mode", "select", true, [
               { id: "PLAN", name: "Lấy từ kế hoạch sản xuất" },

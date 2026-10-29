@@ -1,10 +1,10 @@
-const crypto = require('node:crypto');
 const C = require('../../../domain/core');
 const P = require('../../../domain/policy');
 const paginate = require('../../../../utils/pagination');
+const recordCode = require('../../../../shared/record-code');
 const isId = v => /^[1-9]\d*$/.test(String(v));
 const norm = r => Object.fromEntries(Object.entries(r).map(([k,v])=>[k,(k==='id'||k.endsWith('_id'))&&v!=null?String(v):v]));
-const headerSelect = "SELECT h.*,h.return_status AS status,h.return_version AS version FROM lot_headers h";
+const headerSelect = "SELECT h.*,h.return_status AS status,h.return_version AS version,w.name AS return_warehouse_name,u.full_name AS return_receiver_name FROM lot_headers h LEFT JOIN warehouses w ON w.id=h.return_warehouse_id LEFT JOIN users u ON u.id=h.return_receiver_id";
 class CustomerReturnService {
   constructor(pool, transactions){this.pool=pool;this.transactions=transactions;}
   tx(work){return this.transactions.tx(work);}
@@ -49,7 +49,8 @@ class CustomerReturnService {
         const [[sum]]=await c.execute("SELECT COALESCE(SUM(t.quantity),0) AS total FROM returned_lot_lines t JOIN lot_headers h ON h.id=t.lot_header_id WHERE t.original_stock_document_line_id=? AND h.return_status<>'CANCELLED' FOR UPDATE",[source.id]);
         C.fail(C.qty(line.quantity)+C.qty(String(sum.total),false)>C.qty(String(source.quantity)),'SOURCE_LIMIT_EXCEEDED','Tổng trả không được vượt lượng đã giao.',409);
       }
-      const [h]=await c.execute("INSERT INTO lot_headers(code,lot_kind,return_direction,note,return_status,return_version,return_receiver_id,return_warehouse_id,return_creator_id) VALUES (?,'TRA_VE','KHACH_HANG',?,'PENDING',1,?,?,?)",['TRA-KH-'+crypto.randomBytes(8).toString('hex'),b.reason,b.receiver_id,b.warehouse_id,u.id]);
+      const [[order]]=await c.execute('SELECT code FROM customer_orders WHERE id=?',[sources[0].customer_order_id]);
+      const [h]=await c.execute("INSERT INTO lot_headers(code,lot_kind,return_direction,note,return_status,return_version,return_receiver_id,return_warehouse_id,return_creator_id) VALUES (?,'TRA_VE','KHACH_HANG',?,'PENDING',1,?,?,?)",[await recordCode.next(c,'lot_headers','TRAKH',order.code),b.reason,b.receiver_id,b.warehouse_id,u.id]);
       for(const line of b.lines){const source=sources.find(s=>String(s.id)===String(line.original_stock_document_line_id));await c.execute('INSERT INTO returned_lot_lines(lot_header_id,original_lot_detail_id,quantity,original_stock_document_line_id,return_location_id) VALUES (?,?,?,?,?)',[h.insertId,source.lot_id,C.decimal(C.qty(line.quantity)),source.id,line.location_id]);}
       await this.audit(c,u,h.insertId,'CREATE',request);return h.insertId;
     });return this.get(u,id);
@@ -66,11 +67,11 @@ class CustomerReturnService {
       const [[warehouse]]=await c.execute('SELECT id FROM warehouses WHERE id=? AND is_active=1 FOR UPDATE',[h.return_warehouse_id]);C.fail(!warehouse,'INVALID_STATE','Kho không hoạt động.',409);
       const [[frozen]]=await c.execute("SELECT COUNT(*) AS total FROM stocktake_warehouses w JOIN stocktakes s ON s.id=w.stocktake_id WHERE w.warehouse_id=? AND s.campaign_type='COUNT' AND w.status IN ('COUNTING','COMPLETED') AND s.status<>'CLOSED'",[h.return_warehouse_id]);C.fail(Number(frozen.total)>0,'WAREHOUSE_FROZEN','Kho đang kiểm kê.',409);
       const [lines]=await c.execute('SELECT t.*,l.item_id,l.production_plan_id,l.manufactured_date,l.expiry_date FROM returned_lot_lines t JOIN lots l ON l.id=t.original_lot_detail_id WHERE t.lot_header_id=? ORDER BY t.id FOR UPDATE',[id]);
-      const [doc]=await c.execute("INSERT INTO stock_documents(code,type,stock_request_id,return_header_id,warehouse_id,posted_by,posted_at,status,note,idempotency_key) VALUES (?,'IN',NULL,?,?,?,UTC_TIMESTAMP(6),'POSTED',?,?)",['PN-TRA-'+crypto.randomBytes(8).toString('hex'),id,h.return_warehouse_id,u.id,h.note,'customer-return-'+id]);
+      const [doc]=await c.execute("INSERT INTO stock_documents(code,type,stock_request_id,return_header_id,warehouse_id,posted_by,posted_at,status,note,idempotency_key) VALUES (?,'IN',NULL,?,?,?,UTC_TIMESTAMP(6),'POSTED',?,?)",[await recordCode.next(c,'stock_documents','PNTRA',h.code),id,h.return_warehouse_id,u.id,h.note,'customer-return-'+id]);
       for(const line of lines){
         const [[loc]]=await c.execute('SELECT id FROM warehouse_locations WHERE id=? AND warehouse_id=? AND is_active=1',[line.return_location_id,h.return_warehouse_id]);C.fail(!loc,'INVALID_STATE','Vị trí nhận không còn hoạt động.',409);
         C.fail(!line.production_plan_id,'INVALID_STATE','Dòng giao gốc không phải thành phẩm.',409);
-        const [lot]=await c.execute("INSERT INTO lots(code,lot_header_id,item_id,production_plan_id,manufactured_date,expiry_date,received_quantity,qc_status,version) VALUES (?,?,?,?,?,?,?,'PENDING',1)",['LO-TRA-'+crypto.randomBytes(8).toString('hex'),id,line.item_id,line.production_plan_id,line.manufactured_date,line.expiry_date,line.quantity]);
+        const [lot]=await c.execute("INSERT INTO lots(code,lot_header_id,item_id,production_plan_id,manufactured_date,expiry_date,received_quantity,qc_status,version) VALUES (?,?,?,?,?,?,?,'PENDING',1)",[await recordCode.next(c,'lots','LOTRA',h.code),id,line.item_id,line.production_plan_id,line.manufactured_date,line.expiry_date,line.quantity]);
         await c.execute('UPDATE returned_lot_lines SET returned_lot_detail_id=? WHERE id=?',[lot.insertId,line.id]);
         const [dl]=await c.execute("INSERT INTO stock_document_lines(stock_document_id,stock_request_line_id,return_line_id,lot_id,location_id,quality_bucket,quantity) VALUES (?,NULL,?,?,?,'QUARANTINE',?)",[doc.insertId,line.id,lot.insertId,line.return_location_id,line.quantity]);
         await c.execute("INSERT INTO inventory_balances(lot_id,location_id,quality_bucket,quantity,version) VALUES (?,?,'QUARANTINE',?,1)",[lot.insertId,line.return_location_id,line.quantity]);

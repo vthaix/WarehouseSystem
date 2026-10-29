@@ -52,7 +52,7 @@ class SourceImportService {
       const plan=await this.r.productionPlans.get(user,id);C.state(plan,['APPROVED','IN_PROGRESS']);
       const [lots]=await this.pool.execute("SELECT l.item_id,l.code AS lot_code,l.received_quantity AS quantity,l.manufactured_date,l.expiry_date FROM lots l JOIN stock_requests r ON r.id=l.production_receipt_request_id WHERE l.production_plan_id=? AND (r.status<>'CANCELLED' OR EXISTS(SELECT 1 FROM stock_documents d WHERE d.stock_request_id=r.id)) ORDER BY l.id",[id]);
       const date=v=>v instanceof Date?v.toISOString().slice(0,10):v;
-      return {production_plan_id:String(id),source_code:plan.code,outputs:lots.map(l=>({...l,item_id:String(l.item_id),manufactured_date:date(l.manufactured_date),expiry_date:date(l.expiry_date)})),warnings:['Đã lấy các dòng lô từ từng đợt nhập. Giữ nguyên các dòng này; chỉ thêm thành phẩm thực tế chưa ghi nhận. Nhập NVL thực dùng và xác nhận hoàn tất toàn bộ trước khi gửi tổng kết.']};
+      return {production_plan_id:String(id),source_code:plan.code,outputs:lots.map(l=>({...l,item_id:String(l.item_id),manufactured_date:date(l.manufactured_date),expiry_date:date(l.expiry_date)})),warnings:['Đã lấy các dòng lô từ từng đợt nhập. Giữ nguyên các dòng này; chỉ thêm thành phẩm thực tế chưa ghi nhận. Nhập nguyên vật liệu thực dùng và xác nhận hoàn tất toàn bộ trước khi gửi tổng kết.']};
     }
     if (target === "production-plans") {
       P.role(user, ["PLANNER"]);
@@ -81,7 +81,7 @@ class SourceImportService {
             ),
           })),
         ),
-        warnings: ["Chọn xưởng, thời gian và NVL trước khi lưu."],
+        warnings: ["Chọn xưởng, thời gian và nguyên vật liệu trước khi lưu."],
       };
     }
     if (target === "production-reports") {
@@ -98,7 +98,7 @@ class SourceImportService {
           required_quantity: l.required_quantity,
         })),
         warnings: [
-          "NVL đã gồm dự phòng của kế hoạch; không cộng thêm 10%. Có thể sửa theo nhu cầu thực tế.",
+          "nguyên vật liệu đã gồm dự phòng của kế hoạch; không cộng thêm 10%. Có thể sửa theo nhu cầu thực tế.",
         ],
       };
     }
@@ -178,7 +178,7 @@ class SourceImportService {
       !["REPORT", "PLAN"].includes(mode) ||
         (mode === "PLAN" && body.purpose !== "PRODUCTION_ISSUE"),
       "VALIDATION_ERROR",
-      "Nguồn xuất NVL không hợp lệ.",
+      "Nguồn xuất nguyên vật liệu không hợp lệ.",
     );
     const def = this.r.stockRequests.definition(body.purpose, mode);
     C.fail(!def, "VALIDATION_ERROR", "Chọn loại nhập/xuất.");
@@ -246,7 +246,7 @@ class SourceImportService {
           [id],
         );
         caps = sum(passed);
-        warnings.push("Chỉ lấy lượng NVL đã đạt QC và chưa được yêu cầu nhập.");
+        warnings.push("Chỉ lấy lượng nguyên vật liệu đã đạt QC và chưa được yêu cầu nhập.");
       }
       const lines = [];
       for (const [item, limit] of caps) {

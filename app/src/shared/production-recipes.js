@@ -30,7 +30,7 @@ function calculate(outputs, items, config = configuration) {
       C.fail(
         !material || material.kind !== "MATERIAL" || !material.is_active,
         "RECIPE_MISSING",
-        `NVL ${code} trong công thức chưa hoạt động.`,
+        `nguyên vật liệu ${code} trong công thức chưa hoạt động.`,
         422,
       );
       const key = String(material.id);

@@ -1,6 +1,6 @@
-const crypto = require('node:crypto');
 const C = require('../../../domain/core');
 const P = require('../../../domain/policy');
+const recordCode = require('../../../../shared/record-code');
 const id = v => /^[1-9]\d*$/.test(String(v));
 
 function validate(body) {
@@ -20,7 +20,7 @@ function validate(body) {
 }
 
 async function source(c, lineId) {
-  const [[line]] = await c.execute("SELECT q.*,r.status AS inspection_status,l.expiry_date,l.purchase_order_line_id,h.return_direction,h.return_status FROM qc_inspection_lines q JOIN qc_inspections r ON r.id=q.qc_inspection_id JOIN lots l ON l.id=q.lot_id JOIN lot_headers h ON h.id=l.lot_header_id WHERE q.id=? FOR UPDATE", [lineId]);
+  const [[line]] = await c.execute("SELECT q.*,r.code AS inspection_code,r.status AS inspection_status,l.code AS lot_code,l.expiry_date,l.purchase_order_line_id,h.return_direction,h.return_status FROM qc_inspection_lines q JOIN qc_inspections r ON r.id=q.qc_inspection_id JOIN lots l ON l.id=q.lot_id JOIN lot_headers h ON h.id=l.lot_header_id WHERE q.id=? FOR UPDATE", [lineId]);
   C.fail(!line || line.inspection_status !== 'RECORDED' ||
     (line.return_direction === 'KHACH_HANG' && line.return_status !== 'POSTED'),
     'INVALID_STATE', 'Nguồn phải có kết luận QC; hàng khách trả phải đã nhận.', 409);
@@ -44,7 +44,7 @@ async function create(service, u, b, request) {
         'SOURCE_LIMIT_EXCEEDED','Vượt lượng cách ly còn có thể đề xuất tại vị trí.',409);
     }
     const [r] = await c.execute("INSERT INTO exception_proposals(code,type,qc_inspection_line_id,created_by,action,quantity,reason,resolution_note,status,version) VALUES (?,'QUARANTINE_DISPOSITION',?,?,?,?,?,?,'PENDING_APPROVAL',1)",
-      ['XL-CL-'+crypto.randomBytes(8).toString('hex'),b.qc_inspection_line_id,u.id,b.action,C.decimal(C.qty(b.quantity)),b.reason,b.resolution_note]);
+      [await recordCode.next(c,'exception_proposals','XLCL',`${line.inspection_code}-${line.lot_code}`),b.qc_inspection_line_id,u.id,b.action,C.decimal(C.qty(b.quantity)),b.reason,b.resolution_note]);
     target = r.insertId;
     for (const a of b.allocations) await c.execute('INSERT INTO exception_allocations(exception_proposal_id,location_id,quantity) VALUES (?,?,?)',[target,a.location_id,C.decimal(C.qty(a.quantity))]);
     await service.audit(c,u,target,'CREATE_QUARANTINE',request);
@@ -97,7 +97,7 @@ async function apply(c,u,row) {
     }
   }
   if(row.action==='RETURN_SUPPLIER') {
-    const [header]=await c.execute("INSERT INTO lot_headers(code,lot_kind,return_direction,note) VALUES (?,'TRA_VE','NCC',?)",['TRA-NCC-'+crypto.randomBytes(8).toString('hex'),row.resolution_note]);
+    const [header]=await c.execute("INSERT INTO lot_headers(code,lot_kind,return_direction,note) VALUES (?,'TRA_VE','NCC',?)",[await recordCode.next(c,'lot_headers','TRANCC',row.code),row.resolution_note]);
     await c.execute('INSERT INTO returned_lot_lines(lot_header_id,original_lot_detail_id,quantity,exception_proposal_id) VALUES (?,?,?,?)',[header.insertId,line.lot_id,row.quantity,row.id]);
   }
   if(row.action==='QUARANTINE'||(row.action==='RELEASE'&&line.return_direction!=='KHACH_HANG')) {

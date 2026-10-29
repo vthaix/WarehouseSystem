@@ -1,7 +1,7 @@
-const crypto = require("node:crypto");
 const C = require("../../../domain/core");
 const P = require("../../../domain/policy");
 const paginate = require("../../../../utils/pagination");
+const recordCode = require("../../../../shared/record-code");
 
 const isId = (value) => /^[1-9]\d*$/.test(String(value));
 const asDate = (value) => (value instanceof Date ? value.toISOString() : value);
@@ -537,8 +537,7 @@ class WarehouseFlowService {
       }
       const tasks = [];
       for (const assigneeId of assignees) {
-        const code =
-          "CVK-" + crypto.randomBytes(8).toString("hex").toUpperCase();
+        const code = await recordCode.next(connection, 'tasks', 'CVK', request.code);
         const [created] = await connection.execute(
           "INSERT INTO tasks (code,title,description,start_at,end_at,priority,status,stocktake_id,purchase_order_id,stock_request_id,task_type,manager_id,created_by,version) VALUES (?,?,?,?,?,'NORMAL','PLANNED',NULL,NULL,?,?,?, ?,1)",
           [
@@ -933,9 +932,7 @@ class WarehouseFlowService {
           quantity: C.decimal(quantity),
         });
       }
-      const code =
-        (request.type === "IN" ? "PN-" : "PX-") +
-        crypto.randomBytes(8).toString("hex").toUpperCase();
+      const code = await recordCode.next(connection, 'stock_documents', request.type === 'IN' ? 'PN' : 'PX', request.code);
       const [created] = await connection.execute(
         "INSERT INTO stock_documents (code,type,stock_request_id,warehouse_id,posted_by,posted_at,status,note,idempotency_key,task_id) VALUES (?,?,?,?,?,UTC_TIMESTAMP(6),'POSTED',?,?,?)",
         [

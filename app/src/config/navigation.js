@@ -3,7 +3,7 @@ const labels = {
   MINUTE_EXCEPTION:'Ngoại lệ trong biên bản',OPEN:'Chờ quản lý xử lý',RESOLVED:'Đã xử lý',
   LOT_INSPECTION:'Kiểm tra lô hàng',PART:'Từng phần',FINAL:'Tổng kết trước đây',
   QC_FAILURE:'Hàng QC lỗi', STOCKTAKE_DIFFERENCE:'Chênh lệch kiểm kê',
-  TIEN_DO:'Tiến độ',SU_CO:'Sự cố',NHU_CAU:'Thiếu / nhu cầu NVL',
+  TIEN_DO:'Tiến độ',SU_CO:'Sự cố',NHU_CAU:'Thiếu / nhu cầu nguyên vật liệu',
   RELEASE: "Giải phóng / tái kiểm để sử dụng lại", SCRAP: "Tiêu hủy", RETURN_SUPPLIER: "Trả nhà cung cấp",
   QUARANTINE_DISPOSITION: 'Xử lý hàng cách ly', STOCK_QC_CORRECTION: 'Điều chỉnh QC hàng đã nhập',
   CUSTOMER_ACCEPTED: "Đã phê duyệt",
@@ -11,7 +11,7 @@ const labels = {
   ORDER_SUBMITTED: "Chờ tiếp nhận",
   QUALITY_CHECK: "Kiểm tra chất lượng",
   COUNT: "Kiểm đếm tồn kho",
-  PROCUREMENT: "Bổ sung NVL",
+  PROCUREMENT: "Bổ sung nguyên vật liệu",
   CLOSED_WITH_RETURNS: "Đã nhận, có trả NCC",
   CUSTOMER: "Khách hàng",
   PLANNER: "Lập kế hoạch",
@@ -54,7 +54,7 @@ const labels = {
   FINISHED_PRODUCT: "Thành phẩm",
 };
 const modules = [
-  ['material-prices','Đơn giá nguyên vật liệu','₫',['WAREHOUSE_MANAGER','PURCHASER'],[],'/catalog/material-prices','Đơn vị tính và đơn giá NVL theo từng nhà cung cấp.'],
+  ['material-prices','Đơn giá nguyên vật liệu','₫',['WAREHOUSE_MANAGER','PURCHASER'],[],'/catalog/material-prices','Đơn vị tính và đơn giá nguyên vật liệu theo từng nhà cung cấp.'],
   ['accounts','Quản lý tài khoản','♙',['ADMIN'],['ADMIN'],'/admin/accounts','Thêm, sửa, xóa tài khoản và phân quyền sử dụng hệ thống.'],
   ['warehouse-lookup','Tra cứu kho','▦',['WAREHOUSE_MANAGER','WORKSHOP_OWNER'],[],'/warehouse/lookup','Xem sơ đồ vị trí, mặt hàng, lô và lượng tồn khả dụng.'],
   ['inspection-counts','Quản lý kiểm kê','≡',['STOCKTAKER'],['STOCKTAKER'],'/inspection-counts','Chọn công việc và ghi số đếm các dòng lô trong một lần.'],
@@ -84,7 +84,7 @@ const modules = [
     ["PURCHASER", "WORKSHOP_OWNER", "WAREHOUSE_STAFF", "QC_INSPECTOR"],
     ["PURCHASER"],
     "/purchases",
-    "Tự nhập hoặc lấy kế hoạch mua NVL đã duyệt; chọn NCC theo từng NVL.",
+    "Tự nhập hoặc lấy kế hoạch mua nguyên vật liệu đã duyệt; chọn NCC theo từng nguyên vật liệu.",
   ],
   [
     "categories",
@@ -183,7 +183,7 @@ const modules = [
     ["WORKSHOP_OWNER", "PLANNER", "DIRECTOR"],
     ["WORKSHOP_OWNER"],
     "/production/reports",
-    "Tiến độ, sự cố hoặc thiếu NVL khi đang sản xuất; gửi Ban giám đốc.",
+    "Tiến độ, sự cố hoặc thiếu nguyên vật liệu khi đang sản xuất; gửi Ban giám đốc.",
   ],
   [
     "finished-reports",
@@ -285,18 +285,18 @@ const modules = [
   ],
 ];
 function columnsFor(n) {
-  if(n==='material-prices')return [['code','Mã NVL'],['name','Nguyên vật liệu'],['unit','Đơn vị tính'],['reference_price','Giá tham khảo (đ/đơn vị)']];
+  if(n==='material-prices')return [['code','Mã nguyên vật liệu'],['name','Nguyên vật liệu'],['unit','Đơn vị tính'],['reference_price','Giá tham khảo (đ/đơn vị)']];
   if(n==='accounts')return [['username','Tên đăng nhập'],['full_name','Họ và tên'],['roles','Vai trò'],['status','Trạng thái']];
-  if(n==='production-plans')return [['code','Kế hoạch sản xuất'],['customer_order_code','Đơn khách hàng'],['workshop_name','Xưởng phụ trách'],['start_date','Ngày bắt đầu'],['end_date','Ngày hoàn thành'],['status','Trạng thái']];
+  if(n==='production-plans')return [['code','Kế hoạch sản xuất'],['customer_order_code','Đơn khách hàng'],['workshop_name','Xưởng phụ trách'],['order_total','Tổng giá trị đơn hàng'],['start_date','Ngày bắt đầu'],['end_date','Ngày hoàn thành'],['status','Trạng thái']];
   if(n==='business-plans')return [['code','Kế hoạch'],['type','Loại kế hoạch'],['planned_date','Ngày kế hoạch'],['status','Trạng thái']];
-  if(n==='purchase-orders')return [['code','Đơn mua NVL'],['expected_delivery_date','Ngày dự kiến nhận'],['status','Trạng thái']];
+  if(n==='purchase-orders')return [['code','Đơn mua nguyên vật liệu'],['expected_delivery_date','Ngày dự kiến nhận'],['status','Trạng thái']];
   if(n==='stock-requests')return [['code','Yêu cầu'],['purpose','Nghiệp vụ'],['requested_at','Ngày giờ thực hiện'],['status','Trạng thái']];
   if(n==='stock-documents')return [['code','Phiếu kho'],['type','Loại phiếu'],['posted_at','Ngày giờ ghi phiếu'],['status','Trạng thái']];
   if(n==='inspection-counts')return [['code','Mã công việc'],['title','Công việc'],['start_at','Bắt đầu'],['status','Trạng thái']];
   if(n==='exception-proposals')return [['code','Mã ngoại lệ'],['type','Nguồn'],['reason','Vấn đề cần xử lý'],['status','Trạng thái']];
   if(n==='categories')return [['image_path','Ảnh'],['code','Mã'],['name','Tên'],['is_active','Hoạt động']];
   if(n==='production-reports')return [['code','Mã báo cáo'],['production_plan_code','Kế hoạch'],['report_purpose','Mục đích'],['progress_percentage','Tiến độ (%)'],['status','Trạng thái']];
-  if(n === "customer-returns")return [["code","Mã hàng trả"],["return_warehouse_id","Kho nhận"],["return_receiver_id","Nhân viên nhận"],["status","Trạng thái"],["created_at","Ngày lập"]];
+  if(n === "customer-returns")return [["code","Mã hàng trả"],["return_warehouse_name","Kho nhận"],["return_receiver_name","Nhân viên nhận"],["status","Trạng thái"],["created_at","Ngày lập"]];
   if (n === "items")
     return [
       ["code", "Mã hàng"],
@@ -316,7 +316,7 @@ function columnsFor(n) {
   if (n === "lots")
     return [
       ["code", "Mã lô"],
-      ["item_id", "Mặt hàng"],
+      ["item_name", "Mặt hàng"],
       ["received_quantity", "Số lượng"],
       ["qc_status", "QC"],
       ["expiry_date", "Hạn dùng"],
@@ -332,7 +332,7 @@ function columnsFor(n) {
     ];
   if (n === "reports/stocktakes")
     return [
-      ["warehouse_id", "Kho"],
+      ["warehouse_name", "Kho"],
       ["item_name", "Mặt hàng"],
       ["system_quantity", "Số lượng ghi nhận"],
       ["actual_quantity", "Thực tế"],
@@ -383,7 +383,7 @@ const fieldNames = {
   source_kind:'Nguồn biên bản',source_code:'Mã đợt nguồn',lot_code:'Mã phần / dòng lô',difference_quantity:'Chênh lệch số lượng',
   counted_quantity:'Số lượng kiểm đếm',counted_by:'Người kiểm đếm',counted_at:'Thời điểm kiểm đếm',KiemSoLuong:'Kiểm số lượng',KiemChatLuong:'Kiểm chất lượng',
   inspection_type:'Nhóm hàng',inspection_lots:'Các phần / dòng lô được giao',finished_report_code:'Báo cáo thành phẩm',lot_header_code:'Lô tổng',report_mode:'Hình thức báo cáo thành phẩm',
-  material_source:'Nguồn định lượng NVL',
+  material_source:'Nguồn định lượng nguyên vật liệu',
   customer_order_status:'Trạng thái đơn nguồn',customer_note:'Ghi chú khách hàng',
   image_path:'Ảnh danh mục',
   quarantine_source: "Hàng / vị trí xử lý", result: "Kết luận tái kiểm",
@@ -395,14 +395,14 @@ const fieldNames = {
   campaign_id: "Lịch QC được giao",
   location: "Địa điểm",
   lot_ids: "Các lô cần kiểm tra",
-  source_request_id: "Yêu cầu bổ sung NVL",
-  production_report_id: "Báo cáo nhu cầu NVL",
+  source_request_id: "Yêu cầu bổ sung nguyên vật liệu",
+  production_report_id: "Báo cáo nhu cầu nguyên vật liệu",
   report_purpose: "Mục đích báo cáo",
   progress_percentage: "Tiến độ (%)",
   send_to_planner: "Người nhận báo cáo",
   production_completed: "Xác nhận hoàn tất sản xuất",
   source_mode: "Cách lập đơn mua",
-  production_source_mode: "Nguồn xuất NVL",
+  production_source_mode: "Nguồn xuất nguyên vật liệu",
   finished_report_id: "Báo cáo thành phẩm",
   report_kind: "Loại báo cáo",
   base_quantity: "Nhu cầu gốc",
@@ -491,6 +491,14 @@ const fieldNames = {
   created_at: "Ngày tạo",
   posted_at: "Ngày ghi sổ",
   quoted_total: "Tổng báo giá",
+  order_total: "Tổng giá trị đơn hàng",
+  created_by_name: "Người lập",
+  customer_name: "Khách hàng",
+  workshop_name: "Xưởng phụ trách",
+  customer_order_code: "Mã đơn khách hàng",
+  production_plan_code: "Mã kế hoạch sản xuất",
+  return_warehouse_name: "Kho nhận",
+  return_receiver_name: "Nhân viên nhận",
   total_amount: "Tổng tiền",
   quality_bucket: "Nhóm chất lượng",
   location_id: "Vị trí",

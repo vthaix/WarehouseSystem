@@ -74,10 +74,10 @@ class ReportService {
     const where = [], params = [];
     if (query.warehouse_id) { where.push("sw.warehouse_id=?"); params.push(query.warehouse_id); }
     if (query.stocktake_id) { where.push("s.id=?"); params.push(query.stocktake_id); }
-    const base = " FROM stocktake_lines l JOIN stocktake_warehouses sw ON sw.id=l.stocktake_warehouse_id JOIN stocktakes s ON s.id=sw.stocktake_id JOIN lots lot ON lot.id=l.lot_id JOIN items i ON i.id=lot.item_id" + (where.length ? " WHERE " + where.join(" AND ") : "");
+    const base = " FROM stocktake_lines l JOIN stocktake_warehouses sw ON sw.id=l.stocktake_warehouse_id JOIN stocktakes s ON s.id=sw.stocktake_id JOIN warehouses w ON w.id=sw.warehouse_id JOIN lots lot ON lot.id=l.lot_id JOIN items i ON i.id=lot.item_id" + (where.length ? " WHERE " + where.join(" AND ") : "");
     const [[count]] = await this.pool.execute("SELECT COUNT(*) AS total" + base, params);
     const { page, per_page, offset } = paginate(query);
-    const [rows] = await this.pool.execute("SELECT s.id AS stocktake_id,s.code AS stocktake_code,sw.warehouse_id,lot.code AS lot_code,i.code AS item_code,l.location_id,l.quality_bucket,l.system_quantity,l.actual_quantity,l.resolution_status,l.counted_at" + base + " ORDER BY s.id DESC,l.id" + (exportMode ? " LIMIT 50001" : " LIMIT ? OFFSET ?"), exportMode ? params : [...params, String(per_page), String(offset)]);
+    const [rows] = await this.pool.execute("SELECT s.id AS stocktake_id,s.code AS stocktake_code,sw.warehouse_id,w.name AS warehouse_name,lot.code AS lot_code,i.code AS item_code,i.name AS item_name,l.location_id,l.quality_bucket,l.system_quantity,l.actual_quantity,l.resolution_status,l.counted_at" + base + " ORDER BY s.id DESC,l.id" + (exportMode ? " LIMIT 50001" : " LIMIT ? OFFSET ?"), exportMode ? params : [...params, String(per_page), String(offset)]);
     C.fail(exportMode && rows.length > 50000, "EXPORT_TOO_LARGE", "Báo cáo vượt 50.000 dòng.", 422);
     return { data: rows.map(normalize), meta: { page, per_page, total: Number(count.total), total_pages: Math.ceil(Number(count.total) / per_page), generated_at: new Date().toISOString() } };
   }

@@ -63,6 +63,12 @@ docker compose --profile dev up -d adminer
 
 Giao diện: http://localhost:3000. Adminer: http://localhost:8080 khi bật profile dev. Backend và MySQL không publish cổng ra host. Không cần cài Node/MySQL riêng để chạy Docker.
 
+## Quy ước mã chứng từ
+
+Mã sinh mới gồm loại chứng từ, tên khách hàng hoặc nguồn liên quan đã bỏ dấu, và số thứ tự. Ví dụ đơn hàng thứ hai của Trần Văn A là `DH-TRANVANA-02`; kế hoạch sản xuất đầu tiên cho đơn đó là `KHSX-TRANVANA-02`. Nếu một đơn có nhiều kế hoạch, kế hoạch tiếp theo thêm số thứ tự kế hoạch, như `KHSX-TRANVANA-02-02`. Báo cáo sản xuất dùng `BCSX`, báo cáo thành phẩm dùng `BCTP`; các phiếu kho, kiểm kê, QC và công việc có tiền tố nghiệp vụ và phần nhận diện nguồn.
+
+Giao diện trình bày mã dễ đọc cho các đơn hàng, kế hoạch và báo cáo cũ. Mã lưu trong lịch sử cũ được giữ nguyên để các thông báo và chứng từ đã phát hành vẫn đối chiếu được.
+
 Tài khoản demo: customer, customer2, planner, purchaser, manager, staff, staff2, qc, stocktaker, workshop, director; mật khẩu mặc định 123456 khi khởi tạo mới. Dữ liệu lưu trong Docker volumes; `docker compose down` giữ dữ liệu. Build lại không reset database hoặc seed đè dữ liệu đang dùng.
 
 - [Kiến trúc và giới hạn hiện tại](app/docs/ARCHITECTURE.md)

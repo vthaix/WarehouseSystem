@@ -25,7 +25,7 @@ async function sources(pool){
     material.get(key).lot_ids.push(lot.id);material.get(key).lines.push({lot_id:lot.id,item_name:lot.item_name,quantity:lot.received_quantity,code:lot.code});
   }
   const [plans]=await pool.execute("SELECT id,code,planned_date FROM business_plans WHERE type='PURCHASE' AND status IN ('APPROVED','IN_PROGRESS') ORDER BY id DESC LIMIT 100");
-  for(const p of plans)material.set('PLAN:'+p.id,{id:'PLAN:'+p.id,code:'NVL dự kiến · '+p.code,purchase_plan_id:String(p.id),expected_date:p.planned_date instanceof Date?p.planned_date.toISOString().slice(0,10):p.planned_date,lot_ids:[],lines:[]});
+  for(const p of plans)material.set('PLAN:'+p.id,{id:'PLAN:'+p.id,code:'nguyên vật liệu dự kiến · '+p.code,purchase_plan_id:String(p.id),expected_date:p.planned_date instanceof Date?p.planned_date.toISOString().slice(0,10):p.planned_date,lot_ids:[],lines:[]});
   for(const group of material.values())group.eligible_lots=lots.filter(l=>l.kind==='MATERIAL'&&(group.id.startsWith('PLAN:')?String(l.purchase_plan_id)===group.purchase_plan_id:group.lot_ids.includes(l.id))).map(l=>({id:l.id,name:l.name,expected_date:l.expected_date}));
   return {finished_lots:[...groups.values()],material_lots:[...material.values()]};
 }
@@ -40,13 +40,13 @@ async function create(pool,c,user,b,value,requestId){
     for(const id of b.finished_report_ids){const part=group.parts.find(p=>p.id===String(id));C.fail(!part||!part.available,'VALIDATION_ERROR','Phần được chọn không thuộc lô, chưa gửi báo cáo hoặc đã được giao kiểm tra.');lotIds.push(...part.lot_ids);}
   }else{
     const material=options.material_lots.find(g=>g.id===b.material_source);
-    C.fail(!material,'VALIDATION_ERROR','Chọn lô NVL theo kế hoạch mua đã duyệt.');
+    C.fail(!material,'VALIDATION_ERROR','Chọn lô nguyên vật liệu theo kế hoạch mua đã duyệt.');
     lotIds=material.lot_ids;
     if(b.material_lot_ids!==undefined){
-      C.fail(!Array.isArray(b.material_lot_ids)||b.material_lot_ids.length>100||new Set(b.material_lot_ids.map(String)).size!==b.material_lot_ids.length,'VALIDATION_ERROR','Danh sách phần lô NVL không hợp lệ.');
+      C.fail(!Array.isArray(b.material_lot_ids)||b.material_lot_ids.length>100||new Set(b.material_lot_ids.map(String)).size!==b.material_lot_ids.length,'VALIDATION_ERROR','Danh sách phần lô nguyên vật liệu không hợp lệ.');
       const eligible=new Set(material.eligible_lots.map(l=>l.id));
       C.fail(b.material_lot_ids.some(id=>!eligible.has(String(id))),'VALIDATION_ERROR','Phần lô không thuộc nguồn đã chọn, đã giao kiểm tra hoặc không còn chờ QC.');
-      C.fail(material.eligible_lots.length>0&&!b.material_lot_ids.length,'VALIDATION_ERROR','Chọn ít nhất một phần lô NVL đã nhận.');
+      C.fail(material.eligible_lots.length>0&&!b.material_lot_ids.length,'VALIDATION_ERROR','Chọn ít nhất một phần lô nguyên vật liệu đã nhận.');
       lotIds=b.material_lot_ids.map(String);
     }
     if(material.id.startsWith('PLAN:')){mode='PURCHASE_PLAN';planId=material.purchase_plan_id;}

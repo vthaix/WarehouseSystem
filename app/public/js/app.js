@@ -262,7 +262,7 @@ async function loadTable() {
     const cols = columnsFor(current);
     target.className = "";
     target.innerHTML = cached.length
-      ? `<div class="table-wrap"><table><thead><tr>${cols.map((c) => `<th>${c[1]}</th>`).join("")}<th>Thao tác</th></tr></thead><tbody>${cached.map((r, i) => `<tr>${cols.map(([k]) => `<td>${["status", "qc_status"].includes(k) ? (k === "status" ? statusBadge(r[k]) : badge(r[k])) : k === "code" ? `<strong>${esc(r[k])}</strong>` : esc(format(r[k],k,r))}</td>`).join("")}<td><div class="inline-actions"><button class="button small" data-detail="${i}">Chi tiết ↗</button>${(r.actions || []).includes("review") ? `<button class="button small" data-act="review" data-index="${i}">Duyệt</button>` : ""}${(r.actions || []).includes("post") ? `<button class="button small" data-act="post" data-index="${i}">Ghi phiếu</button>` : ""}</div></td></tr>`).join("")}</tbody></table></div>`
+      ? `<div class="table-wrap"><table><thead><tr>${cols.map((c) => `<th>${c[1]}</th>`).join("")}<th>Thao tác</th></tr></thead><tbody>${cached.map((r, i) => `<tr>${cols.map(([k]) => `<td>${["status", "qc_status"].includes(k) ? (k === "status" ? statusBadge(r[k]) : badge(r[k])) : k === "code" ? `<strong>${esc(format(r[k],k,r))}</strong>` : esc(format(r[k],k,r))}</td>`).join("")}<td><div class="inline-actions"><button class="button small" data-detail="${i}">Chi tiết ↗</button>${(r.actions || []).includes("review") ? `<button class="button small" data-act="review" data-index="${i}">Duyệt</button>` : ""}${(r.actions || []).includes("post") ? `<button class="button small" data-act="post" data-index="${i}">Ghi phiếu</button>` : ""}</div></td></tr>`).join("")}</tbody></table></div>`
       : '<div class="empty"><div class="empty-icon">▤</div>Chưa có dữ liệu phù hợp.<br><span class="hint">Tạo chứng từ mới hoặc thay đổi bộ lọc để tiếp tục.</span></div>';
     const meta = result.meta;
     target.innerHTML += `<div class="pagination"><span>${meta.total ?? cached.length} kết quả · Trang ${page}</span><div class="inline-actions"><button class="button small" id="prev" ${page <= 1 ? "disabled" : ""}>← Trước</button><button class="button small" id="next" ${!meta.total_pages || page >= meta.total_pages ? "disabled" : ""}>Sau →</button></div></div>`;
@@ -296,18 +296,18 @@ async function loadTable() {
   }
 }
 function columnsFor(n) {
-  if(n==='material-prices')return [['code','Mã NVL'],['name','Nguyên vật liệu'],['unit','Đơn vị tính'],['reference_price','Giá tham khảo (đ/đơn vị)']];
+  if(n==='material-prices')return [['code','Mã nguyên vật liệu'],['name','Nguyên vật liệu'],['unit','Đơn vị tính'],['reference_price','Giá tham khảo (đ/đơn vị)']];
   if(n==='accounts')return [['username','Tên đăng nhập'],['full_name','Họ và tên'],['roles','Vai trò'],['status','Trạng thái']];
-  if(n==='production-plans')return [['code','Kế hoạch sản xuất'],['customer_order_code','Đơn khách hàng'],['workshop_name','Xưởng phụ trách'],['start_date','Ngày bắt đầu'],['end_date','Ngày hoàn thành'],['status','Trạng thái']];
+  if(n==='production-plans')return [['code','Kế hoạch sản xuất'],['customer_order_code','Đơn khách hàng'],['workshop_name','Xưởng phụ trách'],['order_total','Tổng giá trị đơn hàng'],['start_date','Ngày bắt đầu'],['end_date','Ngày hoàn thành'],['status','Trạng thái']];
   if(n==='business-plans')return [['code','Kế hoạch'],['type','Loại kế hoạch'],['planned_date','Ngày kế hoạch'],['status','Trạng thái']];
-  if(n==='purchase-orders')return [['code','Đơn mua NVL'],['expected_delivery_date','Ngày dự kiến nhận'],['status','Trạng thái']];
+  if(n==='purchase-orders')return [['code','Đơn mua nguyên vật liệu'],['expected_delivery_date','Ngày dự kiến nhận'],['status','Trạng thái']];
   if(n==='stock-requests')return [['code','Yêu cầu'],['purpose','Nghiệp vụ'],['requested_at','Ngày giờ thực hiện'],['status','Trạng thái']];
   if(n==='stock-documents')return [['code','Phiếu kho'],['type','Loại phiếu'],['posted_at','Ngày giờ ghi phiếu'],['status','Trạng thái']];
   if(n==='inspection-counts')return [['code','Mã công việc'],['title','Công việc'],['start_at','Bắt đầu'],['status','Trạng thái']];
   if(n==='exception-proposals')return [['code','Mã ngoại lệ'],['type','Nguồn'],['reason','Vấn đề cần xử lý'],['status','Trạng thái']];
   if(n==='categories')return [['image_path','Ảnh'],['code','Mã'],['name','Tên'],['is_active','Hoạt động']];
   if(n==='production-reports')return [['code','Mã báo cáo'],['production_plan_code','Kế hoạch'],['report_purpose','Mục đích'],['progress_percentage','Tiến độ (%)'],['status','Trạng thái']];
-  if(n === "customer-returns")return [["code","Mã hàng trả"],["return_warehouse_id","Kho nhận"],["return_receiver_id","Nhân viên nhận"],["status","Trạng thái"],["created_at","Ngày lập"]];
+  if(n === "customer-returns")return [["code","Mã hàng trả"],["return_warehouse_name","Kho nhận"],["return_receiver_name","Nhân viên nhận"],["status","Trạng thái"],["created_at","Ngày lập"]];
   if (n === "items")
     return [
       ["code", "Mã hàng"],
@@ -327,7 +327,7 @@ function columnsFor(n) {
   if (n === "lots")
     return [
       ["code", "Mã lô"],
-      ["item_id", "Mặt hàng"],
+      ["item_name", "Mặt hàng"],
       ["received_quantity", "Số lượng"],
       ["qc_status", "QC"],
       ["expiry_date", "Hạn dùng"],
@@ -343,7 +343,7 @@ function columnsFor(n) {
     ];
   if (n === "reports/stocktakes")
     return [
-      ["warehouse_id", "Kho"],
+      ["warehouse_name", "Kho"],
       ["item_name", "Mặt hàng"],
       ["system_quantity", "Số lượng ghi nhận"],
       ["actual_quantity", "Thực tế"],
@@ -392,15 +392,24 @@ function openModal(title, html) {
   document.querySelector("#close-modal").onclick = () => modal.close();
   if (!modal.open) modal.showModal();
 }
+function detailValue(key, value, record) {
+  if (key === 'status') return statusBadge(value);
+  if (key === 'note' && typeof value === 'string') {
+    const attachment = value.match(/\[Ảnh báo cáo\]\((\/images\/[a-zA-Z0-9._/-]+)\)/);
+    const note = attachment ? value.replace(attachment[0], '').trim() : value;
+    return `${esc(format(note || null, key, record))}${attachment ? `<br><a href="${esc(attachment[1])}" target="_blank" rel="noopener noreferrer">Xem ảnh báo cáo</a>` : ''}`;
+  }
+  return esc(format(value, key, record));
+}
 function detail(r) {
   const hidden = ["actions", "lines", "outputs", "materials", "warehouses", "campaign_type"];
   openModal(
-    r.name || r.title || r.code || "Chi tiết",
+    r.name || r.title || r.display_code || r.code || "Chi tiết",
     `<dl class="detail-grid">${Object.entries(r)
-      .filter(([k, v]) => !hidden.includes(k) && fieldNames[k] && (v===null||typeof v !== "object"))
+      .filter(([k, v]) => !hidden.includes(k) && k !== 'id' && k !== 'version' && !k.endsWith('_id') && k !== 'created_by' && fieldNames[k] && (v===null||typeof v !== "object"))
       .map(
         ([k, v]) =>
-          `<div><dt>${esc(fieldLabel(k))}</dt><dd>${k === "status" ? statusBadge(v) : esc(format(v,k,r))}</dd></div>`,
+          `<div><dt>${esc(k === 'code' ? `Mã ${moduleInfo()?.[1]?.toLowerCase() || 'chứng từ'}` : fieldLabel(k))}</dt><dd>${detailValue(k,v,r)}</dd></div>`,
       )
       .join("")}</dl>${["lines", "outputs", "materials", "allocations", "decision_history", "reinspections", "inspection_lots", "source_lots", "documents", "document_lines"]
       .filter((k) => r[k])
@@ -410,7 +419,7 @@ function detail(r) {
       )
       .join(
         "",
-      )}${r.warehouses ? `<div class="form-section"><h3>Phạm vi kiểm kê</h3>${r.warehouses.map((w) => `<div class="notification"><span>Kho ${esc(w.warehouse_id)} · ${badge(w.status)} · ${w.lines.filter((l) => l.actual_quantity !== null).length}/${w.lines.length} dòng đã đếm</span>${has(["STOCKTAKER", "QC_INSPECTOR"]) && w.assignee_ids.includes(user.id) ? `<button class="button small" data-count="${w.warehouse_id}">Mở bảng đếm</button>` : ""}</div>`).join("")}</div>` : ""}<div class="form-actions">${(r.actions || []).map((a) => `<button class="button ${["review", "post"].includes(a) ? "primary" : ""}" data-action="${a}">${{ handleMinuteException: "Xử lý ngoại lệ", reviewMinuteException: "Phê duyệt phương án", recordCount: "Ghi số lượng kiểm đếm", startInspection: "Bắt đầu đợt kiểm kê", bindInspection: "Chọn lô NVL đã nhận", recordInspection: "Ghi kết quả kiểm tra", bindLots: "Chọn phần lô thực tế", receiveReturn: "Nhận vào khu cách ly", cancelReturn: "Hủy hàng trả chưa nhận", reinspect: "Tái kiểm chất lượng", correct: "Chứng từ bù QC", apply: "Thực hiện", cancelAllocation: "Giải phóng phân công", edit: "Sửa", delete: "Hủy / Xóa", receive: "Tiếp nhận", review: "Phê duyệt", submit: "Gửi", start: "Bắt đầu kiểm kê", close: "Đóng đợt", post: "Ghi phiếu", progress: "Cập nhật tiến độ", dispatch: "Phân công kho", cancel: "Hủy kế hoạch", postTask: "Ghi phần hàng được giao" }[a]}</button>`).join("")}${current === "notifications" && !r.read_at ? '<button class="button" id="mark-read">Đánh dấu đã đọc</button>' : ""}</div>`,
+      )}${r.warehouses ? `<div class="form-section"><h3>Phạm vi kiểm kê</h3>${r.warehouses.map((w) => `<div class="notification"><span>Kho ${esc(w.warehouse_id)} · ${badge(w.status)} · ${w.lines.filter((l) => l.actual_quantity !== null).length}/${w.lines.length} dòng đã đếm</span>${has(["STOCKTAKER", "QC_INSPECTOR"]) && w.assignee_ids.includes(user.id) ? `<button class="button small" data-count="${w.warehouse_id}">Mở bảng đếm</button>` : ""}</div>`).join("")}</div>` : ""}<div class="form-actions">${(r.actions || []).map((a) => `<button class="button ${["review", "post"].includes(a) ? "primary" : ""}" data-action="${a}">${{ handleMinuteException: "Xử lý ngoại lệ", reviewMinuteException: "Phê duyệt phương án", recordCount: "Ghi số lượng kiểm đếm", startInspection: "Bắt đầu đợt kiểm kê", bindInspection: "Chọn lô nguyên vật liệu đã nhận", recordInspection: "Ghi kết quả kiểm tra", bindLots: "Chọn phần lô thực tế", receiveReturn: "Nhận vào khu cách ly", cancelReturn: "Hủy hàng trả chưa nhận", reinspect: "Tái kiểm chất lượng", correct: "Chứng từ bù QC", apply: "Thực hiện", cancelAllocation: "Giải phóng phân công", edit: "Sửa", delete: "Hủy / Xóa", receive: "Tiếp nhận", review: "Phê duyệt", submit: "Gửi", start: "Bắt đầu kiểm kê", close: "Đóng đợt", post: "Ghi phiếu", progress: "Cập nhật tiến độ", dispatch: "Phân công kho", cancel: "Hủy kế hoạch", postTask: "Ghi phần hàng được giao" }[a]}</button>`).join("")}${current === "notifications" && !r.read_at ? '<button class="button" id="mark-read">Đánh dấu đã đọc</button>' : ""}</div>`,
   );
   modalBody
     .querySelectorAll("[data-action]")
@@ -454,7 +463,7 @@ async function showDetail(row) {
 function tableData(rows) {
   if (!rows.length) return '<div class="empty">Chưa có dòng dữ liệu.</div>';
   const keys = [...new Set(rows.flatMap((r) => Object.keys(r)))].filter(
-    (k) => k !== "id" && fieldNames[k] && typeof rows[0][k] !== "object",
+    (k) => k !== "id" && k !== 'version' && !k.endsWith('_id') && fieldNames[k] && typeof rows[0][k] !== "object",
   );
   return `<div class="table-wrap"><table><thead><tr>${keys.map((k) => `<th>${esc(fieldLabel(k))}</th>`).join("")}</tr></thead><tbody>${rows.map((r) => `<tr>${keys.map((k) => `<td>${esc(format(r[k],k,r))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
 }

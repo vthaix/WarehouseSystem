@@ -1,7 +1,7 @@
-const crypto = require("node:crypto");
 const C = require("../../../domain/core");
 const P = require("../../../domain/policy");
 const paginate = require("../../../../utils/pagination");
+const recordCode = require("../../../../shared/record-code");
 
 const statuses = [
   "SUBMITTED",
@@ -45,6 +45,7 @@ class OrderService {
 
   present(user, row) {
     const result = { ...row };
+    if (row.order_sequence != null) result.display_code = recordCode.displayCode(row.code, recordCode.code('DH', row.customer_name, Number(row.order_sequence)));
     for (const name of ["id", "customer_id", "received_by", "reviewed_by"])
       if (result[name] != null) result[name] = String(result[name]);
     result.latest_delivery_date = asDate(result.latest_delivery_date);
@@ -100,7 +101,7 @@ class OrderService {
       params,
     );
     const [rows] = await this.pool.execute(
-      "SELECT o.*,c.name AS customer_name,c.user_id AS customer_user_id,(SELECT COUNT(*) FROM customer_order_lines l WHERE l.customer_order_id=o.id) AS line_count FROM customer_orders o JOIN customers c ON c.id=o.customer_id" +
+      "SELECT o.*,c.name AS customer_name,c.user_id AS customer_user_id,(SELECT COUNT(*) FROM customer_order_lines l WHERE l.customer_order_id=o.id) AS line_count,(SELECT COUNT(*) FROM customer_orders prior WHERE prior.customer_id=o.customer_id AND prior.id<=o.id) AS order_sequence FROM customer_orders o JOIN customers c ON c.id=o.customer_id" +
         filter +
         " ORDER BY o.id DESC LIMIT ? OFFSET ?",
       [...params, String(pagination.per_page), String(pagination.offset)],
@@ -120,7 +121,7 @@ class OrderService {
     C.fail(!isId(id), "NOT_FOUND", "Không tìm thấy đơn hàng.", 404);
     const scoped = this.customerOnly(user) ? " AND c.user_id = ?" : "";
     const [rows] = await connection.execute(
-      "SELECT o.*,c.name AS customer_name,c.user_id AS customer_user_id FROM customer_orders o JOIN customers c ON c.id=o.customer_id WHERE o.id = ?" +
+      "SELECT o.*,c.name AS customer_name,c.user_id AS customer_user_id,(SELECT COUNT(*) FROM customer_orders prior WHERE prior.customer_id=o.customer_id AND prior.id<=o.id) AS order_sequence FROM customer_orders o JOIN customers c ON c.id=o.customer_id WHERE o.id = ?" +
         scoped +
         (locked ? " FOR UPDATE" : ""),
       this.customerOnly(user) ? [id, user.id] : [id],
@@ -231,10 +232,11 @@ class OrderService {
     C.date(body.latest_delivery_date, "latest_delivery_date", true);
     if (body.note !== undefined) C.text(body.note, "note", 5000, false);
     const id = await this.transaction(async (connection) => {
-      const [customers] = await connection.execute("SELECT id FROM customers WHERE user_id=?", [user.id]);
+      const [customers] = await connection.execute("SELECT id,name FROM customers WHERE user_id=? FOR UPDATE", [user.id]);
       C.fail(!customers.length, "FORBIDDEN", "Tài khoản chưa có hồ sơ khách hàng.", 403);
       const data = await this.validateLines(connection, body.lines);
-      const code = "DH-" + crypto.randomBytes(8).toString("hex").toUpperCase();
+      const [[sequence]] = await connection.execute("SELECT COUNT(*) AS total FROM customer_orders WHERE customer_id=?", [customers[0].id]);
+      const code = await recordCode.distinguishNames(connection, 'customer_orders', recordCode.code("DH", customers[0].name, Number(sequence.total) + 1), customers[0].id);
       const [created] = await connection.execute(
         "INSERT INTO customer_orders (code,customer_id,delivery_address,latest_delivery_date,note,status,quoted_total,version) VALUES (?,?,?,?,?,'SUBMITTED',?,1)",
         [code, customers[0].id, body.delivery_address.trim(), body.latest_delivery_date, body.note || null, data.quoted_total],

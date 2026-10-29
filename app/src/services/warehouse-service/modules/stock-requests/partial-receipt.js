@@ -1,5 +1,6 @@
 const crypto = require("node:crypto"),
   C = require("../../../domain/core");
+const recordCode = require("../../../../shared/record-code");
 async function create(service, user, body, requestId) {
   C.fields(body, [
     "purpose",
@@ -139,7 +140,7 @@ async function create(service, user, body, requestId) {
       const [request] = await c.execute(
         "INSERT INTO stock_requests(code,type,purpose,production_plan_id,workshop_id,warehouse_id,created_by,manager_id,requested_date,status,note,version,production_source_mode) VALUES (?,'IN','PRODUCTION_RECEIPT',?,?,?,?,?,?,'PENDING',?,1,'MANUAL')",
         [
-          "YCTP-" + crypto.randomBytes(8).toString("hex"),
+          await recordCode.next(c, 'stock_requests', 'YCTP', plan.code),
           plan.id,
           body.workshop_id,
           body.warehouse_id,

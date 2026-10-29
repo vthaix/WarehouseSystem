@@ -1,6 +1,7 @@
 const C = require("./domain/core");
 const { modules, labels, columnsFor } = require("../config/navigation");
 const { safeUser } = require("../utils/response");
+const presentation = require("../../public/js/presentation");
 class PageService {
   constructor(service) {
     this.service = service;
@@ -88,19 +89,7 @@ class PageService {
     return context;
   }
 }
-function formatValue(v) {
-  return v === null
-    ? "Chưa đếm"
-    : v === undefined
-      ? "—"
-      : typeof v === "boolean"
-        ? v
-          ? "Có"
-          : "Không"
-        : /^-?\d+\.\d+$/.test(String(v))
-          ? new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 4 }).format(
-              Number(v),
-            )
-          : labels[v] || v;
+function formatValue(v, key, record) {
+  return presentation.format(v, key, record);
 }
 module.exports = PageService;

@@ -1,7 +1,7 @@
-const crypto = require("node:crypto");
 const C = require("../../../domain/core");
 const P = require("../../../domain/policy");
 const paginate = require("../../../../utils/pagination");
+const recordCode = require("../../../../shared/record-code");
 const id = (v) => /^[1-9]\d*$/.test(String(v));
 const norm = (r) =>
   Object.fromEntries(
@@ -172,7 +172,7 @@ class ExceptionService {
       const [r] = await c.execute(
         "INSERT INTO exception_proposals(code,type,qc_inspection_line_id,stocktake_line_id,created_by,action,quantity,reason,resolution_note,status,version) VALUES (?,?,?,?,?,?,?,?,?,'PENDING_APPROVAL',1)",
         [
-          "DX-" + crypto.randomBytes(8).toString("hex"),
+          await recordCode.next(c, 'exception_proposals', 'DX', `${type}-${b.reason}`),
           type,
           b.qc_inspection_line_id || null,
           b.stocktake_line_id || null,
@@ -347,7 +347,7 @@ class ExceptionService {
           const [header] = await c.execute(
             "INSERT INTO lot_headers(code,lot_kind,return_direction,note) VALUES (?,'TRA_VE','NCC',?)",
             [
-              "TRA-" + crypto.randomBytes(8).toString("hex"),
+              await recordCode.next(c, 'lot_headers', 'TRANCC', row.code),
               row.resolution_note,
             ],
           );

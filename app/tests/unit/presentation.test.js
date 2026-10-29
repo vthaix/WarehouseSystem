@@ -12,6 +12,13 @@ test('role labels, enums, booleans and reference names are readable without chan
   assert.equal(display.format('2','workshop_id',{workshop_name:'Xưởng bánh quy Sweet Bakery'}),'Xưởng bánh quy Sweet Bakery');
   assert.equal(display.format('100.000'),'100');assert.equal(display.fieldLabel('workshop_name'),'Xưởng phụ trách');
 });
+test('business details show readable references and exact order value',()=>{
+  const row={code:'KSX-B1059C67896A0487',display_code:'KHSX-TRANVANA-02',customer_order_code:'DH-7EAE62C6D16CCE32',customer_order_display_code:'DH-TRANVANA-02'};
+  assert.equal(display.format(row.code,'code',row),'KHSX-TRANVANA-02');
+  assert.equal(display.format(row.customer_order_code,'customer_order_code',row),'DH-TRANVANA-02');
+  assert.equal(display.format('1234567.2500','order_total',row),'1.234.567,25 ₫');
+  assert.equal(display.format('Thiếu NVL','note',row),'Thiếu nguyên vật liệu');
+});
 test('UC navigation only exposes permitted entry points, independently of source lookup read rights',()=>{
   const {modules}=require('../../src/config/navigation'),find=id=>modules.find(m=>m[0]===id);
   assert.deepEqual(find('stocktakes')[3],['DIRECTOR']);assert.deepEqual(find('warehouse-lookup')[3],['WAREHOUSE_MANAGER','WORKSHOP_OWNER']);

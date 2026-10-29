@@ -14,7 +14,7 @@ async function prepareDatabase(pool) {
   await seed.seedRoles(pool);
   if (process.env.SEED_DEMO === "true") await seed.seedDemo(pool);
   await pool.query(
-    "INSERT IGNORE INTO NhanVien (MaNguoiDung,MaNhanVien) SELECT DISTINCT u.id,CONCAT('NV-',u.id) FROM users u JOIN user_roles ur ON ur.user_id=u.id JOIN roles r ON r.id=ur.role_id WHERE r.code<>'CUSTOMER'",
+    "INSERT IGNORE INTO NhanVien (MaNguoiDung,MaNhanVien) SELECT DISTINCT u.id,CONCAT('NV-',LEFT(UPPER(u.username),35)) FROM users u JOIN user_roles ur ON ur.user_id=u.id JOIN roles r ON r.id=ur.role_id WHERE r.code<>'CUSTOMER'",
   );
 }
 module.exports = { prepareDatabase };

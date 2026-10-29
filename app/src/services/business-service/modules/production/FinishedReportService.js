@@ -1,7 +1,7 @@
-const crypto = require("node:crypto");
 const C = require("../../../domain/core");
 const P = require("../../../domain/policy");
 const paginate = require("../../../../utils/pagination");
+const recordCode = require("../../../../shared/record-code");
 
 const isId = (value) => /^[1-9]\d*$/.test(String(value));
 const asDate = (value) =>
@@ -23,6 +23,8 @@ class FinishedReportService {
 
   present(user, row) {
     const result = { ...row };
+    if (row.report_sequence != null) result.display_code = recordCode.displayCode(row.code, recordCode.code('BCTP', row.customer_name, Number(row.report_sequence)));
+    if (row.order_sequence != null) result.production_plan_display_code = recordCode.displayCode(row.production_plan_code,recordCode.code('KHSX', row.customer_name, Number(row.order_sequence)) + (Number(row.plan_sequence) > 1 ? `-${String(row.plan_sequence).padStart(2, '0')}` : ''));
     result.report_mode=row.KieuThanhPham||'FINAL';delete result.KieuThanhPham;
     result.production_completed=row.production_completed==null?null:Boolean(row.production_completed);
     for (const field of [
@@ -86,8 +88,9 @@ class FinishedReportService {
       params,
     );
     const [rows] = await this.pool.execute(
-      "SELECT r.*,p.workshop_id,p.code AS production_plan_code" +
+      "SELECT r.*,p.workshop_id,p.code AS production_plan_code,c.name AS customer_name,(SELECT COUNT(*) FROM customer_orders prior WHERE prior.customer_id=o.customer_id AND prior.id<=o.id) AS order_sequence,(SELECT COUNT(*) FROM production_plans prior WHERE prior.customer_order_id=p.customer_order_id AND prior.id<=p.id) AS plan_sequence,(SELECT COUNT(*) FROM finished_reports prior JOIN production_plans pp ON pp.id=prior.production_plan_id JOIN customer_orders oo ON oo.id=pp.customer_order_id WHERE oo.customer_id=o.customer_id AND prior.id<=r.id) AS report_sequence" +
         base +
+        " JOIN customer_orders o ON o.id=p.customer_order_id JOIN customers c ON c.id=o.customer_id" +
         filter +
         " ORDER BY r.id DESC LIMIT ? OFFSET ?",
       [...params, String(per_page), String(offset)],
@@ -107,7 +110,7 @@ class FinishedReportService {
     P.role(user, P.read["finished-reports"]);
     C.fail(!isId(id), "NOT_FOUND", "Không tìm thấy báo cáo.", 404);
     const [rows] = await connection.execute(
-      "SELECT r.*,p.workshop_id,p.code AS production_plan_code FROM finished_reports r JOIN production_plans p ON p.id=r.production_plan_id WHERE r.id=?",
+      "SELECT r.*,p.workshop_id,p.code AS production_plan_code,c.name AS customer_name,(SELECT COUNT(*) FROM customer_orders prior WHERE prior.customer_id=o.customer_id AND prior.id<=o.id) AS order_sequence,(SELECT COUNT(*) FROM production_plans prior WHERE prior.customer_order_id=p.customer_order_id AND prior.id<=p.id) AS plan_sequence,(SELECT COUNT(*) FROM finished_reports prior JOIN production_plans pp ON pp.id=prior.production_plan_id JOIN customer_orders oo ON oo.id=pp.customer_order_id WHERE oo.customer_id=o.customer_id AND prior.id<=r.id) AS report_sequence,w.name AS workshop_name,u.full_name AS created_by_name FROM finished_reports r JOIN production_plans p ON p.id=r.production_plan_id JOIN customer_orders o ON o.id=p.customer_order_id JOIN customers c ON c.id=o.customer_id JOIN workshops w ON w.id=p.workshop_id JOIN users u ON u.id=r.created_by WHERE r.id=?",
       [id],
     );
     C.fail(
@@ -257,7 +260,7 @@ class FinishedReportService {
       C.fail(
         rest < 0n,
         "SOURCE_LIMIT_EXCEEDED",
-        "Tiêu hao vượt lượng NVL thực tế đã cấp cho kế hoạch.",
+        "Tiêu hao vượt lượng nguyên vật liệu thực tế đã cấp cho kế hoạch.",
       );
       available.set(key, rest);
     }
@@ -361,8 +364,9 @@ class FinishedReportService {
         body.materials || [],
         null,partReport,
       );
-      const code =
-        "BCTP-" + crypto.randomBytes(8).toString("hex").toUpperCase();
+      const [[customer]] = await connection.execute("SELECT c.id,c.name FROM customer_orders o JOIN customers c ON c.id=o.customer_id WHERE o.id=? FOR UPDATE", [plans[0].customer_order_id]);
+      const [[sequence]] = await connection.execute("SELECT COUNT(*) AS total FROM finished_reports r JOIN production_plans p ON p.id=r.production_plan_id JOIN customer_orders o ON o.id=p.customer_order_id WHERE o.customer_id=?", [customer.id]);
+      const code = await recordCode.distinguishNames(connection, 'finished_reports', recordCode.code("BCTP", customer.name, Number(sequence.total) + 1), customer.id);
       const [existingFinal]=await connection.execute("SELECT id FROM finished_reports WHERE production_plan_id=? AND (KieuThanhPham='FINAL' OR production_completed=1) FOR UPDATE",[plans[0].id]);
       C.fail(existingFinal.length,'IN_USE','Kế hoạch đã có báo cáo thành phẩm tổng kết; hãy hoàn thiện báo cáo hiện có.',409);
       const [created] = await connection.execute(

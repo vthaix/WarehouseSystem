@@ -1,8 +1,8 @@
 const confirmation=require('../../../../shared/planning-confirmation');
-const crypto = require("node:crypto");
 const C = require("../../../domain/core");
 const P = require("../../../domain/policy");
 const paginate = require("../../../../utils/pagination");
+const recordCode = require("../../../../shared/record-code");
 
 const isId = (value) => /^[1-9]\d*$/.test(String(value));
 const asDate = (value) =>
@@ -244,7 +244,7 @@ class BusinessPlanService {
         C.fail(
           !isId(requestId),
           "VALIDATION_ERROR",
-          "Yêu cầu bổ sung NVL không hợp lệ.",
+          "Yêu cầu bổ sung nguyên vật liệu không hợp lệ.",
         );
         const [requests] = await connection.execute(
           "SELECT r.*,b.production_plan_id,b.status AS report_status,b.report_purpose,b.send_to_planner FROM stock_requests r JOIN production_reports b ON b.id=r.production_report_id WHERE r.id=? FOR UPDATE",
@@ -339,7 +339,7 @@ class BusinessPlanService {
         body.source_request_id ||
         body.production_report_id,
       "VALIDATION_ERROR",
-      "Kế hoạch bán cần khách hàng và đơn hàng, không chọn nguồn sản xuất/mua NVL.",
+      "Kế hoạch bán cần khách hàng và đơn hàng, không chọn nguồn sản xuất/mua nguyên vật liệu.",
     );
     const [rows] = await connection.execute(
       "SELECT customer_id,status FROM customer_orders WHERE id=? FOR UPDATE",
@@ -554,7 +554,16 @@ class BusinessPlanService {
         null,body.confirm_plan_overage,
       );
       await this.validatePurchaseSource(connection, source, data.lines,null,false,body.confirm_plan_overage);
-      const code = "KH-" + crypto.randomBytes(8).toString("hex").toUpperCase();
+      const [owners] = source.customer_id
+        ? await connection.execute("SELECT id,name FROM customers WHERE id=? FOR UPDATE", [source.customer_id])
+        : source.customer_order_id
+          ? await connection.execute("SELECT c.id,c.name FROM customer_orders o JOIN customers c ON c.id=o.customer_id WHERE o.id=? FOR UPDATE", [source.customer_order_id])
+          : source.supplier_id
+            ? await connection.execute("SELECT id,name FROM suppliers WHERE id=? FOR UPDATE", [source.supplier_id])
+            : [[]];
+      const owner = owners[0] || { name: "NOIBO" };
+      const [[sequence]] = await connection.execute("SELECT COUNT(*) AS total FROM business_plans b LEFT JOIN customer_orders o ON o.id=b.customer_order_id WHERE b.type=? AND " + (source.customer_id || source.customer_order_id ? "(b.customer_id=? OR o.customer_id=?)" : source.supplier_id ? "b.supplier_id=?" : "1=1"), source.customer_id || source.customer_order_id ? [source.type, owner.id, owner.id] : source.supplier_id ? [source.type, source.supplier_id] : [source.type]);
+      const code = owner.id ? await recordCode.distinguishNames(connection, 'business_plans', recordCode.code(source.type === "PURCHASE" ? "KHMUA" : "KHBAN", owner.name, Number(sequence.total) + 1), owner.id, source.supplier_id && !source.customer_id && !source.customer_order_id ? 'NCC' : 'KH') : recordCode.code(source.type === "PURCHASE" ? "KHMUA" : "KHBAN", owner.name, Number(sequence.total) + 1);
       const [created] = await connection.execute(
         "INSERT INTO business_plans (code,type,supplier_id,customer_id,customer_order_id,production_plan_id,source_request_id,production_report_id,finished_report_id,planned_date,note,status,created_by,total_amount,version) VALUES (?,?,?,?,?,?,?,?,?,?,?,'PENDING_APPROVAL',?,?,1)",
         [
@@ -738,7 +747,7 @@ class BusinessPlanService {
         await this.validatePurchaseSource(connection, source, lines, id, true,body.confirm_plan_overage);
       }
       const status = body.decision === "APPROVE" ? "APPROVED" : "REJECTED";
-      if(status==='APPROVED'&&plan.type==='PURCHASE')await connection.execute("INSERT INTO notifications (user_id,subject,body,resource_type,resource_id,business_key) SELECT u.id,?,?, 'business-plans',?,? FROM users u JOIN user_roles ur ON ur.user_id=u.id JOIN roles r ON r.id=ur.role_id WHERE u.status='ACTIVE' AND r.code='PURCHASER' ON DUPLICATE KEY UPDATE id=notifications.id",[`Kế hoạch mua ${plan.code} đã duyệt`,`Lập đơn mua NVL theo kế hoạch ${plan.code}.`,id,`buy-plan-${id}-approved`]);
+      if(status==='APPROVED'&&plan.type==='PURCHASE')await connection.execute("INSERT INTO notifications (user_id,subject,body,resource_type,resource_id,business_key) SELECT u.id,?,?, 'business-plans',?,? FROM users u JOIN user_roles ur ON ur.user_id=u.id JOIN roles r ON r.id=ur.role_id WHERE u.status='ACTIVE' AND r.code='PURCHASER' ON DUPLICATE KEY UPDATE id=notifications.id",[`Kế hoạch mua ${plan.code} đã duyệt`,`Lập đơn mua nguyên vật liệu theo kế hoạch ${plan.code}.`,id,`buy-plan-${id}-approved`]);
       await connection.execute(
         "UPDATE business_plans SET status=?,reviewed_by=?,reviewed_at=UTC_TIMESTAMP(6),rejection_reason=?,version=version+1 WHERE id=?",
         [

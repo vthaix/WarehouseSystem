@@ -21,10 +21,10 @@ async function createFinishedPartForm(record=null){
       const editor=lineEditor('Thành phẩm của phần này',allowed,'outputs',['quantity','lot_code','manufactured_date','expiry_date'],initial);
       const materialRows=(progress.issued_materials||[]).map(m=>({item_id:String(m.item_id),used_quantity:decimal(total(record?.materials,m.item_id,'used_quantity'))}));
       for(const m of record?.materials||[])if(!materialRows.some(r=>r.item_id===String(m.item_id)))materialRows.push({item_id:String(m.item_id),used_quantity:m.used_quantity});
-      const materials=lineEditor('Đối chiếu NVL thực tế sử dụng',materialItems,'materials',['used_quantity'],materialRows);
+      const materials=lineEditor('Đối chiếu nguyên vật liệu thực tế sử dụng',materialItems,'materials',['used_quantity'],materialRows);
       document.querySelector('#part-output-editor').innerHTML=editor.html+materials.html;editor.mount();materials.mount();
       if(!initial.length)document.querySelector('#outputs-rows').innerHTML='';
-      if(!materialRows.length)document.querySelector('#materials-rows').innerHTML='<p>Chưa có phiếu xuất NVL đã ghi sổ cho kế hoạch này.</p>';
+      if(!materialRows.length)document.querySelector('#materials-rows').innerHTML='<p>Chưa có phiếu xuất nguyên vật liệu đã ghi sổ cho kế hoạch này.</p>';
       document.querySelector('#add-outputs').remove();document.querySelector('#add-materials').remove();
       const rows=[...document.querySelectorAll('#outputs-rows .line-row')],materialInputs=[];
       for(const row of rows){
@@ -48,11 +48,11 @@ async function createFinishedPartForm(record=null){
         let complete=rows.length>0;
         for(const row of rows){const input=row.querySelector('[data-key="quantity"]'),n=qty(input.value),max=remaining.get(row.querySelector('[data-key="item_id"]').value)??0n;row.querySelector('[data-remaining]').value=n===null?'':format(decimal(max-n));input.setCustomValidity(n===null?'Nhập số lượng hợp lệ, tối đa 3 chữ số thập phân.':n>max?'Số lượng vượt phần còn lại của kế hoạch.':'');if(n===null||max-n!==0n)complete=false;}
         const previous=final.checked;final.checked=complete;if(complete&&!previous)fillMaterials();
-        for(const m of materialInputs){const n=qty(m.input.value);m.row.querySelector('[data-material-rest]').value=n===null?'':format(decimal(m.available-n));m.input.setCustomValidity(n===null?'Nhập số lượng hợp lệ.':n>m.available?'Lượng dùng vượt lượng NVL chưa quyết toán.':'');}
+        for(const m of materialInputs){const n=qty(m.input.value);m.row.querySelector('[data-material-rest]').value=n===null?'':format(decimal(m.available-n));m.input.setCustomValidity(n===null?'Nhập số lượng hợp lệ.':n>m.available?'Lượng dùng vượt lượng nguyên vật liệu chưa quyết toán.':'');}
       };
       for(const row of rows)row.querySelector('[data-key="quantity"]').oninput=refresh;
       final.onchange=()=>{if(final.checked){for(const row of rows){const itemId=row.querySelector('[data-key="item_id"]').value;row.querySelector('[data-key="quantity"]').value=decimal(remaining.get(itemId)??0n);}fillMaterials();}refresh();};
-      document.querySelector('#materials-rows').insertAdjacentHTML('afterend','<p class="material-reconciliation-note">Đợt cuối gợi ý dùng phần NVL đã xuất chưa được báo cáo. Hãy sửa theo thực tế; phần dư cần lập chứng từ nhập trả riêng, báo cáo này không tự cộng lại tồn kho.</p>');
+      document.querySelector('#materials-rows').insertAdjacentHTML('afterend','<p class="material-reconciliation-note">Đợt cuối gợi ý dùng phần nguyên vật liệu đã xuất chưa được báo cáo. Hãy sửa theo thực tế; phần dư cần lập chứng từ nhập trả riêng, báo cáo này không tự cộng lại tồn kho.</p>');
       ready=true;final.disabled=!rows.length;refresh();
     }catch(e){document.querySelector('#form-error').innerHTML=errorHTML(e);}
   };
@@ -81,7 +81,7 @@ async function createFinishedPartForm(record=null){
         const start=document.querySelector('#f-start_at'),end=document.querySelector('#f-end_at');start.min=value+'T00:00';start.value=value+'T08:00';end.min=start.value;end.value=value+'T09:00';
       };
       const showParts=()=>{
-        const g=group();document.querySelector('#inspection-parts').innerHTML=kind()==='FINISHED_PRODUCT'?'<div class="form-section"><h3>Các phần của lô theo báo cáo thành phẩm</h3>'+((g?.parts||[]).map(p=>'<label class="employee-profile"><input type="checkbox" data-finished-part value="'+esc(p.id)+'"><span><strong>'+esc(p.code)+'</strong><small>'+esc(p.lines.map(l=>l.item_name+': '+l.quantity).join(' · '))+' · '+esc(format(p.expected_date))+'</small></span></label>').join('')||'<p>Chưa có báo cáo thành phẩm đã gửi còn phần chờ kiểm tra trong lô này.</p>')+'</div>':'<div class="notice">Lô NVL được đối chiếu từ kế hoạch mua đã duyệt. '+esc(g?.expected_date?format(g.expected_date):'')+'</div>';
+        const g=group();document.querySelector('#inspection-parts').innerHTML=kind()==='FINISHED_PRODUCT'?'<div class="form-section"><h3>Các phần của lô theo báo cáo thành phẩm</h3>'+((g?.parts||[]).map(p=>'<label class="employee-profile"><input type="checkbox" data-finished-part value="'+esc(p.id)+'"><span><strong>'+esc(p.code)+'</strong><small>'+esc(p.lines.map(l=>l.item_name+': '+l.quantity).join(' · '))+' · '+esc(format(p.expected_date))+'</small></span></label>').join('')||'<p>Chưa có báo cáo thành phẩm đã gửi còn phần chờ kiểm tra trong lô này.</p>')+'</div>':'<div class="notice">Lô nguyên vật liệu được đối chiếu từ kế hoạch mua đã duyệt. '+esc(g?.expected_date?format(g.expected_date):'')+'</div>';
         document.querySelectorAll('[data-finished-part]').forEach(i=>{
           const part=g?.parts.find(p=>p.id===i.value);i.disabled=part?.available===false;
           if(i.disabled)i.closest('label').querySelector('small').insertAdjacentText('beforeend',' · Đã giao kiểm tra / đã có kết quả');
@@ -89,14 +89,14 @@ async function createFinishedPartForm(record=null){
         });
         if(kind()==='MATERIAL'){
           const eligible=g?.eligible_lots||[];
-          document.querySelector('#inspection-parts').insertAdjacentHTML('beforeend','<div class="form-section"><h3>Chọn phần lô NVL đã nhận</h3><p class="material-reconciliation-note">Chỉ chọn các đợt đã ghi nhận thuộc đúng nguồn; không gộp số lượng cả lô tổng.</p>'+(eligible.length?'<div class="field"><label for="inspection-material-lots">Phần lô đang chờ QC *</label><select id="inspection-material-lots" multiple size="6" required>'+eligible.map(l=>'<option value="'+esc(l.id)+'">'+esc(l.name)+'</option>').join('')+'</select><small>Giữ Ctrl (hoặc Command) để chọn nhiều phần lô.</small></div>':'<div class="notice">Chưa có phần lô NVL thực tế chờ kiểm tra. Bạn vẫn có thể lập đợt dự kiến; khi hàng được ghi nhận, chọn bổ sung phần lô trong chi tiết công việc.</div>')+'</div>');
+          document.querySelector('#inspection-parts').insertAdjacentHTML('beforeend','<div class="form-section"><h3>Chọn phần lô nguyên vật liệu đã nhận</h3><p class="material-reconciliation-note">Chỉ chọn các đợt đã ghi nhận thuộc đúng nguồn; không gộp số lượng cả lô tổng.</p>'+(eligible.length?'<div class="field"><label for="inspection-material-lots">Phần lô đang chờ QC *</label><select id="inspection-material-lots" multiple size="6" required>'+eligible.map(l=>'<option value="'+esc(l.id)+'">'+esc(l.name)+'</option>').join('')+'</select><small>Giữ Ctrl (hoặc Command) để chọn nhiều phần lô.</small></div>':'<div class="notice">Chưa có phần lô nguyên vật liệu thực tế chờ kiểm tra. Bạn vẫn có thể lập đợt dự kiến; khi hàng được ghi nhận, chọn bổ sung phần lô trong chi tiết công việc.</div>')+'</div>');
         }
-        document.querySelector('#f-title').value=(kind()==='MATERIAL'?'Kiểm tra NVL ':'Kiểm tra thành phẩm ')+(g?.code||'');dates();
+        document.querySelector('#f-title').value=(kind()==='MATERIAL'?'Kiểm tra nguyên vật liệu ':'Kiểm tra thành phẩm ')+(g?.code||'');dates();
       };
       const sync=()=>{document.querySelector('#inspection-lot').innerHTML=(kind()==='FINISHED_PRODUCT'?sources.finished_lots:sources.material_lots).map(g=>'<option value="'+esc(g.id)+'">'+esc(g.code)+'</option>').join('');showParts();};
       document.querySelector('#f-inspection_type').onchange=sync;document.querySelector('#inspection-lot').onchange=showParts;
       document.querySelector('#f-start_at').onchange=()=>document.querySelector('#f-end_at').min=document.querySelector('#f-start_at').value;
-      bindForm(d=>{const g=group();if(!g)throw Error('Chưa có lô phù hợp để kiểm tra.');const ids=selectedParts();if(kind()==='FINISHED_PRODUCT'&&!ids.length)throw Error('Chọn ít nhất một phần theo báo cáo thành phẩm.');const materialIds=[...document.querySelector('#inspection-material-lots')?.selectedOptions||[]].map(o=>o.value);if(kind()==='MATERIAL'&&g.eligible_lots?.length&&!materialIds.length)throw Error('Chọn ít nhất một phần lô NVL đã nhận.');return {...d,start_at:new Date(d.start_at+'+07:00').toISOString(),end_at:new Date(d.end_at+'+07:00').toISOString(),assignee_ids:selectedEmployees(),...(kind()==='FINISHED_PRODUCT'?{lot_header_id:g.id,finished_report_ids:ids}:{material_source:g.id,material_lot_ids:materialIds})};},'tasks');sync();
+      bindForm(d=>{const g=group();if(!g)throw Error('Chưa có lô phù hợp để kiểm tra.');const ids=selectedParts();if(kind()==='FINISHED_PRODUCT'&&!ids.length)throw Error('Chọn ít nhất một phần theo báo cáo thành phẩm.');const materialIds=[...document.querySelector('#inspection-material-lots')?.selectedOptions||[]].map(o=>o.value);if(kind()==='MATERIAL'&&g.eligible_lots?.length&&!materialIds.length)throw Error('Chọn ít nhất một phần lô nguyên vật liệu đã nhận.');return {...d,start_at:new Date(d.start_at+'+07:00').toISOString(),end_at:new Date(d.end_at+'+07:00').toISOString(),assignee_ids:selectedEmployees(),...(kind()==='FINISHED_PRODUCT'?{lot_header_id:g.id,finished_report_ids:ids}:{material_source:g.id,material_lot_ids:materialIds})};},'tasks');sync();
     }catch(e){openModal('Không thể lập đợt kiểm kê',errorHTML(e));}
   };
   actionForm=async function(r,action){

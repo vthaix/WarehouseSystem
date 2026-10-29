@@ -1,8 +1,8 @@
 const confirmation=require('../../../../shared/planning-confirmation');
-const crypto = require("node:crypto");
 const C = require("../../../domain/core");
 const P = require("../../../domain/policy");
 const paginate = require("../../../../utils/pagination");
+const recordCode = require("../../../../shared/record-code");
 
 const isId = (value) => /^[1-9]\d*$/.test(String(value));
 const asDate = (value) =>
@@ -27,6 +27,7 @@ class ProductionPlanService {
   present(user, row) {
     return {
       ...row,
+      ...(row.order_sequence != null ? {display_code: recordCode.displayCode(row.code, recordCode.code('KHSX', row.customer_name, Number(row.order_sequence)) + (Number(row.plan_sequence) > 1 ? `-${String(row.plan_sequence).padStart(2, '0')}` : '')),customer_order_display_code: recordCode.displayCode(row.customer_order_code,recordCode.code('DH',row.customer_name,Number(row.order_sequence)))} : {}),
       id: String(row.id),
       customer_order_id: String(row.customer_order_id),
       workshop_id: String(row.workshop_id),
@@ -94,7 +95,7 @@ class ProductionPlanService {
       params,
     );
     const [rows] = await this.pool.execute(
-      "SELECT p.*,o.code AS customer_order_code,w.name AS workshop_name FROM production_plans p JOIN customer_orders o ON o.id=p.customer_order_id JOIN workshops w ON w.id=p.workshop_id" +
+      "SELECT p.*,o.code AS customer_order_code,o.quoted_total AS order_total,c.name AS customer_name,(SELECT COUNT(*) FROM customer_orders prior WHERE prior.customer_id=o.customer_id AND prior.id<=o.id) AS order_sequence,(SELECT COUNT(*) FROM production_plans prior WHERE prior.customer_order_id=p.customer_order_id AND prior.id<=p.id) AS plan_sequence,w.name AS workshop_name,u.full_name AS created_by_name FROM production_plans p JOIN customer_orders o ON o.id=p.customer_order_id JOIN customers c ON c.id=o.customer_id JOIN workshops w ON w.id=p.workshop_id JOIN users u ON u.id=p.created_by" +
         filter +
         " ORDER BY p.id DESC LIMIT ? OFFSET ?",
       [...params, String(pagination.per_page), String(pagination.offset)],
@@ -114,7 +115,7 @@ class ProductionPlanService {
     P.role(user, P.read["production-plans"]);
     C.fail(!isId(id), "NOT_FOUND", "Không tìm thấy kế hoạch.", 404);
     const [rows] = await connection.execute(
-      "SELECT p.*,o.code AS customer_order_code,o.delivery_address,o.latest_delivery_date,o.note AS customer_note,o.status AS customer_order_status,c.name AS customer_name,w.name AS workshop_name FROM production_plans p JOIN customer_orders o ON o.id=p.customer_order_id JOIN customers c ON c.id=o.customer_id JOIN workshops w ON w.id=p.workshop_id WHERE p.id=?",
+      "SELECT p.*,o.code AS customer_order_code,o.quoted_total AS order_total,o.delivery_address,o.latest_delivery_date,o.note AS customer_note,o.status AS customer_order_status,c.name AS customer_name,(SELECT COUNT(*) FROM customer_orders prior WHERE prior.customer_id=o.customer_id AND prior.id<=o.id) AS order_sequence,(SELECT COUNT(*) FROM production_plans prior WHERE prior.customer_order_id=p.customer_order_id AND prior.id<=p.id) AS plan_sequence,w.name AS workshop_name,u.full_name AS created_by_name FROM production_plans p JOIN customer_orders o ON o.id=p.customer_order_id JOIN customers c ON c.id=o.customer_id JOIN workshops w ON w.id=p.workshop_id JOIN users u ON u.id=p.created_by WHERE p.id=?",
       [id],
     );
     C.fail(
@@ -179,7 +180,7 @@ class ProductionPlanService {
       C.fail(
         !plan.materials.length,
         "PLAN_MATERIALS_MISSING",
-        "Kế hoạch chưa có định lượng NVL để đối chiếu; không thể kết luận đủ NVL.",
+        "Kế hoạch chưa có định lượng nguyên vật liệu để đối chiếu; không thể kết luận đủ nguyên vật liệu.",
         409,
       );
       const available = plan.materials.length
@@ -399,7 +400,11 @@ class ProductionPlanService {
         confirmation.check(rest < 0n,body.confirm_plan_overage,"Tổng kế hoạch vượt số lượng đơn hàng.");
         remaining.set(key, rest);
       }
-      const code = "KSX-" + crypto.randomBytes(8).toString("hex").toUpperCase();
+      const [[customer]] = await connection.execute("SELECT c.id,c.name FROM customer_orders o JOIN customers c ON c.id=o.customer_id WHERE o.id=? FOR UPDATE", [body.customer_order_id]);
+      const [[orderSequence]] = await connection.execute("SELECT COUNT(*) AS total FROM customer_orders WHERE customer_id=? AND id<=?", [customer.id, body.customer_order_id]);
+      const [[planSequence]] = await connection.execute("SELECT COUNT(*) AS total FROM production_plans WHERE customer_order_id=?", [body.customer_order_id]);
+      const proposedCode = recordCode.code("KHSX", customer.name, Number(orderSequence.total)) + (Number(planSequence.total) ? `-${String(Number(planSequence.total) + 1).padStart(2, '0')}` : '');
+      const code = await recordCode.distinguishNames(connection, 'production_plans', proposedCode, customer.id);
       const [created] = await connection.execute(
         "INSERT INTO production_plans (code,customer_order_id,workshop_id,created_by,start_date,end_date,note,status,version) VALUES (?,?,?,?,?,?,?,'DRAFT',1)",
         [
@@ -786,7 +791,7 @@ class ProductionPlanService {
           "INSERT INTO notifications (user_id,subject,body,resource_type,resource_id,business_key) SELECT wu.user_id,?,?, 'production-plans',?,? FROM workshop_users wu JOIN user_roles ur ON ur.user_id=wu.user_id JOIN roles r ON r.id=ur.role_id WHERE wu.workshop_id=? AND r.code='WORKSHOP_OWNER' ON DUPLICATE KEY UPDATE id=notifications.id",
           [
             `KHSX ${plan.code} đã duyệt`,
-            `Kiểm tra NVL cho KHSX ${plan.code}.`,
+            `Kiểm tra nguyên vật liệu cho KHSX ${plan.code}.`,
             id,
             `plan-${id}-approved`,
             plan.workshop_id,

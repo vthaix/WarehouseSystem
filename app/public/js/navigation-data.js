@@ -12,7 +12,7 @@ const warehouseNavigation = {
     "STOCKTAKE_DIFFERENCE": "Chênh lệch kiểm kê",
     "TIEN_DO": "Tiến độ",
     "SU_CO": "Sự cố",
-    "NHU_CAU": "Thiếu / nhu cầu NVL",
+    "NHU_CAU": "Thiếu / nhu cầu nguyên vật liệu",
     "RELEASE": "Giải phóng / tái kiểm để sử dụng lại",
     "SCRAP": "Tiêu hủy",
     "RETURN_SUPPLIER": "Trả nhà cung cấp",
@@ -23,7 +23,7 @@ const warehouseNavigation = {
     "ORDER_SUBMITTED": "Chờ tiếp nhận",
     "QUALITY_CHECK": "Kiểm tra chất lượng",
     "COUNT": "Kiểm đếm tồn kho",
-    "PROCUREMENT": "Bổ sung NVL",
+    "PROCUREMENT": "Bổ sung nguyên vật liệu",
     "CLOSED_WITH_RETURNS": "Đã nhận, có trả NCC",
     "CUSTOMER": "Khách hàng",
     "PLANNER": "Lập kế hoạch",
@@ -76,7 +76,7 @@ const warehouseNavigation = {
       ],
       [],
       "/catalog/material-prices",
-      "Đơn vị tính và đơn giá NVL theo từng nhà cung cấp."
+      "Đơn vị tính và đơn giá nguyên vật liệu theo từng nhà cung cấp."
     ],
     [
       "accounts",
@@ -172,7 +172,7 @@ const warehouseNavigation = {
         "PURCHASER"
       ],
       "/purchases",
-      "Tự nhập hoặc lấy kế hoạch mua NVL đã duyệt; chọn NCC theo từng NVL."
+      "Tự nhập hoặc lấy kế hoạch mua nguyên vật liệu đã duyệt; chọn NCC theo từng nguyên vật liệu."
     ],
     [
       "categories",
@@ -322,7 +322,7 @@ const warehouseNavigation = {
         "WORKSHOP_OWNER"
       ],
       "/production/reports",
-      "Tiến độ, sự cố hoặc thiếu NVL khi đang sản xuất; gửi Ban giám đốc."
+      "Tiến độ, sự cố hoặc thiếu nguyên vật liệu khi đang sản xuất; gửi Ban giám đốc."
     ],
     [
       "finished-reports",
@@ -493,7 +493,7 @@ const warehouseNavigation = {
     "finished_report_code": "Báo cáo thành phẩm",
     "lot_header_code": "Lô tổng",
     "report_mode": "Hình thức báo cáo thành phẩm",
-    "material_source": "Nguồn định lượng NVL",
+    "material_source": "Nguồn định lượng nguyên vật liệu",
     "customer_order_status": "Trạng thái đơn nguồn",
     "customer_note": "Ghi chú khách hàng",
     "image_path": "Ảnh danh mục",
@@ -514,14 +514,14 @@ const warehouseNavigation = {
     "campaign_id": "Lịch QC được giao",
     "location": "Địa điểm",
     "lot_ids": "Các lô cần kiểm tra",
-    "source_request_id": "Yêu cầu bổ sung NVL",
-    "production_report_id": "Báo cáo nhu cầu NVL",
+    "source_request_id": "Yêu cầu bổ sung nguyên vật liệu",
+    "production_report_id": "Báo cáo nhu cầu nguyên vật liệu",
     "report_purpose": "Mục đích báo cáo",
     "progress_percentage": "Tiến độ (%)",
     "send_to_planner": "Người nhận báo cáo",
     "production_completed": "Xác nhận hoàn tất sản xuất",
     "source_mode": "Cách lập đơn mua",
-    "production_source_mode": "Nguồn xuất NVL",
+    "production_source_mode": "Nguồn xuất nguyên vật liệu",
     "finished_report_id": "Báo cáo thành phẩm",
     "report_kind": "Loại báo cáo",
     "base_quantity": "Nhu cầu gốc",
@@ -609,6 +609,14 @@ const warehouseNavigation = {
     "created_at": "Ngày tạo",
     "posted_at": "Ngày ghi sổ",
     "quoted_total": "Tổng báo giá",
+    "order_total": "Tổng giá trị đơn hàng",
+    "created_by_name": "Người lập",
+    "customer_name": "Khách hàng",
+    "workshop_name": "Xưởng phụ trách",
+    "customer_order_code": "Mã đơn khách hàng",
+    "production_plan_code": "Mã kế hoạch sản xuất",
+    "return_warehouse_name": "Kho nhận",
+    "return_receiver_name": "Nhân viên nhận",
     "total_amount": "Tổng tiền",
     "quality_bucket": "Nhóm chất lượng",
     "location_id": "Vị trí"

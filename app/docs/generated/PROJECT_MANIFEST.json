@@ -4163,7 +4163,7 @@
       ],
       [],
       "/catalog/material-prices",
-      "Đơn vị tính và đơn giá NVL theo từng nhà cung cấp."
+      "Đơn vị tính và đơn giá nguyên vật liệu theo từng nhà cung cấp."
     ],
     [
       "accounts",
@@ -4259,7 +4259,7 @@
         "PURCHASER"
       ],
       "/purchases",
-      "Tự nhập hoặc lấy kế hoạch mua NVL đã duyệt; chọn NCC theo từng NVL."
+      "Tự nhập hoặc lấy kế hoạch mua nguyên vật liệu đã duyệt; chọn NCC theo từng nguyên vật liệu."
     ],
     [
       "categories",
@@ -4409,7 +4409,7 @@
         "WORKSHOP_OWNER"
       ],
       "/production/reports",
-      "Tiến độ, sự cố hoặc thiếu NVL khi đang sản xuất; gửi Ban giám đốc."
+      "Tiến độ, sự cố hoặc thiếu nguyên vật liệu khi đang sản xuất; gửi Ban giám đốc."
     ],
     [
       "finished-reports",

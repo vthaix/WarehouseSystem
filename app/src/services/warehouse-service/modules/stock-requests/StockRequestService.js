@@ -1,7 +1,7 @@
-const crypto = require("node:crypto");
 const C = require("../../../domain/core");
 const P = require("../../../domain/policy");
 const paginate = require("../../../../utils/pagination");
+const recordCode = require("../../../../shared/record-code");
 
 const isId = (value) => /^[1-9]\d*$/.test(String(value));
 const sources = {
@@ -306,7 +306,7 @@ class StockRequestService {
       409,
     );
     const source = rows[0];
-    C.fail(['PRODUCTION_ISSUE','MATERIAL_PURCHASE'].includes(purpose)&&mode!=='PLAN'&&source.report_purpose!=='NHU_CAU','INVALID_STATE','Báo cáo tiến độ/sự cố không phải nguồn nhu cầu NVL.',409);
+    C.fail(['PRODUCTION_ISSUE','MATERIAL_PURCHASE'].includes(purpose)&&mode!=='PLAN'&&source.report_purpose!=='NHU_CAU','INVALID_STATE','Báo cáo tiến độ/sự cố không phải nguồn nhu cầu nguyên vật liệu.',409);
     if ((purpose === "PRODUCTION_ISSUE" && mode === "PLAN") || (purpose==='PRODUCTION_RECEIPT'&&mode==='MANUAL')) source.production_plan_id = source.id;
     let sourceWorkshop = null;
     if (
@@ -538,7 +538,7 @@ class StockRequestService {
         null,
         source,
       );
-      const code = "YCK-" + crypto.randomBytes(8).toString("hex").toUpperCase();
+      const code = await recordCode.next(connection, 'stock_requests', 'YCK', `${body.purpose}-${source.source.code}`);
       const ids = {
         purchase_order_id: null,
         business_plan_id: null,

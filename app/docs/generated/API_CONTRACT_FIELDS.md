@@ -106,15 +106,14 @@ Danh sách trích từ C.fields trong service/helper. Đây là các field đư�
 | src/services/warehouse-service/modules/returns/CustomerReturnService.js | create | b | warehouse_id, receiver_id, reason, lines |
 | src/services/warehouse-service/modules/returns/CustomerReturnService.js | create | line | original_stock_document_line_id, quantity, location_id |
 | src/services/warehouse-service/modules/returns/CustomerReturnService.js | action | b | version |
-| src/services/warehouse-service/modules/stock-requests/partial-receipt.js | create | body | purpose, production_source_mode, production_plan_id, workshop_id, warehouse_id, manager_id, requested_date, note, lines, receipt_key |
-| src/services/warehouse-service/modules/stock-requests/partial-receipt.js | create | line | item_id, quantity, manufactured_date, expiry_date, note |
 | src/services/warehouse-service/modules/stock-requests/StockRequestService.js | list | query | page, per_page, q, status, purpose, sort |
 | src/services/warehouse-service/modules/stock-requests/StockRequestService.js | validateLines | line | item_id, quantity, note |
 | src/services/warehouse-service/modules/stock-requests/StockRequestService.js | create | body | purpose, workflow_source_id, sale_plan_id, workshop_id, warehouse_id, manager_id, requested_date, requested_at, note, lines |
 | src/services/warehouse-service/modules/stock-requests/StockRequestService.js | create | body | purpose, warehouse_id, workshop_id, manager_id, requested_date, requested_at, purchase_order_id, business_plan_id, production_plan_id, production_report_id, production_source_mode, note, lines |
 | src/services/warehouse-service/modules/stock-requests/StockRequestService.js | update | body | version, requested_date, requested_at, warehouse_id, manager_id, note, lines |
 | src/services/warehouse-service/modules/stock-requests/StockRequestService.js | remove | body | version |
-| src/services/warehouse-service/modules/stocktakes/inspection-minutes.js | list | q | page, per_page, q, sort, status |
+| src/services/warehouse-service/modules/stock-requests/partial-receipt.js | create | body | purpose, production_source_mode, production_plan_id, workshop_id, warehouse_id, manager_id, requested_date, note, lines, receipt_key |
+| src/services/warehouse-service/modules/stock-requests/partial-receipt.js | create | line | item_id, quantity, manufactured_date, expiry_date, note |
 | src/services/warehouse-service/modules/stocktakes/StocktakeService.js | list | q | page, per_page, q, status, sort, campaign_type |
 | src/services/warehouse-service/modules/stocktakes/StocktakeService.js | create | b | campaign_type, planned_date, start_at, end_at, item_kind, note, warehouses |
 | src/services/warehouse-service/modules/stocktakes/StocktakeService.js | create | w | warehouse_id, assignee_ids, conclusion_assignee_ids |
@@ -123,13 +122,14 @@ Danh sách trích từ C.fields trong service/helper. Đây là các field đư�
 | src/services/warehouse-service/modules/stocktakes/StocktakeService.js | counts | l | id, version, actual_quantity, cause |
 | src/services/warehouse-service/modules/stocktakes/StocktakeService.js | complete | b | version |
 | src/services/warehouse-service/modules/stocktakes/StocktakeService.js | differences | q | page, per_page, stocktake_id, warehouse_id |
-| src/services/warehouse-service/modules/tasks/inspection-scope.js | record | line | lot_id, counted_quantity |
+| src/services/warehouse-service/modules/stocktakes/inspection-minutes.js | list | q | page, per_page, q, sort, status |
 | src/services/warehouse-service/modules/tasks/TaskService.js | setMinuteAuthor | b | version, minute_author_id |
 | src/services/warehouse-service/modules/tasks/TaskService.js | list | query | page, per_page, q, status, sort |
 | src/services/warehouse-service/modules/tasks/TaskService.js | create | b | title, description, priority, start_at, end_at, assignee_ids, inspection_type, lot_header_id, finished_report_ids, material_source, material_lot_ids, location, minute_author_id |
 | src/services/warehouse-service/modules/tasks/TaskService.js | update | b | version, title, description, priority, start_at, end_at, assignee_ids, minute_author_id |
 | src/services/warehouse-service/modules/tasks/TaskService.js | remove | b | version |
 | src/services/warehouse-service/modules/tasks/TaskService.js | progress | b | version, status, count_lines |
+| src/services/warehouse-service/modules/tasks/inspection-scope.js | record | line | lot_id, counted_quantity |
 | src/services/warehouse-service/modules/warehouse/LotService.js | createLot | body | code, lines |
 | src/services/warehouse-service/modules/warehouse/LotService.js | createLot | line | purchase_order_line_id, received_quantity, manufactured_date, expiry_date |
 | src/services/warehouse-service/modules/warehouse/LotService.js | createLot | body | code, item_id, purchase_order_id, purchase_order_line_id, received_quantity, manufactured_date, expiry_date, lot_header_id |
@@ -146,6 +146,6 @@ Danh sách trích từ C.fields trong service/helper. Đây là các field đư�
 | src/shared/ModuleRoutes.js | helper | req.query | page, per_page |
 | src/shared/ModuleRoutes.js | helper | query | page, per_page, q, kind, sort |
 | src/shared/ModuleRoutes.js | helper | req.body | outputs |
-| src/shared/production-recipes.js | helper | output | item_id, quantity |
 | src/shared/SourceImportService.js | preview | body | source_id, purpose, production_source_mode, workshop_id, warehouse_id, workflow_source, sale_plan_id |
 | src/shared/TestResetRoutes.js | helper | req.body | confirmation |
+| src/shared/production-recipes.js | helper | output | item_id, quantity |

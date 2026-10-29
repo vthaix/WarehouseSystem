@@ -1,7 +1,7 @@
-const crypto = require("node:crypto");
 const C = require("../../../domain/core");
 const P = require("../../../domain/policy");
 const paginate = require("../../../../utils/pagination");
+const recordCode = require("../../../../shared/record-code");
 
 const isId = (value) => /^[1-9]\d*$/.test(String(value));
 class QualityService {
@@ -85,7 +85,7 @@ class QualityService {
         C.fail(
           lot.purchase_order_line_id && failed > 0n,
           "INVALID_STATE",
-          "NVL lỗi phải được ghi chứng từ trả theo kết luận, không sửa bằng đường bù này.",
+          "nguyên vật liệu lỗi phải được ghi chứng từ trả theo kết luận, không sửa bằng đường bù này.",
           409,
         );
         await c.execute(
@@ -394,7 +394,7 @@ class QualityService {
       await connection.beginTransaction();
       const campaign = await this.campaign(connection, user, body.campaign_id);
       const lines = await this.validateLines(connection, campaign, body.lines);
-      const code = "QC-" + crypto.randomBytes(8).toString("hex").toUpperCase();
+      const code = await recordCode.next(connection, 'qc_inspections', 'QC', campaign.code);
       const [created] = await connection.execute(
         "INSERT INTO qc_inspections (code,inspector_id,inspected_at,note,status,version,campaign_id) VALUES (?,?,?,?,'RECORDED',1,?)",
         [
@@ -424,7 +424,7 @@ class QualityService {
         ) {
           const [returned] = await connection.execute(
             "INSERT INTO lot_headers(code,lot_kind,return_direction,note) VALUES (?,'TRA_VE','NCC',?)",
-            ["TRA-QC-" + crypto.randomBytes(8).toString("hex"), line.issue],
+            [await recordCode.next(connection, 'lot_headers', 'TRANCC', code), line.issue],
           );
           await connection.execute(
             "INSERT INTO returned_lot_lines(lot_header_id,original_lot_detail_id,quantity,qc_inspection_line_id) VALUES (?,?,?,?)",

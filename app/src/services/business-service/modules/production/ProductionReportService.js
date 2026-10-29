@@ -1,7 +1,7 @@
-const crypto = require("node:crypto");
 const C = require("../../../domain/core");
 const P = require("../../../domain/policy");
 const paginate = require("../../../../utils/pagination");
+const recordCode = require("../../../../shared/record-code");
 
 const isId = (v) => /^[1-9]\d*$/.test(String(v));
 class ProductionReportService {
@@ -20,6 +20,8 @@ class ProductionReportService {
 
   present(user, row) {
     const result = { ...row };
+    if (row.report_sequence != null) result.display_code = recordCode.displayCode(row.code, recordCode.code('BCSX', row.customer_name, Number(row.report_sequence)));
+    if (row.order_sequence != null) result.production_plan_display_code = recordCode.displayCode(row.production_plan_code,recordCode.code('KHSX', row.customer_name, Number(row.order_sequence)) + (Number(row.plan_sequence) > 1 ? `-${String(row.plan_sequence).padStart(2, '0')}` : ''));
     result.send_to_planner = Boolean(row.send_to_planner);
     for (const field of [
       "id",
@@ -87,8 +89,9 @@ class ProductionReportService {
       params,
     );
     const [rows] = await this.pool.execute(
-      "SELECT r.*,p.workshop_id,p.code AS production_plan_code" +
+      "SELECT r.*,p.workshop_id,p.code AS production_plan_code,c.name AS customer_name,(SELECT COUNT(*) FROM customer_orders prior WHERE prior.customer_id=o.customer_id AND prior.id<=o.id) AS order_sequence,(SELECT COUNT(*) FROM production_plans prior WHERE prior.customer_order_id=p.customer_order_id AND prior.id<=p.id) AS plan_sequence,(SELECT COUNT(*) FROM production_reports prior JOIN production_plans pp ON pp.id=prior.production_plan_id JOIN customer_orders oo ON oo.id=pp.customer_order_id WHERE oo.customer_id=o.customer_id AND prior.id<=r.id) AS report_sequence,w.name AS workshop_name,u.full_name AS created_by_name" +
         base +
+        " JOIN customer_orders o ON o.id=p.customer_order_id JOIN customers c ON c.id=o.customer_id JOIN workshops w ON w.id=p.workshop_id JOIN users u ON u.id=r.created_by" +
         filter +
         " ORDER BY r.id DESC LIMIT ? OFFSET ?",
       [...params, String(per_page), String(offset)],
@@ -108,7 +111,7 @@ class ProductionReportService {
     P.role(user, P.read["production-reports"]);
     C.fail(!isId(id), "NOT_FOUND", "Không tìm thấy báo cáo.", 404);
     const [rows] = await connection.execute(
-      "SELECT r.*,p.workshop_id,p.code AS production_plan_code FROM production_reports r JOIN production_plans p ON p.id=r.production_plan_id WHERE r.id=?",
+      "SELECT r.*,p.workshop_id,p.code AS production_plan_code,c.name AS customer_name,(SELECT COUNT(*) FROM customer_orders prior WHERE prior.customer_id=o.customer_id AND prior.id<=o.id) AS order_sequence,(SELECT COUNT(*) FROM production_plans prior WHERE prior.customer_order_id=p.customer_order_id AND prior.id<=p.id) AS plan_sequence,(SELECT COUNT(*) FROM production_reports prior JOIN production_plans pp ON pp.id=prior.production_plan_id JOIN customer_orders oo ON oo.id=pp.customer_order_id WHERE oo.customer_id=o.customer_id AND prior.id<=r.id) AS report_sequence,w.name AS workshop_name,u.full_name AS created_by_name FROM production_reports r JOIN production_plans p ON p.id=r.production_plan_id JOIN customer_orders o ON o.id=p.customer_order_id JOIN customers c ON c.id=o.customer_id JOIN workshops w ON w.id=p.workshop_id JOIN users u ON u.id=r.created_by WHERE r.id=?",
       [id],
     );
     C.fail(
@@ -118,7 +121,7 @@ class ProductionReportService {
       404,
     );
     const [lines] = await connection.execute(
-      "SELECT l.*,i.name AS item_name,i.code AS item_code FROM production_report_lines l JOIN items i ON i.id=l.item_id WHERE l.production_report_id=? ORDER BY l.id",
+      "SELECT l.*,i.name AS item_name,i.code AS item_code,u.name AS unit_name FROM production_report_lines l JOIN items i ON i.id=l.item_id JOIN units u ON u.id=i.unit_id WHERE l.production_report_id=? ORDER BY l.id",
       [id],
     );
     return {
@@ -243,10 +246,11 @@ class ProductionReportService {
       C.fail(
         purpose !== "NHU_CAU" && body.lines?.length,
         "VALIDATION_ERROR",
-        "Báo cáo tiến độ/sự cố không có dòng nhu cầu NVL.",
+        "Báo cáo tiến độ/sự cố không có dòng nhu cầu nguyên vật liệu.",
       );
-      const code =
-        "BCSX-" + crypto.randomBytes(8).toString("hex").toUpperCase();
+      const [[customer]] = await connection.execute("SELECT c.id,c.name FROM production_plans p JOIN customer_orders o ON o.id=p.customer_order_id JOIN customers c ON c.id=o.customer_id WHERE p.id=? FOR UPDATE", [body.production_plan_id]);
+      const [[sequence]] = await connection.execute("SELECT COUNT(*) AS total FROM production_reports r JOIN production_plans p ON p.id=r.production_plan_id JOIN customer_orders o ON o.id=p.customer_order_id WHERE o.customer_id=?", [customer.id]);
+      const code = await recordCode.distinguishNames(connection, 'production_reports', recordCode.code("BCSX", customer.name, Number(sequence.total) + 1), customer.id);
       const [created] = await connection.execute(
         "INSERT INTO production_reports (code,production_plan_id,created_by,note,status,version,report_purpose,progress_percentage,send_to_planner) VALUES (?,?,?,?,'DRAFT',1,?,?,?)",
         [
@@ -343,7 +347,7 @@ class ProductionReportService {
       C.fail(
         report.report_purpose !== "NHU_CAU" && body.lines?.length,
         "VALIDATION_ERROR",
-        "Tiến độ/sự cố không có dòng nhu cầu NVL.",
+        "Tiến độ/sự cố không có dòng nhu cầu nguyên vật liệu.",
       );
       if (body.lines !== undefined) {
         const lines =

@@ -1,6 +1,6 @@
 function calendarToday() { return new Date().toLocaleDateString('en-CA', {timeZone:'Asia/Ho_Chi_Minh'}); }
 function optionLabel(value) {
-  if (value && typeof value === 'object') return [value.code, value.name || value.title || value.full_name].filter(Boolean).join(' · ') || ('#' + value.id);
+  if (value && typeof value === 'object') return [value.display_code || value.code, value.name || value.title || value.full_name].filter(Boolean).join(' · ') || ('#' + value.id);
   return labels[value] || value;
 }
 function numericInputValue(value) {
@@ -494,7 +494,7 @@ async function createForm() {
           el.disabled = k === "supplier_id" || purchase;
           el.parentElement.hidden = k === "supplier_id" || purchase;
         }
-        document.querySelector('label[for="f-planned_date"]').textContent = purchase ? 'Ngày mong nhận NVL *' : 'Ngày dự kiến giao thành phẩm *';
+        document.querySelector('label[for="f-planned_date"]').textContent = purchase ? 'Ngày mong nhận nguyên vật liệu *' : 'Ngày dự kiến giao thành phẩm *';
       };
       document.querySelector("#f-type").addEventListener("change", sync);
       sync();
