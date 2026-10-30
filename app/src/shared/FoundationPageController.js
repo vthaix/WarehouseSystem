@@ -19,8 +19,8 @@ class FoundationPageController {
     const user = safeUser(req.user),
       available = modules.filter(
         (m) => m[3].includes("*") || user.roles.some((r) => m[3].includes(r)),
-      ),
-      module = modules.find((m) => m[0] === current);
+      ).map(m=>{const copy=[...m];for(const role of user.roles){const name=require('../config/navigation').roleLabels[role]?.[m[0]];if(name){copy[1]=name;break;}}return copy;}),
+      module = available.find((m) => m[0] === current);
     C.fail(
       current !== "dashboard" && !available.includes(module),
       "FORBIDDEN",
@@ -29,7 +29,7 @@ class FoundationPageController {
     );
     let result = { data: [], meta: { page: 1, total: 0, total_pages: 0 } };
     let warehouseMap=null;
-    const supported = current==='material-prices' || current==='accounts' || current==='warehouse-lookup' ||
+    const supported = ['warehouse-inbound','warehouse-outbound'].includes(current)||current==='material-prices' || current==='accounts' || current==='warehouse-lookup' ||
       current === "customer-returns" ||
       ["stocktakes", "stocktake-minutes", "exception-proposals"].includes(
         current,
@@ -49,7 +49,8 @@ class FoundationPageController {
       current === "warehouse-records" ||
       current.startsWith("reports/") ||
       this.runtime.catalog.supports(current);
-    if(current==='material-prices')result=await this.runtime.materialCatalog.list(req.user,serviceQuery);
+    if(['warehouse-inbound','warehouse-outbound'].includes(current))result=await require('./warehouse-management').list(this.runtime,req.user,current,serviceQuery);
+    else if(current==='material-prices')result=await this.runtime.materialCatalog.list(req.user,serviceQuery);
     else if(current==='accounts')result=await this.runtime.accounts.list(req.user,serviceQuery);
     else if(current==='warehouse-lookup')warehouseMap=await this.runtime.reports.warehouseLookup(req.user,serviceQuery);
     else if (current === "dashboard" || current === "notifications")
@@ -175,7 +176,7 @@ class FoundationPageController {
       501,
     );
     const record =
-      req.params.resource === 'material-prices'?await this.runtime.materialCatalog.get(req.user,req.params.id):req.params.resource === 'accounts'?await this.runtime.accounts.get(req.user,req.params.id):req.params.resource === "customer-returns"
+      ['warehouse-inbound','warehouse-outbound'].includes(req.params.resource)?await require('./warehouse-management').get(this.runtime,req.user,req.params.resource,req.params.id):req.params.resource === 'material-prices'?await this.runtime.materialCatalog.get(req.user,req.params.id):req.params.resource === 'accounts'?await this.runtime.accounts.get(req.user,req.params.id):req.params.resource === "customer-returns"
         ? await this.runtime.customerReturns.get(req.user,req.params.id)
       : req.params.resource === "stocktakes"
         ? await this.runtime.stocktakes.get(req.user, req.params.id)

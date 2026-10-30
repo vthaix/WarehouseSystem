@@ -154,8 +154,9 @@ class PurchaseOrderService {
       const [suppliers] = await c.execute('SELECT id FROM suppliers WHERE is_active=1 AND id IN (' + supplierIds.map(() => '?').join(',') + ')', supplierIds);
       C.fail(suppliers.length !== supplierIds.length, 'VALIDATION_ERROR', 'Nhà cung cấp không tồn tại hoặc ngừng hoạt động.');
       const itemIds = [...seen];
-      const [items] = await c.execute("SELECT id FROM items WHERE kind='MATERIAL' AND is_active=1 AND id IN (" + itemIds.map(() => '?').join(',') + ')', itemIds);
+      const [items] = await c.execute("SELECT i.id,n.BangGiaNCC FROM items i JOIN NguyenVatLieu n ON n.MaMatHang=i.id WHERE i.kind='MATERIAL' AND i.is_active=1 AND i.id IN (" + itemIds.map(() => '?').join(',') + ')', itemIds);
       C.fail(items.length !== itemIds.length, 'VALIDATION_ERROR', 'Chỉ mua nguyên vật liệu đang hoạt động.');
+      for(const line of lines){const material=items.find(i=>String(i.id)===line.item_id);const offers=typeof material.BangGiaNCC==='string'?JSON.parse(material.BangGiaNCC):material.BangGiaNCC||[];C.fail(!offers.some(o=>String(o.supplier_id)===line.supplier_id),'SUPPLIER_ITEM_MISMATCH','Nhà cung cấp không cung cấp nguyên vật liệu này. Chọn đúng nhà cung cấp trong danh mục cung ứng.',422);}
       let total = 0n;
       for (const l of lines) total += (C.qty(l.quantity) * C.price(l.unit_price) + 500n) / 1000n;
       C.fail(total > 9999999999999999999n, 'VALIDATION_ERROR', 'Tổng tiền vượt giới hạn.');

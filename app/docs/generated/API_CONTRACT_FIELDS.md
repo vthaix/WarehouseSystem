@@ -63,7 +63,7 @@ Danh sách trích từ C.fields trong service/helper. Đây là các field đư�
 | src/modules/returns/CustomerReturnService.js | action | b | version |
 | src/modules/stock-requests/partial-receipt.js | create | body | purpose, production_source_mode, production_plan_id, workshop_id, warehouse_id, manager_id, requested_date, note, lines, receipt_key |
 | src/modules/stock-requests/partial-receipt.js | create | line | item_id, quantity, manufactured_date, expiry_date, note |
-| src/modules/stock-requests/StockRequestService.js | list | query | page, per_page, q, status, purpose, sort |
+| src/modules/stock-requests/StockRequestService.js | list | query | page, per_page, q, status, purpose, sort, type |
 | src/modules/stock-requests/StockRequestService.js | validateLines | line | item_id, quantity, note |
 | src/modules/stock-requests/StockRequestService.js | create | body | purpose, workflow_source_id, sale_plan_id, workshop_id, warehouse_id, manager_id, requested_date, requested_at, note, lines |
 | src/modules/stock-requests/StockRequestService.js | create | body | purpose, warehouse_id, workshop_id, manager_id, requested_date, requested_at, purchase_order_id, business_plan_id, production_plan_id, production_report_id, production_source_mode, note, lines |

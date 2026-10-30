@@ -1,7 +1,7 @@
 (() => {
  const baseCreate=createForm,baseEdit=editForm;
  const baseLoad=loadTable,baseDetail=detail;
- function thumbnail(element,value){element.replaceChildren();if(typeof value!=='string'||!/^\/images\/categories\/[a-f0-9-]{36}\.(png|jpg|webp)$/.test(value)){element.textContent='—';return;}const img=document.createElement('img');img.src=value;img.alt='Ảnh danh mục';img.className='category-thumbnail';element.append(img);}
+ function thumbnail(element,value){element.replaceChildren();if(typeof value!=='string'||!/^\/images\/(?:categories\/[a-f0-9-]{36}|items\/[a-z0-9-]+)\.(png|jpg|jpeg|webp)$/.test(value)){element.textContent='—';return;}const img=document.createElement('img');img.src=value;img.alt='Ảnh danh mục';img.className='category-thumbnail';element.append(img);}
  loadTable=async function(){await baseLoad();if(current==='categories')document.querySelectorAll('#table tbody tr').forEach((row,i)=>{if(row.cells[0])thumbnail(row.cells[0],cached[i]?.image_path);});};
  detail=function(record){baseDetail(record);if(current==='categories'&&record.image_path){const label=[...document.querySelectorAll('#modal-body dt')].find(el=>el.textContent===fieldLabel('image_path'));if(label)thumbnail(label.nextElementSibling,record.image_path);}};
  const readFile=file=>new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(Error('Không đọc được ảnh.'));reader.readAsDataURL(file);});

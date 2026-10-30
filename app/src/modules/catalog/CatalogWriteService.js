@@ -16,8 +16,8 @@ const definitions = {
   },
   "warehouse-locations": {
     table: "warehouse_locations",
-    create: ["warehouse_id", "code", "name", "is_active"],
-    edit: ["name", "is_active"],
+    create: ["warehouse_id", "code", "name", "is_active","zone_name","zone_category_id","depth"],
+    edit: ["name", "is_active","zone_name","zone_category_id","depth"],
     required: ["warehouse_id", "code", "name"],
   },
   suppliers: {
@@ -124,6 +124,12 @@ class CatalogWriteService {
       );
     const normalized = {};
     for (const [field, value] of Object.entries(body)) {
+      if(resource==='warehouse-locations'&&['zone_name','zone_category_id','depth'].includes(field)){
+       if(field==='zone_name'){if(value==null||value==='')normalized[field]=null;else {C.text(value,field,120);normalized[field]=value.trim();}}
+       else if(field==='zone_category_id'){C.fail(value!=null&&value!==''&&!isId(value),'VALIDATION_ERROR','Nhóm hàng của khu không hợp lệ.');normalized[field]=value||null;}
+       else {C.fail(!Number.isInteger(Number(value))||Number(value)<1||Number(value)>100,'VALIDATION_ERROR','Độ sâu vị trí phải từ 1 đến 100.');normalized[field]=Number(value);}
+       continue;
+      }
       if(field==='material_quality_standard'){C.text(value,field,1000,false);normalized[field]=value?.trim()||null;continue;}
       if(field==='default_shelf_life_days'){C.fail(value!==null&&(!Number.isInteger(value)||value<1||value>36500),'VALIDATION_ERROR','Hạn sử dụng mặc định phải là số ngày từ 1 đến 36500.');normalized[field]=value;continue;}
       if(field==='catalog_kind'){C.fail(!['MATERIAL','FINISHED_PRODUCT'].includes(value),'VALIDATION_ERROR','Chọn nhóm Thành phẩm hoặc Nguyên vật liệu.');normalized.LoaiDanhMuc=value;continue;}

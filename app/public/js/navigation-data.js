@@ -122,9 +122,7 @@ const warehouseNavigation = {
       "↩",
       [
         "WAREHOUSE_MANAGER",
-        "WAREHOUSE_STAFF",
-        "QC_INSPECTOR",
-        "DIRECTOR"
+        "WAREHOUSE_STAFF"
       ],
       [
         "WAREHOUSE_MANAGER"
@@ -152,8 +150,7 @@ const warehouseNavigation = {
       "▤",
       [
         "PLANNER",
-        "DIRECTOR",
-        "PURCHASER"
+        "DIRECTOR"
       ],
       [
         "PLANNER"
@@ -257,9 +254,7 @@ const warehouseNavigation = {
       "Yêu cầu nhập / xuất",
       "⇄",
       [
-        "WORKSHOP_OWNER",
-        "WAREHOUSE_MANAGER",
-        "WAREHOUSE_STAFF"
+        "WORKSHOP_OWNER"
       ],
       [
         "WORKSHOP_OWNER"
@@ -272,8 +267,6 @@ const warehouseNavigation = {
       "Phiếu nhập / xuất",
       "⇥",
       [
-        "WAREHOUSE_MANAGER",
-        "WAREHOUSE_STAFF",
         "DIRECTOR",
         "WORKSHOP_OWNER"
       ],
@@ -357,9 +350,8 @@ const warehouseNavigation = {
       "Biên bản kiểm kê",
       "▨",
       [
-        "STOCKTAKER",
-        "DIRECTOR",
-        "QC_INSPECTOR"
+        "QC_INSPECTOR",
+        "STOCKTAKER"
       ],
       [
         "STOCKTAKER",
@@ -388,14 +380,7 @@ const warehouseNavigation = {
       "Quản lý công việc",
       "▢",
       [
-        "DIRECTOR",
-        "PLANNER",
-        "PURCHASER",
-        "WORKSHOP_OWNER",
-        "WAREHOUSE_MANAGER",
-        "WAREHOUSE_STAFF",
-        "QC_INSPECTOR",
-        "STOCKTAKER"
+        "DIRECTOR"
       ],
       [],
       "/tasks",
@@ -418,10 +403,7 @@ const warehouseNavigation = {
       "reports/stock-documents",
       "Báo cáo nhập / xuất",
       "↗",
-      [
-        "DIRECTOR",
-        "WORKSHOP_OWNER"
-      ],
+      [],
       [],
       "/reports/stock-documents",
       "Đối chiếu phiếu theo kho và ngày."
@@ -441,11 +423,7 @@ const warehouseNavigation = {
       "warehouse-records",
       "Hồ sơ kho tổng hợp",
       "▨",
-      [
-        "WAREHOUSE_MANAGER",
-        "DIRECTOR",
-        "WORKSHOP_OWNER"
-      ],
+      [],
       [],
       "/warehouse/records",
       "Tổng hợp phiếu kho từ các nhân viên."
@@ -460,9 +438,37 @@ const warehouseNavigation = {
       [],
       "/notifications",
       "Thông tin nghiệp vụ dành cho bạn."
+    ],
+    [
+      "warehouse-inbound",
+      "Quản lý nhập kho",
+      "⇥",
+      [
+        "WAREHOUSE_MANAGER",
+        "WAREHOUSE_STAFF"
+      ],
+      [],
+      "/warehouse/inbound",
+      "Tiếp nhận, phân công từng lô và đối chiếu phiếu nhập kho."
+    ],
+    [
+      "warehouse-outbound",
+      "Quản lý xuất kho",
+      "⇤",
+      [
+        "WAREHOUSE_MANAGER",
+        "WAREHOUSE_STAFF"
+      ],
+      [],
+      "/warehouse/outbound",
+      "Phân công xuất nguyên vật liệu, giao thành phẩm và đối chiếu phiếu xuất."
     ]
   ],
   "fieldNames": {
+    "zone_name": "Khu lưu kho",
+    "zone_category_id": "Nhóm hàng của khu",
+    "depth": "Độ sâu vị trí (1 là ngoài cùng)",
+    "supplied_items": "Mặt hàng cung cấp",
     "minute_author_id": "Nhân viên lập biên bản chung",
     "minute_conclusion": "Kết luận biên bản",
     "minute_lines": "Kết quả kiểm tra trong biên bản",
@@ -622,5 +628,33 @@ const warehouseNavigation = {
     "total_amount": "Tổng tiền",
     "quality_bucket": "Nhóm chất lượng",
     "location_id": "Vị trí"
+  },
+  "roleLabels": {
+    "PLANNER": {
+      "customer-orders": "Tiếp nhận đơn hàng",
+      "production-reports": "Báo cáo nhu cầu nhận được",
+      "finished-reports": "Báo cáo thành phẩm nhận được"
+    },
+    "DIRECTOR": {
+      "production-plans": "Phê duyệt kế hoạch sản xuất",
+      "business-plans": "Phê duyệt kế hoạch mua / bán",
+      "production-reports": "Báo cáo sản xuất nhận được",
+      "finished-reports": "Báo cáo thành phẩm nhận được",
+      "stock-documents": "Hồ sơ nhập / xuất kho",
+      "exception-proposals": "Phê duyệt xử lý hàng cách ly"
+    },
+    "WAREHOUSE_STAFF": {
+      "warehouse-inbound": "Nhập kho",
+      "warehouse-outbound": "Xuất kho"
+    },
+    "STOCKTAKER": {
+      "inspection-counts": "Thực hiện kiểm kê"
+    },
+    "WORKSHOP_OWNER": {
+      "stock-requests": "Yêu cầu nhập / xuất kho",
+      "production-plans": "Kế hoạch được giao",
+      "stock-documents": "Hồ sơ nhập / xuất kho",
+      "exception-proposals": "Phê duyệt đề xuất ngoại lệ"
+    }
   }
 };

@@ -22,12 +22,12 @@ try{
   const request={id:'7000',code:'YCK-7000',version:3,type:'IN',purpose:'PURCHASE_RECEIPT',requested_date:'2040-01-01',requested_at:'2040-01-01T03:30:00.000Z'};
   const line={id:'7001',item_name:'Bot mi',remaining_quantity:'10.000',unit:'kg',lots:[{id:'7002',code:'LO-NVL',qc_status:'PASSED',passed_quantity:'10.000',posted_quantity:'0.000'}],locations:[{id:'7003',name:'Ke A'}],balances:[]};
   {
-    const {context,page,errors}=await pageFor('manager','stock-requests');await mock(page,'stock-requests/7000/allocations',{request,frozen:false,lines:[line],allocations:[]});
+    const {context,page,errors}=await pageFor('manager','warehouse-inbound');await mock(page,'stock-requests/7000/allocations',{request,frozen:false,lines:[line],allocations:[]});
     await page.evaluate(r=>dispatchForm(r),request);assert.equal(await page.locator('#f-start_at').inputValue(),'2040-01-01T10:30');assert.equal(await page.locator('[data-dispatch] [data-key="quantity"]').inputValue(),'10');
     const body=await capture(page,'stock-requests/7000/dispatch');assert.equal(body.start_at,'2040-01-01T03:30:00.000Z');assert.equal(body.allocations[0].quantity,'10');assert.deepEqual(errors,[]);await context.close();
   }
   {
-    const {context,page,errors}=await pageFor('staff','tasks');const userId=await page.evaluate(()=>String(user.id));
+    const {context,page,errors}=await pageFor('staff','warehouse-inbound');const userId=await page.evaluate(()=>String(user.id));
     const allocation={id:'7004',stock_request_line_id:'7001',task_id:'7005',user_id:userId,lot_id:'7002',location_id:'7003',quantity:'10.000',posted_quantity:'0.000'};
     await mock(page,'stock-requests/7000/allocations?task_id=7005',{request:{...request,version:4},frozen:false,lines:[line],allocations:[allocation]});
     await page.evaluate(r=>postForm(r),{...request,assigned_task_id:'7005'});assert.equal(await page.locator('[data-actual-quantity]').inputValue(),'10');await page.locator('[data-actual-quantity]').fill('8');await page.locator('details').filter({has:page.locator('#f-note')}).locator('summary').click();await page.locator('#f-note').fill('Phieu giay NK-001');

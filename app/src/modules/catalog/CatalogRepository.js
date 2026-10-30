@@ -68,8 +68,10 @@ class CatalogRepository {
         " ORDER BY t.id DESC LIMIT ? OFFSET ?",
       [...values, String(per_page), String(offset)],
     );
+    let data=rows.map(normalize);
+    if(resource==='suppliers')data=await this.withSupplies(data);
     return {
-      data: rows.map(normalize),
+      data,
       meta: {
         page,
         per_page,
@@ -96,7 +98,11 @@ class CatalogRepository {
       [id],
     );
     C.fail(!rows.length, "NOT_FOUND", "Không tìm thấy dữ liệu.", 404);
-    return normalize(rows[0]);
+    const result=normalize(rows[0]);return resource==='suppliers'?(await this.withSupplies([result]))[0]:result;
+  }
+  async withSupplies(rows){
+    const [items]=await this.pool.execute("SELECT i.id,i.name,n.BangGiaNCC FROM items i JOIN NguyenVatLieu n ON n.MaMatHang=i.id WHERE i.is_active=1");
+    return rows.map(s=>({...s,supplied_items:items.filter(i=>{const offers=typeof i.BangGiaNCC==='string'?JSON.parse(i.BangGiaNCC):i.BangGiaNCC||[];return offers.some(p=>String(p.supplier_id)===String(s.id));}).map(i=>({id:String(i.id),name:i.name}))}));
   }
 }
 function normalize(row) {

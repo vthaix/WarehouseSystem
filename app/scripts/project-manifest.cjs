@@ -25,7 +25,7 @@ function collect() {
     });
   for(const o of objects)if(o.kind==='MISSING'&&new RegExp('CREATE TABLE '+o.name+'\\s*\\(').test(sql))o.kind='TABLE';
   for(const m of sql.matchAll(/ALTER TABLE (\w+) DROP COLUMN (\w+)/g)){const obj=objects.find(o=>o.name===m[1]);if(obj)obj.columns=obj.columns.filter(c=>c.name!==m[2]);}
-  for(const m of sql.matchAll(/ALTER TABLE (\w+) ADD COLUMN (\w+) ([^;\n]+)/g)){const obj=objects.find(o=>o.name===m[1]);if(obj&&!obj.columns.some(c=>c.name===m[2]))obj.columns.push({name:m[2],definition:m[3]});}
+  for(const m of sql.matchAll(/ALTER TABLE (\w+) ([^;]+);/g)){const obj=objects.find(o=>o.name===m[1]);if(!obj)continue;for(const c of m[2].matchAll(/ADD COLUMN (\w+) ([^,;]+)/g))if(!obj.columns.some(v=>v.name===c[1]))obj.columns.push({name:c[1],definition:c[2]});}
   const services=[{name:'warehouse-app',database:'warehouse_db',user:'warehouse',entrypoint:'src/server.js',dockerfile:'Dockerfile',objects}];
   return {format:2,architecture:'modular-monolith',databaseIsolation:'single-mysql-database',serviceMigrations,services,routes,roles:{read:policy.read,create:policy.create,editable:policy.editable},screens:require('../src/config/navigation').modules};
 }
@@ -50,6 +50,6 @@ function outputs(manifest) {
   }}inspect(path.join(root,'src/modules'));inspect(path.join(root,'src/services'));inspect(path.join(root,'src/shared'));
   return {'docs/generated/PROJECT_MANIFEST.json':JSON.stringify(manifest,null,2)+'\n','docs/generated/API_ROUTES.md':api,'docs/generated/DATABASE_OBJECTS.md':data,
     'docs/generated/API_CONTRACT_FIELDS.md':fields,
-    'public/js/navigation-data.js':'// Generated from src/config/navigation.js by npm run docs:sync.\nconst warehouseNavigation = '+JSON.stringify({labels:nav.labels,modules:nav.modules,fieldNames:nav.fieldNames},null,2)+';\n'};
+    'public/js/navigation-data.js':'// Generated from src/config/navigation.js by npm run docs:sync.\nconst warehouseNavigation = '+JSON.stringify({labels:nav.labels,modules:nav.modules,fieldNames:nav.fieldNames,roleLabels:nav.roleLabels},null,2)+';\n'};
 }
 module.exports={collect,outputs,root};

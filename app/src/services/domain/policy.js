@@ -155,6 +155,8 @@ read["warehouse-records"] = ["WAREHOUSE_MANAGER", "DIRECTOR", "WORKSHOP_OWNER"];
 create["warehouse-records"] = ["WAREHOUSE_MANAGER"];
 read["exception-proposals"]=["DIRECTOR","WAREHOUSE_MANAGER","WORKSHOP_OWNER"];
 actionResources.dispatch = ["stock-requests"];
+read['warehouse-inbound']=['WAREHOUSE_MANAGER','WAREHOUSE_STAFF'];
+read['warehouse-outbound']=['WAREHOUSE_MANAGER','WAREHOUSE_STAFF'];
 actionResources.cancel = ["production-plans"];
 module.exports = {
   read,

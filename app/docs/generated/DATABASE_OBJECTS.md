@@ -33,7 +33,7 @@ Tài khoản runtime: `warehouse`.
 | ChiTietBaoCaoSanXuat | TABLE | `MaBanGhi`, `MaBaoCaoSanXuat`, `MaMatHang`, `SoLuongHienCo`, `SoLuongCan`, `NgayTao`, `NgayCapNhat`, `LoaiChiTiet`, `SoLuong`, `SoLuongSuDung` |
 | ChiTietLoBaoCaoSanXuat | TABLE | `MaBanGhi`, `MaBaoCaoThanhPham`, `MaChiTietLo`, `SoLuong`, `NgayTao`, `NgayCapNhat`, `MaChiTietBaoCao` |
 | Kho | TABLE | `MaBanGhi`, `Ma`, `Ten`, `DiaChi`, `ConHoatDong`, `NgayTao`, `NgayCapNhat` |
-| ViTriKho | TABLE | `MaBanGhi`, `MaKho`, `Ma`, `Ten`, `ConHoatDong`, `NgayTao`, `NgayCapNhat` |
+| ViTriKho | TABLE | `MaBanGhi`, `MaKho`, `Ma`, `Ten`, `ConHoatDong`, `NgayTao`, `NgayCapNhat`, `TenKhu`, `MaLoaiHangPhuTrach`, `DoSau` |
 | LoHang | TABLE | `MaBanGhi`, `Ma`, `LoaiLo`, `NgayTao`, `GhiChu`, `HuongTra`, `TrangThaiTra`, `PhienBanTra`, `MaNguoiNhanTra`, `MaKhoNhanTra`, `MaNguoiLapTra`, `MaKeHoachNhapThanhPham` |
 | ChiTietLo | TABLE | `MaBanGhi`, `Ma`, `MaMatHang`, `MaChiTietDonMuaHang`, `MaKeHoachSanXuat`, `NgaySanXuat`, `HanSuDung`, `SoLuongNhan`, `TrangThaiKiemTra`, `PhienBan`, `NgayTao`, `NgayCapNhat`, `MaLoHang`, `MaYeuCauNhapThanhPham` |
 | KetQuaKiemTraQCAC | TABLE | `MaBanGhi`, `Ma`, `MaNguoiKiemTra`, `NgayKiemTra`, `GhiChu`, `TrangThai`, `PhienBan`, `NgayTao`, `NgayCapNhat`, `MaLichKiemTra` |

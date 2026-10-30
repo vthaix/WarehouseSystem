@@ -285,6 +285,7 @@ const modules = [
   ],
 ];
 function columnsFor(n) {
+  if(['warehouse-inbound','warehouse-outbound'].includes(n))return [['code','Mã tiếp nhận'],['purpose','Nghiệp vụ'],['requested_at','Ngày giờ thực hiện'],['status','Trạng thái']];
   if(n==='material-prices')return [['code','Mã nguyên vật liệu'],['name','Nguyên vật liệu'],['unit','Đơn vị tính'],['reference_price','Giá tham khảo (đ/đơn vị)']];
   if(n==='accounts')return [['username','Tên đăng nhập'],['full_name','Họ và tên'],['roles','Vai trò'],['status','Trạng thái']];
   if(n==='production-plans')return [['code','Kế hoạch sản xuất'],['customer_order_code','Đơn khách hàng'],['workshop_name','Xưởng phụ trách'],['order_total','Tổng giá trị đơn hàng'],['start_date','Ngày bắt đầu'],['end_date','Ngày hoàn thành'],['status','Trạng thái']];
@@ -377,6 +378,7 @@ function columnsFor(n) {
   ];
 }
 const fieldNames = {
+  zone_name:'Khu lưu kho',zone_category_id:'Nhóm hàng của khu',depth:'Độ sâu vị trí (1 là ngoài cùng)',supplied_items:'Mặt hàng cung cấp',
   minute_author_id:'Nhân viên lập biên bản chung',minute_conclusion:'Kết luận biên bản',minute_lines:'Kết quả kiểm tra trong biên bản',
   requested_at:'Ngày giờ đề nghị thực hiện',workflow_source_id:'Nguồn yêu cầu',request_direction:'Thao tác',sale_plan_id:'Kế hoạch bán cần giao',source_lots:'Thông tin lô hàng nguồn',documents:'Các phiếu nhập / xuất',document_lines:'Chi tiết hàng thực nhập / xuất',document_code:'Mã phiếu',
   exception_mode:'Ngoại lệ',exception_description:'Mô tả ngoại lệ',exception_status:'Trạng thái ngoại lệ',owner_instruction:'Phương án / ý kiến của chủ xưởng',decision_status:'Kết quả xử lý',
@@ -510,13 +512,21 @@ const fieldNames = {
 // different UC does not automatically add that management screen to the menu.
 const menuRoles={
   'customer-orders':['CUSTOMER','PLANNER'],
-  'business-plans':['PLANNER','DIRECTOR','PURCHASER'],
+  'business-plans':['PLANNER','DIRECTOR'],
+  'customer-returns':['WAREHOUSE_MANAGER','WAREHOUSE_STAFF'],
   'purchase-orders':['PURCHASER'],
   categories:['WAREHOUSE_MANAGER'],items:['WAREHOUSE_MANAGER'],warehouses:['WAREHOUSE_MANAGER'],
   'warehouse-locations':['WAREHOUSE_MANAGER'],suppliers:['WAREHOUSE_MANAGER'],lots:['WAREHOUSE_MANAGER'],
-  'stock-requests':['WORKSHOP_OWNER','WAREHOUSE_MANAGER','WAREHOUSE_STAFF'],
+  'stock-requests':['WORKSHOP_OWNER'],
+  'stock-documents':['DIRECTOR','WORKSHOP_OWNER'],
+  'warehouse-records':[],
+  'reports/stock-documents':[],
+  tasks:['DIRECTOR'],
+  'stocktake-minutes':['QC_INSPECTOR','STOCKTAKER'],
   'qc-inspections':['QC_INSPECTOR'],
   'production-plans':['PLANNER','DIRECTOR','WORKSHOP_OWNER'],
 };
 for(const item of modules){if(menuRoles[item[0]])item[3]=menuRoles[item[0]];item[4]=item[4].filter(role=>item[3].includes(role)||item[3].includes('*'));}
-module.exports = { labels, modules, columnsFor, fieldNames };
+modules.push(['warehouse-inbound','Quản lý nhập kho','⇥',['WAREHOUSE_MANAGER','WAREHOUSE_STAFF'],[],'/warehouse/inbound','Tiếp nhận, phân công từng lô và đối chiếu phiếu nhập kho.'],['warehouse-outbound','Quản lý xuất kho','⇤',['WAREHOUSE_MANAGER','WAREHOUSE_STAFF'],[],'/warehouse/outbound','Phân công xuất nguyên vật liệu, giao thành phẩm và đối chiếu phiếu xuất.']);
+const roleLabels={PLANNER:{'customer-orders':'Tiếp nhận đơn hàng','production-reports':'Báo cáo nhu cầu nhận được','finished-reports':'Báo cáo thành phẩm nhận được'},DIRECTOR:{'production-plans':'Phê duyệt kế hoạch sản xuất','business-plans':'Phê duyệt kế hoạch mua / bán','production-reports':'Báo cáo sản xuất nhận được','finished-reports':'Báo cáo thành phẩm nhận được','stock-documents':'Hồ sơ nhập / xuất kho','exception-proposals':'Phê duyệt xử lý hàng cách ly'},WAREHOUSE_STAFF:{'warehouse-inbound':'Nhập kho','warehouse-outbound':'Xuất kho'},STOCKTAKER:{'inspection-counts':'Thực hiện kiểm kê'},WORKSHOP_OWNER:{'stock-requests':'Yêu cầu nhập / xuất kho','production-plans':'Kế hoạch được giao','stock-documents':'Hồ sơ nhập / xuất kho','exception-proposals':'Phê duyệt đề xuất ngoại lệ'}};
+module.exports = { labels, modules, columnsFor, fieldNames,roleLabels };

@@ -208,7 +208,8 @@
       }
       if (target === "purchase-orders") {
         const items = (await options('items')).filter(i => i.kind === 'MATERIAL');
-        const suppliers = await options('suppliers');
+        const suppliers = (await api('material-price-options')).data.suppliers;
+        const materialOffers=(await api('material-prices?per_page=100')).data;
         const plans = (await api('source-imports/purchase-report-options')).data;
         openModal('Mua nguyên vật liệu', formWrap(
           field('source_mode','select',true,[{id:'PLAN',name:'Theo kế hoạch mua nguyên vật liệu đã duyệt'}]) +
@@ -219,9 +220,11 @@
           document.querySelector('#import-lines').innerHTML = '<h3>nguyên vật liệu cần mua — chọn nhà cung cấp cho từng loại</h3><div id="purchase-lines"></div>' + (planMode ? '' : '<button type="button" class="button small" id="add-purchase-line">＋ Thêm nguyên vật liệu</button>');
           function add(l = {}) {
             const row = document.createElement('div'); row.className='form-section'; row.dataset.section='lines';
+            const allowedIds=new Set((materialOffers.find(m=>String(m.id)===String(l.item_id))?.supplier_prices||[]).map(p=>String(p.supplier_id)));
+            const eligibleSuppliers=suppliers.filter(s=>allowedIds.has(String(s.id)));
             row.innerHTML = '<div class="form-grid"><div class="field"><label>Nguyên vật liệu / đơn vị *</label><select data-key="item_id" aria-label="Nguyên vật liệu" '+(planMode?'disabled':'')+'>'+items.map(i=>'<option value="'+esc(i.id)+'" '+(String(i.id)===String(l.item_id)?'selected':'')+'>'+esc(i.name+' · '+(i.unit || i.unit_name || ''))+'</option>').join('')+'</select></div>' +
               '<div class="field"><label>Số lượng *</label><input aria-label="Số lượng" data-key="quantity" type="number" min="0.001" step="0.001" required '+(planMode?'readonly':'')+' value="'+esc(numericInputValue(l.quantity || '1'))+'"></div>' +
-              '<div class="field"><label>Nhà cung cấp *</label><select aria-label="Nhà cung cấp" data-key="supplier_id" required><option value="">Chọn NCC cho nguyên vật liệu này</option>'+suppliers.map(s=>'<option value="'+esc(s.id)+'">'+esc(optionLabel(s))+'</option>').join('')+'</select></div>' +
+              '<div class="field"><label>Nhà cung cấp *</label><select aria-label="Nhà cung cấp" data-key="supplier_id" required><option value="">'+(eligibleSuppliers.length?'Chọn nhà cung cấp phù hợp':'Chưa có nhà cung cấp cho nguyên vật liệu này')+'</option>'+eligibleSuppliers.map(s=>'<option value="'+esc(s.id)+'">'+esc(s.name)+'</option>').join('')+'</select><small class="supplier-coverage">'+eligibleSuppliers.map(s=>esc(s.name)+': '+esc((s.supplied_items||[]).map(i=>i.name).join(', '))).join('<br>')+'</small></div>' +
               '<div class="field"><label>Đơn giá mua *</label><input aria-label="Đơn giá mua" data-key="unit_price" type="number" min="0" step="0.0001" required value="'+esc(numericInputValue(l.unit_price || '0'))+'"></div></div>' +
               (planMode ? '<input type="hidden" data-key="business_plan_line_id" value="'+esc(l.id)+'">' : '<button class="button small danger" type="button">Xóa dòng</button>');
             if (!planMode) row.querySelector('button').onclick=()=>{row.remove();retryKey=crypto.randomUUID();};

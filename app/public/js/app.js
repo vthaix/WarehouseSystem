@@ -14,8 +14,8 @@ const labels = warehouseNavigation.labels;
 const modules = warehouseNavigation.modules;
 const has = (roles) =>
     roles.includes("*") || user.roles.some((r) => roles.includes(r)),
-  available = () => modules.filter((m) => has(m[3])),
-  moduleInfo = () => modules.find((m) => m[0] === current);
+  available = () => modules.filter((m) => has(m[3])).map(m=>{const copy=[...m];for(const role of user.roles){const name=warehouseNavigation.roleLabels?.[role]?.[m[0]];if(name){copy[1]=name;break;}}return copy;}),
+  moduleInfo = () => available().find((m) => m[0] === current);
 const esc = (v) =>
   String(v ?? "").replace(
     /[&<>"']/g,
@@ -296,6 +296,7 @@ async function loadTable() {
   }
 }
 function columnsFor(n) {
+  if(['warehouse-inbound','warehouse-outbound'].includes(n))return [['code','Mã tiếp nhận'],['purpose','Nghiệp vụ'],['requested_at','Ngày giờ thực hiện'],['status','Trạng thái']];
   if(n==='material-prices')return [['code','Mã nguyên vật liệu'],['name','Nguyên vật liệu'],['unit','Đơn vị tính'],['reference_price','Giá tham khảo (đ/đơn vị)']];
   if(n==='accounts')return [['username','Tên đăng nhập'],['full_name','Họ và tên'],['roles','Vai trò'],['status','Trạng thái']];
   if(n==='production-plans')return [['code','Kế hoạch sản xuất'],['customer_order_code','Đơn khách hàng'],['workshop_name','Xưởng phụ trách'],['order_total','Tổng giá trị đơn hàng'],['start_date','Ngày bắt đầu'],['end_date','Ngày hoàn thành'],['status','Trạng thái']];
@@ -443,6 +444,7 @@ async function showDetail(row) {
   try {
     if (
       [
+        'warehouse-inbound','warehouse-outbound',
         "customer-orders",
         "production-plans",
         "business-plans",

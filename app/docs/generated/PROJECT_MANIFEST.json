@@ -7,7 +7,8 @@
     "002_item_inheritance.sql",
     "003_purchase_approval.sql",
     "004_item_type_integrity.sql",
-    "005_material_supplier_prices.sql"
+    "005_material_supplier_prices.sql",
+    "006_storage_zones.sql"
   ],
   "services": [
     {
@@ -1134,6 +1135,18 @@
             {
               "name": "NgayCapNhat",
               "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "TenKhu",
+              "definition": "VARCHAR(120) NULL"
+            },
+            {
+              "name": "MaLoaiHangPhuTrach",
+              "definition": "BIGINT UNSIGNED NULL"
+            },
+            {
+              "name": "DoSau",
+              "definition": "INT NOT NULL DEFAULT 1"
             }
           ]
         },
@@ -2711,6 +2724,30 @@
     },
     {
       "method": "GET",
+      "path": "/warehouse-inbound",
+      "owner": "warehouse-app",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/warehouse-inbound/:id",
+      "owner": "warehouse-app",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/warehouse-outbound",
+      "owner": "warehouse-app",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/warehouse-outbound/:id",
+      "owner": "warehouse-app",
+      "pending": false
+    },
+    {
+      "method": "GET",
       "path": "/workspace/updates",
       "owner": "warehouse-app",
       "pending": false
@@ -3817,6 +3854,14 @@
         "WAREHOUSE_MANAGER",
         "DIRECTOR",
         "WORKSHOP_OWNER"
+      ],
+      "warehouse-inbound": [
+        "WAREHOUSE_MANAGER",
+        "WAREHOUSE_STAFF"
+      ],
+      "warehouse-outbound": [
+        "WAREHOUSE_MANAGER",
+        "WAREHOUSE_STAFF"
       ]
     },
     "create": {
@@ -4004,9 +4049,7 @@
       "↩",
       [
         "WAREHOUSE_MANAGER",
-        "WAREHOUSE_STAFF",
-        "QC_INSPECTOR",
-        "DIRECTOR"
+        "WAREHOUSE_STAFF"
       ],
       [
         "WAREHOUSE_MANAGER"
@@ -4034,8 +4077,7 @@
       "▤",
       [
         "PLANNER",
-        "DIRECTOR",
-        "PURCHASER"
+        "DIRECTOR"
       ],
       [
         "PLANNER"
@@ -4139,9 +4181,7 @@
       "Yêu cầu nhập / xuất",
       "⇄",
       [
-        "WORKSHOP_OWNER",
-        "WAREHOUSE_MANAGER",
-        "WAREHOUSE_STAFF"
+        "WORKSHOP_OWNER"
       ],
       [
         "WORKSHOP_OWNER"
@@ -4154,8 +4194,6 @@
       "Phiếu nhập / xuất",
       "⇥",
       [
-        "WAREHOUSE_MANAGER",
-        "WAREHOUSE_STAFF",
         "DIRECTOR",
         "WORKSHOP_OWNER"
       ],
@@ -4239,9 +4277,8 @@
       "Biên bản kiểm kê",
       "▨",
       [
-        "STOCKTAKER",
-        "DIRECTOR",
-        "QC_INSPECTOR"
+        "QC_INSPECTOR",
+        "STOCKTAKER"
       ],
       [
         "STOCKTAKER",
@@ -4270,14 +4307,7 @@
       "Quản lý công việc",
       "▢",
       [
-        "DIRECTOR",
-        "PLANNER",
-        "PURCHASER",
-        "WORKSHOP_OWNER",
-        "WAREHOUSE_MANAGER",
-        "WAREHOUSE_STAFF",
-        "QC_INSPECTOR",
-        "STOCKTAKER"
+        "DIRECTOR"
       ],
       [],
       "/tasks",
@@ -4300,10 +4330,7 @@
       "reports/stock-documents",
       "Báo cáo nhập / xuất",
       "↗",
-      [
-        "DIRECTOR",
-        "WORKSHOP_OWNER"
-      ],
+      [],
       [],
       "/reports/stock-documents",
       "Đối chiếu phiếu theo kho và ngày."
@@ -4323,11 +4350,7 @@
       "warehouse-records",
       "Hồ sơ kho tổng hợp",
       "▨",
-      [
-        "WAREHOUSE_MANAGER",
-        "DIRECTOR",
-        "WORKSHOP_OWNER"
-      ],
+      [],
       [],
       "/warehouse/records",
       "Tổng hợp phiếu kho từ các nhân viên."
@@ -4342,6 +4365,30 @@
       [],
       "/notifications",
       "Thông tin nghiệp vụ dành cho bạn."
+    ],
+    [
+      "warehouse-inbound",
+      "Quản lý nhập kho",
+      "⇥",
+      [
+        "WAREHOUSE_MANAGER",
+        "WAREHOUSE_STAFF"
+      ],
+      [],
+      "/warehouse/inbound",
+      "Tiếp nhận, phân công từng lô và đối chiếu phiếu nhập kho."
+    ],
+    [
+      "warehouse-outbound",
+      "Quản lý xuất kho",
+      "⇤",
+      [
+        "WAREHOUSE_MANAGER",
+        "WAREHOUSE_STAFF"
+      ],
+      [],
+      "/warehouse/outbound",
+      "Phân công xuất nguyên vật liệu, giao thành phẩm và đối chiếu phiếu xuất."
     ]
   ]
 }

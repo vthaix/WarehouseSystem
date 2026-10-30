@@ -22,6 +22,10 @@ module.exports = (runtime) => {
   const router = express.Router(),
     catalog = require("../modules/catalog/ApiController")(runtime.catalog);
   const sourceImports = new (require('./SourceImportService'))(runtime);
+  for(const resource of ['warehouse-inbound','warehouse-outbound']){
+   router.get('/'+resource,role(['WAREHOUSE_MANAGER','WAREHOUSE_STAFF']),async(req,res)=>{const r=await require('./warehouse-management').list(runtime,req.user,resource,req.query);ok(req,res,r.data,200,r.meta);});
+   router.get('/'+resource+'/:id',role(['WAREHOUSE_MANAGER','WAREHOUSE_STAFF']),async(req,res)=>ok(req,res,await require('./warehouse-management').get(runtime,req.user,resource,req.params.id)));
+  }
   router.get('/workspace/updates',async(req,res)=>ok(req,res,await runtime.notifications.updates(req.user)));
   router.post('/workspace/seen',async(req,res)=>ok(req,res,await runtime.notifications.seen(req.user,req.body)));
   router.get('/material-price-options',role(['WAREHOUSE_MANAGER','PURCHASER']),async(req,res)=>ok(req,res,await runtime.materialCatalog.metadata(req.user)));

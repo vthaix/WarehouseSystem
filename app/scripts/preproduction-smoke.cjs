@@ -238,8 +238,17 @@ function ok(r, status = 200) {
   await purchaser.login('purchaser'); await manager.login('manager');
   const [suppliers]=await pool.query('SELECT id FROM suppliers WHERE is_active=1 ORDER BY id LIMIT 2');
   assert.equal(suppliers.length,2);
+  const materialCatalogue=ok(await manager.call('material-prices?per_page=100'));
+  const assignedSuppliers=new Set();
   const purchaseBody={source_mode:'PLAN',business_plan_id:buy.id,delivery_terms:'NCC theo tung NVL',
-    lines:buy.lines.map((line,i)=>({business_plan_line_id:line.id,unit_price:'1000.0000',supplier_id:String(suppliers[i].id)}))};
+    lines:buy.lines.map(line=>{
+      const material=materialCatalogue.find(m=>String(m.id)===String(line.item_id));
+      const offers=[...material.supplier_prices].reverse();
+      const offer=offers.find(o=>!assignedSuppliers.has(String(o.supplier_id)))||offers[0];
+      assert.ok(offer,'Fixture material must have a configured supplier');
+      assignedSuppliers.add(String(offer.supplier_id));
+      return {business_plan_line_id:line.id,unit_price:'1000.0000',supplier_id:String(offer.supplier_id)};
+    })};
   assert.equal((await purchaser.call('purchase-orders','POST',{...purchaseBody,expected_delivery_date:shiftDay(1)})).status,422);
   assert.equal((await purchaser.call('purchase-orders','POST',{source_mode:'REPORT',production_report_id:report.id})).status,409);
   assert.equal((await purchaser.call('purchase-orders','POST',{...purchaseBody,lines:purchaseBody.lines.map((l,i)=>i?{...l,supplier_id:'999999999999'}:l)})).status,422);

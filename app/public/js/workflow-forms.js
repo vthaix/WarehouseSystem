@@ -953,7 +953,7 @@ async function dispatchForm(req) {
         );
         const eligible=l.lots.filter(lot=>req.type==='IN'?qty(lot.passed_quantity)>qty(lot.posted_quantity):l.balances.some(b=>String(b.lot_id)===lot.id&&b.quality_bucket==='AVAILABLE'&&qty(b.quantity)>0n));
         row.querySelector('[data-key="lot_id"]').innerHTML = eligible
-          .map((t) => `<option value="${t.id}">${esc(t.code)}</option>`)
+          .map((t) => `<option value="${t.id}">${esc(t.code)}${t.expiry_date?' · HSD '+esc(format(t.expiry_date,'expiry_date')):' · Chưa có HSD'}</option>`)
           .join("");
         const updateQuantity=()=>{
           const lot=eligible.find(t=>t.id===row.querySelector('[data-key="lot_id"]').value);let location=row.querySelector('[data-key="location_id"]').value;
@@ -964,11 +964,12 @@ async function dispatchForm(req) {
           const remaining=qty(l.remaining_quantity)-reserved-drafted;if(remaining<cap)cap=remaining;if(cap<0n)cap=0n;
           row.querySelector('[data-key="quantity"]').value=decimal(cap);
         };
-        row.querySelector('[data-key="lot_id"]').onchange=updateQuantity;row.querySelector('[data-key="location_id"]').onchange=updateQuantity;
+        const suggestPosition=()=>{const lot=eligible.find(t=>t.id===row.querySelector('[data-key="lot_id"]').value);if(req.type==='IN'&&lot?.suggested_location_id)row.querySelector('[data-key="location_id"]').value=lot.suggested_location_id;updateQuantity();let hint=row.querySelector('.queue-hint');if(!hint){hint=document.createElement('p');hint.className='queue-hint';row.append(hint);}hint.textContent=req.type==='OUT'?'Lô được gợi ý theo hạn dùng gần nhất trước; đối chiếu số lượng còn có thể cấp.':lot?.storage_hint||'Chọn vị trí lưu riêng cho dòng lô này.';};
+        row.querySelector('[data-key="lot_id"]').onchange=suggestPosition;row.querySelector('[data-key="location_id"]').onchange=updateQuantity;
         row.querySelector('[data-key="location_id"]').innerHTML = l.locations
-          .map((t) => `<option value="${t.id}">${esc(t.name)}</option>`)
+          .map((t) => `<option value="${t.id}">${esc(t.zone_name?t.zone_name+' · '+t.name:t.name)}</option>`)
           .join("");
-        updateQuantity();
+        suggestPosition();
       };
       row.querySelector('[data-key="stock_request_line_id"]').onchange = sync;
       row.querySelector("button").onclick = () => {

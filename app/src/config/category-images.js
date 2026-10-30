@@ -3,6 +3,7 @@ const C=require('../services/domain/core');
 const directory=()=>path.resolve(process.env.CATEGORY_IMAGE_DIR||path.join(__dirname,'../images/categories'));
 const validName=name=>typeof name==='string'&&/^[a-f0-9-]{36}\.(png|jpg|webp)$/.test(name);
 function validatePath(value){
+  if(typeof value==='string'&&value.startsWith('/images/items/'))return require('./item-images').validatePath(value);
   if(value===null||value==='')return null;
   C.fail(typeof value!=='string'||!value.startsWith('/images/categories/'),'VALIDATION_ERROR','Chọn ảnh danh mục đã tải lên.');
   const name=value.slice('/images/categories/'.length);

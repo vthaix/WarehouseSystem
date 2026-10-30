@@ -17,7 +17,8 @@ module.exports=async function overview(runtime,user,available){
  if(user.roles.includes('CUSTOMER')){
   const result=await runtime.orders.list(user,{per_page:1});counts['customer-orders']=result.meta.total;titles['customer-orders']='Đơn hàng của bạn';
  }
- const priority=user.roles.includes('DIRECTOR')?['production-plans','business-plans','tasks','exception-proposals']:user.roles.includes('PURCHASER')?['purchase-orders','tasks']:user.roles.includes('WAREHOUSE_MANAGER')?['stock-requests','tasks','exception-proposals']:Object.keys(titles);
+ titles['warehouse-inbound']='Nhập kho cần thực hiện';titles['warehouse-outbound']='Xuất kho cần thực hiện';
+ const priority=user.roles.includes('DIRECTOR')?['production-plans','business-plans','tasks','exception-proposals']:user.roles.includes('PURCHASER')?['purchase-orders','tasks']:user.roles.some(r=>['WAREHOUSE_MANAGER','WAREHOUSE_STAFF'].includes(r))?['warehouse-inbound','warehouse-outbound','exception-proposals']:Object.keys(titles);
  const tiles=priority.filter(k=>can(k)&&Object.hasOwn(counts,k)).map(key=>{const m=available.find(m=>m[0]===key);return {key,label:titles[key],count:Number(counts[key]||0),url:m[5]+'?module='+key,icon:m[2]};}).slice(0,3);
  tiles.push({key:'notifications',label:'Thông báo chưa đọc',count:Number(counts.notifications||0),url:'/notifications',icon:'♧'});
  return {tiles,counts,purchaseReady};

@@ -109,7 +109,7 @@ class WarehouseFlowService {
     );
     const detail = await this.requests.get(user, requestId);
     const [locations] = await this.pool.execute(
-      "SELECT id,code,name FROM warehouse_locations WHERE warehouse_id=? AND is_active=1 ORDER BY id",
+      "SELECT id,code,name,zone_name,zone_category_id,depth FROM warehouse_locations WHERE warehouse_id=? AND is_active=1 ORDER BY zone_name,depth,id",
       [request.warehouse_id],
     );
     let lotScope='',lotParams=[];
@@ -118,9 +118,18 @@ class WarehouseFlowService {
     else if(request.purpose==='PRODUCTION_RECEIPT'){lotScope=' AND l.id IN (SELECT lot_id FROM finished_report_outputs WHERE finished_report_id=?)';lotParams=[request.production_report_id];}
     else if(request.purpose==='SALE_ISSUE'){lotScope=' AND l.id IN (SELECT o.lot_id FROM finished_report_outputs o JOIN business_plans p ON p.finished_report_id=o.finished_report_id WHERE p.id=?)';lotParams=[request.business_plan_id];}
     const [lots] = await this.pool.execute(
-      "SELECT l.id,l.code,l.item_id,l.received_quantity,l.qc_status,q.passed_quantity,COALESCE((SELECT SUM(d.quantity) FROM stock_document_lines d JOIN stock_documents doc ON doc.id=d.stock_document_id WHERE d.lot_id=l.id AND doc.type='IN'),0) AS posted_quantity FROM lots l JOIN qc_inspection_lines q ON q.lot_id=l.id JOIN qc_inspections qi ON qi.id=q.qc_inspection_id AND qi.status='RECORDED' WHERE l.qc_status IN ('PASSED','PARTIAL') AND (l.expiry_date IS NULL OR l.expiry_date>=CURRENT_DATE)"+lotScope+" ORDER BY l.id LIMIT 500",
+      "SELECT l.id,l.code,l.item_id,l.expiry_date,l.received_quantity,l.qc_status,q.passed_quantity,COALESCE((SELECT SUM(d.quantity) FROM stock_document_lines d JOIN stock_documents doc ON doc.id=d.stock_document_id WHERE d.lot_id=l.id AND doc.type='IN'),0) AS posted_quantity FROM lots l JOIN qc_inspection_lines q ON q.lot_id=l.id JOIN qc_inspections qi ON qi.id=q.qc_inspection_id AND qi.status='RECORDED' WHERE l.qc_status IN ('PASSED','PARTIAL') AND (l.expiry_date IS NULL OR l.expiry_date>=CURRENT_DATE)"+lotScope+" ORDER BY (l.expiry_date IS NULL),l.expiry_date,l.created_at,l.id LIMIT 500",
       lotParams,
     );
+    const [itemCategories]=await this.pool.execute('SELECT id,category_id FROM items');
+    const [zoneStock]=await this.pool.execute('SELECT b.lot_id,l.item_id,l.expiry_date,b.location_id FROM inventory_balances b JOIN lots l ON l.id=b.lot_id JOIN warehouse_locations loc ON loc.id=b.location_id WHERE loc.warehouse_id=? AND b.quantity>0',[request.warehouse_id]);
+    for(const lot of lots){
+      lot.expiry_date=require('../../shared/storage-queue').date(lot.expiry_date);
+      const category=itemCategories.find(i=>String(i.id)===String(lot.item_id))?.category_id;
+      const choices=locations.filter(l=>l.zone_category_id==null||String(l.zone_category_id)===String(category));
+      const recommendation=require('../../shared/storage-queue').recommend(lot,choices,zoneStock.filter(r=>String(r.item_id)===String(lot.item_id)));
+      lot.suggested_location_id=recommendation.location_id;lot.storage_hint=recommendation.reason;
+    }
     const [balances] = await this.pool.execute(
       "SELECT b.lot_id,b.location_id,b.quality_bucket,b.quantity FROM inventory_balances b JOIN warehouse_locations loc ON loc.id=b.location_id WHERE loc.warehouse_id=?",
       [request.warehouse_id],
@@ -176,7 +185,7 @@ class WarehouseFlowService {
           locations: locations
             .filter(
               (location) =>
-                user.roles.includes("WAREHOUSE_MANAGER") ||
+                (user.roles.includes("WAREHOUSE_MANAGER")&&(request.type!=='IN'||location.zone_category_id==null||String(location.zone_category_id)===String(itemCategories.find(i=>String(i.id)===String(line.item_id))?.category_id))) ||
                 visibleAllocations.some(
                   (allocation) =>
                     String(allocation.stock_request_line_id) === line.id &&
@@ -394,7 +403,7 @@ class WarehouseFlowService {
         ...new Set(body.allocations.map((line) => String(line.lot_id))),
       ].sort((a, b) => Number(a) - Number(b));
       const [lots] = await connection.execute(
-        "SELECT l.id,l.item_id,l.received_quantity,l.expiry_date,l.qc_status,l.purchase_order_line_id,l.production_plan_id,q.passed_quantity FROM lots l JOIN qc_inspection_lines q ON q.lot_id=l.id WHERE l.id IN (" +
+        "SELECT l.id,l.item_id,i.category_id,l.received_quantity,l.expiry_date,l.qc_status,l.purchase_order_line_id,l.production_plan_id,q.passed_quantity FROM lots l JOIN items i ON i.id=l.item_id JOIN qc_inspection_lines q ON q.lot_id=l.id WHERE l.id IN (" +
           lotIds.map(() => "?").join(",") +
           ") ORDER BY l.id FOR UPDATE",
         lotIds,
@@ -404,7 +413,7 @@ class WarehouseFlowService {
         ...new Set(body.allocations.map((line) => String(line.location_id))),
       ];
       const [locations] = await connection.execute(
-        "SELECT id,warehouse_id FROM warehouse_locations WHERE is_active=1 AND id IN (" +
+        "SELECT id,warehouse_id,zone_category_id FROM warehouse_locations WHERE is_active=1 AND id IN (" +
           locationIds.map(() => "?").join(",") +
           ")",
         locationIds,
@@ -440,6 +449,7 @@ class WarehouseFlowService {
           "VALIDATION_ERROR",
           "Lô hoặc vị trí không phù hợp yêu cầu.",
         );
+        C.fail(request.type==='IN'&&location.zone_category_id!=null&&String(location.zone_category_id)!==String(lot.category_id),'ZONE_ITEM_MISMATCH','Vị trí không thuộc khu của mặt hàng này. Chọn đúng khu khi phân công nhập.',422);
         C.fail(
           lot.expiry_date &&
             lot.expiry_date.toISOString().slice(0, 10) <

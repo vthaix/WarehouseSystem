@@ -1,0 +1,329 @@
+{
+  "results": [
+    {
+      "username": "manager",
+      "menu": [
+        {
+          "key": "dashboard",
+          "text": "⊞Tổng quan"
+        },
+        {
+          "key": "material-prices",
+          "text": "₫Đơn giá nguyên vật liệu"
+        },
+        {
+          "key": "warehouse-lookup",
+          "text": "▦Tra cứu kho"
+        },
+        {
+          "key": "customer-returns",
+          "text": "↩Hàng khách trả"
+        },
+        {
+          "key": "items",
+          "text": "◇Mặt hàng"
+        },
+        {
+          "key": "warehouses",
+          "text": "⌂Kho hàng"
+        },
+        {
+          "key": "warehouse-locations",
+          "text": "⊞Vị trí lưu kho"
+        },
+        {
+          "key": "suppliers",
+          "text": "◎Nhà cung cấp"
+        },
+        {
+          "key": "lots",
+          "text": "▥Lô hàng"
+        },
+        {
+          "key": "exception-proposals",
+          "text": "△Xử lý ngoại lệ"
+        },
+        {
+          "key": "reports/inventory",
+          "text": "◴Báo cáo tồn kho"
+        },
+        {
+          "key": "notifications",
+          "text": "♧Thông báo"
+        },
+        {
+          "key": "warehouse-inbound",
+          "text": "⇥Quản lý nhập kho"
+        },
+        {
+          "key": "warehouse-outbound",
+          "text": "⇤Quản lý xuất kho"
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "username": "staff",
+      "menu": [
+        {
+          "key": "dashboard",
+          "text": "⊞Tổng quan"
+        },
+        {
+          "key": "customer-returns",
+          "text": "↩Hàng khách trả"
+        },
+        {
+          "key": "notifications",
+          "text": "♧Thông báo"
+        },
+        {
+          "key": "warehouse-inbound",
+          "text": "⇥Nhập kho"
+        },
+        {
+          "key": "warehouse-outbound",
+          "text": "⇤Xuất kho"
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "username": "workshop",
+      "menu": [
+        {
+          "key": "dashboard",
+          "text": "⊞Tổng quan"
+        },
+        {
+          "key": "warehouse-lookup",
+          "text": "▦Tra cứu kho"
+        },
+        {
+          "key": "stock-requests",
+          "text": "⇄Yêu cầu nhập / xuất kho"
+        },
+        {
+          "key": "stock-documents",
+          "text": "⇥Hồ sơ nhập / xuất kho"
+        },
+        {
+          "key": "production-plans",
+          "text": "⚒Kế hoạch được giao"
+        },
+        {
+          "key": "production-reports",
+          "text": "▱Báo cáo sản xuất"
+        },
+        {
+          "key": "finished-reports",
+          "text": "▣Báo cáo thành phẩm"
+        },
+        {
+          "key": "exception-proposals",
+          "text": "△Phê duyệt đề xuất ngoại lệ"
+        },
+        {
+          "key": "reports/inventory",
+          "text": "◴Báo cáo tồn kho"
+        },
+        {
+          "key": "notifications",
+          "text": "♧Thông báo"
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "username": "director",
+      "menu": [
+        {
+          "key": "dashboard",
+          "text": "⊞Tổng quan"
+        },
+        {
+          "key": "business-plans",
+          "text": "▤Phê duyệt kế hoạch mua / bán"
+        },
+        {
+          "key": "stock-documents",
+          "text": "⇥Hồ sơ nhập / xuất kho"
+        },
+        {
+          "key": "production-plans",
+          "text": "⚒Phê duyệt kế hoạch sản xuất"
+        },
+        {
+          "key": "production-reports",
+          "text": "▱Báo cáo sản xuất nhận được"
+        },
+        {
+          "key": "finished-reports",
+          "text": "▣Báo cáo thành phẩm nhận được"
+        },
+        {
+          "key": "stocktakes",
+          "text": "≡Lập đợt kiểm kê"
+        },
+        {
+          "key": "exception-proposals",
+          "text": "△Phê duyệt xử lý hàng cách ly"
+        },
+        {
+          "key": "tasks",
+          "text": "▢Quản lý công việc"
+        },
+        {
+          "key": "reports/inventory",
+          "text": "◴Báo cáo tồn kho"
+        },
+        {
+          "key": "reports/stocktakes",
+          "text": "▥Báo cáo kiểm kê"
+        },
+        {
+          "key": "notifications",
+          "text": "♧Thông báo"
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "username": "planner",
+      "menu": [
+        {
+          "key": "dashboard",
+          "text": "⊞Tổng quan"
+        },
+        {
+          "key": "customer-orders",
+          "text": "◫Tiếp nhận đơn hàng"
+        },
+        {
+          "key": "business-plans",
+          "text": "▤Kế hoạch mua / bán"
+        },
+        {
+          "key": "production-plans",
+          "text": "⚒Kế hoạch sản xuất"
+        },
+        {
+          "key": "production-reports",
+          "text": "▱Báo cáo nhu cầu nhận được"
+        },
+        {
+          "key": "finished-reports",
+          "text": "▣Báo cáo thành phẩm nhận được"
+        },
+        {
+          "key": "notifications",
+          "text": "♧Thông báo"
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "username": "purchaser",
+      "menu": [
+        {
+          "key": "dashboard",
+          "text": "⊞Tổng quan"
+        },
+        {
+          "key": "material-prices",
+          "text": "₫Đơn giá nguyên vật liệu"
+        },
+        {
+          "key": "purchase-orders",
+          "text": "▧Đơn mua hàng"
+        },
+        {
+          "key": "notifications",
+          "text": "♧Thông báo"
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "username": "qc",
+      "menu": [
+        {
+          "key": "dashboard",
+          "text": "⊞Tổng quan"
+        },
+        {
+          "key": "qc-inspections",
+          "text": "✓Kiểm tra QC / AC"
+        },
+        {
+          "key": "stocktake-minutes",
+          "text": "▨Biên bản kiểm kê"
+        },
+        {
+          "key": "notifications",
+          "text": "♧Thông báo"
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "username": "stocktaker",
+      "menu": [
+        {
+          "key": "dashboard",
+          "text": "⊞Tổng quan"
+        },
+        {
+          "key": "inspection-counts",
+          "text": "≡Thực hiện kiểm kê"
+        },
+        {
+          "key": "stocktake-minutes",
+          "text": "▨Biên bản kiểm kê"
+        },
+        {
+          "key": "notifications",
+          "text": "♧Thông báo"
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "username": "customer",
+      "menu": [
+        {
+          "key": "dashboard",
+          "text": "⊞Tổng quan"
+        },
+        {
+          "key": "customer-orders",
+          "text": "◫Đơn hàng16"
+        },
+        {
+          "key": "notifications",
+          "text": "♧Thông báo16"
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "username": "admin",
+      "menu": [
+        {
+          "key": "dashboard",
+          "text": "⊞Tổng quan"
+        },
+        {
+          "key": "accounts",
+          "text": "♙Quản lý tài khoản"
+        },
+        {
+          "key": "notifications",
+          "text": "♧Thông báo"
+        }
+      ],
+      "status": "PASS"
+    }
+  ],
+  "errors": []
+}

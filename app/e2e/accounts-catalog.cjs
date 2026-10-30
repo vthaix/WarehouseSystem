@@ -13,7 +13,7 @@ const base=process.env.APP_URL||'http://127.0.0.1:3000',executablePath=['C:/Prog
   {
     const {context,page,errors}=await login('manager');await page.locator('.catalog-submenu summary').click();assert.equal(await page.locator('.catalog-submenu>a').count(),2);
     await page.locator('.catalog-submenu>a[href*="kind=MATERIAL"]').click();await page.locator('.catalog-category-card').first().waitFor();assert.equal(await page.locator('.catalog-category-card').count(),7);
-    await page.locator('.catalog-category-card>a').filter({has:page.locator('h2',{hasText:/^Bột$/})}).click();await page.waitForURL('**/catalog/data?**');assert.equal(await page.locator('#table tbody tr').count(),3);
+    await page.locator('.catalog-category-card>a').filter({has:page.locator('h2',{hasText:/^Bột$/})}).click();await page.waitForURL('**/catalog/data?**');await page.locator('.item-catalog-card').first().waitFor();assert.equal(await page.locator('.item-catalog-card').count(),3);
     const category=new URL(page.url()).searchParams.get('category_id');await page.locator('#create').click();assert.equal(await page.locator('#f-category_id').inputValue(),category);assert.equal(await page.locator('#f-kind').inputValue(),'MATERIAL');const unit=await page.locator('#f-unit_id option:checked').textContent();assert.ok(unit.includes('kg'));await page.locator('#cancel').click();
     await page.goto(base+'/catalog/material-prices');const materials=(await page.evaluate(()=>api('material-prices?per_page=100'))).data,material=materials.find(m=>m.code==='NVL-001');await page.evaluate(r=>detail(r),material);
     const input=page.locator('[data-supplier-price]').first();await input.fill('18500,25');assert.equal(await input.evaluate(el=>Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').get.call(el)),'18500,25');
@@ -21,7 +21,7 @@ const base=process.env.APP_URL||'http://127.0.0.1:3000',executablePath=['C:/Prog
   }
   {
     const {context,page,errors}=await login('purchaser');await page.goto(base+'/purchases');
-    const material=(await page.evaluate(()=>options('items'))).find(i=>i.kind==='MATERIAL');
+    const material=(await page.evaluate(()=>options('items'))).find(i=>i.code==='NVL-001');
     await page.route('**/api/v1/source-imports/purchase-report-options',r=>r.fulfill({json:{data:[{id:'99901',code:'APPROVED-UI',type:'PURCHASE',status:'APPROVED'}]}}));
     await page.route('**/api/v1/business-plans/99901',r=>r.fulfill({json:{data:{id:'99901',code:'APPROVED-UI',type:'PURCHASE',status:'APPROVED',planned_date:new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Ho_Chi_Minh'}),lines:[{id:'99902',item_id:material.id,quantity:'1.250',unit_price:'1000.0000'}]}}}));
     await page.locator('#create').click();await page.locator('#f-source_mode').waitFor();assert.deepEqual(await page.locator('#f-source_mode option').evaluateAll(opts=>opts.map(o=>o.value)),['PLAN']);await page.locator('#f-business_plan_id').selectOption('99901');await page.waitForSelector('#purchase-lines [data-key="quantity"]');

@@ -25,6 +25,7 @@ const ok=(r,s=200)=>{assert.equal(r.status,s,JSON.stringify(r));return r.data;};
   assert.ok(material.supplier_prices.length);assert.equal((await customer.call('material-prices')).status,403);
   let saved=ok(await manager.call('material-prices/'+material.id,'PATCH',{version:material.version,unit_id:material.unit_id,reference_price:'18000.0000',supplier_prices:[{supplier_id:priceMeta.suppliers[0].id,unit_price:'18500.2500'}]}));assert.equal(saved.supplier_prices[0].unit_price,'18500.2500');
   assert.equal((await purchaser.call('material-prices/'+material.id,'PATCH',{version:saved.version})).status,403);
+  saved=ok(await manager.call('material-prices/'+material.id,'PATCH',{version:saved.version,unit_id:material.unit_id,reference_price:material.reference_price,supplier_prices:material.supplier_prices}));
   assert.ok(ok(await customer.call('sample-items')).every(i=>!Object.hasOwn(i,'BangGiaNCC')&&!Object.hasOwn(i,'supplier_prices')));
   const categories=ok(await manager.call('categories?kind=MATERIAL&per_page=100'));assert.ok(categories.length>=7);assert.ok(categories.every(c=>c.catalog_kind==='MATERIAL'));
   const flour=categories.find(c=>c.code==='BOT');const items=ok(await manager.call('items?category_id='+flour.id+'&per_page=100'));assert.equal(items.length,3);assert.ok(items.every(i=>i.category_id===flour.id&&i.unit==='kg'));

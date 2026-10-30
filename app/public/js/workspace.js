@@ -50,8 +50,9 @@
  new MutationObserver(enhanceModal).observe(modalBody,{childList:true,subtree:true});
 
  let updates=[],loading=false;
- const resources=new Set(['production-plans','business-plans','purchase-orders','customer-orders','production-reports','finished-reports','stock-requests','tasks','qc-inspections']);
- const unread=(resource,id)=>updates.some(n=>n.resource_type===resource&&String(n.resource_id)===String(id));
+ const resources=new Set(['production-plans','business-plans','purchase-orders','customer-orders','production-reports','finished-reports','stock-requests','tasks','qc-inspections','warehouse-inbound','warehouse-outbound']);
+ const notificationResource=resource=>['warehouse-inbound','warehouse-outbound'].includes(resource)?'stock-requests':resource;
+ const unread=(resource,id)=>updates.some(n=>n.resource_type===notificationResource(resource)&&String(n.resource_id)===String(id));
  function decorate(){
   const table=document.querySelector('#table');if(!table)return;
   if(current==='items'){
@@ -79,8 +80,8 @@
  const baseDetail=detail;
  detail=function(record){
   baseDetail(record);
-  if(!record.id||!resources.has(current))return;
-  const resource=current;
+  if(!record.id||!resources.has(current)||record.status==='POSTED')return;
+  const resource=notificationResource(current);
   api('workspace/seen','POST',{resource_type:resource,resource_id:String(record.id)}).then(()=>{
    updates=updates.filter(n=>!(n.resource_type===resource&&String(n.resource_id)===String(record.id)));decorate();
   }).catch(()=>{});

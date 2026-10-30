@@ -115,10 +115,11 @@ class StockRequestService {
 
   async list(user, query = {}) {
     P.role(user, P.read["stock-requests"]);
-    C.fields(query, ["page", "per_page", "q", "status", "purpose", "sort"]);
+    C.fields(query, ["page", "per_page", "q", "status", "purpose", "sort","type"]);
     const { page, per_page, offset } = paginate(query);
     const where = [],
       params = [];
+    if(query.type){C.fail(!['IN','OUT'].includes(query.type),'VALIDATION_ERROR','Loại nghiệp vụ không hợp lệ.');where.push('r.type=?');params.push(query.type);}
     if (
       user.roles.includes("WORKSHOP_OWNER") &&
       !user.roles.includes("WAREHOUSE_MANAGER") &&
