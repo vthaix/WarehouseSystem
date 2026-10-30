@@ -140,3 +140,17 @@ Menu không cấp quyền. Middleware/service kiểm actor mới nhất từ Ide
 
 
 Ảnh danh mục: LoaiHang.DuongDanAnh / image_path, chọn/xem trước/bỏ ảnh, PNG/JPEG/WebP ≤5 MB. Migration service 007; file ở src/images/categories, Docker lưu volume category_images. Chi tiết: [CATEGORY_IMAGES.md](CATEGORY_IMAGES.md).
+
+## Cập nhật 30/10/2026 — kho theo xưởng và điều phối theo hạn dùng
+
+Mỗi xưởng có ba kho: nguyên vật liệu, thành phẩm và hàng trả về. Mỗi kho có nhiều khu A, B, C… với nhãn nhóm hàng; mỗi khu mẫu có mười vị trí như A01–A10. Số nhỏ ở ngoài, số lớn ở trong. Ba xưởng có tổng cộng chín kho; màn hình tra cứu chọn một xưởng rồi hiển thị ba kho tương ứng.
+
+Khi phân công nhập (UC-08), hệ thống gợi ý khu đúng nhóm hàng, hạn dùng xa ở trong, hạn dùng gần hoặc chưa rõ ở ngoài. Cùng hạn dùng với hàng đang có thì gợi ý đặt sau lô nhập trước. Quản lý chọn nhân viên, vị trí và lượng của từng phần, xác nhận trước khi giao thực hiện; không tự di chuyển hàng đang có.
+
+Khi phân công xuất (UC-09), các lô đủ điều kiện của đúng nguồn và kho được gợi ý theo hạn dùng sớm trước; cùng hạn dùng dùng thời điểm ghi phiếu nhập đầu tiên tại kho đó sớm trước. Không dùng thời điểm tạo lô. Lô chưa có hạn dùng xếp sau lô có hạn dùng; các mốc bằng nhau giữ thứ tự ổn định theo bản ghi lô.
+
+Form phân công xuất có bảng thứ tự và nút Bổ sung phân bổ theo hạn dùng và thứ tự nhập. Nút giữ các dòng đang nhập, bổ sung phần thiếu từ lô tiếp theo và trừ lượng đã có trên form. Quản lý chọn nhân viên cho từng phần và vẫn có thể điều chỉnh lựa chọn hợp lệ. Gợi ý không tự ghi phiếu, không tăng/trừ tồn và không bỏ qua QC, nguồn, tồn khả dụng, giữ chỗ, lịch, phân quyền hoặc khóa kiểm kê.
+
+Nhân viên chỉ ghi phần được giao tại UC-10/UC-11.01/UC-11.02; không tự đổi lô/vị trí ngoài phân công. Ghi một phần giữ lượng còn lại để thực hiện tiếp. Phiếu đã ghi sổ và lịch sử tồn không được viết lại.
+
+Chi tiết: [WORKSHOP_STORAGE.md](WORKSHOP_STORAGE.md). Bản Word và kiểm tra bảo toàn: [review-20261030](review-20261030/README.md).

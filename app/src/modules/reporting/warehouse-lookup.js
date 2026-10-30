@@ -3,10 +3,14 @@ module.exports=async function lookup(pool,user,query={}){
   // UC-22 explicitly allows owners to read shared warehouse stock (see
   // docs/BUSINESS_DECISIONS.md and USE_CASES.md). This read-only DTO exposes no
   // other workshop's orders, reports, staff or warehouse documents.
-  P.role(user,['WAREHOUSE_MANAGER','WORKSHOP_OWNER']);C.fields(query,['warehouse_id']);
+  P.role(user,['WAREHOUSE_MANAGER','WORKSHOP_OWNER']);C.fields(query,['warehouse_id','workshop_id']);
   if(query.warehouse_id!==undefined)C.fail(!/^[1-9]\d*$/.test(String(query.warehouse_id)),'VALIDATION_ERROR','Kho được chọn không hợp lệ.');
-  const [warehouses]=await pool.execute('SELECT id,code,name FROM warehouses WHERE is_active=1 ORDER BY code');
-  const warehouse=query.warehouse_id?warehouses.find(w=>String(w.id)===String(query.warehouse_id)):warehouses[0];
+  if(query.workshop_id!==undefined)C.fail(!/^[1-9]\d*$/.test(String(query.workshop_id)),'VALIDATION_ERROR','Xưởng được chọn không hợp lệ.');
+  const [warehouses]=await pool.execute('SELECT id,code,name,workshop_id,LoaiKho AS warehouse_type FROM warehouses WHERE is_active=1 ORDER BY code');
+  const [workshops]=await pool.execute('SELECT id,code,name FROM workshops WHERE is_active=1 ORDER BY code');
+  C.fail(query.workshop_id&&!workshops.some(w=>String(w.id)===String(query.workshop_id)),'NOT_FOUND','Xưởng không tồn tại hoặc đã ngừng hoạt động.',404);
+  const workshopId=query.workshop_id||user.workshop_ids?.[0];
+  const warehouse=query.warehouse_id?warehouses.find(w=>String(w.id)===String(query.warehouse_id)):warehouses.find(w=>String(w.workshop_id)===String(workshopId))||warehouses[0];
   C.fail(query.warehouse_id&&!warehouse,'NOT_FOUND','Kho không tồn tại hoặc đã ngừng hoạt động.',404);
   const [categories]=await pool.execute('SELECT id,code,name,image_path FROM categories WHERE is_active=1 ORDER BY name');
   if(!warehouse)return {warehouses:[],categories,warehouse_id:null,locations:[],as_of:new Date().toISOString()};
@@ -20,5 +24,5 @@ module.exports=async function lookup(pool,user,query={}){
     line.available_quantity=line.quality_bucket==='AVAILABLE'&&!line.expired&&['PASSED','PARTIAL'].includes(line.qc_status)&&available>0n?quantities.decimal(available):'0.000';
   }
   const normalize=r=>Object.fromEntries(Object.entries(r).map(([k,v])=>[k,k==='id'||k.endsWith('_id')?v==null?null:String(v):v]));
-  return {warehouses:warehouses.map(normalize),categories:categories.map(normalize),warehouse_id:String(warehouse.id),locations:locations.map(l=>({...normalize(l),stock:stock.filter(s=>String(s.location_id)===String(l.id)).map(normalize)})),as_of:new Date().toISOString()};
+  return {workshops:workshops.map(normalize),workshop_id:warehouse.workshop_id==null?null:String(warehouse.workshop_id),warehouses:warehouses.map(normalize),categories:categories.map(normalize),warehouse_id:String(warehouse.id),locations:locations.map(l=>({...normalize(l),stock:stock.filter(s=>String(s.location_id)===String(l.id)).map(normalize)})),as_of:new Date().toISOString()};
 };

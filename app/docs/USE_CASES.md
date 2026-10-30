@@ -170,39 +170,39 @@ Danh sách rỗng vẫn trả kết quả hợp lệ. Sai dữ liệu, sai ngu�
 
 **Actor chính:** Quản lý kho
 
-**Tiền điều kiện:** phiên hợp lệ, vai trò/phạm vi được phép, nguồn/chứng từ ở trạng thái có thể thao tác.
+**Tiền điều kiện:** đã đăng nhập, phụ trách yêu cầu và có nguồn/lượng đủ điều kiện.
 
 ### Luồng cơ bản
 
-1. Chọn yêu cầu/phiếu đúng nhập hoặc xuất; chỉ đọc/phân công/ghi theo vai trò.
-2. Quản lý xem/tổng hợp các phiếu đã ghi; không sửa lượng/lô lịch sử.
-3. Kiểm QC, hạn dùng, nguồn, giữ chỗ và khóa kiểm kê; xuất bán phải hoàn tất SX/đến ngày giao.
-4. Ghi PhieuKho/ChiTietPhieuKho, TonKho/BienDongKho và trạng thái trong transaction. Gửi lại cùng key/payload trả phiếu cũ; lỗi rollback.
+1. Mở Quản lý nhập kho; xem yêu cầu nhập thuộc phạm vi và các phiếu đã ghi sổ. (PhieuYeuCauNhapXuat, PhieuKho)
+2. Chọn yêu cầu; xem nguồn, xưởng, kho, ngày giờ, phần lô và lượng còn phải thực hiện. (ChiTietPhieuYeuCauNhapXuat, Xuong, Kho, LoHang, ChiTietLo, PhanCongKho)
+3. Chọn Phân công kho; chọn nhân viên, từng dòng lô, vị trí, lượng và lịch. Gợi ý khu đúng nhóm hàng và vị trí theo hạn dùng: xa ở trong, gần hoặc chưa rõ ở ngoài; cùng hạn dùng đặt sau lô đã nhập trước. (NguoiDung, ViTriKho, TonKho, PhanCongKho, PhieuKho, ChiTietPhieuKho)
+4. Quản lý kiểm tra, điều chỉnh lựa chọn hợp lệ rồi xác nhận. Hệ thống kiểm tra lại, lưu phân công và thông báo; nhân viên thực hiện phiếu nhập. (CongViec, PhanCongCongViec, PhanCongKho, ThongBao)
 
-**Hậu điều kiện:** đọc trả dữ liệu trong phạm vi; ghi thành công cập nhật version/trạng thái và lịch sử theo service. Hủy form không tạo mutation; hủy chứng từ tuân thủ trạng thái/nguồn.
+**Hậu điều kiện:** phân công được lưu; chưa tự tăng/trừ tồn. Nhân viên ghi phiếu thực nhập mới cập nhật tồn; quản lý xem được kết quả trong Phiếu đã ghi sổ.
 
 ### Luồng thay thế và ngoại lệ
 
-Danh sách rỗng vẫn trả kết quả hợp lệ. Sai dữ liệu, sai nguồn/quyền, version cũ, trạng thái không hợp lệ, nguồn hết hạn mức hoặc kho khóa phải bị chặn. Không tự đổi nguồn, tạo số liệu giả hoặc retry mutation khi chưa đối soát kết quả. Chi tiết điều kiện tương ứng trong SRS, API và service owner.
+Tìm kiếm/lọc, xem phiếu đã ghi sổ, thêm/xóa dòng, phân nhiều nhân viên, điều chỉnh gợi ý hợp lệ, giải phóng phần chưa thực hiện rồi phân lại, hoặc hủy trước xác nhận. Phần đã ghi phiếu giữ nguyên. Không đủ nguồn/lô/vị trí/lượng, sai người phụ trách, lịch trùng, sai nhóm hàng, hàng không đủ điều kiện hoặc dữ liệu vừa thay đổi thì không lưu phân công sai; tải lại và kiểm tra. Các nhánh chi tiết được bổ sung tại cuối tài liệu và trong Word cập nhật ngày 30/10/2026.
 
 ## UC-09 Quản lý xuất kho
 
 **Actor chính:** Quản lý kho
 
-**Tiền điều kiện:** phiên hợp lệ, vai trò/phạm vi được phép, nguồn/chứng từ ở trạng thái có thể thao tác.
+**Tiền điều kiện:** đã đăng nhập, phụ trách yêu cầu và có nguồn/lượng đủ điều kiện.
 
 ### Luồng cơ bản
 
-1. Chọn yêu cầu/phiếu đúng nhập hoặc xuất; chỉ đọc/phân công/ghi theo vai trò.
-2. Quản lý xem/tổng hợp các phiếu đã ghi; không sửa lượng/lô lịch sử.
-3. Kiểm QC, hạn dùng, nguồn, giữ chỗ và khóa kiểm kê; xuất bán phải hoàn tất SX/đến ngày giao.
-4. Ghi PhieuKho/ChiTietPhieuKho, TonKho/BienDongKho và trạng thái trong transaction. Gửi lại cùng key/payload trả phiếu cũ; lỗi rollback.
+1. Mở Quản lý xuất kho; xem yêu cầu xuất thuộc phạm vi và các phiếu đã ghi sổ. (PhieuYeuCauNhapXuat, PhieuKho)
+2. Chọn yêu cầu; xem nguồn, xưởng, kho, ngày giờ, phần lô và lượng còn phải thực hiện. (ChiTietPhieuYeuCauNhapXuat, Xuong, Kho, LoHang, ChiTietLo, PhanCongKho)
+3. Chọn Phân công kho; chọn nhân viên, từng dòng lô, vị trí, lượng và lịch. Hiển thị bảng thứ tự lô: hạn dùng sớm trước; cùng hạn dùng thì ghi phiếu nhập đầu tiên tại kho hiện tại sớm trước. Có thể bổ sung phân bổ phần thiếu từ các lô tiếp theo. (NguoiDung, ViTriKho, TonKho, PhanCongKho, PhieuKho, ChiTietPhieuKho)
+4. Quản lý kiểm tra, điều chỉnh lựa chọn hợp lệ rồi xác nhận. Hệ thống kiểm tra lại, lưu phân công và thông báo; nhân viên thực hiện phiếu xuất. (CongViec, PhanCongCongViec, PhanCongKho, ThongBao)
 
-**Hậu điều kiện:** đọc trả dữ liệu trong phạm vi; ghi thành công cập nhật version/trạng thái và lịch sử theo service. Hủy form không tạo mutation; hủy chứng từ tuân thủ trạng thái/nguồn.
+**Hậu điều kiện:** phân công được lưu; chưa tự tăng/trừ tồn. Nhân viên ghi phiếu thực xuất mới cập nhật tồn; quản lý xem được kết quả trong Phiếu đã ghi sổ.
 
 ### Luồng thay thế và ngoại lệ
 
-Danh sách rỗng vẫn trả kết quả hợp lệ. Sai dữ liệu, sai nguồn/quyền, version cũ, trạng thái không hợp lệ, nguồn hết hạn mức hoặc kho khóa phải bị chặn. Không tự đổi nguồn, tạo số liệu giả hoặc retry mutation khi chưa đối soát kết quả. Chi tiết điều kiện tương ứng trong SRS, API và service owner.
+Tìm kiếm/lọc, xem phiếu đã ghi sổ, thêm/xóa dòng, phân nhiều nhân viên, điều chỉnh gợi ý hợp lệ, giải phóng phần chưa thực hiện rồi phân lại, hoặc hủy trước xác nhận. Phần đã ghi phiếu giữ nguyên. Không đủ nguồn/lô/vị trí/lượng, sai người phụ trách, lịch trùng, sai nhóm hàng, hàng không đủ điều kiện hoặc dữ liệu vừa thay đổi thì không lưu phân công sai; tải lại và kiểm tra. Các nhánh chi tiết được bổ sung tại cuối tài liệu và trong Word cập nhật ngày 30/10/2026.
 
 ## UC-13 Lập đợt kiểm kê
 
@@ -250,9 +250,9 @@ Danh sách rỗng vẫn trả kết quả hợp lệ. Sai dữ liệu, sai ngu�
 
 ### Luồng cơ bản
 
-1. Chọn bộ lọc trong phạm vi vai trò; chủ xưởng được đọc kho chung và hồ sơ xưởng của mình.
-2. Xem hàng/lô/vị trí, bucket, tồn và khả dụng; không lấy lượng cách ly/hết hạn/giữ chỗ thành lượng xuất.
-3. Phân trang/xuất CSV trong giới hạn, trạng thái rỗng và không quyền hiển thị rõ; chưa chứng nhận mọi nhánh bộ lọc theo phiếu chấm.
+1. Chọn xưởng, một trong ba kho NVL/thành phẩm/hàng trả về, rồi chọn khu hoặc tất cả khu. Chủ xưởng được tra cứu kho theo quyền hiện hành. (Xuong, Kho, ViTriKho)
+2. Xem nhãn nhóm hàng từng khu và các vị trí A01–A10, B01–B10…; lọc nhóm hàng/danh mục hoặc tìm mặt hàng/mã lô. (LoaiHang, MatHang, NguyenVatLieu, ThanhPham, LoHang, ChiTietLo)
+3. Chọn vị trí để xem hàng/lô, hạn dùng, đơn vị, tồn, giữ chỗ và khả dụng. Vị trí trống hiển thị chưa có hàng. Tra cứu không tự di chuyển hàng hoặc ghi phiếu. (DonViTinh, TonKho, PhanCongKho, ViTriKho)
 
 **Hậu điều kiện:** đọc trả dữ liệu trong phạm vi; ghi thành công cập nhật version/trạng thái và lịch sử theo service. Hủy form không tạo mutation; hủy chứng từ tuân thủ trạng thái/nguồn.
 
@@ -927,3 +927,23 @@ Danh sách rỗng vẫn trả kết quả hợp lệ. Sai dữ liệu, sai ngu�
 ### Luồng thay thế và ngoại lệ
 
 Danh sách rỗng vẫn trả kết quả hợp lệ. Sai dữ liệu, sai nguồn/quyền, version cũ, trạng thái không hợp lệ, nguồn hết hạn mức hoặc kho khóa phải bị chặn. Không tự đổi nguồn, tạo số liệu giả hoặc retry mutation khi chưa đối soát kết quả. Chi tiết điều kiện tương ứng trong SRS, API và service owner.
+
+## Bổ sung 30/10/2026 — các nhánh điều phối kho
+
+Mỗi xưởng có ba kho: nguyên vật liệu, thành phẩm và hàng trả về. Mỗi kho có nhiều khu A, B, C… với nhãn nhóm hàng; mỗi khu mẫu có mười vị trí như A01–A10. Số nhỏ ở ngoài, số lớn ở trong. Ba xưởng có tổng cộng chín kho; màn hình tra cứu chọn một xưởng rồi hiển thị ba kho tương ứng.
+
+Khi phân công nhập (UC-08), hệ thống gợi ý khu đúng nhóm hàng, hạn dùng xa ở trong, hạn dùng gần hoặc chưa rõ ở ngoài. Cùng hạn dùng với hàng đang có thì gợi ý đặt sau lô nhập trước. Quản lý chọn nhân viên, vị trí và lượng của từng phần, xác nhận trước khi giao thực hiện; không tự di chuyển hàng đang có.
+
+Khi phân công xuất (UC-09), các lô đủ điều kiện của đúng nguồn và kho được gợi ý theo hạn dùng sớm trước; cùng hạn dùng dùng thời điểm ghi phiếu nhập đầu tiên tại kho đó sớm trước. Không dùng thời điểm tạo lô. Lô chưa có hạn dùng xếp sau lô có hạn dùng; các mốc bằng nhau giữ thứ tự ổn định theo bản ghi lô.
+
+Form phân công xuất có bảng thứ tự và nút Bổ sung phân bổ theo hạn dùng và thứ tự nhập. Nút giữ các dòng đang nhập, bổ sung phần thiếu từ lô tiếp theo và trừ lượng đã có trên form. Quản lý chọn nhân viên cho từng phần và vẫn có thể điều chỉnh lựa chọn hợp lệ. Gợi ý không tự ghi phiếu, không tăng/trừ tồn và không bỏ qua QC, nguồn, tồn khả dụng, giữ chỗ, lịch, phân quyền hoặc khóa kiểm kê.
+
+Nhân viên chỉ ghi phần được giao tại UC-10/UC-11.01/UC-11.02; không tự đổi lô/vị trí ngoài phân công. Ghi một phần giữ lượng còn lại để thực hiện tiếp. Phiếu đã ghi sổ và lịch sử tồn không được viết lại.
+
+Chi tiết: [WORKSHOP_STORAGE.md](WORKSHOP_STORAGE.md). Bản Word và kiểm tra bảo toàn: [review-20261030](review-20261030/README.md).
+
+Các nhánh thay thế: thêm/xóa dòng phân bổ, phân nhiều nhân viên, bổ sung phần thiếu qua nhiều lô, điều chỉnh gợi ý hợp lệ, xem phiếu đã ghi sổ, giải phóng phần chưa thực hiện để phân lại, hủy trước xác nhận. Phần đã ghi phiếu luôn giữ nguyên.
+
+Ngoại lệ: không có nguồn/lô/vị trí phù hợp, lượng vượt khả dụng hoặc phần đạt còn chưa nhập, sai khu/nhóm hàng, sai quyền/người phụ trách, lịch trùng hoặc sai thời gian, hàng hết hạn/cách ly/chưa đạt, nguồn hết lượng, kho khóa hoặc dữ liệu bị thay đổi. Không lưu phân công/phiếu không hợp lệ; người dùng kiểm tra lại dữ liệu. Không coi thiếu hạn dùng tự nó là lệnh cấm xuất; vẫn kiểm tra các điều kiện khác.
+
+Không thêm hoặc bỏ UC trong đợt cập nhật này.

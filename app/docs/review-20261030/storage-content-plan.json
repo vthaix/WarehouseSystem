@@ -1,0 +1,214 @@
+{
+  "changes": [
+    {
+      "table": 9,
+      "row": 1,
+      "col": 1,
+      "paragraph": 0,
+      "text": "Quản lý kho đã đăng nhập và phụ trách yêu cầu nhập; có phần hàng đủ điều kiện để phân công. (NguoiDung, PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)"
+    },
+    {
+      "table": 9,
+      "row": 2,
+      "col": 1,
+      "paragraph": 0,
+      "text": "Quản lý kho xem được yêu cầu nhập, phân công nhân viên theo từng dòng lô, số lượng và vị trí; xem các phiếu đã ghi nhận. Phân công chưa tăng tồn kho. (PhieuYeuCauNhapXuat, PhanCongKho, CongViec, PhieuKho, TonKho)"
+    },
+    {
+      "table": 9,
+      "row": 7,
+      "col": 1,
+      "paragraph": 0,
+      "text": "2. Hiển thị yêu cầu nhập trong phạm vi phụ trách và phần Phiếu đã ghi sổ để xem kết quả thực nhập. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, PhanCongKho, PhieuKho)"
+    },
+    {
+      "table": 9,
+      "row": 8,
+      "col": 0,
+      "paragraph": 0,
+      "text": "3. Chọn một yêu cầu nhập để xem nguồn hàng, phần còn phải thực hiện; hoặc chọn phiếu đã ghi sổ để đối chiếu. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, PhieuKho)"
+    },
+    {
+      "table": 9,
+      "row": 8,
+      "col": 1,
+      "paragraph": 0,
+      "text": "4. Hiển thị nguồn nhập, xưởng, kho, ngày giờ đề nghị, từng phần lô, số lượng và phân công; nếu xem phiếu đã ghi sổ thì hiển thị kết quả thực nhập. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, Xuong, PhanCongKho, PhieuKho, ChiTietPhieuKho, MatHang, NguyenVatLieu, ThanhPham, LoHang, ChiTietLo, Kho, ViTriKho)"
+    },
+    {
+      "table": 9,
+      "row": 13,
+      "col": 0,
+      "paragraph": 0,
+      "append": ". 3.2 Phân công nhập kho: (1) Quản lý kho chọn Phân công kho; hệ thống gợi ý ngày giờ từ yêu cầu và hiển thị các dòng hàng đủ điều kiện. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, LoHang, ChiTietLo, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC) (2) Với từng dòng, chọn nhân viên kho, phần lô, số lượng và vị trí trong kho. Khu được gắn nhãn nhóm hàng; vị trí có mã như A01–A10, số nhỏ ở ngoài, số lớn ở trong. (NguoiDung, NguoiDungVaiTro, Kho, ViTriKho, MatHang) (3) Hệ thống gợi ý khu đúng nhóm hàng; hạn dùng xa ưu tiên phía trong, hạn dùng gần hoặc chưa rõ ưu tiên phía ngoài. Nếu cùng hạn dùng với lô đang có, gợi ý đặt sau lô nhập trước; không tự chuyển hàng đang lưu. (TonKho, LoHang, ChiTietLo, ViTriKho) (4) Quản lý kho kiểm tra, điều chỉnh lựa chọn hợp lệ, thêm hoặc xóa dòng phân bổ rồi xác nhận. Có thể giao các phần cho nhiều nhân viên. (PhanCongKho, CongViec, PhanCongCongViec) (5) Hệ thống kiểm tra quyền, lịch, lượng còn được nhập và vị trí, lưu phân công và thông báo cho nhân viên; chưa tăng tồn. Nhân viên ghi phiếu tại UC-10. (PhanCongKho, CongViec, PhanCongCongViec, ThongBao, TonKho) 3.3 Xem hoặc giải phóng phân công: (1) Chọn Xem phân công và phần chưa thực hiện. (PhanCongKho, CongViec) (2) Quản lý có thể giải phóng phần chưa thực hiện rồi phân công lại; phần đã ghi phiếu được giữ nguyên. (PhanCongKho, CongViec, PhieuKho, ChiTietPhieuKho) 3.4 Hủy trước xác nhận: đóng form hoặc quay lại; không lưu phân công mới và không thay đổi tồn kho."
+    },
+    {
+      "table": 9,
+      "row": 15,
+      "col": 0,
+      "paragraph": 0,
+      "text": "2.1 Chưa có yêu cầu nhập hoặc phiếu nhập phù hợp"
+    },
+    {
+      "table": 9,
+      "row": 16,
+      "col": 0,
+      "paragraph": 0,
+      "text": "1. Hệ thống hiển thị danh sách trống hoặc chưa có phiếu đã ghi sổ; không tạo thêm chứng từ. (PhieuYeuCauNhapXuat, PhieuKho)"
+    },
+    {
+      "table": 9,
+      "row": 17,
+      "col": 0,
+      "paragraph": 0,
+      "append": " 3.5 Phân công không hợp lệ: thiếu nhân viên, thời gian sai, lịch trùng, không còn phần hàng đủ điều kiện, số lượng vượt lượng còn được phép, vị trí ngoài kho hoặc thuộc nhóm hàng khác. Hệ thống không lưu phân công; Quản lý kho sửa thông tin hoặc tải lại nguồn và phân công. (NguoiDung, CongViec, PhanCongKho, LoHang, ChiTietLo, Kho, ViTriKho, TonKho) 3.6 Chưa có vị trí phù hợp: không tự tạo vị trí; Quản lý kho kiểm tra danh mục vị trí trước khi xác nhận. (Kho, ViTriKho)"
+    },
+    {
+      "table": 10,
+      "row": 1,
+      "col": 1,
+      "paragraph": 0,
+      "text": "Quản lý kho đã đăng nhập và phụ trách yêu cầu xuất; có lô đủ điều kiện xuất trong kho. (NguoiDung, PhieuYeuCauNhapXuat, TonKho, LoHang, ChiTietLo)"
+    },
+    {
+      "table": 10,
+      "row": 2,
+      "col": 1,
+      "paragraph": 0,
+      "text": "Quản lý kho xem yêu cầu xuất, phân công nhân viên theo lô, vị trí và lượng; xem các phiếu đã ghi sổ. Phân công giữ lượng hàng cho công việc, chưa trừ tồn; nhân viên ghi phiếu mới trừ tồn. (PhanCongKho, CongViec, PhieuKho, TonKho)"
+    },
+    {
+      "table": 10,
+      "row": 7,
+      "col": 1,
+      "paragraph": 0,
+      "text": "2. Hiển thị yêu cầu xuất nguyên vật liệu hoặc thành phẩm trong phạm vi phụ trách và phần Phiếu đã ghi sổ. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, PhanCongKho, PhieuKho)"
+    },
+    {
+      "table": 10,
+      "row": 8,
+      "col": 0,
+      "paragraph": 0,
+      "text": "3. Chọn yêu cầu xuất để xem nguồn, lượng còn phải thực hiện và phân công; hoặc chọn phiếu đã ghi sổ để đối chiếu. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, PhieuKho)"
+    },
+    {
+      "table": 10,
+      "row": 8,
+      "col": 1,
+      "paragraph": 0,
+      "text": "4. Hiển thị nguồn yêu cầu, xưởng, kho, ngày giờ, mặt hàng, phần lô và lượng còn được xuất; hoặc hiển thị thông tin phiếu đã ghi sổ. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, Xuong, PhanCongKho, PhieuKho, ChiTietPhieuKho, MatHang, NguyenVatLieu, ThanhPham, LoHang, ChiTietLo, Kho, ViTriKho, TonKho)"
+    },
+    {
+      "table": 10,
+      "row": 13,
+      "col": 0,
+      "paragraph": 0,
+      "append": ". 3.2 Phân công xuất theo hạn dùng và thời gian nhập: (1) Quản lý kho chọn Phân công kho. Hệ thống hiển thị lô đủ điều kiện của đúng nguồn, đúng mặt hàng và kho, kèm bảng thứ tự đề xuất. (PhieuYeuCauNhapXuat, LoHang, ChiTietLo, TonKho, Kho) (2) Ưu tiên hạn dùng sớm; cùng hạn dùng thì ưu tiên thời điểm ghi phiếu nhập đầu tiên tại kho đang điều phối sớm hơn. Lô chưa có hạn dùng đứng sau lô có hạn dùng; nếu các mốc bằng nhau, giữ thứ tự ổn định theo bản ghi lô. Không dùng ngày tạo lô thay ngày nhập kho. (LoHang, ChiTietLo, PhieuKho, ChiTietPhieuKho, ViTriKho) (3) Quản lý chọn nhân viên, lô, vị trí và số lượng cho từng phần; hệ thống gợi ý lượng không vượt nhu cầu còn lại và hàng tại vị trí. (NguoiDung, PhanCongKho, TonKho, ViTriKho) (4) Nếu lô đầu không đủ, chọn Bổ sung phân bổ theo hạn dùng và thứ tự nhập; hệ thống giữ các dòng đang có và thêm phần còn thiếu từ lô tiếp theo, không lấy trùng lượng đã nhập trên form. Ví dụ cần 10, lô đầu còn 4 thì phân 4 và lấy 6 từ lô tiếp theo nếu đủ. (PhanCongKho, TonKho, ChiTietLo) (5) Quản lý có thể điều chỉnh lựa chọn hợp lệ và chọn nhân viên cho từng phần, rồi xác nhận. Thứ tự là gợi ý điều phối, không phải tự động ghi phiếu. (PhanCongKho, CongViec, PhanCongCongViec) (6) Hệ thống kiểm tra lại quyền, lịch, trạng thái và lượng khả dụng, lưu phân công và thông báo; nhân viên thực hiện UC-11.01 hoặc UC-11.02. (PhanCongKho, CongViec, ThongBao, TonKho) 3.3 Không đủ hàng: chỉ gợi ý lượng còn có thể cấp; không tạo dòng số lượng bằng 0 và không tự tăng lượng tồn. Quản lý kiểm tra lại trước khi xác nhận. (TonKho, PhanCongKho) 3.4 Giải phóng phần chưa thực hiện: xem phân công, giải phóng phần còn lại rồi phân công lại; giữ nguyên các phiếu đã ghi sổ. (PhanCongKho, CongViec, PhieuKho) 3.5 Hủy trước xác nhận: không lưu phân công mới và không trừ tồn."
+    },
+    {
+      "table": 10,
+      "row": 15,
+      "col": 0,
+      "paragraph": 0,
+      "text": "2.1 Không có yêu cầu xuất hoặc phiếu xuất phù hợp"
+    },
+    {
+      "table": 10,
+      "row": 16,
+      "col": 0,
+      "paragraph": 0,
+      "text": "1. Hệ thống hiển thị danh sách trống hoặc chưa có phiếu đã ghi sổ. (PhieuYeuCauNhapXuat, PhieuKho)"
+    },
+    {
+      "table": 10,
+      "row": 17,
+      "col": 0,
+      "paragraph": 0,
+      "append": " 3.6 Không đủ điều kiện phân công: không còn tồn khả dụng, hàng đã dành cho công việc khác, lô hết hạn, chưa đạt chất lượng, cách ly, sai nguồn, sai kho/vị trí, sai nhân viên hoặc lịch trùng. Hệ thống không lưu phân công vượt điều kiện; Quản lý kho tải lại và chọn lượng hoặc lô phù hợp. (TonKho, PhanCongKho, CongViec, LoHang, ChiTietLo, Kho, ViTriKho, KetQuaKiemTraQCAC)"
+    },
+    {
+      "table": 22,
+      "row": 7,
+      "col": 1,
+      "paragraph": 0,
+      "append": " Với yêu cầu mới, danh sách kho được lọc theo xưởng phụ trách và mục đích: nguyên vật liệu dùng kho NVL, thành phẩm dùng kho thành phẩm; kho hàng trả về phục vụ luồng hàng trả riêng. Mỗi xưởng có ba loại kho trên. (Xuong, Kho)"
+    },
+    {
+      "table": 31,
+      "row": 8,
+      "col": 0,
+      "paragraph": 0,
+      "text": "3. Chọn công việc, đối chiếu giấy tờ thực nhập với đúng lô và vị trí Quản lý kho đã giao; kiểm tra số lượng gợi ý, nhập lượng thực nhập và ghi chú. Không tự đổi sang lô hoặc vị trí ngoài phân công. (CongViec, PhanCongCongViec, PhanCongKho, LoHang, ChiTietLo, ViTriKho)"
+    },
+    {
+      "table": 31,
+      "row": 9,
+      "col": 1,
+      "paragraph": 0,
+      "append": " Thời điểm ghi phiếu nhập là căn cứ xét lô nhập trước khi các lô có cùng hạn dùng tại kho này. (PhieuKho, ChiTietPhieuKho, Kho)"
+    },
+    {
+      "table": 31,
+      "row": 14,
+      "col": 0,
+      "paragraph": 0,
+      "append": " Nếu vị trí thực tế cần thay đổi, liên hệ Quản lý kho điều chỉnh phần chưa thực hiện trước khi ghi phiếu; không tự chuyển vị trí bằng thao tác nhập. (PhanCongKho, ViTriKho)"
+    },
+    {
+      "table": 32,
+      "row": 7,
+      "col": 1,
+      "paragraph": 0,
+      "append": " Mỗi công việc giữ đúng lô, vị trí và lượng Quản lý kho đã phân công; thứ tự điều phối ưu tiên hạn dùng sớm, cùng hạn dùng thì nhập kho trước xuất trước. Nhân viên không tự phân công lại. (PhanCongKho, LoHang, ChiTietLo, ViTriKho, PhieuKho, ChiTietPhieuKho)"
+    },
+    {
+      "table": 33,
+      "row": 8,
+      "col": 1,
+      "paragraph": 0,
+      "append": " Nhân viên thực hiện đúng phần được giao theo thứ tự Quản lý kho đã xác nhận; gợi ý điều phối ưu tiên hạn dùng sớm, cùng hạn dùng thì thời điểm nhập kho sớm trước. Nhân viên không tự lấy lô khác ngoài phân công. (PhanCongKho, ChiTietLo, PhieuKho, ChiTietPhieuKho, ViTriKho)"
+    },
+    {
+      "table": 34,
+      "row": 8,
+      "col": 1,
+      "paragraph": 0,
+      "append": " Nhân viên thực hiện đúng phần được giao theo thứ tự Quản lý kho đã xác nhận; gợi ý điều phối ưu tiên hạn dùng sớm, cùng hạn dùng thì thời điểm nhập kho sớm trước. Nhân viên không tự lấy lô khác ngoài phân công. (PhanCongKho, ChiTietLo, PhieuKho, ChiTietPhieuKho, ViTriKho)"
+    },
+    {
+      "table": 48,
+      "row": 7,
+      "col": 1,
+      "paragraph": 0,
+      "text": "2. Hiển thị xưởng, kho và sơ đồ vị trí. Mỗi xưởng có kho nguyên vật liệu, kho thành phẩm và kho hàng trả về; danh sách kho đổi theo xưởng được chọn. (Xuong, Kho, ViTriKho)"
+    },
+    {
+      "table": 48,
+      "row": 8,
+      "col": 0,
+      "paragraph": 0,
+      "text": "3. Chọn xưởng, một trong ba kho, khu lưu trữ; có thể lọc nhóm hàng, danh mục hoặc tìm theo tên mặt hàng, mã mặt hàng, mã lô. (Xuong, Kho, ViTriKho, LoaiHang, MatHang, NguyenVatLieu, ThanhPham, LoHang, ChiTietLo)"
+    },
+    {
+      "table": 48,
+      "row": 8,
+      "col": 1,
+      "paragraph": 0,
+      "text": "4. Hiển thị các khu A, B, C… với nhãn nhóm hàng được lưu, mỗi khu có các vị trí A01–A10, B01–B10… Số nhỏ ở phía ngoài, số lớn ở phía trong; phân biệt vị trí có hàng, trống và đang chọn. Có thể xem một khu hoặc tất cả khu. (Kho, ViTriKho, LoaiHang, MatHang, LoHang, ChiTietLo, TonKho)"
+    },
+    {
+      "table": 48,
+      "row": 9,
+      "col": 0,
+      "paragraph": 0,
+      "text": "5. Chọn vị trí để xem chi tiết hàng đang lưu. (Kho, ViTriKho, TonKho, ChiTietLo)"
+    },
+    {
+      "table": 48,
+      "row": 9,
+      "col": 1,
+      "paragraph": 0,
+      "append": " Tra cứu chỉ đọc dữ liệu; gợi ý vị trí khi nhập và thứ tự lô khi xuất được thực hiện tại UC-08 và UC-09, không tự chuyển hàng khi xem sơ đồ. (Kho, ViTriKho, TonKho, PhanCongKho)"
+    }
+  ]
+}

@@ -27,6 +27,14 @@ try{
     const body=await capture(page,'stock-requests/7000/dispatch');assert.equal(body.start_at,'2040-01-01T03:30:00.000Z');assert.equal(body.allocations[0].quantity,'10');assert.deepEqual(errors,[]);await context.close();
   }
   {
+    const {context,page,errors}=await pageFor('manager','warehouse-outbound');
+    const outbound={...request,type:'OUT'},fifoLine={...line,lots:[{id:'7002',code:'FIFO-FIRST',expiry_date:'2041-01-01',first_received_at:'2040-01-01T01:00:00Z'},{id:'7006',code:'FIFO-NEXT',expiry_date:'2041-01-01',first_received_at:'2040-01-02T01:00:00Z'}],balances:[{lot_id:'7002',location_id:'7003',quality_bucket:'AVAILABLE',quantity:'4.000'},{lot_id:'7006',location_id:'7003',quality_bucket:'AVAILABLE',quantity:'6.000'}]};
+    await mock(page,'stock-requests/7000/allocations',{request:outbound,frozen:false,lines:[fifoLine],allocations:[]});
+    await page.evaluate(r=>dispatchForm(r),outbound);assert.equal(await page.locator('[data-dispatch] [data-key="lot_id"]').inputValue(),'7002');
+    await page.getByRole('button',{name:'Bổ sung phân bổ theo hạn dùng và thứ tự nhập',exact:true}).click();
+    assert.equal(await page.locator('[data-dispatch]').count(),2);const allocations=await page.locator('[data-dispatch]').evaluateAll(rows=>rows.map(r=>({lot:r.querySelector('[data-key="lot_id"]').value,quantity:r.querySelector('[data-key="quantity"]').value})));assert.deepEqual(allocations,[{lot:'7002',quantity:'4'},{lot:'7006',quantity:'6'}]);assert.deepEqual(errors,[]);await context.close();
+  }
+  {
     const {context,page,errors}=await pageFor('staff','warehouse-inbound');const userId=await page.evaluate(()=>String(user.id));
     const allocation={id:'7004',stock_request_line_id:'7001',task_id:'7005',user_id:userId,lot_id:'7002',location_id:'7003',quantity:'10.000',posted_quantity:'0.000'};
     await mock(page,'stock-requests/7000/allocations?task_id=7005',{request:{...request,version:4},frozen:false,lines:[line],allocations:[allocation]});

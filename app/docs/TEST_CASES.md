@@ -2984,3 +2984,26 @@ Sao chép dòng cho từng TC và từng bộ dữ liệu con; đính kèm ảnh
 | … | … | … | … | Not Run | … |
 
 Điều kiện kết thúc đợt kiểm thử: mọi ca đã có kết quả hoặc lý do Blocked/N/A; không còn lỗi P0; các điểm Q01–Q10 được quyết định hoặc ghi rõ chưa nghiệm thu. Số lượng ca không tự chứng minh mọi UC đã hoàn chỉnh.
+
+## Bổ sung 30/10/2026 — kho theo xưởng và thứ tự phân công
+
+Các ca dưới đây mô tả kỳ vọng; không mặc định tất cả đã được chạy trong đợt sửa tài liệu.
+
+| Mã | UC | Thiết lập/thao tác | Kết quả mong đợi |
+| --- | --- | --- | --- |
+| KQ-01 | UC-22 | Đổi giữa ba xưởng | Mỗi xưởng hiển thị ba kho đúng loại; không nhầm ba loại kho với ba khu |
+| KQ-02 | UC-22 | Mở kho NVL, chọn khu A | Có nhãn nhóm hàng, vị trí A01–A10; chọn vị trí xem tồn/giữ chỗ/khả dụng |
+| KQ-03 | UC-08 | Nhập cùng NVL có hạn dùng xa hơn hàng đang có | Gợi ý khu đúng nhóm, phía trong; quản lý vẫn chọn nhân viên và xác nhận |
+| KQ-04 | UC-08 | Lô nhập có hạn dùng gần hơn hoặc chưa rõ | Gợi ý phía ngoài; không tự chuyển hàng cũ |
+| KQ-05 | UC-08 | Chọn vị trí của nhóm hàng khác | Từ chối phân công, không ghi phiếu/tăng tồn |
+| KQ-06 | UC-09 | Hai lô có hạn dùng khác nhau, lô nhập sau lại hết hạn sớm hơn | Lô hết hạn sớm đứng trước |
+| KQ-07 | UC-09 | Cùng hạn dùng, tạo lô A trước nhưng ghi nhập B trước | B đứng trước A, dùng phiếu nhập thực tế tại kho hiện tại |
+| KQ-08 | UC-09 | Cùng hạn dùng và thời điểm nhập | Thứ tự ổn định theo bản ghi; không đổi ngẫu nhiên khi tải lại |
+| KQ-09 | UC-09 | Có lô chưa ghi hạn dùng | Xếp sau lô có hạn dùng, hiển thị chưa có hạn dùng; không bỏ qua QC/tồn/nguồn |
+| KQ-10 | UC-09 | Cần 10, lô đầu có 4 và lô sau có 6; bấm bổ sung phân bổ | Hai dòng 4 và 6 theo đúng thứ tự; không nhân đôi dòng cũ hoặc tạo lượng 0 |
+| KQ-11 | UC-09 | Giao hai phần cho hai nhân viên | Mỗi nhân viên chỉ ghi được phần lô/vị trí/lượng được giao |
+| KQ-12 | UC-08/09 | Hủy form, hoặc giải phóng phần chưa thực hiện | Hủy không lưu; giải phóng không sửa phiếu đã ghi sổ |
+| KQ-13 | UC-10/11 | Nhân viên ghi một phần, rồi ghi phần còn lại | Cập nhật đúng từng lần, giữ lịch sử; không vượt phân công |
+| KQ-14 | UC-09/11 | Lô hết hạn/cách ly, hàng đã giữ chỗ, nguồn sai hoặc kho khóa | Không cấp/ghi lượng không đủ điều kiện; không trừ tồn sai |
+
+Bằng chứng đã chạy ở đợt code trước: 80 kiểm thử đơn vị (có so sánh hạn dùng/thời điểm nhập), bài trình duyệt phân công chia 4+6, bộ MySQL commerce. Bài workshop-storage kiểm tra ba xưởng × ba kho và mười vị trí/khu. Tài liệu này không chứng nhận thêm các ca chưa chạy riêng.

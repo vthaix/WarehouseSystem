@@ -5,3 +5,5 @@
 Microservice archive: ../../archive/microservices-20261029/
 
 Giao diện theo vai trò, khu lưu kho và cung ứng: [ACTOR_STORAGE_UI.md](ACTOR_STORAGE_UI.md). Kết quả kiểm tra: [ACTOR_STORAGE_RESULTS.md](ACTOR_STORAGE_RESULTS.md).
+
+Đặc tả Word cập nhật kho và điều phối theo hạn dùng: [bản ngày 30/10/2026](review-20261030/README.md).

@@ -82,3 +82,11 @@ Biên bản kiểm tra lô có chọn ngoại lệ; textarea chỉ hiện và b�
 Yêu cầu kho của chủ xưởng gom thành Nhập/Xuất và bốn nhánh nguồn: mua NVL, báo cáo thành phẩm, KHSX cấp NVL, KHSX giao thành phẩm. Chọn ngày giờ đề nghị, xem lô/QC và gửi quản lý. Quản lý được gợi ý đúng giờ, chọn nhân viên/lô/vị trí/lượng. Nhân viên đối chiếu giấy, số lượng tự điền phần còn được giao và sửa được; hồ sơ tổng hợp ngay sau phiếu đã ghi. Chi tiết [YEU_CAU_NHAP_XUAT_CHU_XUONG.md](YEU_CAU_NHAP_XUAT_CHU_XUONG.md).
 
 C?p nh?t danh m?c b?nh, ??n v?/gi? NVL v? qu?n tr? t?i kho?n: [QUAN_TRI_TAI_KHOAN_VA_DANH_MUC_BANH.md](QUAN_TRI_TAI_KHOAN_VA_DANH_MUC_BANH.md).
+
+## Cập nhật 30/10/2026 — tra cứu và phân công kho
+
+Tra cứu kho: chọn xưởng → một trong ba kho → khu → vị trí. Mặc định xem một khu; có thể chọn tất cả. Tiêu đề khu ghi nhóm hàng, ô vị trí chỉ dùng mã ngắn; phân biệt có hàng, trống, đang chọn. Bảng chi tiết hiển thị lô, hạn dùng, tồn, giữ chỗ và khả dụng. Quản lý kho dùng Quản lý nhập kho/Quản lý xuất kho; Chủ xưởng dùng Yêu cầu nhập/xuất.
+
+Trong form phân công xuất, bảng Thứ tự xuất đề xuất hiển thị số ưu tiên, mã lô, hạn dùng, thời điểm nhập đầu tiên. Nút Bổ sung phân bổ theo hạn dùng và thứ tự nhập chia phần thiếu qua các lô; quản lý chọn nhân viên và xác nhận. Form nhập hiển thị vị trí gợi ý và lý do theo hạn dùng. Có thể điều chỉnh lựa chọn hợp lệ; gợi ý không tự ghi phiếu.
+
+Card đặt bánh có ảnh/thông tin ở phần trên; số lượng và ghi chú dùng toàn bộ chiều ngang phía dưới. Tham khảo [WORKSHOP_STORAGE.md](WORKSHOP_STORAGE.md).

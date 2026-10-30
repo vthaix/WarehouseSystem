@@ -1,5 +1,7 @@
 # Giao diện theo vai trò và bố trí kho
 
+Cập nhật tiếp theo về ba kho mỗi xưởng và khu A01–A10 thay cho ba mức vị trí mẫu: [WORKSHOP_STORAGE.md](WORKSHOP_STORAGE.md).
+
 Đợt cập nhật ngày 30/10/2026 đối chiếu với bản đặc tả trong `review-20261029/Tuan6_WarehouseTeam_ChiDacTaUC_BoSungEntity.docx`. Không sửa nội dung hoặc cấu trúc Word trong đợt này.
 
 ## Điểm vào theo vai trò

@@ -67,3 +67,11 @@ Quy tắc: [SRS.md](SRS.md), [BUSINESS_DECISIONS.md](BUSINESS_DECISIONS.md). API
 
 
 Ảnh danh mục: LoaiHang.DuongDanAnh / image_path, chọn/xem trước/bỏ ảnh, PNG/JPEG/WebP ≤5 MB. File ở `src/images/categories`, Compose dùng volume `mono_images` gắn tại `/app/src/images`; không còn gateway riêng. Chi tiết: [CATEGORY_IMAGES.md](CATEGORY_IMAGES.md).
+
+## Cập nhật 30/10/2026 — tổ chức kho và thứ tự điều phối
+
+Kho liên kết Xuong bằng MaXuong, phân biệt ba loại bằng LoaiKho: MATERIAL, FINISHED_PRODUCT, RETURN. Một xưởng không có hai kho cùng loại. ViTriKho giữ TenKhu, MaLoaiHangPhuTrach và DoSau; chưa tạo entity Khu riêng. Dữ liệu mẫu A01–A10 có DoSau 1–10.
+
+Thời điểm nhập đầu tiên được tính từ PhieuKho loại nhập và ChiTietPhieuKho tại kho đang điều phối; không thêm một bảng hàng đợi và không lấy NgayTao của lô làm ngày nhập. PhanCongKho tiếp tục lưu nhân viên, phần lô, vị trí và lượng. Quy tắc chỉ sắp thứ tự gợi ý; quyền và kiểm tra khi lưu không đổi.
+
+Migration 007_workshop_warehouses.sql bổ sung liên kết kho/xưởng và loại kho; dữ liệu và vị trí cũ vẫn được bảo toàn. MatHang có hai bảng con NguyenVatLieu và ThanhPham; LoHang/ChiTietLo vẫn dùng chung, không tách lại bảng lô NVL/thành phẩm. Chi tiết: [WORKSHOP_STORAGE.md](WORKSHOP_STORAGE.md).

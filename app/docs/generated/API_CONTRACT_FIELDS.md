@@ -55,7 +55,7 @@ Danh sách trích từ C.fields trong service/helper. Đây là các field đư�
 | src/modules/quality/QualityService.js | validateLines | line | lot_id, inspected_quantity, passed_quantity, failed_quantity, issue |
 | src/modules/quality/QualityService.js | create | body | campaign_id, inspected_at, note, lines |
 | src/modules/reporting/ReportService.js | warehouseLookup | query | format |
-| src/modules/reporting/warehouse-lookup.js | lookup | query | warehouse_id |
+| src/modules/reporting/warehouse-lookup.js | lookup | query | warehouse_id, workshop_id |
 | src/modules/returns/CustomerReturnService.js | list | q | page, per_page, q, status, sort |
 | src/modules/returns/CustomerReturnService.js | deliveries | q | q |
 | src/modules/returns/CustomerReturnService.js | create | b | warehouse_id, receiver_id, reason, lines |

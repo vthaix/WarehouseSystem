@@ -1,0 +1,1612 @@
+TABLE 0
+[0,0,0,0] UC-29 Tiếp nhận đơn hàng
+[0,1,0,0] Tiền điều kiện
+[0,1,1,0] Bộ phận lập kế hoạch đăng nhập thành công vào hệ thống và có đơn hàng trong trạng thái chờ tiếp nhận
+[0,2,0,0] Hậu điều kiện
+[0,2,1,0] Đơn hàng được chuyển sang trạng thái Đã tiếp nhận để Bộ phận lập kế hoạch lập kế hoạch sản xuất. Ban giám đốc phê duyệt kế hoạch sản xuất tại UC-31; không phê duyệt trực tiếp đơn hàng.
+[0,3,0,0] Actor chính
+[0,3,1,0] Bộ phận lập kế hoạch
+[0,4,0,0] Actor phụ
+[0,4,1,0] Không
+[0,5,0,0] Basic flow
+[0,6,0,0] Bộ phận lập kế hoạch
+[0,6,1,0] Hệ thống
+[0,7,0,0] 1. Chọn chức năng Xem đơn hàng (DonHang)
+[0,7,1,0] 2. Hiển thị danh sách các đơn hàng chưa được tiếp nhận (DonHang)
+[0,8,0,0] 3. Chọn một đơn hàng cần tiếp nhận (DonHang)
+[0,8,1,0] 4. Hiển thị thông tin chi tiết đơn hàng (DonHang, ChiTietDonHang, MatHang, ThanhPham, KhachHang)
+[0,9,0,0] 5. Chọn Tiếp nhận đơn hàng (DonHang)
+[0,9,1,0] 
+[0,10,0,0] 
+[0,10,1,0] 
+[0,10,1,1] 6. Cập nhật trạng thái đơn hàng thành Đã tiếp nhận. (DonHang)
+[0,10,1,2] 
+[0,11,0,0] 
+[0,11,1,0] 
+[0,11,1,1] 
+[0,11,1,2] 7. Thông báo tiếp nhận đơn hàng thành công
+[0,11,1,3] 
+[0,12,0,0] 
+[0,12,1,0] 
+[0,12,1,1] 
+[0,12,1,2] 8. Kết thúc use case
+[0,12,1,3] 
+[0,13,0,0] Alternative flow
+[0,14,0,0] Exception flow
+[0,15,0,0] 2.1 Nếu không có đơn hàng nào
+[0,16,0,0] 1. Hệ thống thông báo không có đơn hàng mới (DonHang)
+[0,16,0,1] 2. Kết thúc use case
+[0,17,0,0] 5.1 Đơn hàng đã được tiếp nhận hoặc không còn được phép tiếp nhận1. Hệ thống thông báo không thể tiếp nhận lại đơn hàng. (DonHang)2. Bộ phận lập kế hoạch tải lại danh sách và chọn đơn hàng khác. (DonHang)5.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.5.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (DonHang)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.5.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 1
+[1,0,0,0] UC-06 Quản lý danh mục kho
+[1,1,0,0] Tiền điều kiện
+[1,1,1,0] Quản lý kho đã đăng nhập và có quyền quản lý danh mục kho
+[1,2,0,0] Hậu điều kiện
+[1,2,1,0] Danh mục nguyên vật liệu hoặc thành phẩm được hiển thị; Quản lý kho có thể xem, thêm, sửa hoặc xóa danh mục theo quyền được cấp.
+[1,3,0,0] Actor chính
+[1,3,1,0] Quản lý kho
+[1,4,0,0] Actor phụ
+[1,4,1,0] Không
+[1,5,0,0] Basic flow
+[1,6,0,0] Quản lý kho
+[1,6,1,0] Hệ thống
+[1,7,0,0] 1. Chọn chức năng Quản lý danh mục kho (LoaiHang)
+[1,7,1,0] 2. Hiển thị danh sách danh mục hiện có (LoaiHang)
+[1,8,0,0] 3. Chọn một danh mục để xem chi tiết (LoaiHang)
+[1,8,1,0] 4. Hiển thị tên, nhóm nguyên vật liệu hoặc thành phẩm, mô tả, ảnh nếu có và danh sách mặt hàng thuộc danh mục đã chọn. (LoaiHang, MatHang, NguyenVatLieu, ThanhPham)
+[1,9,0,0] Alternative flow
+[1,10,0,0] 3.1 Chọn Thêm
+[1,11,0,0] 1. Hệ thống thực hiện UC-06.1
+[1,12,0,0] 4.1 Chọn Xóa 
+[1,13,0,0] 1. Hệ thống thực hiện UC-06.2
+[1,14,0,0] 4.2 Chọn Sửa
+[1,15,0,0] 1. Hệ thống thực hiện UC-06.32.1 Chọn nhóm danh mục1. Quản lý kho chọn Nguyên vật liệu hoặc Thành phẩm trên thanh chức năng.2. Hệ thống hiển thị các danh mục của nhóm được chọn. (LoaiHang)3. Quay lại bước 3.
+[1,16,0,0] Exception flow
+[1,17,0,0] 2.1 Không có danh mục nào trong danh sách
+[1,18,0,0] 1. Hệ thống thông báo không tìm thấy danh mục nào (LoaiHang)
+[1,19,0,0] 2. Kết thúc UC3.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.3.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (LoaiHang)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.3.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 2
+[2,0,0,0] UC-06.1 Thêm danh mục kho
+[2,1,0,0] Tiền điều kiện
+[2,1,1,0] Quản lý kho đã đăng nhập hệ thống
+[2,2,0,0] Hậu điều kiện
+[2,2,1,0] Danh mục kho mới được thêm vào hệ thống
+[2,3,0,0] Actor chính
+[2,3,1,0] Quản lý kho
+[2,4,0,0] Actor phụ
+[2,4,1,0] Không
+[2,5,0,0] Basic flow
+[2,6,0,0] Quản lý kho
+[2,6,1,0] Hệ thống
+[2,7,0,0] 1. Chọn Thêm danh mục (LoaiHang)
+[2,7,1,0] 2. Hiển thị form thêm danh mục gồm tên danh mục, nhóm nguyên vật liệu hoặc thành phẩm, mô tả và ảnh nếu có. (LoaiHang)
+[2,8,0,0] 3. Nhập tên danh mục, mô tả và xác nhận (LoaiHang)
+[2,8,1,0] 4. Kiểm tra dữ liệu vừa được nhập (LoaiHang)
+[2,9,0,0] 
+[2,9,1,0] 5. Lưu danh mục mới vào hệ thống và thông báo thêm thành công (LoaiHang)
+[2,10,0,0] Alternative flow
+[2,11,0,0] 3.1 Hủy trước khi xác nhận
+[2,12,0,0] 1. Quản lý kho chọn Hủy; hệ thống không thêm danh mục.
+[2,13,0,0] 2. Quay lại danh sách danh mục của UC-06.
+[2,14,0,0] Exception flow
+[2,15,0,0] 4.1 Tên danh mục đã tồn tại
+[2,16,0,0] 1. Hệ thống thông báo tên danh mục đã tồn tại và yêu cầu nhập lại (LoaiHang)
+[2,17,0,0] 2. Quay lại bước 2
+[2,18,0,0] 4.2 Dữ liệu nhập bị bỏ trống
+[2,19,0,0] 1. Hệ thống thông báo vui lòng nhập đầy đủ thông tin (LoaiHang)
+[2,20,0,0] 2. Quay lại bước 2
+[2,21,0,0] 4.3 Nhóm danh mục không hợp lệ
+[2,22,0,0] 1. Hệ thống yêu cầu chọn nhóm Nguyên vật liệu hoặc Thành phẩm.
+[2,23,0,0] 2. Quay lại bước 2
+[2,24,0,0] 4.4 Ảnh không hợp lệ
+[2,25,0,0] 1. Hệ thống thông báo ảnh không được chấp nhận và yêu cầu chọn lại ảnh.
+[2,26,0,0] 2. Quay lại bước 23.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.3.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (LoaiHang)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.3.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 3
+[3,0,0,0] UC-06.2 Xóa danh mục kho
+[3,1,0,0] Tiền điều kiện
+[3,1,1,0] Quản lý kho đã đăng nhập hệ thống; danh mục kho đang được chọn từ danh sách
+[3,2,0,0] Hậu điều kiện
+[3,2,1,0] Danh mục đủ điều kiện được xóa; nếu hủy hoặc danh mục đang được sử dụng thì giữ nguyên danh mục.
+[3,3,0,0] Actor chính
+[3,3,1,0] Quản lý kho
+[3,4,0,0] Actor phụ
+[3,4,1,0] Không
+[3,5,0,0] Basic flow
+[3,6,0,0] Quản lý kho
+[3,6,1,0] Hệ thống
+[3,7,0,0] 1. Chọn Xoá danh mục (LoaiHang)
+[3,7,1,0] 2. Hệ thống yêu cầu xác nhận xóa (LoaiHang)
+[3,7,1,1] 
+[3,8,0,0] 3. Xác nhận xóa (LoaiHang)
+[3,8,1,0] 4. Hệ thống kiểm tra danh mục có đang được sử dụng hay không (LoaiHang, MatHang)
+[3,9,0,0] 
+[3,9,1,0] 5. Hệ thống xóa danh mục khỏi danh sách và thông báo xoá danh mục thành công (LoaiHang)
+[3,10,0,0] Alternative flow
+[3,11,0,0] 3.1 Hủy khi được yêu cầu xác nhận xóa
+[3,12,0,0] 1. Quản lý kho chọn Hủy
+[3,13,0,0] 2. Hệ thống hủy thao tác xóa, giữ nguyên danh mục (LoaiHang)
+[3,14,0,0] 3. Kết thúc use case
+[3,15,0,0] Exception flow
+[3,16,0,0] 4.1 Danh mục đang được sử dụng
+[3,17,0,0] 1. Hệ thống thông báo không thể xóa vì danh mục đang được sử dụng (LoaiHang)
+[3,18,0,0] 2. Kết thúc use case3.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.3.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (LoaiHang)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.3.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 4
+[4,0,0,0] UC-06.3 Sửa danh mục kho
+[4,1,0,0] Tiền điều kiện
+[4,1,1,0] Quản lý kho đã đăng nhập hệ thống; danh mục kho đang được chọn từ danh sách
+[4,2,0,0] Hậu điều kiện
+[4,2,1,0] Thông tin danh mục được cập nhật chính xác
+[4,3,0,0] Actor chính
+[4,3,1,0] Quản lý kho
+[4,4,0,0] Actor phụ
+[4,4,1,0] Không
+[4,5,0,0] Basic flow
+[4,6,0,0] Quản lý kho
+[4,6,1,0] Hệ thống
+[4,7,0,0] 1. Chọn Sửa danh mục (LoaiHang)
+[4,7,1,0] 2. Hiển thị form với tên danh mục, nhóm hàng, mô tả và ảnh hiện tại để chỉnh sửa theo các trường được phép. (LoaiHang)
+[4,8,0,0] 3. Nhập thông tin muốn chỉnh sửa (LoaiHang)
+[4,8,1,0] 
+[4,9,0,0] 4. Chọn xác nhận (LoaiHang)
+[4,9,1,0] 5. Hệ thống kiểm tra dữ liệu vừa được nhập (LoaiHang)
+[4,10,0,0] 
+[4,10,1,0] 6. Hệ thống lưu thông tin danh mục đã chỉnh sửa và thông báo chỉnh sửa thành công (LoaiHang)
+[4,11,0,0] Alternative flow
+[4,12,0,0] 4.1 Hủy trước khi xác nhận
+[4,13,0,0] 1. Quản lý kho chọn Hủy
+[4,14,0,0] 2. Hệ thống hủy thông tin đã chỉnh sửa
+[4,15,0,0] 3. Quay lại bước 2
+[4,16,0,0] Exception flow
+[4,17,0,0] 5.1 Tên danh mục đã tồn tại
+[4,18,0,0] 1. Hệ thống thông báo tên danh mục đã tồn tại và yêu cầu nhập lại (LoaiHang)
+[4,19,0,0] 2. Quay lại bước 3
+[4,20,0,0] 5.2 Nhóm hàng không hợp lệ hoặc không được phép thay đổi
+[4,21,0,0] 1. Hệ thống thông báo và yêu cầu chọn lại nhóm hàng hợp lệ.
+[4,22,0,0] 2. Quay lại bước 3
+[4,23,0,0] 5.3 Ảnh không hợp lệ
+[4,24,0,0] 1. Hệ thống thông báo ảnh không được chấp nhận và yêu cầu chọn lại.
+[4,25,0,0] 2. Quay lại bước 3
+[4,26,0,0] 5.4 Thông tin bắt buộc bị bỏ trống
+[4,27,0,0] 1. Hệ thống thông báo vui lòng nhập đầy đủ thông tin (LoaiHang)
+[4,28,0,0] 2. Quay lại bước 34.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.4.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (LoaiHang)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.4.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 5
+[5,0,0,0] UC-07 Quản lý dữ liệu danh mục kho
+[5,1,0,0] Tiền điều kiện
+[5,1,1,0] Quản lý kho đã đăng nhập thành công và có quyền quản lý dữ liệu danh mục kho
+[5,2,0,0] Hậu điều kiện
+[5,2,1,0] Hiển thị dữ liệu thuộc danh mục được chọn; Quản lý kho có thể tìm kiếm, xem, thêm, sửa hoặc xóa dữ liệu theo điều kiện cho phép.
+[5,3,0,0] Actor chính
+[5,3,1,0] Quản lý kho
+[5,4,0,0] Actor phụ
+[5,4,1,0] Không
+[5,5,0,0] Basic flow
+[5,6,0,0] Quản lý kho
+[5,6,1,0] Hệ thống
+[5,7,0,0] 1. Chọn chức năng Quản lý dữ liệu danh mục kho (LoaiHang, MatHang, NguyenVatLieu, ThanhPham)
+[5,7,1,0] 2. Hiển thị danh sách danh mục (LoaiHang)
+[5,8,0,0] 3. Chọn một danh mục để xem chi tiết dữ liệu (LoaiHang)
+[5,8,1,0] 4. Hiển thị dữ liệu chi tiết (LoaiHang, MatHang, NguyenVatLieu, ThanhPham, DonViTinh)
+[5,9,0,0] Alternative flow
+[5,10,0,0] 3.1 Tìm kiếm dữ liệu
+[5,11,0,0] 1. Quản lý kho nhập tên dữ liệu cần tìm. (MatHang, NguyenVatLieu, ThanhPham)
+[5,12,0,0] 2. Hệ thống hiển thị dữ liệu phù hợp (MatHang, NguyenVatLieu, ThanhPham)
+[5,13,0,0] 3. Kết thúc UC
+[5,14,0,0] 3.2 Chọn Thêm 
+[5,15,0,0] 1. Hệ thống thực hiện UC-07.1
+[5,16,0,0] 4.1 Chọn Xóa
+[5,17,0,0] 1. Hệ thống thực hiện UC-07.2
+[5,18,0,0] 4.2 Chọn Sửa
+[5,19,0,0] 1. Hệ thống thực hiện UC-07.3
+[5,20,0,0] Exception flow
+[5,21,0,0] 2.1 Không có dữ liệu
+[5,22,0,0] 1. Hệ thống thông báo không tìm thấy dữ liệu (MatHang, NguyenVatLieu, ThanhPham)
+[5,23,0,0] 2. Quay lại bước 13.3 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.3.4 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (MatHang, NguyenVatLieu, ThanhPham)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.3.5 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 6
+[6,0,0,0] UC-07.1 Thêm dữ liệu danh mục kho
+[6,1,0,0] Tiền điều kiện
+[6,1,1,0] Quản lý kho đăng nhập thành công vào hệ thống
+[6,2,0,0] Hậu điều kiện
+[6,2,1,0] Dữ liệu mới được thêm vào danh mục
+[6,3,0,0] Actor chính
+[6,3,1,0] Quản lý kho
+[6,4,0,0] Actor phụ
+[6,4,1,0] Không
+[6,5,0,0] Basic flow
+[6,6,0,0] Quản lý kho
+[6,6,1,0] Hệ thống
+[6,7,0,0] 1. Chọn Thêm dữ liệu (MatHang, NguyenVatLieu, ThanhPham)
+[6,7,1,0] 2. Hiển thị form của loại dữ liệu đang thêm. Đối với mặt hàng, hiển thị tên, danh mục, đơn vị tính, giá, ảnh, mô tả và trạng thái theo các trường được phép nhập; mã và thời điểm tạo do hệ thống ghi nhận. (MatHang, NguyenVatLieu, ThanhPham, LoaiHang, DonViTinh)
+[6,8,0,0] 3. Nhập thông tin và xác nhận (MatHang, NguyenVatLieu, ThanhPham)
+[6,8,1,0] 4. Kiểm tra dữ liệu nhập (MatHang, NguyenVatLieu, ThanhPham, LoaiHang, DonViTinh)
+[6,9,0,0] 
+[6,9,1,0] 5. Lưu dữ liệu mới vào hệ thống và thông báo thêm thành công (MatHang, NguyenVatLieu, ThanhPham)
+[6,10,0,0] Alternative flow
+[6,11,0,0] 3.1 Hủy trước khi xác nhận
+[6,12,0,0] 1. Quản lý kho chọn Hủy
+[6,13,0,0] 2. Hệ thống hủy thông tin đã nhập
+[6,14,0,0] 3. Kết thúc use case
+[6,15,0,0] Exception flow
+[6,16,0,0] 3.1 Tên đã tồn tại
+[6,17,0,0] 1. Hệ thống thông báo tên đã tồn tại và yêu cầu nhập lại (MatHang, NguyenVatLieu, ThanhPham)
+[6,18,0,0] 2. Quay lại bước 3
+[6,19,0,0] 3.2 Dữ liệu để trống
+[6,20,0,0] 1. Hệ thống thông báo vui lòng nhập đầy đủ thông tin (MatHang, NguyenVatLieu, ThanhPham)
+[6,21,0,0] 2. Quay lại bước 3
+[6,22,0,0] 3.3 Nếu dữ liệu là số và Quản lý kho nhập chữ
+[6,23,0,0] 1. Hệ thống thông báo lỗi định dạng và yêu cầu nhập lại (MatHang, NguyenVatLieu, ThanhPham)
+[6,24,0,0] 2. Quay lại bước 3
+[6,25,0,0] 3.4 Nếu dữ liệu là số và Quản lý kho nhập giá trị < 0
+[6,26,0,0] 1. Hệ thống thông báo giá trị phải lớn hơn 0 và yêu cầu nhập lại (MatHang, NguyenVatLieu, ThanhPham)
+[6,27,0,0] 2. Quay lại bước 34.1 Đơn vị tính, danh mục hoặc dữ liệu liên quan không còn được sử dụng1. Hệ thống thông báo nội dung không hợp lệ.2. Quản lý kho chọn lại dữ liệu đang được sử dụng rồi xác nhận. (MatHang, NguyenVatLieu, ThanhPham)3.5 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.3.6 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (MatHang, NguyenVatLieu, ThanhPham)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.3.7 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 7
+[7,0,0,0] UC-07.2 Xóa dữ liệu danh mục kho
+[7,1,0,0] Tiền điều kiện
+[7,1,1,0] Quản lý kho đã đăng nhập hệ thống; dữ liệu đang được chọn từ danh mục
+[7,2,0,0] Hậu điều kiện
+[7,2,1,0] Dữ liệu được xóa khỏi danh mục
+[7,3,0,0] Actor chính
+[7,3,1,0] Quản lý kho
+[7,4,0,0] Actor phụ
+[7,4,1,0] Không
+[7,5,0,0] Basic flow
+[7,6,0,0] Quản lý kho
+[7,6,1,0] Hệ thống
+[7,7,0,0] 1. Chọn Xóa (MatHang, NguyenVatLieu, ThanhPham)
+[7,7,1,0] 2. Hệ thống kiểm tra dữ liệu có còn tồn kho/phát sinh giao dịch hay không (MatHang, NguyenVatLieu, ThanhPham, TonKho, ChiTietPhieuKho, ChiTietDonHang, ChiTietDonMuaHang, ChiTietKeHoachSanXuat, ChiTietKeHoachMuaBan)
+[7,8,0,0]  
+[7,8,1,0] 3. Hệ thống yêu cầu xác nhận xóa (MatHang, NguyenVatLieu, ThanhPham)
+[7,9,0,0] 4. Xác nhận xóa (MatHang, NguyenVatLieu, ThanhPham)
+[7,9,1,0] 5. Hệ thống xóa dữ liệu khỏi danh sách (MatHang, NguyenVatLieu, ThanhPham)
+[7,10,0,0] Alternative flow
+[7,11,0,0] 4.1 Hủy khi được yêu cầu xác nhận xóa
+[7,12,0,0] 1. Quản lý kho chọn Hủy
+[7,13,0,0] 2. Hệ thống hủy thao tác xóa
+[7,14,0,0] 3. Kết thúc use case
+[7,15,0,0] Exception flow
+[7,16,0,0] 2.1 Dữ liệu còn tồn kho hoặc đang được sử dụng
+[7,17,0,0] 1. Hệ thống thông báo không thể xóa
+[7,18,0,0] 2. Kết thúc use case4.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.4.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (MatHang, NguyenVatLieu, ThanhPham)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.4.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 8
+[8,0,0,0] UC-07.3 Sửa dữ liệu danh mục kho
+[8,1,0,0] Tiền điều kiện
+[8,1,1,0] Quản lý kho đã đăng nhập hệ thống; dữ liệu đang được chọn từ danh mục
+[8,2,0,0] Hậu điều kiện
+[8,2,1,0] Thông tin dữ liệu được cập nhật chính xác
+[8,3,0,0] Actor chính
+[8,3,1,0] Quản lý kho
+[8,4,0,0] Actor phụ
+[8,4,1,0] Không
+[8,5,0,0] Basic flow
+[8,6,0,0] Quản lý kho
+[8,6,1,0] Hệ thống
+[8,7,0,0] 1. Chọn Sửa (MatHang, NguyenVatLieu, ThanhPham)
+[8,7,1,0] 2. Hệ thống mở form nhập cho phép chỉnh sửa các thông tin được phép chỉnh sửa (MatHang, NguyenVatLieu, ThanhPham, LoaiHang, DonViTinh)
+[8,8,0,0] 3. Chỉnh sửa các thông tin được phép của dữ liệu đang chọn, như tên mặt hàng, danh mục, đơn vị tính, giá, ảnh hoặc mô tả, rồi xác nhận. (MatHang, NguyenVatLieu, ThanhPham, LoaiHang, DonViTinh)
+[8,8,1,0] 4. Hệ thống kiểm tra thông tin vừa được nhập (MatHang, NguyenVatLieu, ThanhPham, LoaiHang, DonViTinh)
+[8,9,0,0] 
+[8,9,1,0] 5. Hệ thống lưu thông tin mới và thông báo chỉnh sửa thành công. (MatHang, NguyenVatLieu, ThanhPham)
+[8,10,0,0] Alternative flow
+[8,11,0,0] 3.1 Hủy trước khi xác nhận
+[8,12,0,0] 1. Quản lý kho chọn Hủy
+[8,13,0,0] 2. Hệ thống hủy thông tin đã chỉnh sửa
+[8,14,0,0] 3. Kết thúc use case
+[8,15,0,0] Exception flow
+[8,16,0,0] 4.1 Tên bị trùng
+[8,17,0,0] 1. Hệ thống thông báo tên đã tồn tại và yêu cầu nhập lại (MatHang, NguyenVatLieu, ThanhPham)
+[8,18,0,0] 2. Quay lại bước 3
+[8,19,0,0] 4.2 Nếu dữ liệu bị nhập sai định dạng
+[8,20,0,0] 1. Hệ thống thông báo lỗi định dạng và yêu cầu nhập lại (MatHang, NguyenVatLieu, ThanhPham)
+[8,21,0,0] 2. Quay lại bước 3
+[8,22,0,0] 4.3 Dữ liệu để trống
+[8,23,0,0] 1. Hệ thống thông báo vui lòng nhập đầy đủ thông tin (MatHang, NguyenVatLieu, ThanhPham)
+[8,24,0,0] 2. Quay lại bước 34.4 Thay đổi thông tin có ảnh hưởng đến dữ liệu đã sử dụng1. Hệ thống kiểm tra các chứng từ liên quan. (MatHang, NguyenVatLieu, ThanhPham)2. Nếu thông tin không được phép thay đổi, hệ thống thông báo và giữ nguyên thông tin cũ.3.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.3.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (MatHang, NguyenVatLieu, ThanhPham)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.3.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 9
+[9,0,0,0] UC-08 Quản lý nhập kho
+[9,1,0,0] Tiền điều kiện
+[9,1,1,0] Quản lý kho đã đăng nhập
+[9,2,0,0] Hậu điều kiện
+[9,2,1,0] Danh sách chi tiết các phiếu nhập kho được hiển thị
+[9,3,0,0] Actor chính
+[9,3,1,0] Quản lý kho
+[9,4,0,0] Actor phụ
+[9,4,1,0] Không
+[9,5,0,0] Basic flow
+[9,6,0,0] Quản lý kho
+[9,6,1,0] Hệ thống
+[9,7,0,0] 1. Chọn chức năng Quản lý nhập kho
+[9,7,1,0] 2. Hiển thị danh sách phiếu nhập kho (PhieuKho)
+[9,8,0,0] 3. Chọn một phiếu nhập kho để xem chi tiết (PhieuKho)
+[9,8,1,0] 4. Hiển thị thông tin chi tiết phiếu nhập kho (PhieuKho, ChiTietPhieuKho, MatHang, NguyenVatLieu, ThanhPham, LoHang, ChiTietLo, Kho, ViTriKho)
+[9,9,0,0] Alternative flow
+[9,10,0,0] 3.1 Tìm kiếm phiếu nhập kho
+[9,11,0,0] 1. Nhập mã phiếu để tìm kiếm phiếu nhập kho (PhieuKho, ChiTietPhieuKho)
+[9,12,0,0] 2. Hệ thống hiển thị các phiếu nhập kho phù hợp (PhieuKho, ChiTietPhieuKho)
+[9,13,0,0] 3. Đi đến bước 3
+[9,14,0,0] Exception flow
+[9,15,0,0] 2.1 Không có phiếu nhập kho
+[9,16,0,0] 1. Hệ thống thông báo không tìm thấy phiếu nhập kho trong hệ thống (PhieuKho, ChiTietPhieuKho)
+[9,17,0,0] 2. Kết thúc UC3.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.3.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (PhieuKho, ChiTietPhieuKho)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.3.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 10
+[10,0,0,0] UC-09 Quản lý xuất kho
+[10,1,0,0] Tiền điều kiện
+[10,1,1,0] Quản lý kho đã đăng nhập
+[10,2,0,0] Hậu điều kiện
+[10,2,1,0] Danh sách phiếu xuất kho được hiển thị
+[10,3,0,0] Actor chính
+[10,3,1,0] Quản lý kho
+[10,4,0,0] Actor phụ
+[10,4,1,0] Không
+[10,5,0,0] Basic flow
+[10,6,0,0] Quản lý kho
+[10,6,1,0] Hệ thống
+[10,7,0,0] 1. Chọn chức năng Quản lý xuất kho
+[10,7,1,0] 2. Hiển thị danh sách phiếu xuất kho (PhieuKho)
+[10,8,0,0] 3. Chọn một phiếu xuất kho để xem chi tiết (PhieuKho)
+[10,8,1,0] 4. Hiển thị thông tin chi tiết phiếu xuất kho (PhieuKho, ChiTietPhieuKho, MatHang, NguyenVatLieu, ThanhPham, LoHang, ChiTietLo, Kho, ViTriKho)
+[10,9,0,0] Alternative flow
+[10,10,0,0] 3.1 Tìm kiếm phiếu xuất kho
+[10,11,0,0] 1. Nhập mã phiếu để tìm kiếm phiếu xuất kho. (PhieuKho, ChiTietPhieuKho)
+[10,12,0,0] 2. Hệ thống hiển thị các phiếu xuất kho phù hợp. (PhieuKho, ChiTietPhieuKho)
+[10,13,0,0] 3. Đi đến bước 3
+[10,14,0,0] Exception flow
+[10,15,0,0] 2.1 Không có phiếu xuất kho phù hợp
+[10,16,0,0] 1. Hệ thống thông báo không tìm thấy phiếu xuất kho phù hợp (PhieuKho, ChiTietPhieuKho)
+[10,17,0,0] 2. Quay lại bước 13.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.3.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (PhieuKho, ChiTietPhieuKho)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.3.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 11
+[11,0,0,0] UC-13 Lập đợt kiểm kê
+[11,1,0,0] Tiền điều kiện
+[11,1,1,0] Ban giám đốc đã đăng nhập vào hệ thống
+[11,2,0,0] Hậu điều kiện
+[11,2,1,0] Đợt kiểm kê được lưu thành công; những nhân viên QC/AC và Ban kiểm kê được chọn nhận thông báo, người được chỉ định lập biên bản nhận thông tin phân công.
+[11,3,0,0] Actor chính
+[11,3,1,0] Ban giám đốc
+[11,4,0,0] Actor phụ
+[11,4,1,0] Không
+[11,5,0,0] Basic flow
+[11,6,0,0] Ban giám đốc
+[11,6,1,0] Hệ thống
+[11,7,0,0] 1. Chọn chức năng Lập đợt kiểm kê. (DotKiemKe, CongViec, LoLichKiemTra)
+[11,7,1,0] 2. Hiển thị form gồm tên đợt, mô tả, lô cần kiểm, thời gian, danh sách nhân viên và người lập biên bản. (KeHoachMuaBan, KeHoachSanXuat, LoHang, ChiTietLo, BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, NguoiDung, NguoiDungVaiTro, VaiTro, NhanVien, BoPhan)
+[11,8,0,0] 3. Chọn lô nguyên vật liệu từ kế hoạch mua hoặc chọn lô thành phẩm và từng phần thành phẩm cần kiểm. Chọn thời gian, mô tả, từng nhân viên thuộc QC/AC, Ban kiểm kê và một người lập biên bản trong những người đã chọn. (KeHoachMuaBan, KeHoachSanXuat, LoHang, ChiTietLo, BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, NguoiDung, NguoiDungVaiTro, VaiTro)
+[11,8,1,0] 4. Hiển thị nhân viên theo hai nhóm QC/AC và Ban kiểm kê; cho phép chọn nhiều người của một nhóm hoặc cả hai nhóm. Kiểm tra lô, phần lô, ngày nhận và phân công. (NguoiDung, NguoiDungVaiTro, VaiTro, LoHang, ChiTietLo, LoLichKiemTra, PhanCongLichKiemTra, PhanCongCongViec)
+[11,9,0,0] 5. Xác nhận lập đợt kiểm kê.
+[11,9,1,0] 6. Lưu đợt kiểm kê; thông báo đến từng người được giao; thông báo tạo thành công. Người thuộc QC/AC kiểm chất lượng, người thuộc Ban kiểm kê kiểm số lượng. (DotKiemKe, CongViec, PhanCongCongViec, LoLichKiemTra, PhanCongLichKiemTra, ThongBao)
+[11,10,0,0] Alternative flow
+[11,11,0,0] 5.1 Ban giám đốc chọn nhập lại
+[11,12,0,0] 2. Hệ thống hủy thông tin đã nhập
+[11,13,0,0] 3. Quay lại bước 33.1 Chọn nhân viên1. Ban giám đốc mở danh sách nhân viên của nhóm QC/AC hoặc Ban kiểm kê. (NguoiDung, NguoiDungVaiTro, CongViec, PhanCongCongViec)2. Hệ thống hiển thị thông tin nhân viên để lựa chọn. (NguoiDung, NguoiDungVaiTro, CongViec, PhanCongCongViec, DotKiemKe, LoLichKiemTra, PhanCongLichKiemTra)3. Ban giám đốc chọn từng người rồi xác nhận; hệ thống hiển thị tên dưới nhóm tương ứng. (DotKiemKe, CongViec, PhanCongCongViec, LoLichKiemTra, PhanCongLichKiemTra)4. Tiếp tục bước 3.3.2 Chọn lô thành phẩm1. Ban giám đốc chọn lô thành phẩm. (LoHang, ChiTietLo, MatHang, ThanhPham)2. Hệ thống hiển thị các phần đã được tạo từ báo cáo thành phẩm của lô. (MatHang, ThanhPham, DotKiemKe, CongViec, PhanCongCongViec, LoLichKiemTra, PhanCongLichKiemTra)3. Ban giám đốc chọn phần cần kiểm; không lấy lại tổng số lượng cả lô cho mỗi phần. (LoHang, ChiTietLo, DotKiemKe, CongViec, PhanCongCongViec, LoLichKiemTra, PhanCongLichKiemTra)4. Tiếp tục bước 3.3.3 Chọn lô nguyên vật liệu sắp nhận1. Ban giám đốc chọn kế hoạch mua phù hợp. (KeHoachMuaBan, ChiTietKeHoachMuaBan)2. Hệ thống lấy ngày nhận dự kiến làm ngày bắt đầu gợi ý. (DotKiemKe, CongViec, LoLichKiemTra)3. Chỉ khi đã ghi nhận phần hàng thực nhận mới chọn được phần lô đó để thực hiện kiểm tra. (LoHang, ChiTietLo, DotKiemKe, CongViec, PhanCongCongViec, LoLichKiemTra, PhanCongLichKiemTra)4. Tiếp tục bước 3.4.2 Cho phép kiểm tra sớm để thử nghiệm1. Khi chưa đến thời gian bắt đầu, người có quyền chọn ô xác nhận giả lập tại thao tác bắt đầu. (DotKiemKe, CongViec, LoLichKiemTra)2. Hệ thống cho phép bắt đầu sớm trong chế độ thử nghiệm.3. Nếu không chọn giả lập, giữ ràng buộc thời gian thông thường; việc giả lập không tạo thêm hàng thực nhận và không bỏ qua quyền phân công. (NguoiDung, NguoiDungVaiTro, CongViec, PhanCongCongViec)
+[11,14,0,0] Exception flow
+[11,15,0,0] 4.1 Thời gian/phạm vi kiểm kê không hợp lệ
+[11,16,0,0] 1. Hệ thống thông báo lỗi và yêu cầu nhập lại (DotKiemKe, CongViec, PhanCongCongViec, LoLichKiemTra, PhanCongLichKiemTra)
+[11,17,0,0] 2. Quay lại bước 24.3 Chưa chọn nhân viên hoặc người lập biên bản không thuộc danh sách phân công1. Hệ thống yêu cầu chọn nhân viên thuộc QC/AC hoặc Ban kiểm kê và người lập biên bản hợp lệ. (NguoiDung, NguoiDungVaiTro, CongViec, PhanCongCongViec, PhieuKiemKe, LoLichKiemTra)2. Quay lại bước 3.4.4 Ngày bắt đầu trước ngày nhận hàng hoặc thời gian kết thúc trước thời gian bắt đầu1. Hệ thống thông báo thời gian không hợp lệ.2. Ban giám đốc điều chỉnh thời gian rồi xác nhận lại.4.5 Lô hoặc phần lô không phù hợp, đã được kiểm tra hoặc đang thuộc một đợt còn hiệu lực1. Hệ thống thông báo không thể chọn phần lô này. (LoHang, ChiTietLo)2. Ban giám đốc chọn lại phạm vi kiểm.5.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.5.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (DotKiemKe, CongViec, PhanCongCongViec, LoLichKiemTra, PhanCongLichKiemTra)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.5.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 12
+[12,0,0,0] UC-17 Phê duyệt đề xuất xử lý ngoại lệ
+[12,1,0,0] Tiền điều kiện
+[12,1,1,0] Chủ xưởng đã đăng nhập; có đề xuất xử lý ngoại lệ thuộc xưởng đang chờ phê duyệt.
+[12,2,0,0] Hậu điều kiện
+[12,2,1,0] Đề xuất được phê duyệt hoặc từ chối và trạng thái được cập nhật
+[12,3,0,0] Actor chính
+[12,3,1,0] Chủ xưởng
+[12,4,0,0] Actor phụ
+[12,4,1,0] Không
+[12,5,0,0] Basic flow
+[12,6,0,0] Chủ xưởng
+[12,6,1,0] Hệ thống
+[12,7,0,0] 1. Chọn chức năng Phê duyệt đề xuất xử lý ngoại lệ (BanDeXuatXuLyNgoaiLe, KetQuaXuLyNgoaiLe)
+[12,7,1,0] 2. Hiển thị danh sách đề xuất đang chờ phê duyệt (BanDeXuatXuLyNgoaiLe)
+[12,8,0,0] 3. Chọn một đề xuất để xem chi tiết (BanDeXuatXuLyNgoaiLe)
+[12,8,1,0] 4. Hiển thị thông tin chi tiết đề xuất, loại hàng, số lượng, hàng bị vấn đề gì (BanDeXuatXuLyNgoaiLe, KetQuaXuLyNgoaiLe, PhieuKiemKe, ChiTietPhieuKiemKe, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC, LoHang, ChiTietLo, MatHang, NguyenVatLieu, ThanhPham, LoaiHang)
+[12,9,0,0] 5. Chọn Phê duyệt (BanDeXuatXuLyNgoaiLe)
+[12,9,1,0] 6. Lưu quyết định phê duyệt và thông báo cho Quản lý kho. Việc phê duyệt không tự thay đổi số lượng tồn kho; Quản lý kho thực hiện phương án được chấp thuận ở bước xử lý riêng. (BanDeXuatXuLyNgoaiLe, KetQuaXuLyNgoaiLe, ThongBao)
+[12,10,0,0] Alternative flow
+[12,11,0,0] 5.1 Không đồng ý phương án đề xuất
+[12,12,0,0] 1. Chủ xưởng chọn Không đồng ý, nhập lý do và hướng xử lý theo ý kiến của chủ xưởng.
+[12,13,0,0] 2. Hệ thống lưu quyết định, lý do và hướng xử lý; thông báo cho Quản lý kho để thực hiện. (BanDeXuatXuLyNgoaiLe, KetQuaXuLyNgoaiLe, ThongBao)
+[12,14,0,0] 3. Quay lại bước 1
+[12,15,0,0] 5.2 Chưa nhập nội dung bắt buộc khi không đồng ý
+[12,16,0,0] 1. Chủ xưởng chọn Không đồng ý nhưng chưa nhập lý do hoặc hướng xử lý bắt buộc.
+[12,17,0,0] 2. Hệ thống yêu cầu bổ sung nội dung; chưa gửi quyết định. (BanDeXuatXuLyNgoaiLe, KetQuaXuLyNgoaiLe)
+[12,18,0,0] 3. Quay lại bước 4
+[12,19,0,0] Exception flow
+[12,20,0,0] 2.1 Không có đề xuất nào đang chờ phê duyệt
+[12,21,0,0] 1. Hệ thống thông báo không có đề xuất nào đang chờ phê duyệt (BanDeXuatXuLyNgoaiLe, KetQuaXuLyNgoaiLe)
+[12,22,0,0] 2. Kết thúc use case
+[12,23,0,0] 4.1 Đề xuất không còn hiệu lực (đã được xử lý bởi người khác)
+[12,24,0,0] 1. Hệ thống thông báo đề xuất không còn hiệu lực (BanDeXuatXuLyNgoaiLe, KetQuaXuLyNgoaiLe)
+[12,25,0,0] 2. Quay lại bước 15.3 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.5.4 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (BanDeXuatXuLyNgoaiLe, KetQuaXuLyNgoaiLe)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.5.5 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 13
+[13,0,0,0] UC-18 Xem danh sách hàng tồn kho
+[13,1,0,0] Tiền điều kiện
+[13,1,1,0] Ban giám đốc, Quản lý kho hoặc Chủ xưởng đã đăng nhập và có quyền xem tồn kho.
+[13,2,0,0] Hậu điều kiện
+[13,2,1,0] Danh sách hàng tồn kho được hiển thị theo điều kiện lựa chọn
+[13,3,0,0] Actor chính
+[13,3,1,0] Ban giám đốc, Chủ xưởng, Quản lý kho
+[13,4,0,0] Actor phụ
+[13,4,1,0] Không
+[13,5,0,0] Basic flow
+[13,6,0,0] Ban giám đốc / Quản lý kho / Chủ xưởng
+[13,6,1,0] Hệ thống
+[13,7,0,0] 1. Chọn chức năng Xem danh sách hàng tồn kho (TonKho, PhanCongKho)
+[13,7,1,0] 2. Hiển thị form điều kiện lọc (kho, thời gian, mặt hàng) (Kho, MatHang)
+[13,8,0,0] 3. Chọn điều kiện lọc và xác nhận (Kho, MatHang)
+[13,8,1,0] 4. Tổng hợp và hiển thị danh sách hàng tồn kho tương ứng (TonKho, Kho, ViTriKho, LoHang, ChiTietLo, MatHang, NguyenVatLieu, ThanhPham, DonViTinh)
+[13,9,0,0] Alternative flow
+[13,10,0,0] 2.1 Xuất báo cáo ra file
+[13,11,0,0] 1. Ban giám đốc chọn Xuất file (TonKho)
+[13,12,0,0] 2. Hệ thống tạo và tải về file báo cáo
+[13,13,0,0] 3. Quay lại bước 2
+[13,14,0,0] Exception flow
+[13,15,0,0] 3.1 Điều kiện thời gian lọc không hợp lệ (ví dụ: từ ngày lớn hơn đến ngày)
+[13,16,0,0] 1. Hệ thống thông báo điều kiện thời gian không hợp lệ và yêu cầu chọn lại
+[13,17,0,0] 2. Quay lại bước 2
+[13,18,0,0] 4.1 Không có dữ liệu phù hợp với điều kiện lọc
+[13,19,0,0] 1. Hệ thống thông báo không có dữ liệu tồn kho phù hợp (TonKho, PhanCongKho)
+[13,20,0,0] 2. Quay lại bước 14.2 Không tải được báo cáo1. Hệ thống thông báo không thể tải file.2. Người dùng vẫn xem được dữ liệu trên màn hình nếu danh sách đã tải thành công; kiểm tra lại và thử tải file sau. (TonKho)3.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.3.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (TonKho)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.3.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 14
+[14,0,0,0] UC-19 Xem hồ sơ xuất kho
+[14,1,0,0] Tiền điều kiện
+[14,1,1,0] Ban giám đốc, Quản lý kho hoặc Chủ xưởng đã đăng nhập và được xem hồ sơ kho trong phạm vi quyền hạn.
+[14,2,0,0] Hậu điều kiện
+[14,2,1,0] Hồ sơ xuất kho được hiển thị theo điều kiện lựa chọn
+[14,3,0,0] Actor chính
+[14,3,1,0] Ban giám đốc, Quản lý kho, Chủ xưởng
+[14,4,0,0] Actor phụ
+[14,4,1,0] Không
+[14,5,0,0] Basic flow
+[14,6,0,0] Ban giám đốc / Quản lý kho / Chủ xưởng
+[14,6,1,0] Hệ thống
+[14,7,0,0] 1. Chọn chức năng Xem hồ sơ xuất kho
+[14,7,1,0] 2. Hiển thị form điều kiện lọc (kho, thời gian, mặt hàng) (Kho, MatHang, PhieuKho)
+[14,8,0,0] 3. Chọn điều kiện lọc và xác nhận (Kho, MatHang, PhieuKho)
+[14,8,1,0] 4. Tổng hợp và hiển thị hồ sơ xuất kho tương ứng (PhieuKho, ChiTietPhieuKho, MatHang, ThanhPham, NguyenVatLieu, LoHang, ChiTietLo, Kho, ViTriKho)
+[14,9,0,0] Alternative flow
+[14,10,0,0] 2.1 Xuất báo cáo ra file
+[14,11,0,0] 1. Ban giám đốc chọn Xuất file (PhieuKho, ChiTietPhieuKho)
+[14,12,0,0] 2. Hệ thống tạo và tải về file báo cáo
+[14,13,0,0] 3. Quay lại bước 23.1 Xem hồ sơ của xưởng1. Chủ xưởng chọn điều kiện xem hồ sơ.2. Hệ thống chỉ hiển thị phiếu thuộc xưởng mà tài khoản phụ trách. (Xuong, PhieuKho, ChiTietPhieuKho)3. Quay lại bước 3.
+[14,14,0,0] Exception flow
+[14,15,0,0] 3.1 Điều kiện thời gian lọc không hợp lệ (ví dụ: từ ngày lớn hơn đến ngày)
+[14,16,0,0] 1. Hệ thống thông báo điều kiện thời gian không hợp lệ và yêu cầu chọn lại
+[14,17,0,0] 2. Quay lại bước 2
+[14,18,0,0] 4.1 Không có dữ liệu phù hợp với điều kiện lọc
+[14,19,0,0] 1. Hệ thống thông báo không có dữ liệu xuất kho phù hợp (PhieuKho, ChiTietPhieuKho)
+[14,20,0,0] 2. Quay lại bước 14.2 Không tải được báo cáo1. Hệ thống thông báo không thể tải file.2. Người dùng vẫn xem được dữ liệu trên màn hình nếu danh sách đã tải thành công; kiểm tra lại và thử tải file sau. (PhieuKho, ChiTietPhieuKho)3.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.3.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (PhieuKho, ChiTietPhieuKho)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.3.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 15
+[15,0,0,0] UC-20 Xem hồ sơ nhập kho
+[15,1,0,0] Tiền điều kiện
+[15,1,1,0] Ban giám đốc, Quản lý kho hoặc Chủ xưởng đã đăng nhập và được xem hồ sơ kho trong phạm vi quyền hạn.
+[15,2,0,0] Hậu điều kiện
+[15,2,1,0] Hồ sơ nhập kho được hiển thị theo điều kiện lựa chọn
+[15,3,0,0] Actor chính
+[15,3,1,0] Ban giám đốc, Quản lý kho, Chủ xưởng
+[15,4,0,0] Actor phụ
+[15,4,1,0] Không
+[15,5,0,0] Basic flow
+[15,6,0,0] Ban giám đốc / Quản lý kho / Chủ xưởng
+[15,6,1,0] Hệ thống
+[15,7,0,0] 1. Chọn chức năng Xem hồ sơ nhập kho
+[15,7,1,0] 2. Hiển thị form điều kiện lọc (kho, thời gian, mặt hàng) (Kho, MatHang, PhieuKho)
+[15,8,0,0] 3. Chọn điều kiện lọc và xác nhận (Kho, MatHang, PhieuKho)
+[15,8,1,0] 4. Tổng hợp và hiển thị hồ sơ nhập kho tương ứng (PhieuKho, ChiTietPhieuKho, MatHang, ThanhPham, NguyenVatLieu, LoHang, ChiTietLo, Kho, ViTriKho)
+[15,9,0,0] Alternative flow
+[15,10,0,0] 2.1 Xuất báo cáo ra file
+[15,11,0,0] 1. Ban giám đốc chọn Xuất file (PhieuKho, ChiTietPhieuKho)
+[15,12,0,0] 2. Hệ thống tạo và tải về file báo cáo
+[15,13,0,0] 3. Quay lại bước 23.1 Xem hồ sơ của xưởng1. Chủ xưởng chọn điều kiện xem hồ sơ.2. Hệ thống chỉ hiển thị phiếu thuộc xưởng mà tài khoản phụ trách. (Xuong, PhieuKho, ChiTietPhieuKho)3. Quay lại bước 3.
+[15,14,0,0] Exception flow
+[15,15,0,0] 3.1 Điều kiện thời gian lọc không hợp lệ (ví dụ: từ ngày lớn hơn đến ngày)
+[15,16,0,0] 1. Hệ thống thông báo điều kiện thời gian không hợp lệ và yêu cầu chọn lại
+[15,17,0,0] 2. Quay lại bước 2
+[15,18,0,0] 4.1 Không có dữ liệu phù hợp với điều kiện lọc
+[15,19,0,0] 1. Hệ thống thông báo không có dữ liệu nhập kho phù hợp (PhieuKho, ChiTietPhieuKho)
+[15,20,0,0] 2. Quay lại bước 14.2 Không tải được báo cáo1. Hệ thống thông báo không thể tải file.2. Người dùng vẫn xem được dữ liệu trên màn hình nếu danh sách đã tải thành công; kiểm tra lại và thử tải file sau. (PhieuKho, ChiTietPhieuKho)3.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.3.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (PhieuKho, ChiTietPhieuKho)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.3.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 16
+[16,0,0,0] UC-21 Xem báo cáo kiểm kê
+[16,1,0,0] Tiền điều kiện
+[16,1,1,0] Ban giám đốc đã đăng nhập và có quyền xem báo cáo kiểm kê
+[16,2,0,0] Hậu điều kiện
+[16,2,1,0] Báo cáo kiểm kê được hiển thị theo điều kiện lựa chọn
+[16,3,0,0] Actor chính
+[16,3,1,0] Ban giám đốc
+[16,4,0,0] Actor phụ
+[16,4,1,0] Không
+[16,5,0,0] Basic flow
+[16,6,0,0] Ban giám đốc
+[16,6,1,0] Hệ thống
+[16,7,0,0] 1. Chọn chức năng Xem báo cáo kiểm kê
+[16,7,1,0] 2. Hiển thị form điều kiện lọc báo cáo (đợt kiểm kê, thời gian, khu vực) (DotKiemKe, CongViec, PhieuKiemKe, Kho)
+[16,8,0,0] 3. Chọn điều kiện lọc và xác nhận (DotKiemKe, PhieuKiemKe, Kho)
+[16,8,1,0] 4. Tổng hợp và hiển thị báo cáo kiểm kê tương ứng (bao gồm số liệu chênh lệch) (PhieuKiemKe, ChiTietPhieuKiemKe, DotKiemKe, Kho, MatHang, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)
+[16,9,0,0] Alternative flow
+[16,10,0,0] 2.1 Xuất báo cáo ra file
+[16,11,0,0] 1. Ban giám đốc chọn Xuất file (PhieuKiemKe, ChiTietPhieuKiemKe)
+[16,12,0,0] 2. Hệ thống tạo và tải về file báo cáo
+[16,13,0,0] 3. Quay lại bước 2
+[16,14,0,0] Exception flow
+[16,15,0,0] 3.1 Điều kiện thời gian lọc không hợp lệ (ví dụ: từ ngày lớn hơn đến ngày)
+[16,16,0,0] 1. Hệ thống thông báo điều kiện thời gian không hợp lệ và yêu cầu chọn lại
+[16,17,0,0] 2. Quay lại bước 2
+[16,18,0,0] 4.1 Không có dữ liệu phù hợp với điều kiện lọc
+[16,19,0,0] 1. Hệ thống thông báo không có dữ liệu kiểm kê phù hợp (PhieuKiemKe, ChiTietPhieuKiemKe)
+[16,20,0,0] 2. Quay lại bước 14.2 Không tải được báo cáo1. Hệ thống thông báo không thể tải file.2. Người dùng vẫn xem được dữ liệu trên màn hình nếu danh sách đã tải thành công; kiểm tra lại và thử tải file sau. (PhieuKiemKe, ChiTietPhieuKiemKe)3.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.3.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (PhieuKiemKe, ChiTietPhieuKiemKe)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.3.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 17
+[17,0,0,0] UC-25 Quản lý công việc
+[17,1,0,0] Tiền điều kiện
+[17,1,1,0] Ban giám đốc đã đăng nhập và có quyền quản lý công việc
+[17,2,0,0] Hậu điều kiện
+[17,2,1,0] Công việc được xem, cập nhật hoặc xoá theo thao tác của Ban giám đốc
+[17,3,0,0] Actor chính
+[17,3,1,0] Ban giám đốc
+[17,4,0,0] Actor phụ
+[17,4,1,0] Không
+[17,5,0,0] Basic flow
+[17,6,0,0] Ban giám đốc
+[17,6,1,0] Hệ thống
+[17,7,0,0] 1. Chọn chức năng Quản lý công việc
+[17,7,1,0] 2. Hiển thị danh sách công việc (CongViec)
+[17,8,0,0] 3. Chọn công việc cụ thể (CongViec)
+[17,8,1,0] 4. Hiển thị thông tin chi tiết công việc gồm: tên công việc, mô tả, ngày bắt đầu, ngày kết thúc, độ ưu tiên, trạng thái, nhân viên được phân công (CongViec, PhanCongCongViec, NguoiDung, NhanVien)
+[17,9,0,0] 
+[17,9,1,0] 5. Kết thúc UC
+[17,10,0,0] Alternative flow
+[17,11,0,0] 4.1 Nếu giám đốc muốn sửa công việc, chọn Chỉnh sửa
+[17,12,0,0] 1. Đi đến UC-25.1 Chỉnh sửa công việc
+[17,13,0,0] 4.2 Nếu giám đốc muốn xoá công việc, chọn Xoá
+[17,14,0,0] 1. Đi đến UC-25.2 Xóa công việc4.3 Xem công việc của nhân viên1. Nhân viên mở danh sách công việc được giao.2. Hệ thống hiển thị nội dung, thời gian, lô hoặc phần lô và các thao tác theo nhiệm vụ. (LoHang, ChiTietLo, CongViec, PhanCongCongViec)3. Nhân viên không được sửa hoặc xóa công việc của Ban giám đốc.4.4 Lập đợt kiểm kê mới1. Ban giám đốc chuyển sang chức năng Lập đợt kiểm kê tại UC-13.2. Không tạo đợt kiểm kê hoặc đợt kiểm tra QC/AC mới trong chức năng Quản lý công việc. (DotKiemKe, CongViec, LoLichKiemTra, PhanCongCongViec)
+[17,15,0,0] Exception flow
+[17,16,0,0] 2.1 Nếu danh sách công việc hiện đang trống
+[17,17,0,0] 1. Hệ thống thông báo không có công việc hiện tại
+[17,18,0,0] 2. Kết thúc use case3.1 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.3.2 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (CongViec, PhanCongCongViec)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.3.3 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 18
+[18,0,0,0] UC-25.1 Chỉnh sửa công việc
+[18,1,0,0] Tiền điều kiện
+[18,1,1,0] Ban giám đốc đã đăng nhập, có quyền quản lý công việc và đã chọn một công việc cần chỉnh sửa
+[18,2,0,0] Hậu điều kiện
+[18,2,1,0] Công việc được cập nhật theo đúng thông tin Ban giám đốc xác nhận
+[18,3,0,0] Actor chính
+[18,3,1,0] Ban giám đốc
+[18,4,0,0] Actor phụ
+[18,4,1,0] Không
+[18,5,0,0] Basic flow
+[18,6,0,0] Ban giám đốc
+[18,6,1,0] Hệ thống
+[18,7,0,0] 1. Chọn Chỉnh sửa công việc (CongViec)
+[18,7,1,0] 2. Hiển thị form với thông tin hiện tại của công việc (CongViec, PhanCongCongViec, NguoiDung)
+[18,8,0,0] 3. Nhập thông tin muốn chỉnh sửa và chọn Xác nhận. (CongViec)
+[18,8,1,0] 4. Hệ thống kiểm tra công việc còn được phép chỉnh sửa. (CongViec)
+[18,9,0,0] 
+[18,9,1,0] 5. Kiểm tra dữ liệu nhập (CongViec)
+[18,10,0,0] 
+[18,10,1,0] 6. Kiểm tra nhân viên được giao, người lập biên bản và phạm vi lô khi có thay đổi; với đợt kiểm kê, chỉ chọn nhân viên QC/AC hoặc Ban kiểm kê. (CongViec, PhanCongCongViec, NguoiDung, NguoiDungVaiTro, VaiTro, LoLichKiemTra, PhanCongLichKiemTra, LoHang, ChiTietLo)
+[18,11,0,0] 
+[18,11,1,0] 7. Lưu thông tin công việc được cập nhật vào hệ thống và thông báo cập nhật thành công (CongViec, PhanCongCongViec, LoLichKiemTra, PhanCongLichKiemTra, ThongBao)
+[18,12,0,0] Alternative flow
+[18,13,0,0] 4.1 Nếu giám đốc chọn Huỷ
+[18,14,0,0] 1. Hệ thống hủy thông tin đã chỉnh sửa
+[18,15,0,0] 2. Kết thúc UC
+[18,16,0,0] Exception flow
+[18,17,0,0] 5.1 Nếu giám đốc nhập chữ vào ô nhập số
+[18,18,0,0] 1. Hệ thống thông báo lỗi định dạng
+[18,19,0,0] 2. Quay lại bước 3
+[18,20,0,0] 5.2 Nếu giám đốc nhập số < 0
+[18,21,0,0] 1. Hệ thống thông báo số phải lớn hơn 0
+[18,22,0,0] 2. Quay lại bước 3
+[18,23,0,0] 5.3 Nếu bỏ trống thông tin bắt buộc
+[18,24,0,0] 1. Hệ thống thông báo yêu cầu nhập đầy đủ thông tin (CongViec, PhanCongCongViec)
+[18,25,0,0] 2. Quay lại bước 3
+[18,26,0,0] 5.4 Nếu ngày bắt đầu/ngày kết thúc không hợp lệ
+[18,27,0,0] 1. Hệ thống thông báo thời gian thực hiện công việc không hợp lệ
+[18,28,0,0] 2. Quay lại bước 3
+[18,29,0,0] 6.1 Phân công không hợp lệ
+[18,30,0,0] 1. Hệ thống yêu cầu chọn nhân viên đúng nhóm và người lập biên bản thuộc danh sách được giao. (NguoiDung, NguoiDungVaiTro, CongViec, PhanCongCongViec, PhieuKiemKe, LoLichKiemTra)
+[18,31,0,0] 2. Quay lại bước 35.5 Công việc không còn được phép chỉnh sửa1. Hệ thống thông báo và không lưu thay đổi. (CongViec, PhanCongCongViec)2. Ban giám đốc tải lại chi tiết để xem trạng thái mới; không đổi lô, nhân viên hoặc biên bản đã được ghi nhận trái điều kiện. (NguoiDung, NguoiDungVaiTro, CongViec, PhanCongCongViec, PhieuKiemKe, LoLichKiemTra)3.1 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.3.2 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (CongViec, PhanCongCongViec)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.3.3 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 19
+[19,0,0,0] UC-25.2 Xóa công việc
+[19,1,0,0] Tiền điều kiện
+[19,1,1,0] Ban giám đốc đã đăng nhập, có quyền quản lý công việc và đã chọn một công việc cần xoá
+[19,2,0,0] Hậu điều kiện
+[19,2,1,0] Công việc được xoá khỏi hệ thống khi đáp ứng điều kiện xoá
+[19,3,0,0] Actor chính
+[19,3,1,0] Ban giám đốc
+[19,4,0,0] Actor phụ
+[19,4,1,0] Không
+[19,5,0,0] Basic flow
+[19,6,0,0] Ban giám đốc
+[19,6,1,0] Hệ thống
+[19,7,0,0] 1. Chọn Xóa công việc muốn xoá (CongViec)
+[19,7,1,0] 2. Hệ thống yêu cầu xác nhận (CongViec)
+[19,8,0,0] 3. Chọn Xác nhận (CongViec)
+[19,8,1,0] 4. Kiểm tra công việc có đang được thực hiện (CongViec)
+[19,9,0,0] 
+[19,9,1,0] 5. Xóa công việc khỏi hệ thống và thông báo xoá thành công (CongViec, PhanCongCongViec, LoLichKiemTra, PhanCongLichKiemTra)
+[19,10,0,0] Alternative flow
+[19,11,0,0] 3.1 Nếu giám đốc chọn Huỷ
+[19,12,0,0] 1. Hệ thống hủy thao tác xoá
+[19,13,0,0] 2. Kết thúc UC
+[19,14,0,0] Exception flow
+[19,15,0,0] 4.1 Nếu công việc hiện đang được diễn ra
+[19,16,0,0] 1. Hệ thống thông báo công việc đang được tiến hành, không thể xoá
+[19,17,0,0] 2. Kết thúc UC4.2 Công việc đã hoàn thành, bị hủy hoặc đã phát sinh kết quả không được phép xóa1. Hệ thống thông báo không thể xóa công việc.2. Giữ nguyên công việc và các kết quả đã ghi nhận. (CongViec, PhanCongCongViec)3.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.3.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (CongViec, PhanCongCongViec)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.3.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 20
+[20,0,0,0] UC-31 Phê duyệt kế hoạch sản xuất
+[20,1,0,0] Tiền điều kiện
+[20,1,1,0] Ban giám đốc đã đăng nhập thành công vào hệ thống
+[20,2,0,0] Hậu điều kiện
+[20,2,1,0] Kế hoạch sản xuất được phê duyệt hoặc từ chối. Khi kế hoạch gắn với đơn hàng được phê duyệt, hệ thống cập nhật trạng thái đơn hàng tương ứng và thông báo cho xưởng phụ trách.
+[20,3,0,0] Actor chính
+[20,3,1,0] Ban giám đốc
+[20,4,0,0] Actor phụ
+[20,4,1,0] Không
+[20,5,0,0] Basic flow
+[20,6,0,0] Ban giám đốc
+[20,6,1,0] Hệ thống
+[20,7,0,0] 1. Chọn chức năng Phê duyệt kế hoạch sản xuất. (KeHoachSanXuat, ChiTietKeHoachSanXuat)
+[20,7,1,0] 2. Hiển thị danh sách kế hoạch sản xuất đang chờ phê duyệt. (KeHoachSanXuat)
+[20,8,0,0] 3. Chọn kế hoạch sản xuất để xem chi tiết. (KeHoachSanXuat)
+[20,8,1,0] 4. Hiển thị đơn hàng, kế hoạch sản xuất và xưởng liên quan.  (KeHoachSanXuat, ChiTietKeHoachSanXuat, DonHang, ChiTietDonHang, MatHang, ThanhPham, NguyenVatLieu, Xuong)
+[20,9,0,0] 5. Chọn Phê duyệt kế hoạch sản xuất. (KeHoachSanXuat)
+[20,9,1,0] 6. Kiểm tra lại kế hoạch, ngày thực hiện và đơn hàng liên quan; lưu quyết định phê duyệt kế hoạch, cập nhật trạng thái đơn hàng theo quyết định và thông báo cho Bộ phận lập kế hoạch, Chủ xưởng phụ trách. (KeHoachSanXuat, DonHang, NguoiDungXuong, ThongBao)
+[20,10,0,0] Alternative flow
+[20,11,0,0] 5.1 Từ chối kế hoạch sản xuất
+[20,12,0,0] 1. Ban giám đốc chọn Từ chối và nhập lý do.
+[20,13,0,0] 2. Hệ thống lưu kế hoạch bị từ chối cùng lý do, cập nhật thông tin liên quan và thông báo cho Bộ phận lập kế hoạch. Không coi việc từ chối một kế hoạch là hủy mọi kế hoạch hoặc chứng từ của đơn hàng. (DonHang, ThongBao, KeHoachSanXuat)
+[20,14,0,0] 3. Quay lại bước 15.2 Sản lượng dự kiến vượt số lượng đơn hàng1. Hệ thống hiển thị nội dung vượt số lượng để Ban giám đốc xem xét. (KeHoachSanXuat, DonHang)2. Nếu chọn Tiếp tục, hệ thống kiểm tra các điều kiện còn lại và phê duyệt. (KeHoachSanXuat, DonHang)3. Nếu chọn Quay lại, không phê duyệt và giữ nguyên kế hoạch.
+[20,15,0,0] Exception flow
+[20,16,0,0] 2.1 Danh sách kế hoạch sản xuất chờ phê duyệt rỗng
+[20,17,0,0] 1. Hệ thống thông báo không có kế hoạch sản xuất cần phê duyệt. (KeHoachSanXuat, ChiTietKeHoachSanXuat)2. Kết thúc UC.
+[20,17,0,1] 
+[20,18,0,0] 4.1 Kế hoạch không còn chờ phê duyệt
+[20,19,0,0] 1. Hệ thống thông báo kế hoạch không còn được phép phê duyệt.
+[20,20,0,0] 2. Quay lại bước 15.3 Từ chối nhưng chưa nhập lý do1. Hệ thống yêu cầu nhập lý do.2. Ban giám đốc bổ sung rồi xác nhận lại.4.2 Ngày thực hiện không hợp lệ hoặc vượt ngày nhận hàng trễ nhất của đơn1. Hệ thống thông báo không thể phê duyệt.2. Bộ phận lập kế hoạch phải điều chỉnh kế hoạch trước khi trình duyệt lại.5.4 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.5.5 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (KeHoachSanXuat, DonHang)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.5.6 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 21
+[21,0,0,0] UC-14 Xem/Quản lý đơn hàng mua
+[21,1,0,0] Tiền điều kiện
+[21,1,1,0] Bộ phận mua hàng đăng nhập thành công vào hệ thống
+[21,2,0,0] Hậu điều kiện
+[21,2,1,0] Hiển thị danh sách đơn mua hàng đã đặt
+[21,3,0,0] Actor chính
+[21,3,1,0] Bộ phận mua hàng
+[21,4,0,0] Actor phụ
+[21,4,1,0] Không
+[21,5,0,0] Basic flow
+[21,6,0,0] Bộ phận mua hàng
+[21,6,1,0] Hệ thống
+[21,7,0,0] 1. Chọn chức năng Xem/Quản lý đơn hàng mua (DonMuaHang, ChiTietDonMuaHang)
+[21,7,1,0] 2. Hiển thị danh sách đơn hàng đã đặt (DonMuaHang)
+[21,8,0,0] Alternative flow2.1 Xem chi tiết đơn mua1. Bộ phận mua hàng chọn đơn mua. (DonMuaHang, ChiTietDonMuaHang)2. Hệ thống hiển thị từng nguyên vật liệu, nhà cung cấp, số lượng, đơn vị, đơn giá, ngày nhận, điều kiện giao hàng, kế hoạch nguồn nếu có và trạng thái. (MatHang, NguyenVatLieu, DonViTinh, NhaCungCap, DonMuaHang, ChiTietDonMuaHang)3. Quay lại danh sách.2.2 Ghi nhận hàng thực nhận1. Bộ phận mua hàng mở đơn mua còn lượng chưa nhận và chọn ghi nhận hàng về. (DonMuaHang, ChiTietDonMuaHang)2. Nhập từng mặt hàng, số lượng thực nhận, thông tin lô và ngày nhận. (MatHang, DonMuaHang, ChiTietDonMuaHang)3. Hệ thống kiểm tra lượng đã nhận cộng lượng mới, lưu phần lô chờ kiểm tra chất lượng. (LoHang, ChiTietLo, DonMuaHang, ChiTietDonMuaHang)4. Việc đặt mua hoặc đến ngày nhận dự kiến không tự tạo hàng thực nhận, không tự tăng tồn kho. (TonKho, PhanCongKho)
+[21,9,0,0] Exception flow
+[21,10,0,0] 2.1 Không có đơn hàng trong hệ thống
+[21,11,0,0] 1. Hệ thống thông báo không có đơn hàng trong hệ thống / hiển thị danh sách rỗng. (DonHang, DonMuaHang, ChiTietDonMuaHang)
+[21,12,0,0] 2. Kết thúc UC1.1 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.1.2 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (DonMuaHang, ChiTietDonMuaHang)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.1.3 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 22
+[22,0,0,0] UC-23 Yêu cầu nhập/xuất
+[22,1,0,0] Tiền điều kiện
+[22,1,1,0] Chủ xưởng đã đăng nhập và có quyền đối với xưởng.
+[22,2,0,0] Hậu điều kiện
+[22,2,1,0] Yêu cầu hợp lệ được lưu ở trạng thái Chờ xử lý và thông báo đến bộ phận kho. Tạo yêu cầu không thay đổi tồn kho.
+[22,3,0,0] Actor chính
+[22,3,1,0] Chủ xưởng
+[22,4,0,0] Actor phụ
+[22,4,1,0] Không
+[22,5,0,0] Basic flow
+[22,6,0,0] Chủ xưởng
+[22,6,1,0] Hệ thống
+[22,7,0,0] 1. Chọn chức năng Yêu cầu nhập/xuất.
+[22,7,1,0] 2. Hiển thị form chọn Nhập kho hoặc Xuất kho, mục đích, nguồn hàng, kho, Quản lý kho phụ trách, ngày giờ thực hiện và ghi chú. Xưởng mặc định là xưởng gắn với tài khoản Chủ xưởng. (NguoiDungXuong, Xuong, Kho, NguoiDung, NguoiDungVaiTro, KeHoachMuaBan, DonMuaHang, KeHoachSanXuat, BanBaoCaoSanXuat)
+[22,8,0,0] 3. Chọn nhập hoặc xuất, mục đích và nguồn phù hợp; xem các mặt hàng, phần lô và lượng còn được yêu cầu; chọn kho, Quản lý kho phụ trách, ngày giờ và ghi chú. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, KeHoachMuaBan, DonMuaHang, KeHoachSanXuat, BanBaoCaoSanXuat, LoHang, ChiTietLo, Kho, NguoiDung)
+[22,8,1,0] 4. Hiển thị thông tin nguồn, xưởng phụ trách và danh sách mặt hàng của yêu cầu. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, KeHoachMuaBan, DonMuaHang, KeHoachSanXuat, BanBaoCaoSanXuat, Xuong, MatHang, NguyenVatLieu, ThanhPham, LoHang, ChiTietLo)
+[22,9,0,0] 5. Chọn Gửi yêu cầu.
+[22,9,1,0] 6. Kiểm tra thông tin bắt buộc và số lượng lớn hơn 0. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)
+[22,10,0,0]  
+[22,10,1,0] 7. Kiểm tra quyền đối với xưởng, nguồn, phần lô, ngày giờ và lượng còn được phép; không tính lại lượng đã thực hiện hoặc đã nằm trong yêu cầu còn hiệu lực. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, NguoiDungXuong, PhanCongKho, PhieuKho, ChiTietPhieuKho, LoHang, ChiTietLo, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)
+[22,11,0,0]  
+[22,11,1,0] 8. Lưu yêu cầu Chờ xử lý kèm nguồn đã chọn. (PhieuYeuCauNhapXuat)
+[22,12,0,0]  
+[22,12,1,0] 9. Lưu các dòng mặt hàng và lượng đề nghị.  (ChiTietPhieuYeuCauNhapXuat)
+[22,13,0,0]  
+[22,13,1,0] 10. Gửi thông báo đến bộ phận kho. (ThongBao)
+[22,14,0,0]  
+[22,14,1,0] 11. Hiển thị thông báo tạo yêu cầu thành công.
+[22,15,0,0]  
+[22,15,1,0] 12. Kết thúc use case.
+[22,16,0,0] Alternative flow
+[22,17,0,0] 3.1 Yêu cầu nhập nguyên vật liệu
+[22,18,0,0] 1. Chủ xưởng chọn Nhập kho, mục đích Nhập nguyên vật liệu từ kế hoạch mua. (KeHoachMuaBan, ChiTietKeHoachMuaBan, MatHang, NguyenVatLieu)
+[22,19,0,0] 2. Chọn kế hoạch mua có đơn mua và phần hàng thực nhận phù hợp. (DonMuaHang, ChiTietDonMuaHang, KeHoachMuaBan, ChiTietKeHoachMuaBan)
+[22,20,0,0] 3. Hệ thống hiển thị lô nguyên vật liệu, phần đạt chất lượng còn chưa nhập và số lượng được phép yêu cầu; phần lỗi hoặc đã trả nhà cung cấp không được tính vào lượng đạt. (LoHang, ChiTietLo, MatHang, NguyenVatLieu, NhaCungCap, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC, PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)
+[22,21,0,0] 4. Chủ xưởng xác nhận thông tin kho, ngày giờ và người nhận yêu cầu; tiếp tục bước 5 của luồng cơ bản.
+[22,22,0,0] 3.2 Yêu cầu nhập thành phẩm1. Chủ xưởng chọn Nhập kho, mục đích Nhập thành phẩm, rồi chọn báo cáo thành phẩm đã gửi. (MatHang, ThanhPham)2. Hệ thống hiển thị đúng phần thành phẩm của báo cáo, cùng mã lô sản xuất; lấy phần đạt chất lượng còn chưa nhập. (LoHang, ChiTietLo, MatHang, ThanhPham, PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)3. Chủ xưởng hoàn thiện thông tin và tiếp tục bước 5.
+[22,23,0,0] 3.3 Yêu cầu xuất nguyên vật liệu1. Chủ xưởng chọn Xuất kho, mục đích Xuất nguyên vật liệu để sản xuất, rồi chọn kế hoạch sản xuất của xưởng. (KeHoachSanXuat, ChiTietKeHoachSanXuat, MatHang, NguyenVatLieu, Xuong)2. Hệ thống lấy nhu cầu nguyên vật liệu, trừ lượng đã cấp và lượng đã được yêu cầu còn hiệu lực; không cộng thêm 10% lần nữa. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, MatHang, NguyenVatLieu)3. Chủ xưởng hoàn thiện thông tin và tiếp tục bước 5.
+[22,24,0,0] 3.4 Yêu cầu xuất thành phẩm1. Chủ xưởng chọn Xuất kho, mục đích Giao thành phẩm, rồi chọn kế hoạch sản xuất. (KeHoachSanXuat, ChiTietKeHoachSanXuat, MatHang, ThanhPham)2. Hệ thống đối chiếu đơn hàng, kế hoạch bán đã được duyệt, sản lượng hoàn tất và thành phẩm đạt chất lượng đã nhập kho còn có thể xuất. (DonHang, KeHoachSanXuat, ChiTietKeHoachSanXuat, KeHoachMuaBan, ChiTietKeHoachMuaBan, MatHang, ThanhPham, PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)3. Chủ xưởng hoàn thiện thông tin và tiếp tục bước 5.3.5 Hủy trước khi gửi1. Chủ xưởng chọn Hủy.2. Không tạo yêu cầu; kết thúc UC.
+[22,25,0,0] Exception flow
+[22,26,0,0] 3.1 Nguồn hoặc lô không hợp lệ
+[22,27,0,0] 1. Hệ thống thông báo không có nguồn hợp lệ để lập yêu cầu; không lưu yêu cầu. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)
+[22,28,0,0] 2. Đi đến bước 3 của luồng cơ bản.
+[22,29,0,0] 3.2 Chưa có phần hàng thực nhận hoặc chưa có báo cáo thành phẩm đã gửi
+[22,30,0,0] 1. Hệ thống thông báo chưa có dữ liệu nguồn phù hợp; không tự tạo lô chỉ vì đã có kế hoạch hoặc đến ngày dự kiến. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)
+[22,31,0,0] 2. Chủ xưởng kiểm tra lại việc ghi nhận hàng về hoặc gửi báo cáo rồi thực hiện lại. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)
+[22,32,0,0] 6.1 Thiếu thông tin hoặc số lượng không hợp lệ
+[22,33,0,0] 1. Hệ thống yêu cầu nhập đầy đủ thông tin và số lượng lớn hơn 0; không lưu yêu cầu. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)
+[22,34,0,0] 2. Đi đến bước 3 của luồng cơ bản.
+[22,35,0,0] 7.1 Không đủ điều kiện, trùng hoặc vượt lượng được phép
+[22,36,0,0] 1. Hệ thống thông báo yêu cầu không đủ điều kiện hoặc lượng đề nghị vượt lượng còn được phép; không lưu yêu cầu. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)
+[22,37,0,0] 2. Đi đến bước 3 của luồng cơ bản.5.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.5.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.5.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+[22,38,0,0] Quy tắc nghiệp vụ
+[22,39,0,0] 1. Xưởng được lấy từ tài khoản Chủ xưởng: Xưởng ahtor, Xưởng edxn hoặc Xưởng trnvnth. Chủ xưởng không tự chọn thay xưởng ngoài quyền phụ trách. (Xuong)
+[22,40,0,0] 2. Thành phẩm được báo cáo từng phần; mỗi phần thuộc cùng lô sản xuất nhưng chỉ được yêu cầu nhập trong lượng của chính phần đó. (LoHang, ChiTietLo, PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)
+[22,41,0,0] 3. Báo cáo thành phẩm đã gửi là nguồn cho yêu cầu nhập phần thành phẩm. Xuất thành phẩm được đối chiếu với kế hoạch sản xuất, đơn hàng và kế hoạch bán theo điều kiện giao hàng. (DonHang, KeHoachSanXuat, ChiTietKeHoachSanXuat, KeHoachMuaBan, ChiTietKeHoachMuaBan, MatHang, ThanhPham)
+[22,42,0,0] 4. Nhu cầu xuất nguyên vật liệu lấy từ kế hoạch sản xuất; nếu sử dụng báo cáo nhu cầu theo lựa chọn được cung cấp thì lấy đúng nhu cầu được phép của báo cáo. Không lấy lượng thiếu cần mua làm toàn bộ lượng xuất sản xuất. (KeHoachSanXuat, ChiTietKeHoachSanXuat, MatHang, NguyenVatLieu, PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)
+[22,43,0,0] 5. Gửi yêu cầu chưa làm thay đổi tồn kho. Quản lý kho phân công nhân viên và phần lô thực hiện; Nhân viên kho ghi phiếu thực nhập hoặc thực xuất mới cập nhật tồn kho. (LoHang, ChiTietLo, PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, TonKho, PhanCongKho, NguoiDung, NguoiDungVaiTro, CongViec, PhanCongCongViec)
+TABLE 23
+[23,0,0,0] UC-24 Quản lý yêu cầu nhập xuất
+[23,1,0,0] Tiền điều kiện
+[23,1,1,0] Chủ xưởng đã đăng nhập; đã có yêu cầu được gửi (UC-23)
+[23,2,0,0] Hậu điều kiện
+[23,2,1,0] Danh sách yêu cầu của chủ xưởng được hiển thị/tìm kiếm theo yêu cầu
+[23,3,0,0] Actor chính
+[23,3,1,0] Chủ xưởng
+[23,4,0,0] Actor phụ
+[23,4,1,0] Không
+[23,5,0,0] Basic flow
+[23,6,0,0] Chủ xưởng
+[23,6,1,0] Hệ thống
+[23,7,0,0] 1. Chọn chức năng Quản lý yêu cầu
+[23,7,1,0] 2. Hiển thị danh sách yêu cầu đã gửi của chủ xưởng (PhieuYeuCauNhapXuat)
+[23,8,0,0] 3. Chọn một yêu cầu để xem chi tiết (PhieuYeuCauNhapXuat)
+[23,8,1,0] 4. Hiển thị thông tin và trạng thái xử lý yêu cầu (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, MatHang, LoHang, ChiTietLo, PhanCongKho, CongViec)
+[23,9,0,0] Alternative flow
+[23,10,0,0] 1.1 Tìm kiếm/lọc yêu cầu theo trạng thái, thời gian
+[23,11,0,0] 1. Chủ xưởng nhập điều kiện tìm kiếm
+[23,12,0,0] 2. Hệ thống hiển thị yêu cầu phù hợp (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)
+[23,13,0,0] 3. Quay lại bước 1
+[23,14,0,0] 4.1 Chọn Sửa
+[23,15,0,0] 1. Hệ thống thực hiện UC-24.1
+[23,16,0,0] 4.2 Chọn Xóa
+[23,17,0,0] 1. Hệ thống thực hiện UC-24.2
+[23,18,0,0] Exception flow
+[23,19,0,0] 1.1 Tìm kiếm hoặc lọc không có kết quả phù hợp
+[23,20,0,0] 1. Hệ thống thông báo không tìm thấy yêu cầu phù hợp. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)
+[23,21,0,0] 2. Quay lại bước 1
+[23,22,0,0] 2.1 Không có yêu cầu trong hệ thống
+[23,23,0,0] 1. Hệ thống thông báo không tìm thấy yêu cầu (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)
+[23,24,0,0] 2. Quay lại bước 13.1 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.3.2 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.3.3 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 24
+[24,0,0,0] UC-24.1 Sửa yêu cầu
+[24,1,0,0] Tiền điều kiện
+[24,1,1,0] Chủ xưởng đăng nhập thành công vào hệ thống
+[24,2,0,0] Hậu điều kiện
+[24,2,1,0] Thông tin yêu cầu được cập nhật chính xác
+[24,3,0,0] Actor chính
+[24,3,1,0] Chủ xưởng
+[24,4,0,0] Actor phụ
+[24,4,1,0] Không
+[24,5,0,0] Basic flow
+[24,6,0,0] Chủ xưởng
+[24,6,1,0] Hệ thống
+[24,7,0,0] 1. Chọn Sửa (PhieuYeuCauNhapXuat)
+[24,7,1,0] 2. Kiểm tra yêu cầu chưa được xử lý (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, PhanCongKho, CongViec)
+[24,8,0,0] 
+[24,8,1,0] 3. Hiển thị form với thông tin hiện tại (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)
+[24,9,0,0] 4. Chỉnh sửa thông tin muốn thay đổi (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)
+[24,9,1,0] 
+[24,10,0,0] 5. Chọn xác nhận (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)
+[24,10,1,0] 6. Hệ thống kiểm tra thông tin nhập (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, PhanCongKho)
+[24,11,0,0] 
+[24,11,1,0] 7. Hệ thống cập nhật thông tin sau khi chỉnh sửa (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)
+[24,12,0,0] Alternative flow
+[24,13,0,0] 5.1 Hủy trước khi xác nhận
+[24,14,0,0] 1. Chủ xưởng chọn Hủy
+[24,15,0,0] 2. Hệ thống hủy thông tin đã chỉnh sửa
+[24,16,0,0] 3. Kết thúc use case
+[24,17,0,0] Exception flow
+[24,18,0,0] 2.1 Yêu cầu đã được xử lý
+[24,19,0,0] 1. Hệ thống thông báo không thể chỉnh sửa yêu cầu đã được xử lý (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)
+[24,20,0,0] 2. Kết thúc use case
+[24,21,0,0] 6.1 Thông tin không hợp lệ
+[24,22,0,0] 1. Hệ thống thông báo lỗi và yêu cầu nhập lại (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)
+[24,23,0,0] 2. Quay lại bước 36.2 Thay đổi vượt nhu cầu, nguồn không còn phù hợp hoặc yêu cầu đã được phân công1. Hệ thống thông báo không thể lưu nội dung sửa. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)2. Chủ xưởng tải lại yêu cầu và liên hệ Quản lý kho nếu cần điều chỉnh phần đã phân công. (NguoiDung, NguoiDungVaiTro, CongViec, PhanCongCongViec)5.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.5.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.5.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 25
+[25,0,0,0] UC-24.2 Xóa yêu cầu
+[25,1,0,0] Tiền điều kiện
+[25,1,1,0] Yêu cầu đang ở trạng thái Chờ xử lý
+[25,2,0,0] Hậu điều kiện
+[25,2,1,0] Yêu cầu đủ điều kiện được hủy, vẫn giữ lịch sử; các chứng từ đã ghi không bị xóa theo yêu cầu.
+[25,3,0,0] Actor chính
+[25,3,1,0] Chủ xưởng
+[25,4,0,0] Actor phụ
+[25,4,1,0] Quản lý kho nhận thông báo hủy yêu cầu.
+[25,5,0,0] Basic flow
+[25,6,0,0] Chủ xưởng
+[25,6,1,0] Hệ thống
+[25,7,0,0] 1. Chọn một yêu cầu và chọn Xóa (PhieuYeuCauNhapXuat)
+[25,7,1,0] 2. Hệ thống yêu cầu xác nhận xóa (PhieuYeuCauNhapXuat)
+[25,8,0,0] 3. Xác nhận xóa (PhieuYeuCauNhapXuat)
+[25,8,1,0] 4. Hệ thống hủy yêu cầu và thông báo đến bộ phận kho (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, ThongBao)
+[25,9,0,0] Alternative flow
+[25,10,0,0] 3.1 Hủy trước khi xác nhận xóa
+[25,11,0,0] 1. Chủ xưởng chọn Hủy
+[25,12,0,0] 2. Hệ thống hủy thao tác xóa
+[25,13,0,0] 3. Kết thúc use case
+[25,14,0,0] Exception flow
+[25,15,0,0] 3.1 Yêu cầu đã được xử lý
+[25,16,0,0] 1. Hệ thống thông báo không thể xóa yêu cầu đã được xử lý (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)
+[25,17,0,0] 2. Kết thúc use case3.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.3.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.3.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 26
+[26,0,0,0] UC-27 Mua hàng
+[26,1,0,0] Tiền điều kiện
+[26,1,1,0] Bộ phận mua hàng đã đăng nhập; có thể lập đơn trực tiếp hoặc theo kế hoạch mua nguyên vật liệu đã được duyệt, chưa có đơn mua theo chính sách một đơn mua cho mỗi kế hoạch.
+[26,2,0,0] Hậu điều kiện
+[26,2,1,0] Đơn hàng mua (nguyên vật liệu) mới được tạo và đang trong trạng thái "Chờ xử lý"
+[26,3,0,0] Actor chính
+[26,3,1,0] Bộ phận mua hàng
+[26,4,0,0] Actor phụ
+[26,4,1,0] Không
+[26,5,0,0] Basic flow
+[26,6,0,0] Bộ phận mua hàng
+[26,6,1,0] Hệ thống
+[26,7,0,0] 1. Chọn chức năng Mua hàng
+[26,7,1,0] 2. Hiển thị hai hình thức Lập trực tiếp và Theo kế hoạch mua nguyên vật liệu.
+[26,8,0,0] 3. Chọn Theo kế hoạch mua nguyên vật liệu và chọn kế hoạch đã được duyệt. (KeHoachMuaBan)
+[26,8,1,0] 4. Hiển thị danh sách nguyên vật liệu, số lượng và ngày nhận mong muốn của kế hoạch; hiển thị báo cáo nguồn nếu kế hoạch có báo cáo. (KeHoachMuaBan, ChiTietKeHoachMuaBan, MatHang, NguyenVatLieu, DonViTinh, BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)
+[26,9,0,0] 5. Chọn nhà cung cấp cho từng nguyên vật liệu; kiểm tra đơn vị, nhập giá thỏa thuận, điều kiện giao hàng và ghi chú. (MatHang, NguyenVatLieu, NhaCungCap, DonViTinh)
+[26,9,1,0] 6. Kiểm tra mặt hàng, nhà cung cấp từng dòng, lượng mua, đơn giá, ngày nhận và kế hoạch nguồn. Ngày nhận của đơn theo kế hoạch được lấy từ kế hoạch mua. (KeHoachMuaBan, ChiTietKeHoachMuaBan, MatHang, NguyenVatLieu, NhaCungCap, DonViTinh, DonMuaHang, ChiTietDonMuaHang)
+[26,10,0,0] 7. Xác nhận mua hàng
+[26,10,1,0] 8. Tạo đơn mua và các dòng nguyên vật liệu, nhà cung cấp tương ứng; ghi nhận kế hoạch và báo cáo nguồn nếu có; thông báo mua hàng thành công. Chưa tạo hàng thực nhận hoặc tăng tồn kho. (DonMuaHang, ChiTietDonMuaHang, KeHoachMuaBan, BanBaoCaoSanXuat)
+[26,11,0,0] Alternative flow
+[26,12,0,0] 7.1 Hủy trước khi xác nhận
+[26,13,0,0] 1. Bộ phận mua hàng chọn Hủy
+[26,14,0,0] 2. Hệ thống hủy thông tin đã nhập
+[26,15,0,0] 3. Kết thúc use case3.1 Lập đơn mua trực tiếp1. Bộ phận mua hàng chọn Lập trực tiếp.2. Chọn từng nguyên vật liệu, số lượng, nhà cung cấp, đơn giá, ngày nhận mong muốn, điều kiện giao hàng và ghi chú. (MatHang, NguyenVatLieu, NhaCungCap)3. Hệ thống kiểm tra dữ liệu; tiếp tục bước 7. Không bắt buộc có kế hoạch sản xuất hoặc báo cáo nhu cầu. (KeHoachSanXuat, ChiTietKeHoachSanXuat, DonMuaHang, ChiTietDonMuaHang)5.1 Chọn nhà cung cấp và giá1. Bộ phận mua hàng chọn nhà cung cấp của từng dòng. (NhaCungCap)2. Hệ thống gợi ý giá nếu đã có bảng giá phù hợp; người mua được nhập giá thỏa thuận.3. Một đơn có thể có các nhà cung cấp khác nhau ở các dòng; quay lại bước 5. (NhaCungCap)
+[26,16,0,0] Exception flow
+[26,17,0,0] 2.1 Không có kế hoạch mua hàng nào đang chờ xử lý
+[26,18,0,0] 1. Hệ thống thông báo không có kế hoạch mua hàng cần xử lý / hiển thị danh sách rỗng. (KeHoachMuaBan, ChiTietKeHoachMuaBan, DonMuaHang, ChiTietDonMuaHang)
+[26,19,0,0] 2. Kết thúc UC.
+[26,20,0,0] 6.1 Thông tin đơn hàng mua không hợp lệ
+[26,21,0,0] 1. Hệ thống thông báo lỗi và yêu cầu nhập lại (DonMuaHang, ChiTietDonMuaHang)
+[26,22,0,0] 2. Quay lại bước 56.2 Kế hoạch chưa duyệt, sai loại, đã có đơn mua hoặc đã thay đổi1. Hệ thống thông báo không thể dùng kế hoạch này.2. Bộ phận mua hàng chọn lại kế hoạch phù hợp.6.3 Ngày nhận không hợp lệ, khác ngày của kế hoạch hoặc vượt giới hạn ngày giao liên quan1. Hệ thống yêu cầu sửa ngày hoặc điều chỉnh kế hoạch nguồn theo quyền.2. Chưa tạo đơn mua.6.4 Nguyên vật liệu trùng, nhà cung cấp không còn hoạt động, số lượng hoặc đơn giá không hợp lệ1. Hệ thống chỉ rõ thông tin cần sửa.2. Quay lại bước 5.7.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.7.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (DonMuaHang, ChiTietDonMuaHang)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.7.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 27
+[27,0,0,0] UC-04 Lập kế hoạch mua/bán
+[27,1,0,0] Tiền điều kiện
+[27,1,1,0] Bộ phận lập kế hoạch đã đăng nhập
+[27,2,0,0] Hậu điều kiện
+[27,2,1,0] Kế hoạch mua/bán mới được tạo, lưu vào hệ thống với trạng thái chờ phê duyệt (Ban giám đốc thực hiện UC-32 Phê duyệt kế hoạch mua/bán)
+[27,3,0,0] Actor chính
+[27,3,1,0] Bộ phận lập kế hoạch
+[27,4,0,0] Actor phụ
+[27,4,1,0] Không
+[27,5,0,0] Basic flow
+[27,6,0,0] Bộ phận lập kế hoạch
+[27,6,1,0] Hệ thống
+[27,7,0,0] 1. Chọn chức năng Lập kế hoạch mua/bán (KeHoachMuaBan, ChiTietKeHoachMuaBan)
+[27,7,1,0] 2. Hiển thị form lập kế hoạch với loại kế hoạch và nguồn phù hợp; đối với kế hoạch mua nguyên vật liệu, có hai hình thức Lập trực tiếp và Theo báo cáo sản xuất. (BanBaoCaoSanXuat, KeHoachSanXuat, DonHang)
+[27,8,0,0] 3. Chọn kế hoạch mua nguyên vật liệu, hình thức Theo báo cáo sản xuất và báo cáo nhu cầu đã gửi có nguyên vật liệu còn thiếu. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)
+[27,8,1,0] 
+[27,9,0,0] 4. Hệ thống lấy danh sách nguyên vật liệu và lượng thiếu; Bộ phận lập kế hoạch kiểm tra lượng mua, đơn giá dự kiến, chọn ngày nhận mong muốn và nhập ghi chú. Không chọn nhà cung cấp ở bước lập kế hoạch. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, MatHang, NguyenVatLieu, DonViTinh)
+[27,9,1,0] 5. Kiểm tra loại báo cáo, số lượng còn thiếu và thông tin kế hoạch.  (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, KeHoachMuaBan, ChiTietKeHoachMuaBan)
+[27,10,0,0] 
+[27,10,1,0] 6. Tính tổng tiền dựa trên đơn giá * số lượng (ChiTietKeHoachMuaBan)
+[27,11,0,0] 7. Chọn Xác nhận
+[27,11,1,0] 8. Lưu kế hoạch và chi tiết, ghi nhận báo cáo nguồn nếu có, chuyển sang Chờ phê duyệt và thông báo thành công. (KeHoachMuaBan, ChiTietKeHoachMuaBan, BanBaoCaoSanXuat, ThongBao)
+[27,12,0,0] Alternative flow
+[27,13,0,0] 3.1 Chọn kế hoạch bán hàng
+[27,14,0,0] 1. Chọn báo cáo thành phẩm đã gửi phù hợp; lấy thành phẩm thực tế, đối chiếu phần đạt chất lượng đã nhập kho và lượng còn có thể sử dụng, nhập lượng bán và ghi chú. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, TonKho, PhanCongKho, MatHang, ThanhPham, KeHoachMuaBan, ChiTietKeHoachMuaBan)
+[27,15,0,0] 2. Kiểm tra và tính tổng tiền như bước 5 đến bước 6; khi xác nhận, lưu kế hoạch bán và các dòng, gắn với báo cáo thành phẩm nguồn, trạng thái Chờ phê duyệt. (KeHoachMuaBan, ChiTietKeHoachMuaBan, BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, MatHang, ThanhPham)
+[27,16,0,0] 3.2 Chọn kế hoạch sản xuất
+[27,17,0,0] 1. Bộ phận lập kế hoạch chọn đơn hàng cần sản xuất; hệ thống lấy thông tin từ đơn hàng gồm thành phẩm, số lượng và ngày giao dự kiến (DonHang, MatHang, ThanhPham, KeHoachMuaBan, ChiTietKeHoachMuaBan)
+[27,18,0,0] 2. Chọn xưởng, ngày bắt đầu, ngày kết thúc và ghi chú; hệ thống tính nguyên vật liệu dự kiến từ công thức và số lượng thành phẩm, cộng dự phòng 10% một lần cho từng loại. Đối chiếu lượng có thể cấp để hiển thị phần thiếu dự kiến; kế hoạch có cả danh sách thành phẩm và nguyên vật liệu. (KeHoachSanXuat, ChiTietKeHoachSanXuat, TonKho, PhanCongKho, MatHang, NguyenVatLieu, ThanhPham, Xuong, DotKiemKe, CongViec, LoLichKiemTra, KeHoachMuaBan, ChiTietKeHoachMuaBan)
+[27,19,0,0] 3. Kiểm tra đơn hàng, xưởng, ngày bắt đầu, ngày kết thúc và lượng dự kiến; khi xác nhận, lưu kế hoạch sản xuất để Ban giám đốc phê duyệt tại UC-31. Kế hoạch sản xuất được lưu riêng với kế hoạch mua hoặc bán. (DonHang, KeHoachSanXuat, ChiTietKeHoachSanXuat, KeHoachMuaBan, ChiTietKeHoachMuaBan, Xuong, DotKiemKe, CongViec, LoLichKiemTra)3.3 Lập kế hoạch mua trực tiếp1. Bộ phận lập kế hoạch chọn loại Mua nguyên vật liệu và hình thức Lập trực tiếp. (MatHang, NguyenVatLieu)2. Chọn nguyên vật liệu, nhập lượng cần mua, giá dự kiến, ngày nhận mong muốn và ghi chú. (MatHang, NguyenVatLieu, KeHoachMuaBan, ChiTietKeHoachMuaBan)3. Không bắt buộc chọn báo cáo sản xuất; không chọn nhà cung cấp.4. Tiếp tục kiểm tra và xác nhận như bước 5 đến bước 8. (KeHoachMuaBan, ChiTietKeHoachMuaBan)3.4 Lập từ chi tiết báo cáo sản xuất1. Bộ phận lập kế hoạch mở báo cáo nhu cầu đã nhận và chọn Tạo kế hoạch mua nguyên vật liệu. (KeHoachMuaBan, ChiTietKeHoachMuaBan, BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, MatHang, NguyenVatLieu)2. Hệ thống mở form đã chọn báo cáo và điền các nguyên vật liệu còn thiếu. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, MatHang, NguyenVatLieu)3. Tiếp tục bước 4.5.4 Số lượng dự kiến vượt nguồn1. Hệ thống hiển thị cảnh báo phần vượt so với đơn hàng hoặc báo cáo nguồn. (DonHang, BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, KeHoachMuaBan, ChiTietKeHoachMuaBan)2. Nếu chọn Tiếp tục, hệ thống kiểm tra các điều kiện còn lại rồi lưu; nếu chọn Quay lại thì chưa lưu.3. Xác nhận này không cho phép bỏ qua điều kiện chất lượng hoặc xuất quá tồn thực tế.7.1 Hủy trước khi xác nhận1. Bộ phận lập kế hoạch chọn Hủy.2. Hệ thống không tạo kế hoạch; kết thúc UC.
+[27,20,0,0] Exception flow
+[27,21,0,0] 5.1 Nếu thông tin nhập là số và < 0
+[27,22,0,0] 1. Hệ thống thông báo lỗi, yêu cầu nhập lại (KeHoachMuaBan, ChiTietKeHoachMuaBan)
+[27,23,0,0] 2. Quay lại bước 4
+[27,24,0,0] 5.2 Nếu thông tin nhập là số mà người dùng nhập chữ
+[27,25,0,0] 1. Hệ thống thông báo lỗi, yêu cầu nhập lại (KeHoachMuaBan, ChiTietKeHoachMuaBan)
+[27,26,0,0] 2. Quay lại bước 4
+[27,27,0,0] 5.3 Kế hoạch sản xuất chưa chọn đơn hàng hoặc xưởng được phân công
+[27,28,0,0] 1. Hệ thống thông báo lỗi, yêu cầu nhập lại (KeHoachMuaBan, ChiTietKeHoachMuaBan)
+[27,29,0,0] 2. Quay lại bước 45.5 Ngày kế hoạch hoặc ngày nhận nằm trong quá khứ1. Hệ thống yêu cầu chọn lại ngày hợp lệ.2. Quay lại bước nhập ngày.5.6 Lịch sản xuất không hợp lệ1. Nếu ngày kết thúc trước ngày bắt đầu, hoặc lịch vượt ngày nhận trễ nhất của đơn hàng, hệ thống không lưu. (DonHang, DotKiemKe, CongViec, LoLichKiemTra, KeHoachMuaBan, ChiTietKeHoachMuaBan)2. Bộ phận lập kế hoạch điều chỉnh lịch và xác nhận lại.5.7 Báo cáo sai mục đích, chưa gửi hoặc không còn là nguồn được phép1. Hệ thống thông báo không thể dùng báo cáo này. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)2. Chọn lại báo cáo nhu cầu để mua hoặc báo cáo thành phẩm phù hợp để bán. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, MatHang, ThanhPham)5.8 Chọn trùng mặt hàng, thiếu thông tin, số lượng không dương hoặc đơn giá âm1. Hệ thống chỉ rõ dòng cần sửa.2. Bộ phận lập kế hoạch sửa rồi xác nhận lại.7.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.7.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (KeHoachMuaBan, ChiTietKeHoachMuaBan)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.7.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 28
+[28,0,0,0] UC-05 Quản lý kế hoạch
+[28,1,0,0] Tiền điều kiện
+[28,1,1,0] Bộ phận lập kế hoạch đã đăng nhập và có quyền quản lý kế hoạch
+[28,2,0,0] Hậu điều kiện
+[28,2,1,0] Danh sách kế hoạch sản xuất, kế hoạch mua hoặc bán được hiển thị theo chức năng đang chọn; có thể tìm kiếm và thực hiện thao tác được phép.
+[28,3,0,0] Actor chính
+[28,3,1,0] Bộ phận lập kế hoạch
+[28,4,0,0] Actor phụ
+[28,4,1,0] Không
+[28,5,0,0] Basic flow
+[28,6,0,0] Bộ phận lập kế hoạch
+[28,6,1,0] Hệ thống
+[28,7,0,0] 1. Chọn chức năng Quản lý kế hoạch
+[28,7,1,0] 2. Hiển thị các kế hoạch của chức năng đang chọn cùng trạng thái và nguồn liên quan. (KeHoachMuaBan, KeHoachSanXuat)
+[28,8,0,0] 3. Chọn một kế hoạch để xem chi tiết (KeHoachMuaBan, KeHoachSanXuat)
+[28,8,1,0] 4. Hiển thị kế hoạch và các dòng chi tiết; kế hoạch sản xuất có đơn hàng, xưởng và nguyên vật liệu; kế hoạch mua hoặc bán có báo cáo nguồn nếu được lập từ báo cáo. (KeHoachMuaBan, ChiTietKeHoachMuaBan, KeHoachSanXuat, ChiTietKeHoachSanXuat, DonHang, ChiTietDonHang, Xuong, BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, MatHang, NguyenVatLieu, ThanhPham)
+[28,9,0,0] Alternative flow
+[28,10,0,0] 3.1 Tìm kiếm/lọc kế hoạch
+[28,11,0,0] 1. Nhân viên nhập điều kiện tìm kiếm (loại kế hoạch, thời gian, trạng thái)
+[28,12,0,0] 2. Hệ thống hiển thị các kế hoạch phù hợp (KeHoachMuaBan, ChiTietKeHoachMuaBan, KeHoachSanXuat, ChiTietKeHoachSanXuat)
+[28,13,0,0] 3. Quay lại bước 1
+[28,14,0,0] 4.1 Chọn Sửa
+[28,15,0,0] 1. Hệ thống thực hiện UC-05.1
+[28,16,0,0] 4.2 Chọn Xóa
+[28,17,0,0] 1. Hệ thống thực hiện UC-05.2
+[28,18,0,0] Exception flow
+[28,19,0,0] 2.1 Không có kế hoạch nào
+[28,20,0,0] 1. Hệ thống thông báo không tìm thấy kế hoạch (KeHoachMuaBan, ChiTietKeHoachMuaBan, KeHoachSanXuat, ChiTietKeHoachSanXuat)
+[28,21,0,0] 2. Quay lại bước 13.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.3.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (KeHoachMuaBan, ChiTietKeHoachMuaBan, KeHoachSanXuat, ChiTietKeHoachSanXuat)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.3.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 29
+[29,0,0,0] UC-05.1 Sửa kế hoạch
+[29,1,0,0] Tiền điều kiện
+[29,1,1,0] Kế hoạch được chọn chưa được duyệt/thực hiện
+[29,2,0,0] Hậu điều kiện
+[29,2,1,0] Thông tin kế hoạch được cập nhật chính xác
+[29,3,0,0] Actor chính
+[29,3,1,0] Bộ phận lập kế hoạch
+[29,4,0,0] Actor phụ
+[29,4,1,0] Không
+[29,5,0,0] Basic flow
+[29,6,0,0] Bộ phận lập kế hoạch
+[29,6,1,0] Hệ thống
+[29,7,0,0] 1. Chọn Sửa (KeHoachMuaBan, KeHoachSanXuat)
+[29,7,1,0] 2. Hiển thị form với thông tin kế hoạch hiện tại (KeHoachMuaBan, ChiTietKeHoachMuaBan, KeHoachSanXuat, ChiTietKeHoachSanXuat)
+[29,8,0,0] 3. Nhập thông tin cần chỉnh sửa và xác nhận (KeHoachMuaBan, ChiTietKeHoachMuaBan, KeHoachSanXuat, ChiTietKeHoachSanXuat)
+[29,8,1,0] 4. Kiểm tra thông tin, trạng thái kế hoạch và lượng sửa so với báo cáo nguồn.  (KeHoachMuaBan, ChiTietKeHoachMuaBan, KeHoachSanXuat, ChiTietKeHoachSanXuat, BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)
+[29,9,0,0] 
+[29,9,1,0] 5. Lưu cập nhật vào hệ thống (KeHoachMuaBan, ChiTietKeHoachMuaBan, KeHoachSanXuat, ChiTietKeHoachSanXuat)
+[29,10,0,0]  
+[29,10,1,0] 6. Thông báo kế hoạch đã được cập nhật (KeHoachMuaBan, ChiTietKeHoachMuaBan, KeHoachSanXuat, ChiTietKeHoachSanXuat)
+[29,11,0,0] Alternative flow
+[29,12,0,0] 1.1 Hủy trước khi xác nhận
+[29,13,0,0] 1. Nhân viên chọn Hủy
+[29,14,0,0] 2. Hệ thống hủy thông tin đã nhập, quay lại UC-05 bước 44.2 Lượng dự kiến sau khi sửa vượt nguồn1. Hệ thống hiển thị cảnh báo và yêu cầu xác nhận phần vượt. (KeHoachMuaBan, ChiTietKeHoachMuaBan, KeHoachSanXuat, ChiTietKeHoachSanXuat)2. Nếu đồng ý, tiếp tục kiểm tra và lưu; nếu không đồng ý, giữ nguyên kế hoạch cũ. (KeHoachMuaBan, ChiTietKeHoachMuaBan, KeHoachSanXuat, ChiTietKeHoachSanXuat)
+[29,15,0,0] Exception flow
+[29,16,0,0] 4.1 Thông tin nhập không hợp lệ
+[29,17,0,0] 1. Hệ thống thông báo lỗi và yêu cầu nhập lại (KeHoachMuaBan, ChiTietKeHoachMuaBan, KeHoachSanXuat, ChiTietKeHoachSanXuat)
+[29,18,0,0] 2. Quay lại bước 34.3 Kế hoạch đã được duyệt hoặc thực hiện1. Hệ thống thông báo không thể sửa.2. Giữ nguyên kế hoạch.4.4 Ngày, nguồn hoặc dòng mặt hàng không hợp lệ1. Hệ thống yêu cầu điều chỉnh, giữ nguyên các điều kiện ngày và nguồn như khi lập mới.2. Quay lại bước 3.3.1 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.3.2 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (KeHoachMuaBan, ChiTietKeHoachMuaBan, KeHoachSanXuat, ChiTietKeHoachSanXuat)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.3.3 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 30
+[30,0,0,0] UC-05.2 Xóa kế hoạch
+[30,1,0,0] Tiền điều kiện
+[30,1,1,0] Kế hoạch được chọn chưa được duyệt/thực hiện
+[30,2,0,0] Hậu điều kiện
+[30,2,1,0] Kế hoạch được xóa khỏi danh sách
+[30,3,0,0] Actor chính
+[30,3,1,0] Bộ phận lập kế hoạch
+[30,4,0,0] Actor phụ
+[30,4,1,0] Không
+[30,5,0,0] Basic flow
+[30,6,0,0] Bộ phận lập kế hoạch
+[30,6,1,0] Hệ thống
+[30,7,0,0] 1. Chọn Xóa (KeHoachMuaBan, KeHoachSanXuat)
+[30,7,1,0] 2. Hệ thống kiểm tra kế hoạch được chọn chưa được duyệt/thực hiện (KeHoachMuaBan, KeHoachSanXuat, DonMuaHang, BanBaoCaoSanXuat, PhieuYeuCauNhapXuat)
+[30,8,0,0] 
+[30,8,1,0] 3. Hệ thống yêu cầu xác nhận xóa (KeHoachMuaBan, KeHoachSanXuat)
+[30,9,0,0] 4. Xác nhận xóa (KeHoachMuaBan, KeHoachSanXuat)
+[30,9,1,0] 5. Hệ thống xóa kế hoạch khỏi danh sách và thông báo thành công (KeHoachMuaBan, ChiTietKeHoachMuaBan, KeHoachSanXuat, ChiTietKeHoachSanXuat)
+[30,10,0,0] Alternative flow
+[30,11,0,0] 4.1 Hủy thao tác xóa
+[30,12,0,0] 1. Nhân viên chọn Không đồng ý
+[30,13,0,0] 2. Quay lại UC-05 bước 4
+[30,14,0,0] Exception flow
+[30,15,0,0] 2.1 Kế hoạch đã được duyệt/đang thực hiện
+[30,16,0,0] 1. Hệ thống thông báo không thể xóa kế hoạch đã được duyệt (KeHoachMuaBan, ChiTietKeHoachMuaBan, KeHoachSanXuat, ChiTietKeHoachSanXuat)
+[30,17,0,0] 2. Kết thúc use case4.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.4.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (KeHoachMuaBan, ChiTietKeHoachMuaBan, KeHoachSanXuat, ChiTietKeHoachSanXuat)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.4.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 31
+[31,0,0,0] UC-10 Nhập kho
+[31,1,0,0] Tiền điều kiện
+[31,1,1,0] Nhân viên kho đã đăng nhập, được Quản lý kho phân công nhập hàng; phần hàng đạt chất lượng và còn lượng được phép nhập; kho, vị trí phù hợp.
+[31,2,0,0] Hậu điều kiện
+[31,2,1,0] Hàng hóa được cập nhật vào tồn kho, phiếu nhập kho được tạo
+[31,3,0,0] Actor chính
+[31,3,1,0] Nhân viên kho
+[31,4,0,0] Actor phụ
+[31,4,1,0] Không
+[31,5,0,0] Basic flow
+[31,6,0,0] Nhân viên kho
+[31,6,1,0] Hệ thống
+[31,7,0,0] 1. Chọn chức năng Nhập kho
+[31,7,1,0] 2. Hiển thị công việc nhập kho được giao, yêu cầu nguồn, lô hoặc phần lô và lượng còn được thực hiện. (CongViec, PhanCongCongViec, PhanCongKho, PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, LoHang, ChiTietLo)
+[31,8,0,0] 3. Chọn công việc, đối chiếu giấy tờ thực nhập; kiểm tra lượng hệ thống gợi ý và điều chỉnh lượng thực nhập, vị trí, ngày nhập hoặc ghi chú theo thực tế. (CongViec, PhanCongCongViec, PhanCongKho, LoHang, ChiTietLo, ViTriKho)
+[31,8,1,0] 4. Kiểm tra đúng người được phân công, kho, vị trí, dòng lô và lượng nhập không vượt lượng được giao hoặc phần đạt chất lượng còn chưa nhập. (CongViec, PhanCongCongViec, PhanCongKho, Kho, ViTriKho, LoHang, ChiTietLo, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC, ChiTietPhieuKho)
+[31,9,0,0] 5. Xác nhận nhập kho
+[31,9,1,0] 6. Ghi phiếu nhập kho, tăng tồn theo lượng thực nhập, cập nhật lượng đã thực hiện và trạng thái công việc; thông báo thành công. Hồ sơ được cung cấp cho người có quyền xem. (PhieuKho, ChiTietPhieuKho, TonKho, BienDongKho, PhanCongKho, PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, CongViec)
+[31,10,0,0] Alternative flow
+[31,11,0,0] 3.1 Chỉ nhập một phần số lượng được phân công
+[31,12,0,0] 1. Nhân viên kho điều chỉnh lượng thực nhập trong giới hạn còn được nhập và ghi chú thực tế nếu cần.
+[31,13,0,0] 2. Hệ thống ghi nhận đúng lượng thực nhập; lượng còn lại chưa được coi là đã nhập. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, PhanCongKho)
+[31,14,0,0] 3. Tiếp tục bước 5; phần còn lại thực hiện bằng lần ghi nhận sau khi còn đủ điều kiện.
+[31,15,0,0] Exception flow
+[31,16,0,0] 4.1 Thông tin nhập kho không hợp lệ
+[31,17,0,0] 1. Hệ thống thông báo lỗi và yêu cầu nhập lại (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, PhanCongKho)
+[31,18,0,0] 2. Quay lại bước 24.2 Hàng chưa đạt chất lượng, đã nhập hết, bị cách ly hoặc lượng nhập vượt phân công1. Hệ thống thông báo không thể nhập lượng đã chọn. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, PhanCongKho)2. Nhân viên kho kiểm tra lại hoặc liên hệ Quản lý kho. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, PhanCongKho)4.3 Kho đang bị khóa để kiểm kê hoặc vị trí không thuộc kho1. Hệ thống không ghi phiếu và không tăng tồn.2. Nhân viên chọn vị trí hợp lệ hoặc chờ kho đủ điều kiện. (ViTriKho, Kho)5.1 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.5.2 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, PhanCongKho)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.5.3 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 32
+[32,0,0,0] UC-11 Xuất kho
+[32,1,0,0] Tiền điều kiện
+[32,1,1,0] Nhân viên kho đã đăng nhập, được phân công thực hiện yêu cầu xuất kho còn hiệu lực.
+[32,2,0,0] Hậu điều kiện
+[32,2,1,0] Phiếu xuất kho được lập; tồn kho và trạng thái lô được cập nhật
+[32,3,0,0] Actor chính
+[32,3,1,0] Nhân viên kho
+[32,4,0,0] Actor phụ
+[32,4,1,0] Không
+[32,5,0,0] Basic flow
+[32,6,0,0] Nhân viên kho
+[32,6,1,0] Hệ thống
+[32,7,0,0] 1. Chọn chức năng Xuất kho
+[32,7,1,0] 2. Hiển thị công việc xuất kho được giao gồm xuất nguyên vật liệu để sản xuất hoặc xuất thành phẩm để giao hàng. (CongViec, PhanCongCongViec, PhanCongKho, PhieuYeuCauNhapXuat)
+[32,8,0,0] Alternative flow
+[32,9,0,0] 2.1 Chọn Xuất nguyên vật liệu
+[32,10,0,0] 1. Hệ thống thực hiện UC-11.01
+[32,11,0,0] 2.2 Chọn Xuất thành phẩm
+[32,12,0,0] 1. Hệ thống thực hiện UC-11.02
+[32,13,0,0] Exception flow
+[32,14,0,0] Xử lý trong UC-11.01 và UC-11.021.1 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.1.2 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (CongViec, PhanCongCongViec, PhanCongKho)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.1.3 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 33
+[33,0,0,0] UC-11.01 Xuất nguyên vật liệu
+[33,1,0,0] Tiền điều kiện
+[33,1,1,0] Nhân viên kho được phân công xuất nguyên vật liệu cho kế hoạch sản xuất hoặc báo cáo nhu cầu hợp lệ của xưởng; nguồn, lô, vị trí và lượng còn đủ điều kiện.
+[33,2,0,0] Hậu điều kiện
+[33,2,1,0] Phiếu xuất kho nguyên vật liệu được lập; tồn kho và trạng thái lô được cập nhật
+[33,3,0,0] Actor chính
+[33,3,1,0] Nhân viên kho
+[33,4,0,0] Actor phụ
+[33,4,1,0] Không
+[33,5,0,0] Basic flow
+[33,6,0,0] Nhân viên kho
+[33,6,1,0] Hệ thống
+[33,7,0,0] 1. Chọn Xuất nguyên vật liệu (MatHang, NguyenVatLieu)
+[33,7,1,0] 2. Hiển thị các công việc xuất đúng mục đích được giao cho nhân viên, còn lượng chưa thực hiện. (CongViec, PhanCongCongViec, PhanCongKho)
+[33,8,0,0] 3. Chọn công việc và đối chiếu giấy tờ thực xuất; kiểm tra số lượng gợi ý, nhập lượng thực xuất và ghi chú thực tế. (CongViec, PhanCongCongViec, PhanCongKho)
+[33,8,1,0] 4. Hiển thị yêu cầu xuất cho kế hoạch sản xuất hoặc nguồn nhu cầu được phép, cùng lô, vị trí và lượng Quản lý kho đã phân công. Kiểm tra lượng chưa cấp; không tự phân bổ lại lô thay Quản lý kho. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, KeHoachSanXuat, ChiTietKeHoachSanXuat, BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, LoHang, ChiTietLo, ViTriKho, PhanCongKho)
+[33,9,0,0] 5. Xác nhận xuất kho
+[33,9,1,0] 6. Kiểm tra lại tồn kho khả dụng và trạng thái lô (TonKho, LoHang, ChiTietLo, PhanCongKho)
+[33,10,0,0]  
+[33,10,1,0] 7. Lập phiếu xuất kho và trừ tồn kho (PhieuKho, ChiTietPhieuKho, TonKho, BienDongKho, PhanCongKho)
+[33,11,0,0]  
+[33,11,1,0] 8. Cập nhật trạng thái lô và phiếu yêu cầu (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, PhanCongKho, CongViec)
+[33,12,0,0]  
+[33,12,1,0] 9. Thông báo xuất kho thành công và hiển thị phiếu xuất kho (PhieuKho, ChiTietPhieuKho)
+[33,13,0,0] Alternative flow
+[33,14,0,0] 3.1 Chưa thể xuất theo thực tế
+[33,15,0,0] 1. Nhân viên kho không xác nhận xuất khi thiếu hàng hoặc phát hiện hàng không đủ điều kiện; liên hệ Quản lý kho để kiểm tra và điều chỉnh theo quyền. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, PhanCongKho)
+[33,16,0,0] 2. Khi chưa ghi phiếu, hệ thống không trừ tồn. Nếu cần xử lý ngoại lệ, Quản lý kho thực hiện tại UC-16; không tự tạo đề xuất hoặc tự đổi yêu cầu sang Chờ duyệt lại. (BanDeXuatXuLyNgoaiLe, KetQuaXuLyNgoaiLe, PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, PhanCongKho)3.2 Xuất một phần lượng được giao1. Nhân viên kho nhập lượng thực xuất nhỏ hơn lượng còn được phép. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, PhanCongKho)2. Hệ thống cập nhật đúng lượng thực xuất, giữ phần chưa xuất để xử lý tiếp. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, PhanCongKho)3. Tiếp tục bước 5.
+[33,17,0,0] Exception flow
+[33,18,0,0] 6.1 Tồn kho không đủ hoặc lô không còn khả dụng
+[33,19,0,0] 1. Hệ thống thông báo lỗi, không lập phiếu xuất kho (PhieuKho, ChiTietPhieuKho)
+[33,20,0,0] 2. Quay lại bước 26.2 Sai người thực hiện, lô hoặc vị trí ngoài phân công, hàng hết hạn hoặc đang cách ly1. Hệ thống thông báo không thể xuất.2. Không tạo phiếu và không trừ tồn.6.3 Kho đang bị khóa kiểm kê hoặc dữ liệu đã thay đổi1. Hệ thống dừng ghi phiếu.2. Nhân viên tải lại công việc hoặc liên hệ Quản lý kho; không cố xuất lại bằng thông tin cũ.5.1 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.5.2 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, PhanCongKho)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.5.3 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 34
+[34,0,0,0] UC-11.02 Xuất thành phẩm
+[34,1,0,0] Tiền điều kiện
+[34,1,1,0] Nhân viên kho đã đăng nhập và chọn Xuất thành phẩm (UC-11); đơn hàng và kế hoạch BAN liên quan đã được duyệt, có thành phẩm đạt QC và tồn khả dụng.
+[34,2,0,0] Hậu điều kiện
+[34,2,1,0] Phiếu xuất kho thành phẩm được lập; tồn kho, trạng thái lô và đơn hàng được cập nhật
+[34,3,0,0] Actor chính
+[34,3,1,0] Nhân viên kho
+[34,4,0,0] Actor phụ
+[34,4,1,0] Không
+[34,5,0,0] Basic flow
+[34,6,0,0] Nhân viên kho
+[34,6,1,0] Hệ thống
+[34,7,0,0] 1. Chọn Xuất thành phẩm (MatHang, ThanhPham)
+[34,7,1,0] 2. Hiển thị các công việc xuất đúng mục đích được giao cho nhân viên, còn lượng chưa thực hiện. (CongViec, PhanCongCongViec, PhanCongKho)
+[34,8,0,0] 3. Chọn công việc và đối chiếu giấy tờ thực xuất; kiểm tra số lượng gợi ý, nhập lượng thực xuất và ghi chú thực tế. (CongViec, PhanCongCongViec, PhanCongKho)
+[34,8,1,0] 4. Hiển thị yêu cầu, đơn hàng, kế hoạch sản xuất, kế hoạch bán và các phần thành phẩm đạt chất lượng mà Quản lý kho đã phân công. Kiểm tra điều kiện hoàn tất sản xuất, ngày giao và lượng còn được giao. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, DonHang, ChiTietDonHang, KeHoachSanXuat, ChiTietKeHoachSanXuat, KeHoachMuaBan, ChiTietKeHoachMuaBan, LoHang, ChiTietLo, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC, PhanCongKho)
+[34,9,0,0] 5. Xác nhận xuất kho
+[34,9,1,0] 6. Kiểm tra lại tồn kho khả dụng và trạng thái lô (TonKho, LoHang, ChiTietLo, PhanCongKho)
+[34,10,0,0]  
+[34,10,1,0] 7. Lập phiếu xuất kho và trừ tồn kho (PhieuKho, ChiTietPhieuKho, TonKho, BienDongKho, PhanCongKho)
+[34,11,0,0]  
+[34,11,1,0] 8. Cập nhật trạng thái lô, lượng đã giao của đơn và lượng đã thực hiện của kế hoạch BAN.  (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, PhanCongKho, CongViec, DonHang, KeHoachMuaBan)
+[34,12,0,0]  
+[34,12,1,0] 9. Thông báo xuất kho thành công và hiển thị phiếu xuất kho (PhieuKho, ChiTietPhieuKho)
+[34,13,0,0] Alternative flow
+[34,14,0,0] 3.1 Chưa thể xuất theo thực tế
+[34,15,0,0] 1. Nhân viên kho không xác nhận xuất khi thiếu hàng hoặc phát hiện hàng không đủ điều kiện; liên hệ Quản lý kho để kiểm tra và điều chỉnh theo quyền. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, PhanCongKho)
+[34,16,0,0] 2. Khi chưa ghi phiếu, hệ thống không trừ tồn. Nếu cần xử lý ngoại lệ, Quản lý kho thực hiện tại UC-16; không tự tạo đề xuất hoặc tự đổi yêu cầu sang Chờ duyệt lại. (BanDeXuatXuLyNgoaiLe, KetQuaXuLyNgoaiLe, PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, PhanCongKho)3.2 Xuất một phần lượng được giao1. Nhân viên kho nhập lượng thực xuất nhỏ hơn lượng còn được phép. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, PhanCongKho)2. Hệ thống cập nhật đúng lượng thực xuất, giữ phần chưa xuất để xử lý tiếp. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, PhanCongKho)3. Tiếp tục bước 5.
+[34,17,0,0] Exception flow
+[34,18,0,0] 6.1 Tồn kho không đủ hoặc lô không còn khả dụng
+[34,19,0,0] 1. Hệ thống thông báo lỗi, không lập phiếu xuất kho (PhieuKho, ChiTietPhieuKho)
+[34,20,0,0] 2. Quay lại bước 26.2 Sai người thực hiện, lô hoặc vị trí ngoài phân công, hàng hết hạn hoặc đang cách ly1. Hệ thống thông báo không thể xuất.2. Không tạo phiếu và không trừ tồn.6.3 Kho đang bị khóa kiểm kê hoặc dữ liệu đã thay đổi1. Hệ thống dừng ghi phiếu.2. Nhân viên tải lại công việc hoặc liên hệ Quản lý kho; không cố xuất lại bằng thông tin cũ.5.1 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.5.2 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, PhanCongKho)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.5.3 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 35
+[35,0,0,0] UC-35 Báo cáo thành phẩm
+[35,1,0,0] Tiền điều kiện
+[35,1,1,0] Chủ xưởng đã đăng nhập; kế hoạch sản xuất đã được phê duyệt, thuộc xưởng phụ trách, chưa chốt hoàn tất và có thành phẩm mới hoàn thành cần báo cáo.
+[35,2,0,0] Hậu điều kiện
+[35,2,1,0] Báo cáo thành phẩm được lưu; khi gửi sẽ ghi nhận phần thành phẩm trong cùng lô sản xuất để kiểm tra chất lượng và yêu cầu nhập kho. Gửi báo cáo chưa làm tăng tồn kho. Báo cáo đợt cuối đủ điều kiện hoàn tất kế hoạch và làm căn cứ bước bán hàng.
+[35,3,0,0] Actor chính
+[35,3,1,0] Chủ xưởng
+[35,4,0,0] Actor phụ
+[35,4,1,0] Không
+[35,5,0,0] Basic flow
+[35,6,0,0] Chủ xưởng
+[35,6,1,0] Hệ thống
+[35,7,0,0] 1. Chọn chức năng Báo cáo thành phẩm (MatHang, ThanhPham)
+[35,7,1,0] 2. Hiển thị kế hoạch, xưởng, số lượng thành phẩm theo kế hoạch, đã báo cáo, còn lại và nguyên vật liệu đã xuất cho sản xuất. (KeHoachSanXuat, ChiTietKeHoachSanXuat, Xuong, BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, PhieuKho, ChiTietPhieuKho, MatHang, ThanhPham, NguyenVatLieu)
+[35,8,0,0] 3. Nhập lượng thành phẩm mới hoàn thành của phần này, thông tin phần lô, ngày sản xuất, hạn dùng nếu có và ghi chú. Khi báo cáo đợt cuối, kiểm tra và nhập lượng nguyên vật liệu thực tế đã dùng. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, ChiTietLoBaoCaoSanXuat, LoHang, ChiTietLo)
+[35,8,1,0] 4. Cập nhật lượng còn lại theo lượng đang nhập; kiểm tra tổng các phần thành phẩm, lô, ngày và lượng nguyên vật liệu sử dụng. Các phần của cùng kế hoạch dùng chung mã lô sản xuất nhưng có thông tin phần riêng. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, ChiTietLoBaoCaoSanXuat, LoHang, ChiTietLo, KeHoachSanXuat, ChiTietKeHoachSanXuat, PhieuKho, ChiTietPhieuKho)
+[35,9,0,0] 5. Xác nhận gửi báo cáo
+[35,9,1,0] 6. Lưu và gửi báo cáo thành phẩm; ghi nhận phần lô tương ứng, thông báo cho người nhận. Chỉ đợt cuối đủ điều kiện mới hoàn tất kế hoạch; không tự nhập tồn hoặc tự kết luận chất lượng. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, ChiTietLoBaoCaoSanXuat, LoHang, ChiTietLo, KeHoachSanXuat, ThongBao)
+[35,10,0,0] Alternative flow
+[35,11,0,0] 5.1 Hủy trước khi xác nhận gửi báo cáo
+[35,12,0,0] 1. Chủ xưởng chọn Hủy
+[35,13,0,0] 2. Hệ thống hủy thông tin báo cáo đã nhập
+[35,14,0,0] 3. Kết thúc use case3.1 Điền lượng còn lại1. Chủ xưởng chọn ô điền lượng còn lại của mặt hàng. (MatHang)2. Hệ thống điền lượng chưa báo cáo vào số lượng của phần này, đồng thời cập nhật cột Còn lại về 0. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)3. Chủ xưởng vẫn có thể điều chỉnh lượng theo thực tế.3.2 Đợt cuối1. Khi lượng còn lại của tất cả thành phẩm bằng 0, hệ thống tự chọn Đợt cuối. (MatHang, ThanhPham)2. Khi chọn Đợt cuối, hệ thống gợi ý lượng nguyên vật liệu chưa quyết toán từ tổng lượng đã xuất, trừ lượng đã báo sử dụng ở các phần trước. (MatHang, NguyenVatLieu)3. Chủ xưởng kiểm tra và sửa lượng thực dùng rồi tiếp tục bước 5. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)3.3 Còn nguyên vật liệu chưa dùng1. Ví dụ đã xuất 5.000, thực dùng 4.900 thì báo cáo ghi đúng 4.900; phần 100 còn dư phải được đối chiếu riêng. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)2. Báo cáo không tự tạo phiếu nhập trả 100 và không tự tăng tồn kho.5.2 Lưu nháp1. Chủ xưởng lưu báo cáo để kiểm tra lại. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)2. Báo cáo chưa gửi chưa được coi là phần hàng đã sẵn sàng cho các bước tiếp theo.3. Khi đủ thông tin, Chủ xưởng mở lại và gửi.
+[35,15,0,0] Exception flow
+[35,16,0,0] 4.1 Thông tin báo cáo thành phẩm chưa đầy đủ hoặc không hợp lệ
+[35,17,0,0] 1. Hệ thống thông báo thông tin không hợp lệ và yêu cầu nhập lại (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)
+[35,18,0,0] 2. Quay lại bước 34.2 Lượng báo cáo vượt sản lượng còn được báo cáo, mặt hàng ngoài kế hoạch hoặc lô không phù hợp1. Hệ thống không lưu hoặc gửi báo cáo không hợp lệ. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)2. Chủ xưởng điều chỉnh lượng và nguồn.4.3 Chọn đợt cuối khi chưa đủ điều kiện hoặc kế hoạch đã có báo cáo chốt cuối1. Hệ thống thông báo không thể chốt.2. Chủ xưởng kiểm tra lại các phần trước và lượng còn lại. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)4.4 Lượng nguyên vật liệu sử dụng vượt lượng đã xuất còn được quyết toán1. Hệ thống yêu cầu đối chiếu lại phiếu xuất và lượng đã báo sử dụng. (PhieuKho, ChiTietPhieuKho)2. Chưa xác nhận lượng sử dụng không có căn cứ.4.5 Ngày sản xuất, ngày hoàn thành hoặc hạn dùng không hợp lệ1. Hệ thống yêu cầu chọn lại ngày.2. Không tự sửa lịch sử của phần lô đã ghi.5.3 Báo cáo đã gửi1. Hệ thống không cho sửa đè hoặc xóa báo cáo đã làm căn cứ cho bước tiếp theo. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)2. Chủ xưởng xem lại báo cáo đã gửi để tránh lập trùng. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)5.4 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.5.5 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.5.6 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 36
+[36,0,0,0] UC-01 Đăng nhập
+[36,1,0,0] Tiền điều kiện
+[36,1,1,0] Người dùng đã được cấp tài khoản trong hệ thống
+[36,2,0,0] Hậu điều kiện
+[36,2,1,0] Người dùng đăng nhập thành công và truy cập được các chức năng theo quyền hạn được cấp
+[36,3,0,0] Actor chính
+[36,3,1,0] Người dùng
+[36,4,0,0] Actor phụ
+[36,4,1,0] Không
+[36,5,0,0] Basic flow
+[36,6,0,0] Người dùng
+[36,6,1,0] Hệ thống
+[36,7,0,0] 1. Truy cập màn hình đăng nhập
+[36,7,1,0] 2. Hiển thị form đăng nhập gồm tên đăng nhập và mật khẩu
+[36,8,0,0] 3. Nhập tên đăng nhập, mật khẩu và chọn Đăng nhập
+[36,8,1,0] 4. Kiểm tra thông tin đăng nhập (NguoiDung, NguoiDungVaiTro, VaiTro, LanThuDangNhap)
+[36,9,0,0] 5. Xem kết quả đăng nhập
+[36,9,1,0] 6. Hiển thị màn hình chính theo quyền của người dùng (NguoiDung, NguoiDungVaiTro, VaiTro, NguoiDungXuong, PhienDangNhap)
+[36,10,0,0] Alternative flow
+[36,11,0,0] 3.1 Sai tên đăng nhập hoặc mật khẩu
+[36,12,0,0] 1. Hệ thống thông báo tên đăng nhập hoặc mật khẩu không đúng
+[36,13,0,0] 2. Quay lại bước 2
+[36,14,0,0] 3.2 Bỏ trống thông tin đăng nhập
+[36,15,0,0] 1. Hệ thống thông báo yêu cầu nhập đầy đủ tên đăng nhập và mật khẩu (NguoiDung)
+[36,16,0,0] 2. Quay lại bước 2
+[36,17,0,0] Exception flow
+[36,18,0,0] 4.1 Tài khoản bị khóa
+[36,19,0,0] 1. Hệ thống không cho đăng nhập bằng tài khoản không hoạt động; hiển thị thông báo tên đăng nhập hoặc mật khẩu không đúng. Người dùng liên hệ quản trị viên để kiểm tra tài khoản. (NguoiDung)
+[36,20,0,0] 2. Kết thúc use case4.2 Đăng nhập sai nhiều lần liên tiếp1. Hệ thống thông báo tạm thời chưa thể tiếp tục đăng nhập.2. Người dùng chờ hết thời gian giới hạn rồi thử lại; không được vào hệ thống trong thời gian bị chặn.5.1 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.5.2 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (NguoiDung)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.5.3 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 37
+[37,0,0,0] UC-12 Quản lý kết quả kiểm tra QC/AC
+[37,1,0,0] Tiền điều kiện
+[37,1,1,0] Bộ phận QC/AC đã đăng nhập
+[37,2,0,0] Hậu điều kiện
+[37,2,1,0] Danh sách kết quả kiểm tra chất lượng được hiển thị/tìm kiếm theo yêu cầu
+[37,3,0,0] Actor chính
+[37,3,1,0] Bộ phận QC/AC
+[37,4,0,0] Actor phụ
+[37,4,1,0] Không
+[37,5,0,0] Basic flow
+[37,6,0,0] Bộ phận QC/AC
+[37,6,1,0] Hệ thống
+[37,7,0,0] 1. Chọn chức năng Quản lý kết quả kiểm tra chất lượng (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)
+[37,7,1,0] 2. Hiển thị danh sách kết quả kiểm tra chất lượng (KetQuaKiemTraQCAC)
+[37,8,0,0] 3. Chọn một kết quả để xem chi tiết (KetQuaKiemTraQCAC)
+[37,8,1,0] 4. Hiển thị chi tiết kết quả kiểm tra (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC, LoHang, ChiTietLo, MatHang, NguyenVatLieu, ThanhPham)
+[37,9,0,0] Alternative flow
+[37,10,0,0] 1.1 Tìm kiếm hoặc lọc kết quả theo những điều kiện được hiển thị trên màn hình
+[37,11,0,0] 1. Nhân viên nhập điều kiện tìm kiếm hoặc lọc kết quả. (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)
+[37,12,0,0] 2. Hệ thống hiển thị kết quả phù hợp (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)
+[37,13,0,0] 3. Quay lại bước 1
+[37,14,0,0] 2.1 Chọn Thêm
+[37,15,0,0] 1. Hệ thống thực hiện UC-12.1
+[37,16,0,0] 4.1 Chọn Sửa 
+[37,17,0,0] 1. Hệ thống thực hiện UC-12.2
+[37,18,0,0] 4.2 Xem kết quả đã ghi nhận
+[37,19,0,0] 1. Kết quả đã ghi không được xóa; nếu sai, thực hiện điều chỉnh tại UC-12.2 để giữ lịch sử. UC-12.3 không còn được sử dụng để xóa kết quả. (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)
+[37,20,0,0] 4.3 Kết quả ghi nhận "không đạt"
+[37,21,0,0] 1. Hệ thống lưu kết quả không đạt và ghi nhận trạng thái để tiếp tục xử lý hàng lỗi (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)
+[37,22,0,0] Exception flow
+[37,23,0,0] 1.1 Không có kết quả phù hợp
+[37,24,0,0] 1. Hệ thống thông báo không tìm thấy kết quả phù hợp (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)
+[37,25,0,0] 2. Quay lại bước 13.1 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.3.2 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.3.3 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 38
+[38,0,0,0] UC-12.1 Thêm kết quả kiểm tra QC/AC
+[38,1,0,0] Tiền điều kiện
+[38,1,1,0] Nhân viên QC/AC được phân công trong đợt đã bắt đầu; có phần lô nguyên vật liệu hoặc thành phẩm thực tế chưa được ghi kết quả kiểm tra.
+[38,2,0,0] Hậu điều kiện
+[38,2,1,0] Kết quả kiểm tra chất lượng mới được lưu vào hệ thống
+[38,3,0,0] Actor chính
+[38,3,1,0] Bộ phận QC/AC
+[38,4,0,0] Actor phụ
+[38,4,1,0] Không
+[38,5,0,0] Basic flow
+[38,6,0,0] Bộ phận QC/AC
+[38,6,1,0] Hệ thống
+[38,7,0,0] 1. Chọn Thêm kết quả kiểm tra (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)
+[38,7,1,0] 2. Hiển thị các đợt được phân công và từng phần lô còn chờ kiểm tra; gợi ý lượng cần kiểm. (LoLichKiemTra, PhanCongLichKiemTra, CongViec, PhanCongCongViec, LoHang, ChiTietLo, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)
+[38,8,0,0] 3. Nhập lượng kiểm tra, lượng đạt, lượng lỗi và ghi chú của từng dòng lô; xác nhận.  (ChiTietKetQuaKiemTraQCAC, ChiTietLo)
+[38,8,1,0] 4. Kiểm tra lượng đạt cộng lượng lỗi bằng toàn bộ lượng phải kiểm của từng dòng; lưu kết quả và cập nhật tiến độ đợt. Nguyên vật liệu lỗi được ghi nhận trả nhà cung cấp theo kết luận; phần đạt chưa tăng tồn, phải có yêu cầu và phiếu nhập. Thành phẩm lỗi được xử lý theo kết luận và ngoại lệ nếu cần. (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC, LoHang, ChiTietLo, LoLichKiemTra, CongViec, PhanCongLichKiemTra, ChiTietLoTraVe, DonMuaHang)
+[38,9,0,0] Alternative flow
+[38,10,0,0] 3.1 Hủy trước khi xác nhận
+[38,11,0,0] 1. Bộ phận QC/AC chọn Hủy
+[38,12,0,0] 2. Hệ thống hủy thông tin đã nhập
+[38,13,0,0] 3. Kết thúc use case3.2 Toàn bộ đạt hoặc toàn bộ không đạt1. Nếu toàn bộ đạt, nhập lượng lỗi bằng 0. Nếu toàn bộ không đạt, nhập lượng đạt bằng 0. (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)2. Nếu có lượng lỗi, nhập mô tả lỗi. (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)3. Tiếp tục kiểm tra và lưu ở bước 4. (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)3.3 Đợt có cả QC/AC và Ban kiểm kê1. QC/AC ghi phần chất lượng; Ban kiểm kê ghi phần số lượng riêng.2. Đợt chỉ hoàn tất khi đủ các nội dung được phân công; kết quả được tổng hợp vào một biên bản tại UC-28. (NguoiDung, NguoiDungVaiTro, CongViec, PhanCongCongViec, PhieuKiemKe, LoLichKiemTra, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)
+[38,14,0,0] Exception flow
+[38,15,0,0] 3.1 Thông tin nhập không hợp lệ
+[38,16,0,0] 1. Hệ thống thông báo lỗi và yêu cầu nhập lại (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)
+[38,17,0,0] 2. Quay lại bước 3
+[38,18,0,0] 3.2 Thông tin nhập bị bỏ trống
+[38,19,0,0] 1. Hệ thống thông báo vui lòng nhập đầy đủ thông tin (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)
+[38,20,0,0] 2. Quay lại bước 32.1 Chưa có phần lô thực tế hoặc đợt chưa bắt đầu1. Hệ thống thông báo chưa có dữ liệu hoặc chưa đến thời gian thực hiện. (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)2. Kiểm tra lại ghi nhận hàng về và thời gian đợt; giả lập chỉ cho phép bắt đầu sớm khi được xác nhận, không tạo phần lô. (LoHang, ChiTietLo, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)4.1 Tổng số đạt và lỗi không bằng lượng kiểm, kiểm chưa đủ lượng của dòng hoặc dòng đã có kết quả1. Hệ thống thông báo và không ghi kết quả trùng hoặc không đủ. (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)2. Nhân viên kiểm tra lại số lượng và dòng lô. (LoHang, ChiTietLo, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)3.4 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.3.5 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.3.6 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 39
+[39,0,0,0] UC-12.2 Sửa kết quả kiểm tra QC/AC
+[39,1,0,0] Tiền điều kiện
+[39,1,1,0] Nhân viên QC/AC đã lập kết quả gốc đăng nhập; kết quả còn đủ điều kiện điều chỉnh và chưa có chứng từ liên quan ngăn việc điều chỉnh trực tiếp.
+[39,2,0,0] Hậu điều kiện
+[39,2,1,0] Kết quả được điều chỉnh bằng chứng từ ghi lại số trước, số sau và lý do; vẫn giữ lịch sử kết quả ban đầu.
+[39,3,0,0] Actor chính
+[39,3,1,0] Bộ phận QC/AC
+[39,4,0,0] Actor phụ
+[39,4,1,0] Không
+[39,5,0,0] Basic flow
+[39,6,0,0] Bộ phận QC/AC
+[39,6,1,0] Hệ thống
+[39,7,0,0] 1. Chọn kết quả cần điều chỉnh và mở Chứng từ bù QC. (ChungTuBuQC, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)
+[39,7,1,0] 2. Hiển thị dòng lô, số lượng đạt, số lượng lỗi và nội dung lỗi hiện tại. (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC, ChiTietLo)
+[39,8,0,0] 3. Nhập số đạt, số lỗi mới, mô tả lỗi nếu có và lý do điều chỉnh; xác nhận. Số nhập là kết quả mới, không phải số chênh lệch. (ChungTuBuQC, ChiTietKetQuaKiemTraQCAC)
+[39,8,1,0] 4. Kiểm tra người lập, dòng lô và tổng lượng không đổi; lưu chứng từ điều chỉnh và kết quả mới nếu đủ điều kiện. Không sửa phiếu kho hoặc tự thay đổi tồn kho. (ChungTuBuQC, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC, ChiTietLo)
+[39,9,0,0] Alternative flow
+[39,10,0,0] 3.1 Hủy trước khi xác nhận
+[39,11,0,0] 1. Bộ phận QC/AC chọn Hủy
+[39,12,0,0] 2. Hệ thống hủy thông tin đã chỉnh sửa
+[39,13,0,0] 3. Kết thúc use case
+[39,14,0,0] Exception flow
+[39,15,0,0] 3.1 Thông tin nhập không hợp lệ
+[39,16,0,0] 1. Hệ thống thông báo lỗi và yêu cầu nhập lại (ChungTuBuQC, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)
+[39,17,0,0] 2. Quay lại bước 3
+[39,18,0,0] 3.2 Thông tin nhập bị bỏ trống
+[39,19,0,0] 1. Hệ thống thông báo vui lòng nhập đầy đủ thông tin (ChungTuBuQC, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)
+[39,20,0,0] 2. Quay lại bước 34.1 Kết quả đã dùng để nhập kho, phân công hàng, trả hàng hoặc xử lý ngoại lệ1. Hệ thống thông báo không thể điều chỉnh trực tiếp.2. Người dùng liên hệ Quản lý kho để xử lý theo chứng từ và phê duyệt tương ứng; không xóa kết quả cũ. (ChungTuBuQC, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)4.2 Không phải người lập kết quả gốc hoặc thiếu lý do1. Hệ thống không ghi điều chỉnh.2. Người có quyền bổ sung đúng nội dung và thực hiện lại.3.3 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.3.4 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (ChungTuBuQC, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.3.5 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 40
+[40,0,0,0] UC-12.3 Xóa kết quả kiểm tra QC/AC
+[40,1,0,0] Tiền điều kiện
+[40,1,1,0] Chức năng xóa kết quả QC/AC đã ghi không còn được sử dụng; giữ bảng đặc tả này để đối chiếu với tài liệu ban đầu.
+[40,2,0,0] Hậu điều kiện
+[40,2,1,0] Không xóa kết quả đã ghi; nếu cần sửa sai, thực hiện UC-12.2 theo điều kiện cho phép.
+[40,3,0,0] Actor chính
+[40,3,1,0] Bộ phận QC/AC
+[40,4,0,0] Actor phụ
+[40,4,1,0] Không
+[40,5,0,0] Basic flow
+[40,6,0,0] Bộ phận QC/AC
+[40,6,1,0] Hệ thống
+[40,7,0,0] 1. Mở chi tiết kết quả kiểm tra. (KetQuaKiemTraQCAC)
+[40,7,1,0] 2. Hệ thống hiển thị kết quả đã ghi và không cung cấp thao tác xóa kết quả như một bước thực hiện thành công. (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)
+[40,8,0,0] 
+[40,8,1,0] 3. Người dùng cần sửa sai chuyển sang điều chỉnh kết quả tại UC-12.2.
+[40,9,0,0] 
+[40,9,1,0] 4. Kết thúc UC; giữ nguyên kết quả và lịch sử.
+[40,10,0,0] Alternative flow
+[40,11,0,0] 2.1 Cần sửa sai kết quả
+[40,12,0,0] 1. QC/AC thực hiện UC-12.2 nếu đủ điều kiện.
+[40,13,0,0] 2. Nếu kết quả đã gắn với hàng nhập kho hoặc chứng từ khác, phải xử lý theo luồng điều chỉnh có liên quan; không xóa lịch sử. (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)
+[40,14,0,0] 
+[40,15,0,0] Exception flow
+[40,16,0,0] 2.2 Yêu cầu xóa kết quả đã ghi
+[40,17,0,0] 1. Hệ thống thông báo không xóa kết quả QC đã ghi. (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)
+[40,18,0,0] 2. Không thay đổi kết quả hoặc tồn kho. (TonKho, PhanCongKho, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)4.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.4.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.4.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 41
+[41,0,0,0] UC-34 Lập phiếu báo cáo sản xuất
+[41,0,1,0] 
+[41,1,0,0] Tiền điều kiện
+[41,1,1,0] Chủ xưởng đã đăng nhập; có kế hoạch sản xuất đã được phê duyệt, được phân công cho xưởng và tiến độ sản xuất chưa đạt 100%.
+[41,2,0,0] Hậu điều kiện
+[41,2,1,0] Báo cáo được lưu nháp hoặc gửi theo lựa chọn. Khi gửi, Ban giám đốc luôn nhận được; báo cáo nhu cầu còn thiếu nguyên vật liệu được gửi thêm Bộ phận lập kế hoạch. Báo cáo tiến độ hoặc sự cố không tự tạo phần lô hay tăng tồn kho.
+[41,3,0,0] Actor chính
+[41,3,1,0] Chủ xưởng
+[41,4,0,0] Actor phụ
+[41,4,1,0] Không
+[41,5,0,0] Basic flow
+[41,5,1,0] 
+[41,6,0,0] Chủ xưởng
+[41,6,1,0] Hệ thống
+[41,7,0,0] 1. Chọn chức năng Lập phiếu báo cáo sản xuất. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)
+[41,7,1,0] 
+[41,8,0,0] 
+[41,8,1,0] 2. Hiển thị form báo cáo sản xuất. (KeHoachSanXuat, Xuong)
+[41,9,0,0] 3. Chọn kế hoạch sản xuất và mục đích báo cáo: tiến độ, sự cố hoặc nhu cầu nguyên vật liệu. (KeHoachSanXuat)
+[41,9,1,0] 
+[41,10,0,0] 
+[41,10,1,0] 4. Hiển thị kế hoạch, xưởng và các nội dung phù hợp với mục đích báo cáo. Với báo cáo nhu cầu, lấy lượng nguyên vật liệu ước lượng từ kế hoạch. (KeHoachSanXuat, ChiTietKeHoachSanXuat, Xuong, MatHang, NguyenVatLieu)
+[41,11,0,0] 
+[41,11,1,0] 5. Với báo cáo nhu cầu, hiển thị lượng tồn khả dụng từ hệ thống; không coi toàn bộ lượng đã dành cho nhu cầu khác là lượng còn có thể cấp. (TonKho, PhanCongKho, ChiTietLo, MatHang, NguyenVatLieu)
+[41,12,0,0] 6. Nhập tiến độ sản xuất hiện tại. (BanBaoCaoSanXuat)
+[41,12,1,0] 
+[41,13,0,0] 7. Nhập mô tả tình hình sản xuất, vấn đề phát sinh hoặc nội dung cần báo cáo. (BanBaoCaoSanXuat)
+[41,13,1,0] 
+[41,14,0,0] 
+[41,14,1,0] 8. Với báo cáo nhu cầu, đối chiếu lượng có thể cấp với lượng ước lượng cần dùng. (KeHoachSanXuat, ChiTietKeHoachSanXuat, TonKho, PhanCongKho, MatHang, NguyenVatLieu)
+[41,15,0,0] 
+[41,15,1,0] 9. Tính lượng thiếu của từng nguyên vật liệu, không nhỏ hơn 0; xác định đủ hoặc thiếu. Báo cáo tiến độ hoặc sự cố không bắt buộc phải có dòng nguyên vật liệu. (ChiTietKeHoachSanXuat, TonKho, PhanCongKho, MatHang, NguyenVatLieu)
+[41,16,0,0] 
+[41,16,1,0] 10. Hiển thị nội dung báo cáo và người nhận mặc định là Ban giám đốc. (BanBaoCaoSanXuat, NguoiDung, NguoiDungVaiTro, VaiTro)
+[41,17,0,0] 11. Chọn gửi thêm Bộ phận lập kế hoạch nếu cần. Với báo cáo nhu cầu còn thiếu nguyên vật liệu, hệ thống tự gửi thêm bộ phận này. (BanBaoCaoSanXuat, NguoiDung, NguoiDungVaiTro, VaiTro)
+[41,17,1,0] 
+[41,18,0,0] 12. Xác nhận gửi báo cáo.
+[41,18,1,0] 
+[41,19,0,0] 
+[41,19,1,0] 13. Kiểm tra thông tin báo cáo, tiến độ và quyền đối với kế hoạch, xưởng. (KeHoachSanXuat, ChiTietKeHoachSanXuat, NguoiDungXuong, BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)
+[41,20,0,0] 
+[41,20,1,0] 14. Lưu báo cáo sản xuất với thời gian lập, mục đích, tiến độ và mô tả, liên kết kế hoạch sản xuất và xưởng. (BanBaoCaoSanXuat)
+[41,21,0,0] 
+[41,21,1,0] 15. Đối với báo cáo nhu cầu, lưu từng nguyên vật liệu, lượng có thể cấp, lượng cần dùng và lượng còn thiếu. (ChiTietBaoCaoSanXuat)
+[41,22,0,0] 
+[41,22,1,0] 16. Gửi báo cáo đến Ban giám đốc. (BanBaoCaoSanXuat, ThongBao, NguoiDung, NguoiDungVaiTro, VaiTro)
+[41,23,0,0] 
+[41,23,1,0] 17. Gửi thêm Bộ phận lập kế hoạch nếu Chủ xưởng đã chọn hoặc nếu là báo cáo nhu cầu còn thiếu nguyên vật liệu. (BanBaoCaoSanXuat, ThongBao, NguoiDung, NguoiDungVaiTro, VaiTro)
+[41,24,0,0] 
+[41,24,1,0] 18. Hiển thị thông báo “Gửi báo cáo thành công”.
+[41,25,0,0] 
+[41,25,1,0] 19. Kết thúc use case.
+[41,26,0,0] Alternative flow
+[41,27,0,0] 12.1 Hủy trước khi gửi báo cáo
+[41,28,0,0] 1. Chủ xưởng chọn Hủy trước khi xác nhận gửi.
+[41,28,0,1] 2. Hệ thống hủy dữ liệu đang nhập, không lưu và không gửi báo cáo.
+[41,28,0,2] 3. Đi đến bước 19 của luồng cơ bản.
+[41,29,0,0] 
+[41,30,0,0] 3.1 Báo cáo tiến độ hoặc sự cố1. Chủ xưởng chọn mục đích phù hợp, nhập tiến độ, mô tả tình hình hoặc sự cố, ghi chú và ảnh minh họa nếu có.2. Không bắt buộc kê nguyên vật liệu; báo cáo luôn gửi Ban giám đốc khi xác nhận gửi.3. Không dùng báo cáo này để tạo phần thành phẩm; phần thành phẩm thực hiện tại UC-35.3.2 Báo cáo từ đối chiếu nguyên vật liệu1. Chủ xưởng mở đối chiếu tồn từ kế hoạch và chọn lập báo cáo nhu cầu. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)2. Hệ thống điền lượng cần dùng, lượng có thể cấp và lượng thiếu. (TonKho, PhanCongKho)3. Chủ xưởng kiểm tra, bổ sung mô tả hoặc ảnh rồi tiếp tục bước 12. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)12.2 Lưu nháp1. Chủ xưởng chọn Lưu nháp. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)2. Hệ thống lưu báo cáo chưa gửi, cho phép mở lại để hoàn thiện. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)3. Chưa thông báo cho người nhận như một báo cáo đã gửi.
+[41,31,0,0] Exception flow
+[41,32,0,0] 13.1 Thông tin báo cáo chưa đầy đủ hoặc không hợp lệ
+[41,33,0,0] 1. Hệ thống hiển thị thông báo về thông tin cần bổ sung hoặc chỉnh sửa; không lưu và không gửi báo cáo. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)
+[41,33,0,1] 2. Quay lại bước 6 của luồng cơ bản.
+[41,34,0,0] 
+[41,35,0,0] 13.2 Kế hoạch không hợp lệ hoặc không thuộc xưởng
+[41,36,0,0] 1. Hệ thống hiển thị thông báo “Kế hoạch sản xuất không hợp lệ hoặc không thuộc xưởng”; không lưu và không gửi báo cáo. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, Xuong)
+[41,36,0,1] 2. Quay lại bước 3 của luồng cơ bản.
+[41,37,0,0] 
+[41,38,0,0] 13.3 Tiến độ sản xuất không hợp lệ
+[41,39,0,0] 1. Hệ thống hiển thị thông báo “Tiến độ báo cáo sản xuất phải từ 0% đến dưới 100%”; không lưu và không gửi báo cáo. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)
+[41,39,0,1] 2. Quay lại bước 6 của luồng cơ bản.
+[41,40,0,0] 13.4 Đã có báo cáo nhu cầu đang hiệu lực cho kế hoạch1. Hệ thống không tạo báo cáo nhu cầu trùng. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)2. Chủ xưởng xem lại báo cáo đang hiệu lực. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)13.5 Ảnh không hợp lệ hoặc không tải được ảnh1. Hệ thống thông báo ảnh chưa được chấp nhận.2. Chủ xưởng chọn lại ảnh phù hợp hoặc bỏ ảnh trước khi gửi.13.6 Báo cáo đã gửi hoặc đã được sử dụng làm nguồn1. Hệ thống không cho sửa đè báo cáo. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)2. Chủ xưởng xem lại báo cáo đã gửi; không tự thay đổi thông tin mà kế hoạch sau đang sử dụng. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)12.3 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.12.4 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.12.5 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 42
+[42,0,0,0] UC-15 Thực hiện kiểm kê
+[42,1,0,0] Tiền điều kiện
+[42,1,1,0] Nhân viên Ban kiểm kê đã đăng nhập, được phân công trong đợt đã bắt đầu và còn phần việc kiểm số lượng chưa hoàn tất.
+[42,2,0,0] Hậu điều kiện
+[42,2,1,0] Số lượng thực tế của hàng hóa được ghi nhận cho đợt kiểm kê
+[42,3,0,0] Actor chính
+[42,3,1,0] Ban kiểm kê
+[42,4,0,0] Actor phụ
+[42,4,1,0] Không
+[42,5,0,0] Basic flow
+[42,6,0,0] Ban kiểm kê
+[42,6,1,0] Hệ thống
+[42,7,0,0] 1. Chọn chức năng Thực hiện kiểm kê
+[42,7,1,0] 2. Hiển thị các công việc được giao; khi chọn công việc, hiển thị toàn bộ lô hoặc phần lô phải kiểm cùng mặt hàng, đơn vị và lượng hệ thống để đối chiếu. (CongViec, PhanCongCongViec, LoLichKiemTra, PhanCongLichKiemTra, LoHang, ChiTietLo, MatHang, DonViTinh, PhieuKiemKe, ChiTietPhieuKiemKe, TonKho)
+[42,8,0,0] 3. Chọn công việc và nhập lượng thực đếm của từng dòng; có thể chọn Đạt ở một dòng hoặc Đạt tất cả để điền lượng bằng lượng hệ thống. (PhieuKiemKe, ChiTietPhieuKiemKe, PhanCongLichKiemTra)
+[42,8,1,0] 4. Hiển thị chênh lệch theo số lượng vừa nhập; vẫn cho sửa lượng đã điền để đúng thực tế. Nút Đạt chỉ hỗ trợ kiểm số lượng, không thay kết luận chất lượng của QC/AC. (PhieuKiemKe, ChiTietPhieuKiemKe)
+[42,9,0,0] 5. Xác nhận lưu kết quả kiểm số lượng của công việc.
+[42,9,1,0] 6. Kiểm tra đủ dòng và quyền phân công; lưu số đếm, người đếm, thời điểm và tiến độ. Nếu đợt có QC/AC, vẫn chờ phần chất lượng hoàn tất. Không tự điều chỉnh tồn kho theo số đếm. (PhieuKiemKe, ChiTietPhieuKiemKe, CongViec, LoLichKiemTra, PhanCongLichKiemTra)
+[42,10,0,0] Alternative flow
+[42,11,0,0] 3.1 Điền nhanh số lượng đạt
+[42,12,0,0] 1. Nhân viên chọn Đạt ở dòng cần điền hoặc Đạt tất cả. (PhieuKiemKe, ChiTietPhieuKiemKe)
+[42,13,0,0] 2. Hệ thống điền lượng đối chiếu cho dòng chưa ghi nhận; không ghi đè các dòng đã có kết quả hoàn tất. (PhieuKiemKe, ChiTietPhieuKiemKe)
+[42,14,0,0] 3. Nhân viên kiểm tra và điều chỉnh số thực đếm, sau đó tiếp tục bước 5. (PhieuKiemKe, ChiTietPhieuKiemKe)
+[42,15,0,0] Exception flow
+[42,16,0,0] 2.1 Mất kết nối trong khi nhập số liệu
+[42,17,0,0] 1. Hệ thống thông báo lỗi kết nối. Khi có kết nối trở lại, nhân viên mở danh sách kiểm tra lần ghi trước đã thành công chưa; chỉ nhập và xác nhận lại phần chưa được ghi nhận.
+[42,18,0,0] 2. Nhân viên thử lại khi có kết nối
+[42,19,0,0] 3. Quay lại bước 24.1 Thiếu số đếm, số âm hoặc số không hợp lệ1. Hệ thống yêu cầu bổ sung hoặc sửa đúng số lượng.2. Chưa xác nhận hoàn tất phần kiểm số lượng.4.2 Công việc chưa bắt đầu, đã hoàn tất hoặc nhân viên không được giao kiểm số lượng1. Hệ thống không cho ghi số đếm. (PhieuKiemKe, ChiTietPhieuKiemKe)2. Nhân viên kiểm tra lại thời gian, phân công và trạng thái công việc. (NguoiDung, NguoiDungVaiTro, CongViec, PhanCongCongViec, PhieuKiemKe, ChiTietPhieuKiemKe)5.1 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.5.2 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (PhieuKiemKe, ChiTietPhieuKiemKe)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.5.3 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 43
+[43,0,0,0] UC-28 Lập biên bản kiểm kê
+[43,1,0,0] Tiền điều kiện
+[43,1,1,0] Đợt đã hoàn tất các nội dung được giao; người lập biên bản là nhân viên QC/AC hoặc Ban kiểm kê được Ban giám đốc chỉ định; chưa có biên bản đã gửi.
+[43,2,0,0] Hậu điều kiện
+[43,2,1,0] Lưu nháp hoặc gửi một biên bản chung tổng hợp kết quả của đợt. Khi gửi, Ban giám đốc nhận thông tin; nếu có ngoại lệ, Quản lý kho thấy nội dung cần xử lý.
+[43,3,0,0] Actor chính
+[43,3,1,0] Ban kiểm kê, bộ phận QC/AC
+[43,4,0,0] Actor phụ
+[43,4,1,0] Không
+[43,5,0,0] Basic flow
+[43,6,0,0] Ban kiểm kê / Bộ phận QC/AC
+[43,6,1,0] Hệ thống
+[43,7,0,0] 1. Chọn chức năng Lập biên bản kiểm kê (PhieuKiemKe, LoLichKiemTra)
+[43,7,1,0] 2. Hiển thị công việc và kết quả đã hoàn tất. Đợt có cả QC/AC và Ban kiểm kê tổng hợp cả chất lượng và số đếm; đợt chỉ có một nhóm chỉ yêu cầu kết quả của nhóm được giao. (CongViec, PhanCongCongViec, LoLichKiemTra, PhanCongLichKiemTra, PhieuKiemKe, ChiTietPhieuKiemKe, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)
+[43,8,0,0] 3. Người được chỉ định nhập kết luận, nhận xét; chọn Không có ngoại lệ hoặc Nhập mô tả ngoại lệ; nếu có ngoại lệ thì nhập nội dung, xem lại và gửi biên bản. (PhieuKiemKe, LoLichKiemTra)
+[43,8,1,0] 4. Kiểm tra người lập và kết quả đợt; lưu biên bản chung, nội dung ngoại lệ nếu có và gửi thông báo. Biên bản đã gửi giữ nguyên kết quả được tổng hợp tại thời điểm gửi. (PhieuKiemKe, LoLichKiemTra, PhanCongLichKiemTra, PhanCongKetLuanKiemKe, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC, ChiTietPhieuKiemKe, ThongBao)
+[43,9,0,0] Alternative flow
+[43,10,0,0] 3.1 Lưu tạm biên bản
+[43,11,0,0] 1. Nhân viên chọn Lưu tạm (PhieuKiemKe, ChiTietPhieuKiemKe)
+[43,12,0,0] 2. Lưu tạm nội dung biên bản trên phiếu kiểm kê.  (PhieuKiemKe, LoLichKiemTra, ChiTietPhieuKiemKe)
+[43,13,0,0] 3. Kết thúc use case2.1 Nhân viên không phải người được chỉ định1. Nhân viên vẫn mở được giao diện và xem dữ liệu trong phạm vi được phép. (PhieuKiemKe, ChiTietPhieuKiemKe)2. Hệ thống không cho tạo, sửa hoặc gửi biên bản thay người được phân công. (NguoiDung, NguoiDungVaiTro, CongViec, PhanCongCongViec, PhieuKiemKe, LoLichKiemTra)3. Người được phân công thấy thông tin nhiệm vụ lập biên bản. (NguoiDung, NguoiDungVaiTro, CongViec, PhanCongCongViec, PhieuKiemKe, LoLichKiemTra)3.2 Nhập ngoại lệ1. Chọn Nhập mô tả ngoại lệ.2. Hệ thống hiển thị ô mô tả; nhân viên nhập vấn đề và gửi cùng biên bản. (NguoiDung, NguoiDungVaiTro, CongViec, PhanCongCongViec, PhieuKiemKe, LoLichKiemTra, ChiTietPhieuKiemKe)3. QC/AC và Ban kiểm kê không xử lý ngoại lệ tại đây; Quản lý kho xử lý tại UC-16.3.3 Gửi biên bản nháp1. Người lập mở bản nháp, kiểm tra và sửa nội dung được phép. (PhieuKiemKe, ChiTietPhieuKiemKe)2. Chọn Gửi.3. Hệ thống kiểm tra lại điều kiện rồi lưu bản gửi và thông báo. (PhieuKiemKe, ChiTietPhieuKiemKe)
+[43,14,0,0] Exception flow
+[43,15,0,0] 2.1 Đợt kiểm kê chưa hoàn thành
+[43,16,0,0] 1. Hệ thống thông báo còn nội dung kiểm số lượng hoặc chất lượng được giao chưa hoàn tất; chưa cho lập biên bản chung. (PhieuKiemKe, LoLichKiemTra)
+[43,17,0,0] 2. Kết thúc use case3.1 Chọn có ngoại lệ nhưng chưa mô tả, thiếu kết luận hoặc thiếu thông tin bắt buộc1. Hệ thống yêu cầu bổ sung nội dung.2. Người lập sửa rồi xác nhận lại.4.1 Biên bản đã được gửi, đã có người tạo hoặc phân công đã thay đổi1. Hệ thống thông báo không thể tạo hoặc sửa theo thông tin cũ.2. Nhân viên tải lại đợt và kiểm tra biên bản, phân công hiện tại. (NguoiDung, NguoiDungVaiTro, CongViec, PhanCongCongViec, PhieuKiemKe, LoLichKiemTra, ChiTietPhieuKiemKe)3.4 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.3.5 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (PhieuKiemKe, ChiTietPhieuKiemKe)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.3.6 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 44
+[44,0,0,0] UC-32 Phê duyệt kế hoạch mua/bán
+[44,1,0,0] Tiền điều kiện
+[44,1,1,0] Ban giám đốc đăng nhập thành công vào hệ thống
+[44,2,0,0] Hậu điều kiện
+[44,2,1,0] Kế hoạch được phê duyệt hoặc từ chối và trạng thái kế hoạch được cập nhật
+[44,3,0,0] Actor chính
+[44,3,1,0] Ban giám đốc
+[44,4,0,0] Actor phụ
+[44,4,1,0] Không
+[44,5,0,0] Basic flow
+[44,6,0,0] Ban giám đốc
+[44,6,1,0] Hệ thống
+[44,7,0,0] 1. Chọn chức năng Phê duyệt kế hoạch mua/bán (KeHoachMuaBan, ChiTietKeHoachMuaBan)
+[44,7,1,0] 2. Hiển thị danh sách kế hoạch đang chờ phê duyệt (KeHoachMuaBan)
+[44,8,0,0] 3. Chọn một kế hoạch để xem chi tiết (KeHoachMuaBan)
+[44,8,1,0] 4. Hiển thị kế hoạch, các dòng, ngày nhận hoặc ngày bán và nguồn nếu có. Kế hoạch mua trực tiếp không bắt buộc có báo cáo; kế hoạch mua theo báo cáo lấy nhu cầu nguyên vật liệu; kế hoạch bán đối chiếu báo cáo thành phẩm và lượng đạt chất lượng còn có thể sử dụng. (KeHoachMuaBan, ChiTietKeHoachMuaBan, BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, MatHang, NguyenVatLieu, ThanhPham, TonKho, LoHang, ChiTietLo, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC)
+[44,9,0,0] 5. Chọn Phê duyệt (KeHoachMuaBan)
+[44,9,1,0] 6. Cập nhật kế hoạch thành Đã duyệt: MUA cho phép lập đơn mua; BAN cho phép triển khai xuất bán. Việc nhập kho chỉ thực hiện sau nhận hàng và QC đạt.  (KeHoachMuaBan, ThongBao)
+[44,10,0,0] Alternative flow
+[44,11,0,0] 5.1 Từ chối kế hoạch và có nhập lý do
+[44,12,0,0] 1. Ban giám đốc chọn Từ chối và nhập lý do
+[44,13,0,0] 2. Hệ thống cập nhật trạng thái kế hoạch bị từ chối và thông báo cho Bộ phận lập kế hoạch (ThongBao, KeHoachMuaBan, ChiTietKeHoachMuaBan)
+[44,14,0,0] 3. Kết thúc UC
+[44,15,0,0] 5.2 Từ chối kế hoạch và không nhập lý do
+[44,16,0,0] 1. Ban giám đốc chọn Từ chối và không nhập lý do
+[44,17,0,0] 2. Hệ thống thông báo yêu cầu nhập lý do từ chối
+[44,18,0,0] 3. Quay lại bước 45.3 Lượng dự kiến vượt nguồn1. Hệ thống hiển thị cảnh báo phần vượt. (KeHoachMuaBan, ChiTietKeHoachMuaBan)2. Ban giám đốc chọn Tiếp tục để duyệt sau khi các điều kiện còn lại hợp lệ, hoặc chọn Quay lại để chưa duyệt.3. Xác nhận vượt dự kiến không thay thế điều kiện tồn kho và chất lượng khi thực hiện. (TonKho, PhanCongKho)
+[44,19,0,0] Exception flow
+[44,20,0,0] 4.1 Không có kế hoạch đang chờ phê duyệt trong hệ thống
+[44,21,0,0] 1. Hệ thống thông báo không có kế hoạch đang chờ phê duyệt
+[44,22,0,0] 2. Kết thúc UC
+[44,23,0,0] 4.2 Kế hoạch không còn ở trạng thái chờ phê duyệt
+[44,24,0,0] 1. Hệ thống thông báo kế hoạch không còn hiệu lực để phê duyệt
+[44,25,0,0] 2. Quay lại bước 14.3 Nguồn hoặc lịch kế hoạch không hợp lệ1. Hệ thống thông báo chưa thể phê duyệt.2. Bộ phận lập kế hoạch điều chỉnh nguồn hoặc ngày rồi trình lại.5.4 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.5.5 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (KeHoachMuaBan, ChiTietKeHoachMuaBan)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.5.6 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 45
+[45,0,0,0] UC-02 Đặt đơn hàng
+[45,1,0,0] Tiền điều kiện
+[45,1,1,0] Khách hàng đã đăng nhập hệ thống
+[45,2,0,0] Hậu điều kiện
+[45,2,1,0] Đơn hàng mới được tạo và lưu vào hệ thống với trạng thái “Chờ tiếp nhận”
+[45,3,0,0] Actor chính
+[45,3,1,0] Khách hàng
+[45,4,0,0] Actor phụ
+[45,4,1,0] Không
+[45,5,0,0] Basic flow
+[45,6,0,0] Khách hàng
+[45,6,1,0] Hệ thống
+[45,7,0,0] 1. Chọn chức năng Đặt đơn hàng (DonHang)
+[45,7,1,0] 2. Hiển thị danh sách hàng mẫu để lựa chọn (MatHang, ThanhPham, LoaiHang, DonViTinh)
+[45,8,0,0] 3. Chọn một hoặc nhiều mặt hàng, nhập số lượng theo đơn vị hiển thị, ghi chú từng dòng nếu có; nhập địa chỉ, ngày nhận trễ nhất và ghi chú chung. (MatHang, ThanhPham, DonViTinh)
+[45,8,1,0]  
+[45,9,0,0] 4. Xác nhận đặt hàng
+[45,9,1,0] 5. Kiểm tra hàng còn được đặt, các mặt hàng không trùng, số lượng dương, địa chỉ và ngày nhận; lấy giá hiện hành của mặt hàng để tính tiền tham khảo. (MatHang, ThanhPham, KhachHang)
+[45,10,0,0]  
+[45,10,1,0] 6. Lưu một đơn hàng với các dòng đã chọn, trạng thái Chờ tiếp nhận; thông báo đặt thành công và gửi thông báo cho Bộ phận lập kế hoạch. Đặt hàng chưa tạo lô hàng vật lý. (DonHang, ChiTietDonHang, KhachHang, ThongBao)
+[45,11,0,0] Alternative flow
+[45,12,0,0] 4.1 Khách hàng chọn Quay lại
+[45,13,0,0] 1. Quay lại bước 2
+[45,14,0,0] Exception flow
+[45,15,0,0] 2.1 Danh sách hàng mẫu không có
+[45,16,0,0] 1. Hệ thống thông báo danh sách hàng mẫu đang rỗng
+[45,17,0,0] 2. Kết thúc UC
+[45,18,0,0] 5.1 Thông tin đơn hàng không hợp lệ
+[45,19,0,0] 1. Hệ thống thông báo lỗi (thiếu thông tin/số lượng không hợp lệ) và yêu cầu nhập lại (DonHang, ChiTietDonHang)
+[45,20,0,0] 2. Quay lại bước 3
+[45,21,0,0] 5.2 Thông tin ngày nhận là ngày trong quá khứ
+[45,22,0,0] 1. Hệ thống thông báo lỗi thông tin ngày nhận hàng không hợp lệ và yêu cầu nhập lại (DonHang, ChiTietDonHang)
+[45,23,0,0] 2. Quay lại bước 35.3 Mặt hàng ngừng sử dụng, không còn được đặt hoặc bị chọn trùng1. Hệ thống yêu cầu chọn lại mặt hàng hợp lệ và gộp số lượng của cùng mặt hàng vào một dòng. (MatHang)2. Quay lại bước 3.5.4 Số lượng hoặc ghi chú vượt giới hạn nhập1. Hệ thống chỉ rõ nội dung cần sửa.2. Khách hàng điều chỉnh rồi xác nhận lại.4.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.4.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (DonHang, ChiTietDonHang)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.4.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 46
+[46,0,0,0] UC-03 Quản lý đơn hàng khách hàng
+[46,1,0,0] Tiền điều kiện
+[46,1,1,0] Khách hàng đã đăng nhập thành công vào hệ thống
+[46,2,0,0] Hậu điều kiện
+[46,2,1,0] Danh sách đơn hàng của khách hàng được hiển thị đúng thông tin và có thể thực hiện các chức năng mở rộng
+[46,3,0,0] Actor chính
+[46,3,1,0] Khách hàng
+[46,4,0,0] Actor phụ
+[46,4,1,0] Không
+[46,5,0,0] Basic flow
+[46,6,0,0] Khách hàng
+[46,6,1,0] Hệ thống
+[46,7,0,0] 1. Chọn chức năng Quản lý đơn hàng (DonHang)
+[46,7,1,0] 2. Hiển thị danh sách đơn hàng hiện có của khách hàng (DonHang, KhachHang)
+[46,8,0,0] 3. Chọn một đơn hàng để xem chi tiết (DonHang)
+[46,8,1,0] 4. Hiển thị thông tin chi tiết đơn hàng (DonHang, ChiTietDonHang, MatHang, ThanhPham)
+[46,9,0,0] Alternative flow
+[46,10,0,0] 1.1 Tìm kiếm/lọc đơn hàng theo trạng thái, thời gian
+[46,11,0,0] 1. Khách hàng nhập điều kiện tìm kiếm
+[46,12,0,0] 2. Hệ thống hiển thị các đơn hàng phù hợp (DonHang, ChiTietDonHang)
+[46,13,0,0] 3. Quay lại bước 1
+[46,14,0,0] 4.1 Chọn Sửa đơn hàng
+[46,15,0,0] 1. Hệ thống thực hiện UC-03.1 Sửa đơn hàng khách hàng
+[46,16,0,0] Exception flow
+[46,17,0,0] 2.1 Không có đơn hàng nào trong hệ thống
+[46,18,0,0] 1. Hệ thống thông báo không có đơn hàng nào (DonHang, ChiTietDonHang)
+[46,19,0,0] 2. Kết thúc UC3.1 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.3.2 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (DonHang, ChiTietDonHang)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.3.3 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 47
+[47,0,0,0] UC-03.1 Sửa đơn hàng khách hàng
+[47,1,0,0] Tiền điều kiện
+[47,1,1,0] Khách hàng đăng nhập thành công vào hệ thống
+[47,2,0,0] Hậu điều kiện
+[47,2,1,0] Thông tin đơn hàng được cập nhật khi còn được phép sửa; giữ trạng thái xử lý hiện tại, không tự chuyển đơn thành Chờ phê duyệt. Ban giám đốc phê duyệt kế hoạch sản xuất tại UC-31.
+[47,3,0,0] Actor chính
+[47,3,1,0] Khách hàng
+[47,4,0,0] Actor phụ
+[47,4,1,0] Không
+[47,5,0,0] Basic flow
+[47,6,0,0] Khách hàng
+[47,6,1,0] Hệ thống
+[47,7,0,0] 1. Chọn Sửa đơn hàng (DonHang)
+[47,7,1,0] 2. Hiển thị form với thông tin hiện tại của đơn hàng (DonHang, ChiTietDonHang, MatHang, ThanhPham)
+[47,8,0,0] 3. Nhập thông tin muốn chỉnh sửa (số lượng, mô tả) (DonHang, ChiTietDonHang)
+[47,8,1,0]  
+[47,9,0,0] 4. Chọn xác nhận (DonHang, ChiTietDonHang)
+[47,9,1,0] 5. Kiểm tra thông tin mới (DonHang, ChiTietDonHang, KeHoachSanXuat, ChiTietKeHoachSanXuat)
+[47,10,0,0]  
+[47,10,1,0] 6. Cập nhật thông tin đơn hàng hợp lệ, giữ trạng thái xử lý hiện tại. (DonHang, ChiTietDonHang)
+[47,11,0,0]  
+[47,11,1,0] 7. Thông báo cập nhật đơn hàng thành công.
+[47,12,0,0] Alternative flow
+[47,13,0,0] 2.1 Khách hàng chọn Quay lại
+[47,14,0,0] 1. Đi đến bước 4 của UC-03 (hủy thao tác sửa)
+[47,15,0,0] 5.1 Nếu khách hàng tăng số lượng đơn hàng
+[47,16,0,0] 1. Hệ thống yêu cầu xác nhận việc thay đổi số lượng; khách hàng kiểm tra lại số lượng và ngày nhận mong muốn. (DonHang, ChiTietDonHang)
+[47,17,0,0] 2. Khách hàng chọn xác nhận
+[47,18,0,0] 3. Đi đến bước 6
+[47,19,0,0] 5.2 Nếu khách hàng giảm số lượng đơn hàng
+[47,20,0,0] 1. Hệ thống yêu cầu khách hàng kiểm tra và xác nhận việc giảm số lượng. (DonHang, ChiTietDonHang)
+[47,21,0,0] 2. Khách hàng chọn xác nhận
+[47,22,0,0] 3. Đi đến bước 6
+[47,23,0,0] Exception flow
+[47,24,0,0] 1.1 Đơn hàng không ở trạng thái cho phép sửa
+[47,25,0,0] 1. Hệ thống thông báo đơn hàng đã được xử lý/duyệt, không thể chỉnh sửa (DonHang, ChiTietDonHang)
+[47,26,0,0] 2. Kết thúc use case
+[47,27,0,0] 5.1 Thông tin nhập không hợp lệ
+[47,28,0,0] 1. Hệ thống thông báo lỗi (thiếu thông tin/số lượng không hợp lệ) và yêu cầu nhập lại (DonHang, ChiTietDonHang)
+[47,29,0,0] 2. Quay lại bước 35.2 Giảm lượng thấp hơn tổng đã lập kế hoạch hoặc chọn ngày nhận trước ngày kết thúc kế hoạch đã lập1. Hệ thống thông báo nội dung sửa không phù hợp với kế hoạch hiện có.2. Khách hàng sửa lại hoặc liên hệ Bộ phận lập kế hoạch.5.3 Ngày nhận mới trong quá khứ hoặc mặt hàng không hợp lệ1. Hệ thống yêu cầu chỉnh sửa. (DonHang, ChiTietDonHang)2. Quay lại bước 3.4.1 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.4.2 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (DonHang, ChiTietDonHang)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.4.3 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 48
+[48,0,0,0] UC-22 Tra cứu dữ liệu trong kho
+[48,1,0,0] Tiền điều kiện
+[48,1,1,0] Quản lý kho hoặc Chủ xưởng đã đăng nhập và có quyền tra cứu kho.
+[48,2,0,0] Hậu điều kiện
+[48,2,1,0] Người dùng xem được thông tin danh mục/dữ liệu phù hợp với nhu cầu tra cứu
+[48,3,0,0] Actor chính
+[48,3,1,0] Quản lý kho, Chủ xưởng
+[48,4,0,0] Actor phụ
+[48,4,1,0] Không
+[48,5,0,0] Basic flow
+[48,6,0,0] Quản lý kho / Chủ xưởng
+[48,6,1,0] Hệ thống
+[48,7,0,0] 1. Chọn chức năng Tra cứu dữ liệu (Kho, ViTriKho, TonKho, LoHang, ChiTietLo, MatHang, NguyenVatLieu, ThanhPham)
+[48,7,1,0] 2. Hiển thị danh sách danh mục hàng hóa (Kho, LoaiHang, MatHang)
+[48,8,0,0] 3. Nhập tên (kho, danh mục, nguyên vật liệu, thành phẩm, tồn kho, lô nguyên vật liệu, lô thành phẩm) để tìm kiếm (Kho, LoaiHang, MatHang, NguyenVatLieu, ThanhPham, LoHang, ChiTietLo)
+[48,8,1,0] 4. Hiển thị các danh mục/dữ liệu phù hợp (Kho, ViTriKho, LoaiHang, MatHang, NguyenVatLieu, ThanhPham, LoHang, ChiTietLo, TonKho)
+[48,9,0,0] 5. Chọn một mục để xem chi tiết (Kho, ViTriKho, MatHang, ChiTietLo)
+[48,9,1,0] 6. Hiển thị thông tin chi tiết (Kho, ViTriKho, MatHang, NguyenVatLieu, ThanhPham, DonViTinh, LoHang, ChiTietLo, TonKho, PhanCongKho)
+[48,10,0,0] Alternative flow
+[48,11,0,0] 5.1 Chỉ xem danh sách, không xem chi tiết
+[48,12,0,0] 1. Quản lý kho chỉ xem danh sách phù hợp mà không chọn xem chi tiết
+[48,13,0,0] 2. Kết thúc use case3.1 Tra cứu theo sơ đồ vị trí1. Người dùng chọn kho hoặc nhóm hàng.2. Hệ thống hiển thị các vị trí, phân biệt vị trí có hàng, trống và đang chọn. (ViTriKho, Kho, TonKho, LoHang, ChiTietLo, MatHang, NguyenVatLieu, ThanhPham)3. Chọn một vị trí để xem mặt hàng, phần lô, đơn vị, lượng tồn và lượng còn có thể sử dụng; vị trí trống hiển thị chưa có hàng. (LoHang, ChiTietLo, TonKho, PhanCongKho, ViTriKho, Kho, MatHang, DonViTinh, NguyenVatLieu, ThanhPham)3.2 Đối chiếu nguyên vật liệu từ kế hoạch sản xuất1. Chủ xưởng chọn kế hoạch của xưởng và mở đối chiếu tồn kho. (TonKho, PhanCongKho, Xuong)2. Hệ thống lấy nhu cầu theo công thức và sản lượng, gồm dự phòng 10% một lần; đối chiếu lượng có thể cấp sau khi trừ phần đã dành cho nhu cầu khác. (KeHoachSanXuat, ChiTietKeHoachSanXuat, TonKho, PhanCongKho)3. Hiển thị lượng cần dùng, có thể cấp và còn thiếu theo từng nguyên vật liệu, đúng đơn vị. (MatHang, NguyenVatLieu, DonViTinh, Kho, ViTriKho, TonKho, LoHang, ChiTietLo, ThanhPham)4. Chủ xưởng có thể chuyển sang lập báo cáo nhu cầu tại UC-34.
+[48,14,0,0] Exception flow
+[48,15,0,0] 3.1 Không tìm thấy dữ liệu phù hợp
+[48,16,0,0] 1. Hệ thống thông báo không tìm thấy dữ liệu phù hợp (Kho, ViTriKho, TonKho, LoHang, ChiTietLo, MatHang, NguyenVatLieu, ThanhPham)
+[48,17,0,0] 2. Quay lại bước 35.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.5.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (Kho, ViTriKho, TonKho, LoHang, ChiTietLo, MatHang, NguyenVatLieu, ThanhPham)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.5.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.
+TABLE 49
+[49,0,0,0] UC-16 Xử lý chênh lệch kiểm kê
+[49,1,0,0] Tiền điều kiện
+[49,1,1,0] Quản lý kho đã đăng nhập; có biên bản đã gửi ghi ngoại lệ hoặc kết quả chênh lệch đủ điều kiện xử lý trong phạm vi được quản lý.
+[49,2,0,0] Hậu điều kiện
+[49,2,1,0] Vấn đề được ghi nhận cách xử lý, chuyển Chủ xưởng phê duyệt khi cần, hoặc được thực hiện theo phương án đủ điều kiện. Ghi mô tả xử lý không tự thay đổi tồn kho.
+[49,3,0,0] Actor chính
+[49,3,1,0] Quản lý kho
+[49,4,0,0] Actor phụ
+[49,4,1,0] Không
+[49,5,0,0] Basic flow
+[49,6,0,0] Quản lý kho
+[49,6,1,0] Hệ thống
+[49,7,0,0] 1. Chọn chức năng Xử lý chênh lệch kiểm kê (PhieuKiemKe, ChiTietPhieuKiemKe)
+[49,7,1,0] 2. Tự hiển thị các ngoại lệ từ biên bản đã gửi và các chênh lệch cần xử lý; không yêu cầu Quản lý kho tự tạo lại vấn đề đã có. (PhieuKiemKe, ChiTietPhieuKiemKe, LoLichKiemTra, BanDeXuatXuLyNgoaiLe)
+[49,8,0,0] 3. Chọn vấn đề cần xử lý. (PhieuKiemKe, LoLichKiemTra, BanDeXuatXuLyNgoaiLe)
+[49,8,1,0] 4. Hiển thị biên bản, kết quả số lượng hoặc chất lượng, mặt hàng, lô, lượng liên quan và mô tả ngoại lệ; mở form xử lý. (PhieuKiemKe, ChiTietPhieuKiemKe, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC, LoHang, ChiTietLo, MatHang, NguyenVatLieu, ThanhPham, BanDeXuatXuLyNgoaiLe)
+[49,9,0,0] 5. Nhập cách xử lý; nếu cần xin ý kiến, chọn gửi đề xuất cho Chủ xưởng và nhập nội dung đề nghị. (PhieuKiemKe, LoLichKiemTra, BanDeXuatXuLyNgoaiLe)
+[49,9,1,0] 
+[49,10,0,0] 6. Xác nhận nội dung xử lý.
+[49,10,1,0] 7. Lưu cách xử lý hoặc gửi đề xuất chờ Chủ xưởng phê duyệt. Vấn đề đơn giản có thể xác nhận xử lý trực tiếp bằng mô tả; nếu cần điều chỉnh tồn kho, phải thực hiện bước chứng từ và phê duyệt tương ứng, không chỉ sửa số tồn bằng ghi chú. (PhieuKiemKe, LoLichKiemTra, BanDeXuatXuLyNgoaiLe, KetQuaXuLyNgoaiLe, ThongBao)
+[49,10,1,1] 
+[49,11,0,0] Alternative flow
+[49,12,0,0] 5.1 Gửi đề xuất cho Chủ xưởng
+[49,13,0,0] 1. Quản lý kho chọn gửi phê duyệt, nhập cách xử lý đề xuất và nội dung cần Chủ xưởng xem xét. (BanDeXuatXuLyNgoaiLe, KetQuaXuLyNgoaiLe, PhieuKiemKe, ChiTietPhieuKiemKe)
+[49,14,0,0] 2. Hệ thống lưu đề xuất Chờ phê duyệt, thông báo cho Chủ xưởng đúng xưởng; thực hiện quyết định tại UC-17. (Xuong, BanDeXuatXuLyNgoaiLe, KetQuaXuLyNgoaiLe, ThongBao, PhieuKiemKe, ChiTietPhieuKiemKe)
+[49,15,0,0] 3. Kết thúc use case5.2 Chủ xưởng đã cho ý kiến1. Quản lý kho mở vấn đề để xem quyết định. (BanDeXuatXuLyNgoaiLe, KetQuaXuLyNgoaiLe, PhieuKiemKe, ChiTietPhieuKiemKe)2. Nếu đồng ý, thực hiện phương án được duyệt; nếu không đồng ý, xem lý do và hướng xử lý thay thế của Chủ xưởng. (BanDeXuatXuLyNgoaiLe, KetQuaXuLyNgoaiLe)3. Ghi nhận kết quả theo quyền; không tự coi việc phê duyệt là đã thực hiện xong. (PhieuKiemKe, ChiTietPhieuKiemKe, BanDeXuatXuLyNgoaiLe, KetQuaXuLyNgoaiLe)5.3 Điều chỉnh chênh lệch tồn kho theo phiếu kiểm kê kho1. Quản lý kho lập đề xuất điều chỉnh từ kết quả đã chốt. (BanDeXuatXuLyNgoaiLe, KetQuaXuLyNgoaiLe, PhieuKiemKe, ChiTietPhieuKiemKe)2. Ban giám đốc xem xét quyết định theo luồng điều chỉnh tồn. (BanDeXuatXuLyNgoaiLe, KetQuaXuLyNgoaiLe, PhieuKiemKe, ChiTietPhieuKiemKe)3. Quản lý kho chỉ áp dụng điều chỉnh được duyệt tại bước riêng; hệ thống ghi nhận thay đổi và giữ căn cứ. (PhieuKiemKe, ChiTietPhieuKiemKe, BanDeXuatXuLyNgoaiLe, KetQuaXuLyNgoaiLe)4. Không nhầm luồng này với việc Chủ xưởng cho ý kiến về mô tả ngoại lệ của biên bản lô. (PhieuKiemKe, LoLichKiemTra)
+[49,16,0,0] Exception flow
+[49,17,0,0] 2.1 Không có chênh lệch cần xử lý
+[49,18,0,0] 1. Hệ thống thông báo không có mặt hàng chênh lệch (MatHang, PhieuKiemKe, ChiTietPhieuKiemKe)
+[49,19,0,0] 2. Kết thúc use case6.1 Thiếu cách xử lý, thiếu nội dung đề xuất hoặc vấn đề đã xử lý1. Hệ thống thông báo và không ghi trùng kết quả. (PhieuKiemKe, ChiTietPhieuKiemKe, BanDeXuatXuLyNgoaiLe, KetQuaXuLyNgoaiLe)2. Quản lý kho bổ sung nội dung hoặc tải lại chi tiết.6.2 Phương án làm thay đổi tồn kho chưa được duyệt hoặc không còn đủ điều kiện1. Hệ thống không áp dụng thay đổi số lượng.2. Quản lý kho kiểm tra lại chứng từ, quyết định và tồn kho hiện tại. (TonKho, PhanCongKho, BanDeXuatXuLyNgoaiLe, KetQuaXuLyNgoaiLe, PhieuKiemKe, ChiTietPhieuKiemKe)4.2 Nếu phiên đăng nhập hết hạn hoặc người dùng không có quyền thao tác1. Hệ thống yêu cầu đăng nhập lại hoặc thông báo không có quyền. (NguoiDung, NguoiDungVaiTro, VaiTro, PhienDangNhap)2. Không thực hiện thay đổi chưa được cho phép.4.3 Nếu dữ liệu vừa bị người khác thay đổi hoặc không còn tồn tại1. Hệ thống thông báo và không lưu đè thông tin cũ. (PhieuKiemKe, ChiTietPhieuKiemKe, BanDeXuatXuLyNgoaiLe, KetQuaXuLyNgoaiLe)2. Người dùng tải lại danh sách hoặc chi tiết trước khi thực hiện lại.4.4 Nếu không kết nối được khi xác nhận1. Hệ thống thông báo thao tác chưa có kết quả xác định.2. Khi kết nối trở lại, người dùng kiểm tra danh sách hoặc chi tiết để biết lần trước đã được ghi nhận chưa rồi mới thử lại; không mặc định bấm lại là tạo chứng từ mới.

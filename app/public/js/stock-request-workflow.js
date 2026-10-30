@@ -18,6 +18,11 @@
         const submit=document.querySelector('#data-form [type=submit]');submit.disabled=true;
         const source=candidates().find(s=>s.id===value('workflow_source_id'));
         if(source?.workshop_id)document.querySelector('#f-workshop_id').value=source.workshop_id;
+        const warehouseSelect=document.querySelector('#f-warehouse_id'),previousWarehouse=warehouseSelect.value;
+        const requiredType=['PURCHASE_RECEIPT','PRODUCTION_ISSUE'].includes(value('purpose'))?'MATERIAL':'FINISHED_PRODUCT';
+        const eligibleWarehouses=warehouses.filter(w=>(!w.workshop_id||String(w.workshop_id)===value('workshop_id'))&&(!(w.warehouse_type||w.LoaiKho)||(w.warehouse_type||w.LoaiKho)===requiredType));
+        warehouseSelect.innerHTML=eligibleWarehouses.map(w=>'<option value="'+esc(w.id)+'">'+esc(w.name)+'</option>').join('');
+        if(eligibleWarehouses.some(w=>String(w.id)===previousWarehouse))warehouseSelect.value=previousWarehouse;
         const sales=sources.sale_plans.filter(p=>p.production_plan_id===source?.id),sale=document.querySelector('#f-sale_plan_id');
         const previousSale=sale.value;sale.innerHTML=(sales.length>1?'<option value="">Chọn kế hoạch bán cần giao</option>':'')+sales.map(s=>'<option value="'+esc(s.id)+'">'+esc(s.code)+'</option>').join('');
         if(sales.some(s=>s.id===previousSale))sale.value=previousSale;

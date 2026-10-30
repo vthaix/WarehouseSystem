@@ -105,11 +105,11 @@
         },
         {
           "key": "stock-documents",
-          "text": "⇥Hồ sơ nhập / xuất kho"
+          "text": "⇥Hồ sơ nhập / xuất kho9"
         },
         {
           "key": "production-plans",
-          "text": "⚒Kế hoạch được giao"
+          "text": "⚒Kế hoạch được giao6"
         },
         {
           "key": "production-reports",
@@ -129,7 +129,7 @@
         },
         {
           "key": "notifications",
-          "text": "♧Thông báo"
+          "text": "♧Thông báo17"
         }
       ],
       "status": "PASS"
@@ -235,11 +235,11 @@
         },
         {
           "key": "purchase-orders",
-          "text": "▧Đơn mua hàng"
+          "text": "▧Đơn mua hàng1"
         },
         {
           "key": "notifications",
-          "text": "♧Thông báo"
+          "text": "♧Thông báo8"
         }
       ],
       "status": "PASS"
@@ -297,11 +297,11 @@
         },
         {
           "key": "customer-orders",
-          "text": "◫Đơn hàng16"
+          "text": "◫Đơn hàng"
         },
         {
           "key": "notifications",
-          "text": "♧Thông báo16"
+          "text": "♧Thông báo"
         }
       ],
       "status": "PASS"

@@ -8,7 +8,8 @@
     "003_purchase_approval.sql",
     "004_item_type_integrity.sql",
     "005_material_supplier_prices.sql",
-    "006_storage_zones.sql"
+    "006_storage_zones.sql",
+    "007_workshop_warehouses.sql"
   ],
   "services": [
     {

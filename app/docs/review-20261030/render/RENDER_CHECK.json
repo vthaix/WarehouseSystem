@@ -1,0 +1,41 @@
+﻿{
+    "samples":  [
+                    {
+                        "page":  121,
+                        "image":  "page-121.png"
+                    },
+                    {
+                        "page":  122,
+                        "image":  "page-122.png"
+                    },
+                    {
+                        "page":  123,
+                        "image":  "page-123.png"
+                    },
+                    {
+                        "page":  136,
+                        "image":  "page-136.png"
+                    },
+                    {
+                        "page":  137,
+                        "image":  "page-137.png"
+                    },
+                    {
+                        "page":  138,
+                        "image":  "page-138.png"
+                    },
+                    {
+                        "page":  139,
+                        "image":  "page-139.png"
+                    },
+                    {
+                        "page":  847,
+                        "image":  "page-847.png"
+                    },
+                    {
+                        "page":  848,
+                        "image":  "page-848.png"
+                    }
+                ],
+    "pdfPages":  899
+}

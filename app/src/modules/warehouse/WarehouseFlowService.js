@@ -118,9 +118,10 @@ class WarehouseFlowService {
     else if(request.purpose==='PRODUCTION_RECEIPT'){lotScope=' AND l.id IN (SELECT lot_id FROM finished_report_outputs WHERE finished_report_id=?)';lotParams=[request.production_report_id];}
     else if(request.purpose==='SALE_ISSUE'){lotScope=' AND l.id IN (SELECT o.lot_id FROM finished_report_outputs o JOIN business_plans p ON p.finished_report_id=o.finished_report_id WHERE p.id=?)';lotParams=[request.business_plan_id];}
     const [lots] = await this.pool.execute(
-      "SELECT l.id,l.code,l.item_id,l.expiry_date,l.received_quantity,l.qc_status,q.passed_quantity,COALESCE((SELECT SUM(d.quantity) FROM stock_document_lines d JOIN stock_documents doc ON doc.id=d.stock_document_id WHERE d.lot_id=l.id AND doc.type='IN'),0) AS posted_quantity FROM lots l JOIN qc_inspection_lines q ON q.lot_id=l.id JOIN qc_inspections qi ON qi.id=q.qc_inspection_id AND qi.status='RECORDED' WHERE l.qc_status IN ('PASSED','PARTIAL') AND (l.expiry_date IS NULL OR l.expiry_date>=CURRENT_DATE)"+lotScope+" ORDER BY (l.expiry_date IS NULL),l.expiry_date,l.created_at,l.id LIMIT 500",
-      lotParams,
+      "SELECT l.id,l.code,l.item_id,l.expiry_date,l.received_quantity,l.qc_status,q.passed_quantity,(SELECT MIN(doc.posted_at) FROM stock_document_lines d JOIN stock_documents doc ON doc.id=d.stock_document_id JOIN warehouse_locations pos ON pos.id=d.location_id WHERE d.lot_id=l.id AND doc.type='IN' AND pos.warehouse_id=?) AS first_received_at,COALESCE((SELECT SUM(d.quantity) FROM stock_document_lines d JOIN stock_documents doc ON doc.id=d.stock_document_id WHERE d.lot_id=l.id AND doc.type='IN'),0) AS posted_quantity FROM lots l JOIN qc_inspection_lines q ON q.lot_id=l.id JOIN qc_inspections qi ON qi.id=q.qc_inspection_id AND qi.status='RECORDED' WHERE l.qc_status IN ('PASSED','PARTIAL') AND (l.expiry_date IS NULL OR l.expiry_date>=CURRENT_DATE)"+lotScope+" ORDER BY (l.expiry_date IS NULL),l.expiry_date,(first_received_at IS NULL),first_received_at,l.created_at,l.id LIMIT 500",
+      [request.warehouse_id,...lotParams],
     );
+    lots.sort(require('../../shared/storage-queue').compare);
     const [itemCategories]=await this.pool.execute('SELECT id,category_id FROM items');
     const [zoneStock]=await this.pool.execute('SELECT b.lot_id,l.item_id,l.expiry_date,b.location_id FROM inventory_balances b JOIN lots l ON l.id=b.lot_id JOIN warehouse_locations loc ON loc.id=b.location_id WHERE loc.warehouse_id=? AND b.quantity>0',[request.warehouse_id]);
     for(const lot of lots){
