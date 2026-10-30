@@ -496,7 +496,7 @@ const warehouseNavigation = {
     "material_source": "Nguồn định lượng nguyên vật liệu",
     "customer_order_status": "Trạng thái đơn nguồn",
     "customer_note": "Ghi chú khách hàng",
-    "image_path": "Ảnh danh mục",
+    "image_path": "Ảnh",
     "quarantine_source": "Hàng / vị trí xử lý",
     "result": "Kết luận tái kiểm",
     "original_stock_document_line_id": "Dòng phiếu giao gốc",

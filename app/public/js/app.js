@@ -393,6 +393,7 @@ function openModal(title, html) {
   if (!modal.open) modal.showModal();
 }
 function detailValue(key, value, record) {
+  if(key==='image_path'&&value)return `<a href="${esc(value)}" target="_blank" rel="noopener noreferrer">Xem ảnh ↗</a>`;
   if (key === 'status') return statusBadge(value);
   if (key === 'note' && typeof value === 'string') {
     const attachment = value.match(/\[Ảnh báo cáo\]\((\/images\/[a-zA-Z0-9._/-]+)\)/);

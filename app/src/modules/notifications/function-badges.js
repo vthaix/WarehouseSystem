@@ -14,6 +14,7 @@ module.exports=async function badges(pool,user){
     await count('business-plans',"SELECT COUNT(*) AS total FROM business_plans WHERE status='PENDING_APPROVAL'");
   }
   if(has('PLANNER'))await count('customer-orders',"SELECT COUNT(*) AS total FROM customer_orders WHERE status='SUBMITTED'");
+  if(has('PURCHASER'))await count('purchase-orders',"SELECT COUNT(*) AS total FROM business_plans p WHERE p.type='PURCHASE' AND p.status='APPROVED' AND NOT EXISTS(SELECT 1 FROM purchase_orders o WHERE o.business_plan_id=p.id)");
   if(has('STOCKTAKER'))await count('inspection-counts',"SELECT COUNT(DISTINCT t.id) AS total FROM tasks t JOIN task_assignments a ON a.task_id=t.id JOIN stocktakes s ON s.id=t.stocktake_id WHERE a.user_id=? AND t.task_type='LOT_INSPECTION' AND s.KiemSoLuong=1 AND s.status='IN_PROGRESS' AND EXISTS(SELECT 1 FROM quality_campaign_lots l WHERE l.campaign_id=s.id AND l.SoLuongDem IS NULL)",[user.id]);
   if(has('QC_INSPECTOR'))await count('qc-inspections',"SELECT COUNT(DISTINCT s.id) AS total FROM stocktakes s JOIN quality_campaign_assignments a ON a.campaign_id=s.id WHERE a.user_id=? AND s.KiemChatLuong=1 AND s.status='IN_PROGRESS' AND EXISTS(SELECT 1 FROM quality_campaign_lots q JOIN lots l ON l.id=q.lot_id WHERE q.campaign_id=s.id AND l.qc_status='PENDING')",[user.id]);
   if(has('QC_INSPECTOR')||has('STOCKTAKER'))await count('stocktake-minutes',"SELECT COUNT(*) AS total FROM stocktakes WHERE NguoiLapBienBanDuocChon=? AND campaign_type='QUALITY_CHECK' AND status IN ('COMPLETED','CLOSED') AND BienBanTrangThai='DRAFT'",[user.id]);

@@ -30,7 +30,7 @@ try{
     const {context,page,errors}=await pageFor('staff','tasks');const userId=await page.evaluate(()=>String(user.id));
     const allocation={id:'7004',stock_request_line_id:'7001',task_id:'7005',user_id:userId,lot_id:'7002',location_id:'7003',quantity:'10.000',posted_quantity:'0.000'};
     await mock(page,'stock-requests/7000/allocations?task_id=7005',{request:{...request,version:4},frozen:false,lines:[line],allocations:[allocation]});
-    await page.evaluate(r=>postForm(r),{...request,assigned_task_id:'7005'});assert.equal(await page.locator('[data-actual-quantity]').inputValue(),'10');await page.locator('[data-actual-quantity]').fill('8');await page.locator('#f-note').fill('Phieu giay NK-001');
+    await page.evaluate(r=>postForm(r),{...request,assigned_task_id:'7005'});assert.equal(await page.locator('[data-actual-quantity]').inputValue(),'10');await page.locator('[data-actual-quantity]').fill('8');await page.locator('details').filter({has:page.locator('#f-note')}).locator('summary').click();await page.locator('#f-note').fill('Phieu giay NK-001');
     const body=await capture(page,'stock-documents');assert.equal(body.allocations[0].quantity,'8');assert.equal(body.allocations[0].allocation_id,'7004');assert.equal(body.task_id,'7005');assert.equal(body.note,'Phieu giay NK-001');
     await mock(page,'stock-requests/7000/allocations?task_id=7005',{request:{...request,version:5},frozen:false,lines:[line],allocations:[{...allocation,posted_quantity:'8.000'}]});
     await page.evaluate(r=>postForm(r),{...request,assigned_task_id:'7005'});assert.equal(await page.locator('[data-actual-quantity]').inputValue(),'2');assert.deepEqual(errors,[]);await context.close();

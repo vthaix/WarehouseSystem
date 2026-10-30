@@ -8,6 +8,8 @@ Sinh bằng `node scripts/sync-project-docs.cjs`. Tiền tố `/api/v1`; router 
 | POST | `/auth/login` | warehouse-app | Có handler |
 | GET | `/auth/me` | warehouse-app | Có handler |
 | POST | `/auth/logout` | warehouse-app | Có handler |
+| GET | `/workspace/updates` | warehouse-app | Có handler |
+| POST | `/workspace/seen` | warehouse-app | Có handler |
 | GET | `/material-price-options` | warehouse-app | Có handler |
 | GET | `/material-prices` | warehouse-app | Có handler |
 | GET | `/material-prices/:id` | warehouse-app | Có handler |

@@ -104,7 +104,9 @@ class FoundationPageController {
         current.slice("reports/".length),
         serviceQuery,
       );
+    const workspace=current==='dashboard'||current==='purchase-orders'?await require('./workspace-overview')(this.runtime,req.user,available):null;
     const context = {
+      workspace,
       user,
       available,
       current,
@@ -142,6 +144,7 @@ class FoundationPageController {
       csrf: context.csrf,
       current,
       rows: context.rows,
+      workspace,
       warehouseMap,
       meta: context.meta,
       page: Number(req.query.page || 1),
@@ -154,7 +157,7 @@ class FoundationPageController {
       context = await this.context(req, current);
     const view =
       current === "dashboard"
-        ? "dashboard/index"
+        ? "dashboard/workspace"
         : current==='warehouse-lookup'?'warehouse/lookup'
         : context.supported
           ? "resources/index"

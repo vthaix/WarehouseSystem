@@ -20,7 +20,7 @@ class SourceImportService {
   async purchaseReports(user) {
     P.role(user, ["PURCHASER"]);
     const [rows] = await this.pool.execute(
-      "SELECT id,code FROM business_plans WHERE type='PURCHASE' AND status='APPROVED' ORDER BY id DESC LIMIT 100",
+      "SELECT p.id,p.code FROM business_plans p WHERE p.type='PURCHASE' AND p.status='APPROVED' AND NOT EXISTS(SELECT 1 FROM purchase_orders o WHERE o.business_plan_id=p.id) ORDER BY p.id DESC LIMIT 100",
     );
     return rows.map((r) => ({ ...r, id: String(r.id), name: r.code }));
   }

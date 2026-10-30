@@ -2711,6 +2711,18 @@
     },
     {
       "method": "GET",
+      "path": "/workspace/updates",
+      "owner": "warehouse-app",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/workspace/seen",
+      "owner": "warehouse-app",
+      "pending": false
+    },
+    {
+      "method": "GET",
       "path": "/material-price-options",
       "owner": "warehouse-app",
       "pending": false

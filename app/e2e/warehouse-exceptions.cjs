@@ -26,8 +26,10 @@ const executablePath=process.env.BROWSER_PATH||['C:/Program Files (x86)/Microsof
       assert.deepEqual(writes.at(-1),{quarantine:true,qc_inspection_line_id:'9001',action,quantity,reason:'Kiểm tra giao diện kho',resolution_note:'Duyệt trước thực hiện',allocations:[{location_id:'9002',quantity}]});
     }
     await page.evaluate(()=>detail({code:'XL-TEST',decision_history:[{decision:'APPROVED',reason:'Đã duyệt'}],reinspections:[{result:'FAILED',note:'Lỗi đã xác nhận'}],actions:[]}));
-    await assert.equal(await page.locator('#modal-body').getByRole('heading',{name:'Lịch sử phê duyệt'}).count(),1);
-    await assert.equal(await page.locator('#modal-body').getByRole('heading',{name:'Lịch sử tái kiểm'}).count(),1);
+    const decisions=page.locator('#modal-body summary').filter({hasText:'Lịch sử phê duyệt'}),reinspections=page.locator('#modal-body summary').filter({hasText:'Lịch sử tái kiểm'});
+    assert.equal(await decisions.count(),1);assert.equal(await reinspections.count(),1);
+    await decisions.click();await reinspections.click();
+    assert.equal(await page.locator('#modal-body').getByText('Lỗi đã xác nhận',{exact:true}).isVisible(),true);
     await assert.equal(await page.locator('#modal-body').getByText('Lỗi đã xác nhận',{exact:true}).count(),1);
     assert.deepEqual(errors,[]);
     console.log('WAREHOUSE EXCEPTIONS BROWSER PASS: release/scrap/posted-QC forms and payloads; writes mocked');

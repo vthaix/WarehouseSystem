@@ -1,0 +1,8 @@
+<section class="purchase-ready" aria-labelledby="purchase-ready-title">
+  <h2 id="purchase-ready-title">Kế hoạch đã duyệt chờ đặt mua <span class="record-freshness"><%= workspace.counts['purchase-orders']||0 %></span></h2>
+  <p>Chọn kế hoạch để lấy sẵn nguyên vật liệu, số lượng và ngày nhận. Nhà cung cấp được chọn theo từng dòng khi đặt mua.</p>
+  <div class="purchase-ready-list"><% if(!workspace.purchaseReady.length){ %><div class="empty">Không có kế hoạch đã duyệt nào đang chờ đặt mua.</div><% } %>
+  <% workspace.purchaseReady.forEach((p,i)=>{ %><article class="purchase-ready-row" data-ready-plan="<%= p.id %>"><div><strong><%= p.code %></strong><% if(i===0){ %><span class="record-freshness">Mới nhất</span><% } %><small>Ngày nhận mong muốn: <%= format(p.planned_date,'planned_date') %> · <%= p.line_count %> dòng nguyên vật liệu</small><small>Tạo lúc <%= format(p.created_at,'created_at') %></small></div><button class="button primary small" type="button" data-order-plan="<%= p.id %>">Đặt mua theo kế hoạch →</button></article><% }) %>
+  </div>
+  <% if(workspace.counts['purchase-orders']>workspace.purchaseReady.length){ %><p>Còn <%= workspace.counts['purchase-orders']-workspace.purchaseReady.length %> kế hoạch khác. Chọn Tạo mới để xem toàn bộ nguồn có thể đặt mua.</p><% } %>
+</section>

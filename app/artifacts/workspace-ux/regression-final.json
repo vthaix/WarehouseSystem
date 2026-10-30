@@ -1,0 +1,81 @@
+[
+    {
+        "name":  "ssr",
+        "status":  "PASS",
+        "exit":  0,
+        "ms":  2091
+    },
+    {
+        "name":  "accounts-catalog",
+        "status":  "PASS",
+        "exit":  0,
+        "ms":  3418
+    },
+    {
+        "name":  "admin-theme",
+        "status":  "PASS",
+        "exit":  0,
+        "ms":  1596
+    },
+    {
+        "name":  "category-images",
+        "status":  "PASS",
+        "exit":  0,
+        "ms":  1336
+    },
+    {
+        "name":  "customer-order",
+        "status":  "PASS",
+        "exit":  0,
+        "ms":  2040
+    },
+    {
+        "name":  "inspection-workflow",
+        "status":  "PASS",
+        "exit":  0,
+        "ms":  7418
+    },
+    {
+        "name":  "planning-confirmation",
+        "status":  "PASS",
+        "exit":  0,
+        "ms":  1648
+    },
+    {
+        "name":  "preproduction",
+        "status":  "PASS",
+        "exit":  0,
+        "ms":  2798
+    },
+    {
+        "name":  "source-imports",
+        "status":  "PASS",
+        "exit":  0,
+        "ms":  9622
+    },
+    {
+        "name":  "warehouse-exceptions",
+        "status":  "PASS",
+        "exit":  0,
+        "ms":  1726
+    },
+    {
+        "name":  "warehouse-lookup",
+        "status":  "PASS",
+        "exit":  0,
+        "ms":  3355,
+        "followup":  "Standalone final run: 2 authorized roles and 7 denied roles, all passed."
+    },
+    {
+        "name":  "warehouse-request-workflow",
+        "status":  "PASS",
+        "exit":  0,
+        "ms":  2825
+    },
+    {
+        "name":  "reset-data",
+        "status":  "PASS",
+        "exit":  0,
+        "ms":  5845
+    }
+]

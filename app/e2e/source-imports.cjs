@@ -286,7 +286,7 @@ const executablePath =
         "purchase-orders",
       );
       await mock(page, "source-imports/purchase-report-options", [
-        { id: "901", name: "REPORT-UI" },
+        { id: "902", name: "BUY-UI" },
       ]);
       await mock(page, "lookup/business-plans", [
         { id: "902", code: "BUY-UI", type: "PURCHASE" },

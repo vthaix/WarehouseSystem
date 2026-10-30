@@ -7,7 +7,9 @@ const executablePath=process.env.BROWSER_PATH||['C:/Program Files (x86)/Microsof
   const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto(base+'/login');await page.locator('#username').fill('manager');await page.locator('#password').fill(process.env.DEMO_PASSWORD||'123456');
   await page.locator('#login-form button').click();await page.waitForURL('**/dashboard');
-  assert.equal(await page.locator('.summary-card').count(),3);
+  assert.equal(await page.locator('.work-stat').count(),4);
+  assert.equal(await page.locator('.work-hero').count(),1);
+  assert.ok(await page.locator('.work-meter').count());
   assert.equal(await page.locator('.sidebar').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(255, 255, 255)');
   await page.locator('#nav-search').fill('mat hang');await page.locator('#nav-search-results a').first().waitFor();
   assert.ok((await page.locator('#nav-search-results a').allTextContents()).length>0);

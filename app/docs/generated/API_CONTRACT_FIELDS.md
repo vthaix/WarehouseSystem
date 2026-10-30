@@ -23,6 +23,7 @@ Danh sách trích từ C.fields trong service/helper. Đây là các field đư�
 | src/modules/exceptions/ExceptionService.js | reinspect | b | version, result, note |
 | src/modules/exceptions/minute-exceptions.js | list | q | page, per_page, q, status, sort |
 | src/modules/exceptions/quarantine.js | helper | line | location_id, quantity |
+| src/modules/notifications/NotificationService.js | seen | body | resource_type, resource_id |
 | src/modules/production/FinishedReportService.js | list | query | page, per_page, q, status, sort |
 | src/modules/production/FinishedReportService.js | validate | output | item_id, lot_code, quantity, manufactured_date, expiry_date |
 | src/modules/production/FinishedReportService.js | validate | line | item_id, used_quantity |

@@ -68,7 +68,7 @@ const definitions = {
   },
 };
 const isId = (v) => /^[1-9]\d*$/.test(String(v));
-for(const action of ['create','edit'])definitions.items[action].push('material_quality_standard','default_shelf_life_days');
+for(const action of ['create','edit'])definitions.items[action].push('material_quality_standard','default_shelf_life_days','image_path');
 const optionalText = new Set([
   "description",
   "address",
@@ -127,7 +127,7 @@ class CatalogWriteService {
       if(field==='material_quality_standard'){C.text(value,field,1000,false);normalized[field]=value?.trim()||null;continue;}
       if(field==='default_shelf_life_days'){C.fail(value!==null&&(!Number.isInteger(value)||value<1||value>36500),'VALIDATION_ERROR','Hạn sử dụng mặc định phải là số ngày từ 1 đến 36500.');normalized[field]=value;continue;}
       if(field==='catalog_kind'){C.fail(!['MATERIAL','FINISHED_PRODUCT'].includes(value),'VALIDATION_ERROR','Chọn nhóm Thành phẩm hoặc Nguyên vật liệu.');normalized.LoaiDanhMuc=value;continue;}
-      if(field==='image_path'){normalized[field]=require('../../config/category-images').validatePath(value);continue;}
+      if(field==='image_path'){normalized[field]=require(resource==='items'?'../../config/item-images':'../../config/category-images').validatePath(value);continue;}
       if (field === "version") continue;
       if (["category_id", "unit_id", "warehouse_id"].includes(field)) {
         C.fail(

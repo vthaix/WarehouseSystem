@@ -1,0 +1,41 @@
+{
+  "results": [
+    {
+      "username": "director",
+      "status": "PASS"
+    },
+    {
+      "username": "purchaser",
+      "status": "PASS"
+    },
+    {
+      "username": "manager",
+      "status": "PASS"
+    },
+    {
+      "username": "customer",
+      "status": "PASS"
+    },
+    {
+      "username": "workshop",
+      "status": "PASS"
+    },
+    {
+      "username": "qc",
+      "status": "PASS"
+    },
+    {
+      "username": "stocktaker",
+      "status": "PASS"
+    },
+    {
+      "username": "staff",
+      "status": "PASS"
+    },
+    {
+      "username": "admin",
+      "status": "PASS"
+    }
+  ],
+  "errors": []
+}

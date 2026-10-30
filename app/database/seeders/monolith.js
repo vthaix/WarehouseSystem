@@ -3,7 +3,7 @@ const {hashPassword}=require('../../src/services/domain/core');
 async function seed(pool){
  await require('./foundation').seedRoles(pool);
  const [[done]]=await pool.execute("SELECT COUNT(*) total FROM LichSuCSDL WHERE Ten='demo_monolith_v1'");
- if(Number(done.total))return;
+ if(Number(done.total)){await require('./item-images').seed(pool);return;}
  await require('./foundation').seedDemo(pool);
  const c=await pool.getConnection();
  try{
@@ -27,5 +27,6 @@ async function seed(pool){
   await c.execute("UPDATE users SET full_name='Chủ xưởng ahtor' WHERE username='workshop' AND full_name='Chủ xưởng'");
   await c.execute('INSERT INTO LichSuCSDL(Ten,MaBam) VALUES (?,?)',['demo_monolith_v1','0'.repeat(64)]);await c.commit();
  }catch(e){await c.rollback();throw e}finally{c.release()}
+ await require('./item-images').seed(pool);
 }
 module.exports={seed};

@@ -385,7 +385,7 @@ const fieldNames = {
   inspection_type:'Nhóm hàng',inspection_lots:'Các phần / dòng lô được giao',finished_report_code:'Báo cáo thành phẩm',lot_header_code:'Lô tổng',report_mode:'Hình thức báo cáo thành phẩm',
   material_source:'Nguồn định lượng nguyên vật liệu',
   customer_order_status:'Trạng thái đơn nguồn',customer_note:'Ghi chú khách hàng',
-  image_path:'Ảnh danh mục',
+  image_path:'Ảnh',
   quarantine_source: "Hàng / vị trí xử lý", result: "Kết luận tái kiểm",
   original_stock_document_line_id: "Dòng phiếu giao gốc", returned_lot_detail_id: "Dòng lô nhận trả", return_receiver_id: "Nhân viên nhận", return_warehouse_id: "Kho nhận", return_location_id: "Vị trí cách ly", return_header_id: "Lô trả", return_line_id: "Dòng trả", receiver_id: "Nhân viên nhận",
   conclusion_assignee_ids: "QC/AC lập kết luận (tùy chọn)",

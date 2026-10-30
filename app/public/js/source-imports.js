@@ -209,7 +209,7 @@
       if (target === "purchase-orders") {
         const items = (await options('items')).filter(i => i.kind === 'MATERIAL');
         const suppliers = await options('suppliers');
-        const plans = (await options('business-plans')).filter(p => p.type === 'PURCHASE');
+        const plans = (await api('source-imports/purchase-report-options')).data;
         openModal('Mua nguyên vật liệu', formWrap(
           field('source_mode','select',true,[{id:'PLAN',name:'Theo kế hoạch mua nguyên vật liệu đã duyệt'}]) +
           pick('business_plan_id',plans,'Chọn kế hoạch mua nguyên vật liệu') + field('expected_delivery_date','date') +

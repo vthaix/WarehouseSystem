@@ -3,7 +3,12 @@ const base=process.env.APP_URL||'http://127.0.0.1:3000';
 const executablePath=process.env.BROWSER_PATH||['C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe','C:/Program Files/Google/Chrome/Application/chrome.exe'].find(p=>fs.existsSync(p));
 (async()=>{const browser=await chromium.launch({headless:true,...(executablePath?{executablePath}:{})});
 try{
-  async function login(username){const context=await browser.newContext({viewport:{width:1440,height:1000}}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(base+'/login');await page.locator('#username').fill(username);await page.locator('#password').fill(process.env.DEMO_PASSWORD||'123456');await page.locator('#login-form button').click();await page.waitForURL('**/dashboard');assert.ok((await page.locator('.role-value').textContent()).trim().length>2);return {context,page,errors};}
+  async function login(username){
+    const context=await browser.newContext({viewport:{width:1440,height:1000}}),page=await context.newPage(),errors=[];
+    page.on('pageerror',e=>errors.push(e.message));await page.goto(base+'/login');await page.locator('#username').fill(username);await page.locator('#password').fill(process.env.DEMO_PASSWORD||'123456');await page.locator('#login-form button').click();await page.waitForURL('**/dashboard');
+    const namedRole=await page.evaluate(()=>warehouseNavigation.labels[user.roles[0]]);assert.ok(namedRole&&namedRole.length>2);assert.ok((await page.locator('.topbar .profile').textContent()).includes(namedRole));
+    return {context,page,errors};
+  }
   for(const username of ['manager','workshop']){
     const {context,page,errors}=await login(username);assert.equal(await page.locator('.nav-link[data-nav="warehouse-lookup"]').count(),1);assert.equal(await page.locator('.nav-link[data-nav="stocktakes"]').count(),0);
     assert.equal((await page.goto(base+'/warehouse/lookup')).status(),200);await page.waitForLoadState('networkidle');assert.deepEqual(errors,[]);

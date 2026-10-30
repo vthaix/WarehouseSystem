@@ -7,6 +7,16 @@ class NotificationService {
   async badges(user) {
     return require('./function-badges')(this.pool,user);
   }
+  async updates(user){
+    const [rows]=await this.pool.execute('SELECT resource_type,resource_id,MAX(created_at) AS created_at,COUNT(*) AS total FROM notifications WHERE user_id=? AND read_at IS NULL GROUP BY resource_type,resource_id',[user.id]);
+    return rows.map(r=>({...r,resource_id:String(r.resource_id),total:Number(r.total)}));
+  }
+  async seen(user,body){
+    C.fields(body,['resource_type','resource_id']);
+    C.fail(typeof body.resource_type!=='string'||!/^([a-z]+-?)+$/.test(body.resource_type)||!/^\d+$/.test(String(body.resource_id)),'VALIDATION_ERROR','Chứng từ không hợp lệ.');
+    await this.pool.execute('UPDATE notifications SET read_at=COALESCE(read_at,UTC_TIMESTAMP(6)) WHERE user_id=? AND resource_type=? AND resource_id=?',[user.id,body.resource_type,body.resource_id]);
+    return {seen:true};
+  }
   async list(user, query = {}) {
     const { page, per_page, offset } = paginate(query);
     const unread = query.unread_only === "true" ? " AND read_at IS NULL" : "";

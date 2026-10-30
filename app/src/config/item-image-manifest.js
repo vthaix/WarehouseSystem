@@ -1,0 +1,11 @@
+module.exports={
+ 'NVL-001':'bot-mi.jpg','NL-BOT-02':'bot-bap.webp','NL-BOT-03':'bot-cacao.webp',
+ 'NVL-002':'duong-cat.jpeg','NL-DUONG-02':'duong-bot.jpg','NL-MUOI':'muoi.jpg',
+ 'NVL-003':'bo-lat.webp','NL-SUA-01':'sua-tuoi.webp','NL-SUA-02':'sua-dac.jpg','PK-001':'trung-ga.jpg',
+ 'NL-MEN':'men-no.webp','NL-BOT-NO':'bot-no.jpg','NL-NHAN-01':'dau-do.jpg','NL-NHAN-02':'dau-xanh.jpg',
+ 'NL-NHAN-03':'sicula.jpg','NL-NHAN-04':'mut-dau.webp','NL-KEM':'whipping.jpg','NL-HANH-NHAN':'hanh-nhan.jpg','NL-COM-MAU':'com-mau.webp',
+ 'BB-002':'hop-banh.png','BB-TUI':'tui-banh-sweet-taste.png','BB-DE':'de-banh.jpg','BB-TEM':'tem-nhan-sweet-taste.png',
+ 'TP-MI-01':'banh-mi-sandwich.jpeg','TP-MI-02':'banh-mi-bo-sua.jpg','TP-002':'bong-lan-cuon.jpg','TP-CUPCAKE':'cup-cake.jpg',
+ 'TP-001':'banh-quy-bo.jpg','TP-003':'banh-quy-sicula.jpg','TP-KEM-01':'banh-kem-vani.jpg','TP-KEM-02':'banh-kem-sicula.webp',
+ 'TP-004':'banh-nahn-dau-do.webp','TP-NHAN-02':'banh-nhan-dau-xanh.webp',
+};
