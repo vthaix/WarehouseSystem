@@ -29,3 +29,4 @@ lượng chênh lệch còn thiếu.
 Chủ xưởng từ lượng chênh lệch đó sẽ tạo luôn báo cáo sản xuất (chụp ảnh chênh lệch và dán vào mục mô tả kèm ghi chú), gửi cho ban giám đốc và bộ phận lập kế hoạch. Báo cáo sản xuất có thể lập bất kì thời điểm nào
 ví dụ trong quá trình sản xuất máy móc hư cũng có thể lập, hoặc mỗi đơn hàng sẽ sản xuất thành nhiều đợt nhỏ, mỗi đợt thành phẩm nhỏ cùng mã lô sẽ được nhập kho TP trước,
 lúc này cũng có thể lập.
+
