@@ -422,6 +422,10 @@ const fieldNames = {
   task_type: "Loại công việc",
   returned_supplier_quantity: "Lượng trả NCC",
   shortage_quantity: "Lượng thiếu",
+  usable_quantity: "Lượng đạt có thể dùng",
+  missing_received_quantity: "Thiếu so với lượng thực nhận/đếm",
+  planned_compensation_quantity: "Đã lập kế hoạch bù",
+  remaining_compensation_quantity: "Còn cần lập bù",
   type: "Loại",
   decision: "Quyết định",
   difference: "Dòng chênh lệch",
@@ -511,7 +515,7 @@ const fieldNames = {
 // Navigation represents UC entry points. Read access to source data used by a
 // different UC does not automatically add that management screen to the menu.
 const menuRoles={
-  'customer-orders':['CUSTOMER','PLANNER'],
+  'customer-orders':['CUSTOMER','PLANNER','DIRECTOR'],
   'business-plans':['PLANNER','DIRECTOR'],
   'customer-returns':['WAREHOUSE_MANAGER','WAREHOUSE_STAFF'],
   'purchase-orders':['PURCHASER'],

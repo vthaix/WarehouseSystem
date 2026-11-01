@@ -3,7 +3,7 @@ const base='http://127.0.0.1:3310',out=path.resolve(process.env.UI_AUDIT_OUT||pa
 const executablePath=['C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe','C:/Program Files/Google/Chrome/Application/chrome.exe'].find(p=>fs.existsSync(p));
 (async()=>{fs.mkdirSync(out,{recursive:true});const browser=await chromium.launch({headless:true,...(executablePath?{executablePath}:{})}),rows=[];try{
  for(const username of ['admin','customer','customer2','planner','purchaser','manager','staff','staff2','qc','qc2','qc3','stocktaker','stocktaker2','stocktaker3','workshop','workshop2','workshop3','director']){
-  const context=await browser.newContext(),page=await context.newPage();let errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=500)errors.push('HTTP '+r.status()+' '+r.url());});
+  const context=await browser.newContext(),page=await context.newPage();let errors=[];page.on('pageerror',e=>errors.push(e.stack||e.message));page.on('response',r=>{if(r.status()>=500)errors.push('HTTP '+r.status()+' '+r.url());});
   await page.goto(base+'/login');await page.locator('#username').fill(username);await page.locator('#password').fill('123456');await page.locator('#login-form button').click();await page.waitForURL('**/dashboard');
   await page.waitForFunction(()=>typeof available==='function'&&!!user);const modules=await page.evaluate(()=>available().map(m=>({key:m[0],name:m[1],path:m[5]})));
   for(const module of modules){
@@ -21,5 +21,5 @@ const executablePath=['C:/Program Files (x86)/Microsoft/Edge/Application/msedge.
   }
   await page.screenshot({path:path.join(out,'role-'+username+'.png'),fullPage:true});await context.close();console.log(username+': '+modules.length+' screens reviewed');
  }
- console.log('ROLE UI AUDIT COMPLETE: '+rows.length+' actor/screens; '+rows.filter(r=>r.status!==200||r.errors.length).length+' unexpected failures.');
+ if(rows.some(r=>r.status!==200||r.errors.length))process.exitCode=1;console.log('ROLE UI AUDIT COMPLETE: '+rows.length+' actor/screens; '+rows.filter(r=>r.status!==200||r.errors.length).length+' unexpected failures.');
 }finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

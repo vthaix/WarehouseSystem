@@ -131,7 +131,7 @@ class SourceImportService {
       );
       C.fail(!order, "NOT_FOUND", "Đơn mua không còn chờ nhận.", 404);
       const [lines] = await this.pool.execute(
-        "SELECT p.id,i.name AS item_name,p.supplier_id,s.name AS supplier_name,p.quantity,COALESCE((SELECT SUM(l.received_quantity) FROM lots l WHERE l.purchase_order_line_id=p.id),0) AS received FROM purchase_order_lines p JOIN items i ON i.id=p.item_id LEFT JOIN suppliers s ON s.id=p.supplier_id WHERE p.purchase_order_id=?",
+        "SELECT p.id,i.name AS item_name,p.supplier_id,s.name AS supplier_name,p.quantity,COALESCE((SELECT SUM(l.received_quantity) FROM lots l WHERE l.purchase_order_line_id=p.id),0) AS received,COALESCE((SELECT SUM(IF(x.MaLo IS NULL,x.ThucNhan,x.SoLoi)) FROM ThucKiemKeHoachMua x WHERE x.MaDongDonMua=p.id),0) AS checked FROM purchase_order_lines p JOIN items i ON i.id=p.item_id LEFT JOIN suppliers s ON s.id=p.supplier_id WHERE p.purchase_order_id=?",
         [id],
       );
       return {
@@ -144,11 +144,12 @@ class SourceImportService {
             item_name: l.item_name,
             supplier_id: l.supplier_id == null ? null : String(l.supplier_id),
             supplier_name: l.supplier_name,
-            quantity: remaining(q(l.quantity), q(l.received)),
+            ordered_quantity:l.quantity,already_recorded_quantity:C.decimal(q(l.received)+q(l.checked)),
+            quantity: remaining(q(l.quantity), q(l.received)+q(l.checked)),
           })),
         ),
         warnings: [
-          "Hàng thực nhận chờ QC. Tồn khả dụng chỉ tăng khi ghi phiếu nhập phần đạt QC.",
+          "Chỉ hiển thị phần đơn mua chưa có lô hoặc kết quả thực kiểm. Phần lỗi đã ghi nhận không được nhận lại như hàng mới. Tồn chỉ tăng khi ghi phiếu nhập.",
         ],
       };
     }
@@ -239,6 +240,12 @@ class SourceImportService {
         const n = limit - (used.get(item) || 0n);
         if (n > 0n) lines.push({ item_id: item, quantity: C.decimal(n) });
       }
+      if(body.purpose==='PRODUCTION_ISSUE'&&body.warehouse_id){
+        const [stock]=await c.execute("SELECT l.item_id,b.quantity,COALESCE((SELECT SUM(a.quantity-a.posted_quantity) FROM stock_allocations a JOIN tasks t ON t.id=a.task_id WHERE a.lot_id=b.lot_id AND a.location_id=b.location_id AND a.quality_bucket='AVAILABLE' AND t.task_type='WAREHOUSE_OUT' AND t.status<>'CANCELLED'),0) AS reserved FROM inventory_balances b JOIN lots l ON l.id=b.lot_id JOIN warehouse_locations loc ON loc.id=b.location_id JOIN warehouses w ON w.id=loc.warehouse_id WHERE loc.warehouse_id=? AND b.quality_bucket='AVAILABLE' AND l.qc_status IN ('PASSED','PARTIAL') AND (l.expiry_date IS NULL OR l.expiry_date>=?) AND loc.is_active=1 AND w.is_active=1",[body.warehouse_id,C.today()]);
+        const available=new Map();for(const s of stock){const n=q(s.quantity)-q(s.reserved);if(n>0n)available.set(String(s.item_id),(available.get(String(s.item_id))||0n)+n);}
+        for(const line of lines){line.required_quantity=line.quantity;line.available_quantity=C.decimal(available.get(line.item_id)||0n);if(q(line.quantity)>q(line.available_quantity))line.quantity=line.available_quantity;}
+        warnings.push('Lượng xuất gợi ý bằng nhu cầu còn lại nhưng không vượt tồn khả dụng của kho đã chọn; đã trừ phần giữ chỗ, hàng lỗi, cách ly và hết hạn.');
+      }
       if (body.purpose === "SALE_ISSUE") {
         C.fail(
           !info.source.finished_report_id,
@@ -247,7 +254,7 @@ class SourceImportService {
           409,
         );
         const [stock] = await c.execute(
-          "SELECT l.id AS lot_id,l.item_id,l.code AS lot_code,l.qc_status,b.location_id,b.quantity,loc.warehouse_id,COALESCE((SELECT SUM(a.quantity-a.posted_quantity) FROM stock_allocations a JOIN tasks t ON t.id=a.task_id WHERE a.lot_id=b.lot_id AND a.location_id=b.location_id AND a.quality_bucket='AVAILABLE' AND t.task_type='WAREHOUSE_OUT' AND t.status<>'CANCELLED'),0) AS reserved FROM finished_report_outputs o JOIN lots l ON l.id=o.lot_id JOIN inventory_balances b ON b.lot_id=l.id JOIN warehouse_locations loc ON loc.id=b.location_id JOIN warehouses w ON w.id=loc.warehouse_id WHERE o.finished_report_id=? AND b.quality_bucket='AVAILABLE' AND l.qc_status IN ('PASSED','PARTIAL') AND (l.expiry_date IS NULL OR l.expiry_date>=CURRENT_DATE) AND loc.is_active=1 AND w.is_active=1" +
+          "SELECT l.id AS lot_id,l.item_id,l.code AS lot_code,l.qc_status,b.location_id,b.quantity,loc.warehouse_id,COALESCE((SELECT SUM(a.quantity-a.posted_quantity) FROM stock_allocations a JOIN tasks t ON t.id=a.task_id WHERE a.lot_id=b.lot_id AND a.location_id=b.location_id AND a.quality_bucket='AVAILABLE' AND t.task_type='WAREHOUSE_OUT' AND t.status<>'CANCELLED'),0) AS reserved FROM finished_report_outputs o JOIN lots l ON l.id=o.lot_id JOIN inventory_balances b ON b.lot_id=l.id JOIN warehouse_locations loc ON loc.id=b.location_id JOIN warehouses w ON w.id=loc.warehouse_id WHERE "+require('./sale-report-scope')('o')+" AND b.quality_bucket='AVAILABLE' AND l.qc_status IN ('PASSED','PARTIAL') AND (l.expiry_date IS NULL OR l.expiry_date>=DATE(DATE_ADD(UTC_TIMESTAMP(),INTERVAL 7 HOUR))) AND loc.is_active=1 AND w.is_active=1" +
             (body.warehouse_id ? " AND loc.warehouse_id=?" : ""),
           [
             info.source.finished_report_id,

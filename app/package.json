@@ -9,6 +9,8 @@
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
     "test": "node --test tests/unit/*.test.js",
+    "test:documented": "node scripts/execute-documented-cases.cjs",
+    "test:final": "node scripts/final-system-test.cjs",
     "check": "node scripts/check.cjs",
     "docs:sync": "node scripts/sync-project-docs.cjs",
     "check:sync": "node scripts/check-monolith-sync.cjs",

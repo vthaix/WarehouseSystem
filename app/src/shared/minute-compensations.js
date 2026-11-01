@@ -1,0 +1,24 @@
+const C=require('../services/domain/core'),P=require('../services/domain/policy');
+const qty=v=>C.qty(String(v),false),positive=n=>n>0n?n:0n;
+const groupKey=l=>[l.kind,l.item_id,l.kind==='FINISHED_PRODUCT'?l.customer_order_id:'',l.kind==='FINISHED_PRODUCT'?l.workshop_id:''].join(':');
+function deficits(rows){return rows.map(r=>{const required=qty(r.system_quantity??r.planned_quantity??0),count=r.counted_quantity==null?null:qty(r.counted_quantity),passed=r.passed_quantity==null?null:qty(r.passed_quantity),actual=count??(r.inspected_quantity==null?null:qty(r.inspected_quantity));let usable=passed??actual;if(usable!==null&&count!==null&&count<usable)usable=count;return {...r,required_quantity:C.decimal(required),usable_quantity:usable===null?null:C.decimal(usable),missing_received_quantity:actual===null?null:C.decimal(positive(required-actual)),shortage_quantity:usable===null?null:C.decimal(positive(required-usable))};});}
+async function source(c,key,lock=false){
+ C.fail(!/^[1-9]\d*$/.test(String(key)),'NOT_FOUND','Biên bản nguồn không hợp lệ.',404);
+ const [[r]]=await c.execute("SELECT * FROM stocktakes WHERE id=? AND BienBanTrangThai='SUBMITTED'"+(lock?' FOR UPDATE':''),[key]);C.fail(!r,'NOT_FOUND','Chỉ lập bù từ biên bản đã gửi.',404);
+ let rows=typeof r.BienBanDuLieu==='string'?JSON.parse(r.BienBanDuLieu):r.BienBanDuLieu||[];
+ const [lotInfo]=await c.execute('SELECT l.id AS lot_id,l.item_id,i.kind,p.customer_order_id,p.workshop_id FROM quality_campaign_lots q JOIN lots l ON l.id=q.lot_id JOIN items i ON i.id=l.item_id LEFT JOIN production_plans p ON p.id=l.production_plan_id WHERE q.campaign_id=?',[key]);
+ rows=deficits(rows.map(x=>{const info=x.lot_id?lotInfo.find(l=>String(l.lot_id)===String(x.lot_id)):null;return {...info,...x,kind:x.kind||info?.kind||(r.quality_kind==='MATERIAL'?'MATERIAL':'FINISHED_PRODUCT')};}));
+ const grouped=new Map();for(const line of rows){if(!line.item_id||!line.shortage_quantity||qty(line.shortage_quantity)===0n)continue;const id=groupKey(line);if(!grouped.has(id))grouped.set(id,{...line,item_id:String(line.item_id),shortage_quantity:'0.000'});grouped.get(id).shortage_quantity=C.decimal(qty(grouped.get(id).shortage_quantity)+qty(line.shortage_quantity));}
+ const [used]=await c.execute("SELECT 'MATERIAL' AS kind,l.item_id,l.quantity,p.id AS plan_id,p.code,NULL AS customer_order_id,NULL AS workshop_id FROM business_plans p JOIN business_plan_lines l ON l.business_plan_id=p.id WHERE p.MaBienBanBu=? AND p.status NOT IN ('REJECTED','CANCELLED') UNION ALL SELECT 'FINISHED_PRODUCT',l.item_id,l.quantity,p.id,p.code,p.customer_order_id,p.workshop_id FROM production_plans p JOIN production_plan_outputs l ON l.production_plan_id=p.id WHERE p.MaBienBanBu=? AND p.status<>'CANCELLED'",[key,key]);
+ const lines=[...grouped.values()].map(l=>{const allocated=used.filter(u=>groupKey(u)===groupKey(l)).reduce((n,u)=>n+qty(u.quantity),0n);return {...l,planned_compensation_quantity:C.decimal(allocated),remaining_compensation_quantity:C.decimal(positive(qty(l.shortage_quantity)-allocated))};});
+ return {id:String(r.id),code:'BB-'+r.code,lines,plans:used.map(p=>({id:String(p.plan_id),code:p.code,kind:p.kind})),rows};
+}
+async function validate(c,key,kind,requested,exclude=null,context={}){
+ const data=await source(c,key,true),matching=data.lines.filter(l=>l.kind===kind&&(kind==='MATERIAL'||String(l.customer_order_id)===String(context.customer_order_id)&&String(l.workshop_id)===String(context.workshop_id))),limits=new Map(matching.map(l=>[l.item_id,qty(l.shortage_quantity)]));C.fail(!requested.length,'VALIDATION_ERROR','Kế hoạch bù cần mặt hàng.');
+ const table=kind==='MATERIAL'?'business_plans':'production_plans',details=kind==='MATERIAL'?'business_plan_lines':'production_plan_outputs',fk=kind==='MATERIAL'?'business_plan_id':'production_plan_id';
+ const [used]=await c.execute('SELECT l.item_id,l.quantity FROM '+table+' p JOIN '+details+' l ON l.'+fk+"=p.id WHERE p.MaBienBanBu=? AND p.status NOT IN ('REJECTED','CANCELLED')"+(kind==='FINISHED_PRODUCT'?' AND p.customer_order_id=? AND p.workshop_id=?':'')+(exclude?' AND p.id<>?':'')+' FOR UPDATE',[key,...(kind==='FINISHED_PRODUCT'?[context.customer_order_id,context.workshop_id]:[]),...(exclude?[exclude]:[])]);
+ for(const l of [...used,...requested]){const id=String(l.item_id),remaining=(limits.get(id)||0n)-qty(l.quantity);C.fail(remaining<0n,'SOURCE_LIMIT_EXCEEDED','Lượng bù vượt phần thiếu còn lại của biên bản hoặc mặt hàng sai nguồn.');limits.set(id,remaining);}
+ return data;
+}
+async function list(pool,u){P.role(u,['PLANNER','DIRECTOR']);const [rows]=await pool.execute("SELECT id FROM stocktakes WHERE BienBanTrangThai='SUBMITTED' AND BienBanDuLieu IS NOT NULL ORDER BY id DESC LIMIT 200");const out=[];for(const r of rows){const data=await source(pool,r.id);if(data.lines.some(l=>qty(l.remaining_compensation_quantity)>0n))out.push(data);}return out;}
+module.exports={deficits,source,validate,list};

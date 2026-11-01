@@ -29,6 +29,7 @@
         document.querySelector("#" + slot).innerHTML = "";
       const save = form.querySelector("[type=submit]");
       save.disabled = true;
+      delete form.dataset.importBlocked;
       document.querySelector("#form-error").innerHTML = "";
       try {
         await work(() => attempt === seq && form.isConnected);
@@ -36,7 +37,7 @@
         if (attempt === seq && form.isConnected)
           document.querySelector("#form-error").innerHTML = errorHTML(e);
       } finally {
-        if (attempt === seq && form.isConnected) save.disabled = false;
+        if (attempt === seq && form.isConnected) save.disabled = form.dataset.importBlocked==='true';
       }
     };
   }
@@ -263,13 +264,14 @@
               ]),
             ).values(),
           ];
+        if(!orders.length){openModal('Đơn mua đã được ghi nhận hết','<div class="notice">Không còn lượng đơn mua chưa có lô hoặc kết quả thực kiểm. Xem các lô hiện có; nếu vừa kiểm xong theo kế hoạch, mở kết quả thực kiểm để tạo lô phần đạt. Không tạo lại từ toàn bộ đơn mua.</div>');return;}
         openModal(
           "Nhận nguyên vật liệu theo đơn mua",
           formWrap(
             pick("purchase_order_id", orders, "Chọn đơn mua") +
-              field("code") +
+              '<div class="span2 notice">Mã lô được hệ thống tự sinh khi lưu.</div>' +
               field("manufactured_date", "date", false) +
-              field("expiry_date", "date", false) +
+              '<div class="span2 hint">Hạn dùng tự tính từ ngày sản xuất theo cấu hình NVL và nhà cung cấp.</div>' +
               '<div class="span2" id="import-info"></div><div class="span2" id="import-lines"></div>',
           ),
         );
@@ -280,11 +282,14 @@
               source_id: value("purchase_order_id"),
             });
             if (!fresh()) return;
+            if(!r.lines.length){document.querySelector('#data-form').dataset.importBlocked='true';document.querySelector('#import-info').innerHTML='<div class="notice">Đơn mua này đã được ghi nhận đủ qua lô hoặc kết quả thực kiểm. Không còn lượng để tạo thêm lô; xem lô hiện có hoặc kết quả thực kiểm.</div>';return;}
             const suppliers = [...new Map(r.lines.map(l => [l.supplier_id, {id:l.supplier_id,name:l.supplier_name || 'Nhà cung cấp'}])).values()];
-            document.querySelector("#import-info").innerHTML = notice(r) + '<p>Mỗi lô thực nhận thuộc một nhà cung cấp.</p>' + field('receiving_supplier_id','select',true,suppliers);
+            document.querySelector("#import-info").innerHTML = notice(r) + '<p>Mỗi lô thực nhận thuộc một nhà cung cấp.</p>' + field('receiving_supplier_id','select',true,suppliers)+'<button type="button" class="button small" id="reload-receipt-remaining">Tải lại lượng còn được nhận</button>';
+            document.querySelector('#reload-receipt-remaining').onclick=()=>document.querySelector('#f-purchase_order_id').onchange();
             const draw = () => {
               const lines=r.lines.filter(l=>l.supplier_id===value('receiving_supplier_id'));
               rowsAt('import-lines','Lượng thực nhận theo NCC — điều chỉnh theo hàng giao',lines.map(l=>({id:l.item_id,name:l.item_name})), 'lines',['quantity'],lines);
+              for(const row of document.querySelectorAll('#import-lines .line-row')){const select=row.querySelector('[data-key="item_id"]'),quantity=row.querySelector('[data-key="quantity"]');const cap=()=>{quantity.max=lines.find(l=>l.item_id===select.value)?.quantity||'0';};select.addEventListener('change',cap);cap();}
             };
             document.querySelector('#f-receiving_supplier_id').onchange=draw;
             draw();
@@ -292,17 +297,18 @@
           ["import-lines", "import-info"],
         );
         bindForm(
-          (d) => ({
-            code: d.code,
-            lines: readLines().map((l) => ({
+          async (d) => {
+            const latest=await preview(target,{source_id:value('purchase_order_id')}),entered=readLines();
+            for(const line of entered){const live=latest.lines.find(l=>l.item_id===line.item_id);if(!live||Number(line.quantity)>Number(live.quantity))throw Error((live?.item_name||'Dòng đơn mua')+' đã được ghi nhận hoặc thay đổi. '+(live?'Còn được nhận '+format(live.quantity)+'. ':'Không còn lượng để nhận. ')+'Bấm Tải lại lượng còn được nhận; không tạo trùng lô.');}
+            return {lines: entered.map((l) => ({
               purchase_order_line_id: l.item_id,
               received_quantity: l.quantity,
               ...(d.manufactured_date
                 ? { manufactured_date: d.manufactured_date }
                 : {}),
               ...(d.expiry_date ? { expiry_date: d.expiry_date } : {}),
-            })),
-          }),
+            }))};
+          },
           target,
         );
         return;

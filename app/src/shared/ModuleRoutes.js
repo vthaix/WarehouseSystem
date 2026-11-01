@@ -21,12 +21,20 @@ function pending(req, res, next) {
 module.exports = (runtime) => {
   const router = express.Router(),
     catalog = require("../modules/catalog/ApiController")(runtime.catalog);
+  const purchaseChecks=require('../modules/quality/purchase-plan-check');
+  router.get('/compensation-sources',role(['PLANNER','DIRECTOR']),async(req,res)=>ok(req,res,await require('./minute-compensations').list(runtime.pool,req.user)));
+  router.get('/compensation-sources/:id',role(['PLANNER','DIRECTOR']),async(req,res)=>ok(req,res,await require('./minute-compensations').source(runtime.pool,req.params.id)));
+  router.get('/purchase-plan-price-options',role(['PLANNER','DIRECTOR']),async(req,res)=>ok(req,res,await require('./supplier-terms').catalogue(runtime.pool)));
+  router.get('/quality-campaigns/:id/purchase-check',async(req,res)=>ok(req,res,await purchaseChecks.get(runtime,req.user,req.params.id)));
+  router.post('/quality-campaigns/:id/purchase-check',async(req,res)=>ok(req,res,await purchaseChecks.save(runtime,req.user,req.params.id,req.body,req.request_id)));
+  router.post('/quality-campaigns/:id/material-lots',async(req,res)=>ok(req,res,await purchaseChecks.createLots(runtime,req.user,req.params.id,req.body,req.request_id)));
   const sourceImports = new (require('./SourceImportService'))(runtime);
   for(const resource of ['warehouse-inbound','warehouse-outbound']){
    router.get('/'+resource,role(['WAREHOUSE_MANAGER','WAREHOUSE_STAFF']),async(req,res)=>{const r=await require('./warehouse-management').list(runtime,req.user,resource,req.query);ok(req,res,r.data,200,r.meta);});
    router.get('/'+resource+'/:id',role(['WAREHOUSE_MANAGER','WAREHOUSE_STAFF']),async(req,res)=>ok(req,res,await require('./warehouse-management').get(runtime,req.user,resource,req.params.id)));
   }
   router.get('/workspace/updates',async(req,res)=>ok(req,res,await runtime.notifications.updates(req.user)));
+  router.get('/workspace/pending',async(req,res)=>ok(req,res,await require('../modules/notifications/pending-work')(runtime.pool,req.user)));
   router.post('/workspace/seen',async(req,res)=>ok(req,res,await runtime.notifications.seen(req.user,req.body)));
   router.get('/material-price-options',role(['WAREHOUSE_MANAGER','PURCHASER']),async(req,res)=>ok(req,res,await runtime.materialCatalog.metadata(req.user)));
   router.get('/material-prices',role(['WAREHOUSE_MANAGER','PURCHASER']),async(req,res)=>{const r=await runtime.materialCatalog.list(req.user,req.query);ok(req,res,r.data,200,r.meta);});
@@ -271,7 +279,7 @@ module.exports = (runtime) => {
     if (req.params.resource === "purchase-order-lines") {
       P.role(req.user, ["WAREHOUSE_MANAGER"]);
       const [rows] = await runtime.pool.query(
-        "SELECT l.*,CONCAT(p.code,' / ',i.name) AS name FROM purchase_order_lines l JOIN purchase_orders p ON p.id=l.purchase_order_id JOIN items i ON i.id=l.item_id WHERE p.status IN ('PENDING','PARTIALLY_RECEIVED') ORDER BY l.id DESC LIMIT 100",
+        "SELECT l.*,CONCAT(p.code,' / ',i.name) AS name FROM purchase_order_lines l JOIN purchase_orders p ON p.id=l.purchase_order_id JOIN items i ON i.id=l.item_id WHERE p.status IN ('PENDING','PARTIALLY_RECEIVED') AND l.quantity>COALESCE((SELECT SUM(x.received_quantity) FROM lots x WHERE x.purchase_order_line_id=l.id),0)+COALESCE((SELECT SUM(IF(x.MaLo IS NULL,x.ThucNhan,x.SoLoi)) FROM ThucKiemKeHoachMua x WHERE x.MaDongDonMua=l.id),0) ORDER BY l.id DESC LIMIT 100",
       );
       return ok(
         req,

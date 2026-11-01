@@ -21,3 +21,5 @@
 @media(min-width:1000px){.warehouse-map-detail{position:sticky;top:88px}}
 
 .item-thumb,.item-photo-preview img,.item-detail-photo,.category-thumbnail,.category-image-preview img{object-fit:cover;object-position:center;padding:0}
+
+.lot-summary{margin:12px 0;padding:16px 18px;border:1px solid #ebe5e7;border-radius:12px;background:white}.lot-summary summary{display:flex;justify-content:space-between;gap:14px;cursor:pointer}.lot-summary summary span{font-size:13px;color:#807580}.lot-line{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-top:1px solid #eee;margin-top:8px}.warehouse-zone-block .warehouse-slot-grid,.warehouse-zone-block .warehouse-queue-caption{display:none}.warehouse-zone-block{cursor:pointer}.warehouse-zone-heading{margin:0}.warehouse-zone-block:hover{border-color:#d92d42}

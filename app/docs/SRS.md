@@ -1,5 +1,7 @@
 # Đặc tả yêu cầu WarehouseSystem
 
+Cập nhật 01/11/2026: giám đốc xem đơn hàng (không tạo/sửa/tiếp nhận); giữ nổi bật phần việc tới khi xử lý xong; phân biệt ngày thực tế và ngày dự kiến. [Quy tắc](CHO_XU_LY_VA_NGAY_GIO.md) · [Word, sequence và kiểm thử](review-20261101/README.md).
+
 Bản hiện hành hợp nhất ngày 14/10/2026, theo các yêu cầu/đồng ý của chủ dự án và code hiện tại. Bản Word và bản trước hợp nhất được giữ để truy vết; không dùng chúng để ghi đè những thay đổi đã chốt ở đây. Giữ 48 UC gốc và hai luồng UC-11.01/11.02; không thêm UC-26/30/33.
 
 ## Phạm vi
@@ -154,3 +156,14 @@ Form phân công xuất có bảng thứ tự và nút Bổ sung phân bổ theo
 Nhân viên chỉ ghi phần được giao tại UC-10/UC-11.01/UC-11.02; không tự đổi lô/vị trí ngoài phân công. Ghi một phần giữ lượng còn lại để thực hiện tiếp. Phiếu đã ghi sổ và lịch sử tồn không được viết lại.
 
 Chi tiết: [WORKSHOP_STORAGE.md](WORKSHOP_STORAGE.md). Bản Word và kiểm tra bảo toàn: [review-20261030](review-20261030/README.md).
+
+
+## Cập nhật 31/10/2026 — thực kiểm kế hoạch mua trước khi tạo lô
+
+Luồng NVL mới: giám đốc lập đợt từ kế hoạch mua; QC/AC và Ban kiểm kê đối chiếu hàng thực tế với các dòng mua trước khi có lô. Quản lý nhận kết quả và tạo lô phần đạt với mã tự sinh. Chỉ nhân viên ghi phiếu nhập mới tăng tồn. Chi tiết, thay đổi giao diện và kịch bản kiểm tra: [THUC_KIEM_KE_HOACH_MUA.md](THUC_KIEM_KE_HOACH_MUA.md). Quy tắc này cập nhật các UC-13, UC-15, UC-12.1, UC-08/09/10/22/23/28 và xử lý ngoại lệ; không đổi quyền actor ngoài phần việc được phân công.
+
+
+Cập nhật hạn dùng theo từng cặp NVL–NCC, bản chụp giá dự toán kế hoạch mua và kiểm tra lượng còn được nhận: [NCC_HAN_DUNG_VA_DU_TOAN.md](NCC_HAN_DUNG_VA_DU_TOAN.md). Hạn dùng được biết trước khi xác nhận QC; quản lý tạo lô không nhập lại hạn dùng.
+
+
+Cập nhật xuất bán và số lượng QC mặc định: [XUAT_BAN_VA_MAC_DINH_QC.md](XUAT_BAN_VA_MAC_DINH_QC.md). Khách/đơn lấy từ báo cáo và kế hoạch sản xuất; không chọn khách khác. Giữ điều kiện chỉ xuất từ ngày giao theo xác nhận 31/10/2026. QC tự điền số nguồn nhưng cho sửa trước khi xác nhận.

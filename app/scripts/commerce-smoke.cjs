@@ -107,7 +107,7 @@ function client() {
     const production = await planner.call("/api/v1/production-plans", "POST", {
       customer_order_id: customerOrderId,
       workshop_id: workshopId,
-      start_date: date,
+      start_date: require('../src/services/domain/core').today(),
       end_date: date,
       outputs: [{ item_id: sample.id, quantity: "1.000" }],
       materials: [{ item_id: String(items[0].id), required_quantity: "5.000" }],
@@ -181,7 +181,8 @@ function client() {
     });
     assert.equal(plan.status, 201, JSON.stringify(plan));
     planId = plan.data.id;
-    assert.equal(plan.data.total_amount, "50.0000");
+    assert.ok(Number(plan.data.total_amount)>0);
+    assert.ok(plan.data.lines.every(l=>l.price_estimate?.offers.length>0),'Purchase budget must be derived from configured supplier quotations');
     await director.login("director");
     reviewKey = crypto.randomUUID();
     const approved = await director.call(

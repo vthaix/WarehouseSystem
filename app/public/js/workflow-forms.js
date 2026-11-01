@@ -315,10 +315,12 @@ createForm = async function () {
           lot?.received_quantity || "";
         document.querySelector("#f-passed_quantity").value =
           lot?.received_quantity || "";
+        document.querySelector('#f-failed_quantity').value='0';
       };
       document.querySelector("#f-campaign_id").onchange = sync;
       document.querySelector("#f-lot_id").onchange = fillQuantity;
       sync();
+      wireQcQuantities(document.querySelector('#data-form'),'#f-inspected_quantity','#f-passed_quantity','#f-failed_quantity');
       bindForm(
         (d) => ({
           campaign_id: d.campaign_id,
@@ -609,6 +611,9 @@ createForm = async function () {
           report.required = purchase && !manual;
         }
         const selectedReport = !purchase ? finishedReports.find(r=>r.id===finished?.value) : !manual ? reports.find(r=>r.id===report?.value) : null;
+        for(const key of ['customer_id','customer_order_id']){const input=document.querySelector('#f-'+key);if(input){input.disabled=true;input.required=false;input.closest('.field').hidden=true;}}
+        if(!purchase&&selectedReport){let summary=document.querySelector('#sale-customer-source');if(!summary){summary=document.createElement('div');summary.id='sale-customer-source';summary.className='span2 notice';grid.append(summary);}summary.textContent='Khách hàng: '+(selectedReport.customer_name||'Theo đơn gốc')+' · Đơn hàng: '+(selectedReport.customer_order_code||'Theo kế hoạch sản xuất');summary.hidden=false;}
+        else if(document.querySelector('#sale-customer-source'))document.querySelector('#sale-customer-source').hidden=true;
         const source = production.find(p=>p.id===String(selectedReport?.production_plan_id || plan?.value));
         const date = document.querySelector('#f-planned_date');
         const limit = !purchase ? source?.latest_delivery_date : source?.end_date;
@@ -639,7 +644,7 @@ createForm = async function () {
             const [whole, fraction = ""] = String(value).split(".");
             return BigInt(whole) * 1000n + BigInt(fraction.padEnd(3, "0"));
           };
-          for (const output of report.outputs) {
+          for (const output of (report.sale_outputs||report.outputs)) {
             const previous = grouped.get(output.item_id);
             if (previous) {
               const total =
@@ -946,6 +951,7 @@ async function dispatchForm(req) {
       row.innerHTML =
         '<div class="form-grid">' +
         `<div class="field"><label>Dòng hàng</label><select aria-label="Dòng hàng" data-key="stock_request_line_id">${preview.lines.map((l) => `<option value="${l.id}">${esc(l.item_name)} · còn ${l.remaining_quantity}</option>`).join("")}</select></div><div class="field"><label>Nhân viên kho</label><select aria-label="Nhân viên kho" data-key="assignee_id">${staff.map((u) => `<option value="${u.id}">${esc(u.name)}</option>`).join("")}</select></div><div class="field"><label>Lô</label><select aria-label="Lô phân công" data-key="lot_id"></select></div><div class="field"><label>Vị trí</label><select aria-label="Vị trí phân công" data-key="location_id"></select></div><div class="field"><label>Số lượng</label><input aria-label="Số lượng phân công" data-key="quantity" type="number" min="0.001" step="0.001" required value="1"></div><div class="field"><label>Chất lượng</label><input aria-label="Chất lượng" data-key="quality_bucket" value="AVAILABLE" readonly></div></div><button class="button small danger" type="button">Xóa phân bổ</button>`;
+      if(req.type==='IN')row.querySelector('[data-key="location_id"]').previousElementSibling.textContent='Khu lưu trữ';
       const sync = () => {
         const l = preview.lines.find(
           (l) =>
@@ -968,7 +974,7 @@ async function dispatchForm(req) {
           const remaining=qty(l.remaining_quantity)-reserved-drafted;if(remaining<cap)cap=remaining;if(cap<0n)cap=0n;
           row.querySelector('[data-key="quantity"]').value=decimal(cap);
         };
-        const suggestPosition=()=>{const lot=eligible.find(t=>t.id===row.querySelector('[data-key="lot_id"]').value);if(req.type==='IN'&&lot?.suggested_location_id)row.querySelector('[data-key="location_id"]').value=lot.suggested_location_id;updateQuantity();let hint=row.querySelector('.queue-hint');if(!hint){hint=document.createElement('p');hint.className='queue-hint';row.append(hint);}hint.textContent=req.type==='OUT'?'Ưu tiên hạn dùng gần nhất; cùng hạn dùng thì nhập kho trước xuất trước.':lot?.storage_hint||'Chọn vị trí lưu riêng cho dòng lô này.';};
+        const suggestPosition=()=>{const lot=eligible.find(t=>t.id===row.querySelector('[data-key="lot_id"]').value);if(req.type==='IN'){const areas=new Map();for(const pos of [...l.locations].sort((a,b)=>(String(b.id)===String(lot?.suggested_location_id))-(String(a.id)===String(lot?.suggested_location_id)))){const name=(pos.zone_name||'Khu chung').replace(/^Khu [A-Z] · /,'Khu ');if(!areas.has(name))areas.set(name,pos);}row.querySelector('[data-key="location_id"]').innerHTML=[...areas].map(([name,pos])=>'<option value="'+esc(pos.id)+'">'+esc(name)+'</option>').join('');}if(req.type==='IN'&&lot?.suggested_location_id)row.querySelector('[data-key="location_id"]').value=lot.suggested_location_id;updateQuantity();let hint=row.querySelector('.queue-hint');if(!hint){hint=document.createElement('p');hint.className='queue-hint';row.append(hint);}hint.textContent=req.type==='OUT'?'Ưu tiên hạn dùng gần nhất; cùng hạn dùng thì nhập kho trước xuất trước.':lot?.storage_hint||'Chọn vị trí lưu riêng cho dòng lô này.';};
         row.querySelector('[data-key="lot_id"]').onchange=suggestPosition;row.querySelector('[data-key="location_id"]').onchange=updateQuantity;
         row.querySelector('[data-key="location_id"]').innerHTML = l.locations
           .map((t) => `<option value="${t.id}">${esc(t.zone_name?t.zone_name+' · '+t.name:t.name)}</option>`)

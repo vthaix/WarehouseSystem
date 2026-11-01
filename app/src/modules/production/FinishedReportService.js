@@ -11,6 +11,12 @@ class FinishedReportService {
   constructor(pool) {
     this.pool = pool;
   }
+  async chronology(connection,plan,completed,outputs){
+    require('../../shared/time-rules').actualDate(completed,'completed_date');
+    const [[order]]=await connection.execute('SELECT latest_delivery_date FROM customer_orders WHERE id=?',[plan.customer_order_id]);
+    C.fail(completed<asDate(plan.start_date)||(order&&completed>asDate(order.latest_delivery_date)),'VALIDATION_ERROR','Ngày hoàn thành phải từ ngày bắt đầu sản xuất đến hạn giao đơn hàng.');
+    for(const output of outputs)C.fail(output.manufactured_date>completed||output.manufactured_date<asDate(plan.start_date),'VALIDATION_ERROR','Ngày sản xuất thành phẩm phải từ ngày bắt đầu kế hoạch đến ngày hoàn thành báo cáo.');
+  }
 
   visible(user, row) {
     return (
@@ -88,7 +94,7 @@ class FinishedReportService {
       params,
     );
     const [rows] = await this.pool.execute(
-      "SELECT r.*,p.workshop_id,p.code AS production_plan_code,c.name AS customer_name,(SELECT COUNT(*) FROM customer_orders prior WHERE prior.customer_id=o.customer_id AND prior.id<=o.id) AS order_sequence,(SELECT COUNT(*) FROM production_plans prior WHERE prior.customer_order_id=p.customer_order_id AND prior.id<=p.id) AS plan_sequence,(SELECT COUNT(*) FROM finished_reports prior JOIN production_plans pp ON pp.id=prior.production_plan_id JOIN customer_orders oo ON oo.id=pp.customer_order_id WHERE oo.customer_id=o.customer_id AND prior.id<=r.id) AS report_sequence" +
+      "SELECT r.*,p.workshop_id,p.customer_order_id,o.customer_id,o.code AS customer_order_code,p.code AS production_plan_code,c.name AS customer_name,(SELECT COUNT(*) FROM customer_orders prior WHERE prior.customer_id=o.customer_id AND prior.id<=o.id) AS order_sequence,(SELECT COUNT(*) FROM production_plans prior WHERE prior.customer_order_id=p.customer_order_id AND prior.id<=p.id) AS plan_sequence,(SELECT COUNT(*) FROM finished_reports prior JOIN production_plans pp ON pp.id=prior.production_plan_id JOIN customer_orders oo ON oo.id=pp.customer_order_id WHERE oo.customer_id=o.customer_id AND prior.id<=r.id) AS report_sequence" +
         base +
         " JOIN customer_orders o ON o.id=p.customer_order_id JOIN customers c ON c.id=o.customer_id" +
         filter +
@@ -110,7 +116,7 @@ class FinishedReportService {
     P.role(user, P.read["finished-reports"]);
     C.fail(!isId(id), "NOT_FOUND", "Không tìm thấy báo cáo.", 404);
     const [rows] = await connection.execute(
-      "SELECT r.*,p.workshop_id,p.code AS production_plan_code,c.name AS customer_name,(SELECT COUNT(*) FROM customer_orders prior WHERE prior.customer_id=o.customer_id AND prior.id<=o.id) AS order_sequence,(SELECT COUNT(*) FROM production_plans prior WHERE prior.customer_order_id=p.customer_order_id AND prior.id<=p.id) AS plan_sequence,(SELECT COUNT(*) FROM finished_reports prior JOIN production_plans pp ON pp.id=prior.production_plan_id JOIN customer_orders oo ON oo.id=pp.customer_order_id WHERE oo.customer_id=o.customer_id AND prior.id<=r.id) AS report_sequence,w.name AS workshop_name,u.full_name AS created_by_name FROM finished_reports r JOIN production_plans p ON p.id=r.production_plan_id JOIN customer_orders o ON o.id=p.customer_order_id JOIN customers c ON c.id=o.customer_id JOIN workshops w ON w.id=p.workshop_id JOIN users u ON u.id=r.created_by WHERE r.id=?",
+      "SELECT r.*,p.workshop_id,p.customer_order_id,o.customer_id,o.code AS customer_order_code,p.code AS production_plan_code,c.name AS customer_name,(SELECT COUNT(*) FROM customer_orders prior WHERE prior.customer_id=o.customer_id AND prior.id<=o.id) AS order_sequence,(SELECT COUNT(*) FROM production_plans prior WHERE prior.customer_order_id=p.customer_order_id AND prior.id<=p.id) AS plan_sequence,(SELECT COUNT(*) FROM finished_reports prior JOIN production_plans pp ON pp.id=prior.production_plan_id JOIN customer_orders oo ON oo.id=pp.customer_order_id WHERE oo.customer_id=o.customer_id AND prior.id<=r.id) AS report_sequence,w.name AS workshop_name,u.full_name AS created_by_name FROM finished_reports r JOIN production_plans p ON p.id=r.production_plan_id JOIN customer_orders o ON o.id=p.customer_order_id JOIN customers c ON c.id=o.customer_id JOIN workshops w ON w.id=p.workshop_id JOIN users u ON u.id=r.created_by WHERE r.id=?",
       [id],
     );
     C.fail(
@@ -127,8 +133,13 @@ class FinishedReportService {
       "SELECT m.*,i.name AS item_name FROM finished_report_materials m JOIN items i ON i.id=m.item_id WHERE m.finished_report_id=? ORDER BY m.id",
       [id],
     );
+    let saleOutputs=outputs;
+    if(rows[0].KieuThanhPham==='PART'&&Number(rows[0].production_completed)===1&&rows[0].status==='SUBMITTED'){
+      [saleOutputs]=await connection.execute('SELECT o.quantity,l.item_id,i.name AS item_name,l.id AS lot_id FROM finished_report_outputs o JOIN lots l ON l.id=o.lot_id JOIN items i ON i.id=l.item_id WHERE '+require('../../shared/sale-report-scope')('o'),[id]);
+    }
     return {
       ...this.present(user, rows[0]),
+      sale_outputs:saleOutputs.map(o=>({...o,item_id:String(o.item_id),lot_id:String(o.lot_id)})),
       outputs: outputs.map((row) => ({
         ...row,
         id: String(row.id),
@@ -184,7 +195,7 @@ class FinishedReportService {
       C.qty(output.quantity);
       const partial=partialByCode.get(output.lot_code);
       if(partial)C.fail(String(partial.item_id)!==String(output.item_id)||C.qty(String(partial.received_quantity))!==C.qty(output.quantity)||asDate(partial.manufactured_date)!==output.manufactured_date||(asDate(partial.expiry_date)||null)!==(output.expiry_date||null),'IMMUTABLE_LOT','Dòng lô nhập từng phần phải giữ nguyên mặt hàng, số lượng và ngày.',409);
-      C.date(output.manufactured_date, "manufactured_date", !partial);
+      require('../../shared/time-rules').actualDate(output.manufactured_date, "manufactured_date");
       if (output.expiry_date) C.date(output.expiry_date, "expiry_date", !partial);
       C.fail(
         output.expiry_date && output.expiry_date < output.manufactured_date,
@@ -336,7 +347,7 @@ class FinishedReportService {
       "VALIDATION_ERROR",
       "Kế hoạch sản xuất không hợp lệ.",
     );
-    C.date(body.completed_date, "completed_date", true);
+    require('../../shared/time-rules').actualDate(body.completed_date, "completed_date");
     const partReport=body.report_mode==='PART';
     C.fail(body.report_mode!==undefined&&!['PART','FINAL'].includes(body.report_mode),'VALIDATION_ERROR','Loại báo cáo thành phẩm không hợp lệ.');
     C.fail(partReport?typeof body.production_completed!=='boolean':body.production_completed!==true,'VALIDATION_ERROR','Chọn trạng thái hoàn tất của đợt sản xuất.');
@@ -357,6 +368,7 @@ class FinishedReportService {
         404,
       );
       C.state(plans[0], ["APPROVED", "IN_PROGRESS"]);
+      await this.chronology(connection,plans[0],body.completed_date,body.outputs||[]);
       const data = await this.validate(
         connection,
         plans[0],
@@ -430,7 +442,7 @@ class FinishedReportService {
       "Không có nội dung cần sửa.",
     );
     if (body.completed_date !== undefined)
-      C.date(body.completed_date, "completed_date", true);
+      require('../../shared/time-rules').actualDate(body.completed_date, "completed_date");
     C.fail(body.production_completed!==undefined&&typeof body.production_completed!=='boolean','VALIDATION_ERROR','Trạng thái hoàn tất không hợp lệ.');
     if (body.note !== undefined) C.text(body.note, "note", 5000, false);
     const connection = await this.pool.getConnection();
@@ -459,6 +471,8 @@ class FinishedReportService {
       const report = rows[0];
       C.version(report, body.version);
       C.state(report, ["DRAFT"]);
+      const currentForDates=await this.get(user,id,connection);
+      await this.chronology(connection,plans[0],body.completed_date||asDate(report.completed_date),body.outputs||currentForDates.outputs);
       C.fail(report.KieuThanhPham!=='PART'&&body.production_completed===false,'VALIDATION_ERROR','Báo cáo tổng kết cũ phải xác nhận hoàn tất.');
       if(body.production_completed!==undefined)await connection.execute('UPDATE finished_reports SET production_completed=? WHERE id=?',[body.production_completed,id]);
       if (body.outputs !== undefined || body.materials !== undefined) {

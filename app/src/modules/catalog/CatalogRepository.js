@@ -30,6 +30,7 @@ class CatalogRepository {
     if(['items','categories'].includes(resource)&&query.include_inactive!=='true')where.push('t.is_active=1');
     if(resource==='categories'&&query.kind){C.fail(!['MATERIAL','FINISHED_PRODUCT'].includes(query.kind),'VALIDATION_ERROR','Nhóm danh mục không hợp lệ.');where.push('t.LoaiDanhMuc=?');values.push(query.kind);}
     if(resource==='items'&&query.category_id){C.fail(!/^[1-9]\d*$/.test(String(query.category_id)),'VALIDATION_ERROR','Danh mục không hợp lệ.');where.push('t.category_id=?');values.push(String(query.category_id));}
+    if(resource==='lots'&&query.lot_header_id){C.fail(!/^[1-9]\d*$/.test(String(query.lot_header_id)),'VALIDATION_ERROR','Lô tổng không hợp lệ.');where.push('t.lot_header_id=?');values.push(String(query.lot_header_id));}
     if (query.q) {
       C.text(query.q, "q", 150);
       where.push(resource === "lots" ? "t.code LIKE ?" : "(t.code LIKE ? OR t.name LIKE ?)");
@@ -51,8 +52,8 @@ class CatalogRepository {
       );
     }
     const clause = where.length ? " WHERE " + where.join(" AND ") : "";
-    const select = resource === "items" ? "t.*,u.name AS unit,n.TieuChuanNhap AS material_quality_standard,f.HanSuDungMacDinhNgay AS default_shelf_life_days" : resource === "lots" ? "t.*,i.name AS item_name" : "t.*",
-      join = resource === "items" ? " JOIN units u ON u.id = t.unit_id LEFT JOIN NguyenVatLieu n ON n.MaMatHang=t.id LEFT JOIN ThanhPham f ON f.MaMatHang=t.id" : resource === "lots" ? " JOIN items i ON i.id=t.item_id" : "";
+    const select = resource === "items" ? "t.*,u.name AS unit,n.TieuChuanNhap AS material_quality_standard,f.HanSuDungMacDinhNgay AS default_shelf_life_days" : resource === "lots" ? "t.*,i.name AS item_name,h.code AS lot_header_code" : "t.*",
+      join = resource === "items" ? " JOIN units u ON u.id = t.unit_id LEFT JOIN NguyenVatLieu n ON n.MaMatHang=t.id LEFT JOIN ThanhPham f ON f.MaMatHang=t.id" : resource === "lots" ? " JOIN items i ON i.id=t.item_id LEFT JOIN lot_headers h ON h.id=t.lot_header_id" : "";
     const [[count]] = await this.pool.execute(
       "SELECT COUNT(*) AS total FROM " + tables[resource] + " t" + clause,
       values,

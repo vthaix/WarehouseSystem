@@ -1,0 +1,10 @@
+module.exports={
+'UC-29':['customer-orders/999999999/receive','POST'],'UC-06':['categories'],'UC-06.1':['categories','POST'],'UC-06.2':['categories/999999999','DELETE'],'UC-06.3':['categories/999999999','PATCH'],
+'UC-07':['items'],'UC-07.1':['items','POST'],'UC-07.2':['items/999999999','DELETE'],'UC-07.3':['items/999999999','PATCH'],'UC-08':['warehouse-inbound'],'UC-09':['warehouse-outbound'],'UC-13':['tasks','POST'],
+'UC-17':['exception-proposals/999999999/review','POST'],'UC-18':['reports/inventory'],'UC-19':['stock-documents'],'UC-20':['stock-documents'],'UC-21':['reports/stocktakes'],'UC-25':['tasks'],'UC-25.1':['tasks/999999999','PATCH'],'UC-25.2':['tasks/999999999','DELETE'],
+'UC-31':['production-plans/999999999/review','POST'],'UC-14':['purchase-orders'],'UC-23':['stock-requests','POST'],'UC-24':['stock-requests'],'UC-24.1':['stock-requests/999999999','PATCH'],'UC-24.2':['stock-requests/999999999','DELETE'],
+'UC-27':['purchase-orders','POST'],'UC-04':['business-plans','POST'],'UC-05':['business-plans'],'UC-05.1':['business-plans/999999999','PATCH'],'UC-05.2':['business-plans/999999999','DELETE'],'UC-10':['stock-documents','POST'],
+'UC-11':['stock-documents','POST'],'UC-11.01':['stock-documents','POST'],'UC-11.02':['stock-documents','POST'],'UC-35':['finished-reports','POST'],'UC-01':['auth/me'],'UC-12':['qc-inspections'],'UC-12.1':['qc-inspections','POST'],
+'UC-12.2':['qc-inspections/999999999','PATCH'],'UC-12.3':['qc-inspections/999999999','DELETE'],'UC-34':['production-reports','POST'],'UC-15':['inspection-counts'],'UC-28':['stocktake-minutes','POST'],
+'UC-32':['business-plans/999999999/review','POST'],'UC-02':['customer-orders','POST'],'UC-03':['customer-orders'],'UC-03.1':['customer-orders/999999999','PATCH'],'UC-22':['warehouse-lookup'],'UC-16':['exception-proposals'],
+'UC-BS-01':['accounts'],'UC-BS-02':['customer-returns'],'UC-BS-03':['notifications'],'UC-BS-04':['test-data/reset','POST']};

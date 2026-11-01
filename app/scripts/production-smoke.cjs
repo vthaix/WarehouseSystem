@@ -70,6 +70,7 @@ function client() {
       "SELECT id FROM items WHERE kind='MATERIAL' AND is_active=1 LIMIT 1",
     );
     assert.ok(materials.length);
+    const date=require('../src/services/domain/core').today();
     const delivery = new Date(Date.now() + 14 * 86400000)
       .toISOString()
       .slice(0, 10);
@@ -90,7 +91,7 @@ function client() {
     const plan = await planner.call("/api/v1/production-plans", "POST", {
       customer_order_id: orderId,
       workshop_id: workshopId,
-      start_date: delivery,
+      start_date: date,
       end_date: delivery,
       outputs: [{ item_id: item.id, quantity: "2.000" }],
       materials: [],
@@ -305,17 +306,17 @@ function client() {
     assert.equal(blockedReportEdit.status, 409);
     const code =
       "FIN-TEST-" + crypto.randomBytes(5).toString("hex").toUpperCase();
-    const prematureFinal=await workshop.call('/api/v1/finished-reports','POST',{production_plan_id:planId,production_completed:false,completed_date:delivery,outputs:[{item_id:item.id,lot_code:code+'-EARLY',quantity:'2.000',manufactured_date:delivery}],materials:[]});assert.equal(prematureFinal.status,422,JSON.stringify(prematureFinal));
+    const prematureFinal=await workshop.call('/api/v1/finished-reports','POST',{production_plan_id:planId,production_completed:false,completed_date:date,outputs:[{item_id:item.id,lot_code:code+'-EARLY',quantity:'2.000',manufactured_date:date}],materials:[]});assert.equal(prematureFinal.status,422,JSON.stringify(prematureFinal));
     const finished = await workshop.call("/api/v1/finished-reports", "POST", {
       production_completed:true,
       production_plan_id: planId,
-      completed_date: delivery,
+      completed_date: date,
       outputs: [
         {
           item_id: item.id,
           lot_code: code,
           quantity: "2.000",
-          manufactured_date: delivery,
+          manufactured_date: date,
         },
       ],
       materials: [],
@@ -326,13 +327,13 @@ function client() {
     const over = await workshop.call("/api/v1/finished-reports", "POST", {
       production_completed:true,
       production_plan_id: planId,
-      completed_date: delivery,
+      completed_date: date,
       outputs: [
         {
           item_id: item.id,
           lot_code: code + "-OVER",
           quantity: "1.000",
-          manufactured_date: delivery,
+          manufactured_date: date,
         },
       ],
       materials: [],

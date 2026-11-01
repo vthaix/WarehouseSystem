@@ -49,10 +49,11 @@
  },true);
  new MutationObserver(enhanceModal).observe(modalBody,{childList:true,subtree:true});
 
- let updates=[],loading=false;
- const resources=new Set(['production-plans','business-plans','purchase-orders','customer-orders','production-reports','finished-reports','stock-requests','tasks','qc-inspections','warehouse-inbound','warehouse-outbound']);
+ let updates=[],pending={},loading=false;
+ const resources=new Set(['production-plans','business-plans','purchase-orders','customer-orders','production-reports','finished-reports','stock-requests','tasks','qc-inspections','inspection-counts','stocktake-minutes','exception-proposals','warehouse-inbound','warehouse-outbound']);
  const notificationResource=resource=>['warehouse-inbound','warehouse-outbound'].includes(resource)?'stock-requests':resource;
  const unread=(resource,id)=>updates.some(n=>n.resource_type===notificationResource(resource)&&String(n.resource_id)===String(id));
+ const workQueue=()=>user?.roles?.some(role=>({DIRECTOR:['production-plans','business-plans'],PLANNER:['customer-orders','production-reports','finished-reports','business-plans'],WAREHOUSE_MANAGER:['warehouse-inbound','warehouse-outbound','exception-proposals'],WAREHOUSE_STAFF:['warehouse-inbound','warehouse-outbound'],STOCKTAKER:['inspection-counts','stocktake-minutes'],QC_INSPECTOR:['stocktake-minutes'],WORKSHOP_OWNER:['production-plans','stock-requests','exception-proposals']}[role]||[]).includes(current));
  function decorate(){
   const table=document.querySelector('#table');if(!table)return;
   if(current==='items'){
@@ -62,21 +63,30 @@
   if(!resources.has(current))return;
   table.querySelectorAll('tbody tr').forEach((row,i)=>{
    const record=cached[i];if(!record)return;
-   row.classList.toggle('record-unread',unread(current,record.id));
+   // Inspection-count rows are tasks; QC result rows are already recorded.
+   const key=current;
+   const work=current==='qc-inspections'?null:(pending[key]||[]).find(r=>r.id===String(current==='inspection-counts'?record.inspection?.id:record.id));
+   const information=!workQueue()&&unread(current,record.id);
+   row.classList.toggle('record-unread',!!work||information);
+   row.classList.toggle('record-pending',!!work);
    let marker=row.querySelector('.record-freshness');
-   const text=unread(current,record.id)?'Chưa xem':(page===1&&i===0?'Mới nhất':'');
+   const text=work?work.reason:information?'Thông tin mới':'';
    if(!text){marker?.remove();return;}
    if(!marker){marker=document.createElement('span');marker.className='record-freshness';row.cells[0]?.append(marker);}
    if(marker.textContent!==text)marker.textContent=text;
   });
-  document.querySelectorAll('[data-ready-plan]').forEach(el=>el.classList.toggle('record-unread',unread('business-plans',el.dataset.readyPlan)));
+  document.querySelectorAll('[data-ready-plan]').forEach(el=>{const work=(pending['business-plans']||[]).some(r=>r.id===el.dataset.readyPlan);el.classList.toggle('record-unread',work);el.classList.toggle('record-pending',work);});
+  document.querySelectorAll('[data-pending-resource][data-pending-id]').forEach(el=>{const work=(pending[el.dataset.pendingResource]||[]).find(r=>r.id===el.dataset.pendingId);el.classList.toggle('record-pending',!!work);if(work)el.title=work.reason;});
+  let summary=document.querySelector('#pending-work-summary');
+  const work=pending[current]||[],extra=pending['compensation-'+current]||[];
+  if(work.length+extra.length){if(!summary){summary=document.createElement('div');summary.id='pending-work-summary';summary.className='pending-work-summary';document.querySelector('#content .heading')?.after(summary);}const text=(work.length+extra.length)+' chứng từ / phần việc cần xử lý · Dấu nổi bật được giữ đến khi hoàn tất, kể cả đã mở xem.';if(summary.textContent!==text)summary.textContent=text;}else summary?.remove();
  }
  async function refresh(){
   if(!user||loading||document.hidden)return;loading=true;
-  try{updates=(await api('workspace/updates')).data;decorate();}catch(e){/* Existing queues remain visible when updates cannot be loaded. */}finally{loading=false;}
+  try{const id=String(user.id),results=await Promise.all([api('workspace/updates'),api('workspace/pending')]);if(String(user?.id)!==id)return;updates=results[0].data;pending=results[1].data;decorate();}catch(e){/* Existing queues remain visible when updates cannot be loaded. */}finally{loading=false;}
  }
  const baseLoad=loadTable;
- loadTable=async function(){await baseLoad();decorate();};
+ loadTable=async function(){await baseLoad();await refresh();decorate();};
  const baseDetail=detail;
  detail=function(record){
   baseDetail(record);
@@ -105,6 +115,7 @@
  const parentApi=api;
  api=async function(path,method='GET',body,key){
   const result=await parentApi(path,method,body,key);
+  if(method!=='GET'&&path!=='workspace/seen')queueMicrotask(refresh);
   if(path==='purchase-orders'&&method==='POST'&&body?.business_plan_id){
    document.querySelectorAll('[data-ready-plan]').forEach(row=>{if(row.dataset.readyPlan===String(body.business_plan_id))row.remove();});
    const count=document.querySelector('#purchase-ready-title .record-freshness');if(count)count.textContent=String(Math.max(0,Number(count.textContent)-1));
@@ -112,6 +123,8 @@
   }
   return result;
  };
+ let decorationQueued=false;
+ if(document.querySelector('#content'))new MutationObserver(()=>{if(decorationQueued)return;decorationQueued=true;requestAnimationFrame(()=>{decorationQueued=false;decorate();});}).observe(document.querySelector('#content'),{childList:true,subtree:true});
 
  // Images reuse the validated upload endpoint; IDs, versions and other form
  // builders remain owned by their existing modules.

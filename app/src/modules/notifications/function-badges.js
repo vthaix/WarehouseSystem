@@ -4,7 +4,7 @@ module.exports=async function badges(pool,user){
   const result={},has=role=>user.roles.includes(role);
   const count=async(key,sql,args=[])=>{const [[r]]=await pool.execute(sql,args);result[key]=Number(r.total);};
   const [unread]=await pool.execute('SELECT resource_type,COUNT(*) AS total FROM notifications WHERE user_id=? AND read_at IS NULL GROUP BY resource_type',[user.id]);
-  const aliases={'minute-exceptions':'exception-proposals','quality-campaigns':'stocktakes'};
+  const aliases={'minute-exceptions':'exception-proposals','quality-campaigns':'stocktakes','purchase-checks':'lots'};
   result.notifications=0;
   for(const r of unread){const n=Number(r.total);result.notifications+=n;const key=aliases[r.resource_type]||r.resource_type;if(key&&key!=='notifications')result[key]=(result[key]||0)+n;}
   if(result['stock-documents'])result['warehouse-records']=result['stock-documents'];
@@ -22,6 +22,10 @@ module.exports=async function badges(pool,user){
   if(has('STOCKTAKER'))await count('inspection-counts',"SELECT COUNT(DISTINCT t.id) AS total FROM tasks t JOIN task_assignments a ON a.task_id=t.id JOIN stocktakes s ON s.id=t.stocktake_id WHERE a.user_id=? AND t.task_type='LOT_INSPECTION' AND s.KiemSoLuong=1 AND s.status='IN_PROGRESS' AND EXISTS(SELECT 1 FROM quality_campaign_lots l WHERE l.campaign_id=s.id AND l.SoLuongDem IS NULL)",[user.id]);
   if(has('QC_INSPECTOR'))await count('qc-inspections',"SELECT COUNT(DISTINCT s.id) AS total FROM stocktakes s JOIN quality_campaign_assignments a ON a.campaign_id=s.id WHERE a.user_id=? AND s.KiemChatLuong=1 AND s.status='IN_PROGRESS' AND EXISTS(SELECT 1 FROM quality_campaign_lots q JOIN lots l ON l.id=q.lot_id WHERE q.campaign_id=s.id AND l.qc_status='PENDING')",[user.id]);
   if(has('QC_INSPECTOR')||has('STOCKTAKER'))await count('stocktake-minutes',"SELECT COUNT(*) AS total FROM stocktakes WHERE NguoiLapBienBanDuocChon=? AND campaign_type='QUALITY_CHECK' AND status IN ('COMPLETED','CLOSED') AND BienBanTrangThai='DRAFT'",[user.id]);
+  for(const [role,key,column]of [['QC_INSPECTOR','qc-inspections','ThucNhan'],['STOCKTAKER','inspection-counts','SoDem']])if(has(role)){
+    const [[pending]]=await pool.execute("SELECT COUNT(DISTINCT s.id) AS total FROM stocktakes s JOIN quality_campaign_assignments a ON a.campaign_id=s.id JOIN purchase_orders p ON p.business_plan_id=s.MaKeHoachMuaQC JOIN purchase_order_lines l ON l.purchase_order_id=p.id WHERE a.user_id=? AND s.KiemTheoKeHoach=1 AND s.status='IN_PROGRESS' AND NOT EXISTS(SELECT 1 FROM ThucKiemKeHoachMua x WHERE x.MaDot=s.id AND x.MaDongDonMua=l.id AND x."+column+' IS NOT NULL)',[user.id]);result[key]=(result[key]||0)+Number(pending.total);
+  }
+  if(has('WAREHOUSE_MANAGER'))await count('lots',"SELECT COUNT(DISTINCT s.id) AS total FROM stocktakes s JOIN ThucKiemKeHoachMua x ON x.MaDot=s.id WHERE s.KiemTheoKeHoach=1 AND s.status IN ('COMPLETED','CLOSED') AND x.SoDat>0 AND x.MaLo IS NULL");
   if(has('WAREHOUSE_MANAGER')){
     await count('exception-proposals',"SELECT COUNT(*) AS total FROM stocktakes WHERE BienBanTrangThai='SUBMITTED' AND NgoaiLeMoTa IS NOT NULL AND NgoaiLeTrangThai IN ('OPEN','APPROVED','REJECTED')");
   }else if(has('WORKSHOP_OWNER')){
@@ -29,5 +33,9 @@ module.exports=async function badges(pool,user){
     result['exception-proposals']=0;
     if(ids.length)await count('exception-proposals',"SELECT COUNT(*) AS total FROM stocktakes WHERE NgoaiLeTrangThai='PENDING_APPROVAL' AND NgoaiLeMaXuong IN ("+ids.map(()=>'?').join(',')+')',ids);
   }
+  const pending=await require('./pending-work')(pool,user);
+  const counts={};
+  for(const [key,rows]of Object.entries(pending)){const menu=key.startsWith('compensation-')?key.slice('compensation-'.length):key==='purchase-checks'?'lots':key;counts[menu]=(counts[menu]||0)+rows.length;}
+  Object.assign(result,counts);
   return result;
 };

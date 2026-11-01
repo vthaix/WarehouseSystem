@@ -1,0 +1,17 @@
+﻿{
+    "samples":  [
+                    {
+                        "page":  3,
+                        "image":  "DacTa_Kem_TestCase_20261101-page-3.png"
+                    },
+                    {
+                        "page":  4,
+                        "image":  "DacTa_Kem_TestCase_20261101-page-4.png"
+                    },
+                    {
+                        "page":  5,
+                        "image":  "DacTa_Kem_TestCase_20261101-page-5.png"
+                    }
+                ],
+    "pdfPages":  579
+}

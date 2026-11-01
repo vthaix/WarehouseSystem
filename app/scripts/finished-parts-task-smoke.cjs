@@ -26,6 +26,8 @@ try{
   assert.equal((await workshop.call('finished-reports','POST',part('61.000','-OVER'))).status,422);
   let second=ok(await workshop.call('finished-reports','POST',part('60.000','-2',true)),201);
   second=ok(await workshop.call('finished-reports/'+second.id+'/submit','POST',{version:second.version}));
+  assert.equal(second.sale_outputs.length,2,'Final partial report exposes the complete submitted series for sale planning');
+  assert.equal(second.sale_outputs.reduce((n,l)=>n+Number(l.quantity),0),100);
   assert.equal(ok(await workshop.call('production-plans/'+plan.id)).status,'COMPLETED');
   const [[other]]=await pool.execute('SELECT lot_header_id FROM lots WHERE id=?',[second.outputs[0].lot_id]);assert.equal(other.lot_header_id,header.lot_header_id);
   const [[stock]]=await pool.execute('SELECT COUNT(*) n FROM inventory_balances WHERE lot_id IN (?,?)',[first.outputs[0].lot_id,second.outputs[0].lot_id]);assert.equal(Number(stock.n),0);
@@ -108,6 +110,15 @@ try{
   sale=ok(await director.call('business-plans/'+sale.id+'/review','POST',{version:sale.version,decision:'APPROVE'}));
   const earlyDelivery=await workshop.call('stock-requests','POST',{purpose:'SALE_ISSUE',business_plan_id:sale.id,workshop_id:String(w.workshop_id),warehouse_id:String(location.warehouse_id),manager_id:ids.manager,requested_date:future,lines:[{item_id:item.id,quantity:'1.000'}]});
   assert.equal(earlyDelivery.error?.code,'DELIVERY_NOT_DUE','Earlier part remains deliverable after final-part confirmation, subject to actual delivery date');
+  let seriesSale=ok(await planner.call('business-plans','POST',{type:'SALE',finished_report_id:second.id,planned_date:future,lines:[{item_id:item.id,quantity:'38.000',unit_price:'1000'}]}),201);
+  assert.equal(seriesSale.customer_order_id,order.id,'Customer order is derived from final report');
+  seriesSale=ok(await director.call('business-plans/'+seriesSale.id+'/review','POST',{version:seriesSale.version,decision:'APPROVE'}));
+  await pool.execute('UPDATE customer_orders SET latest_delivery_date=? WHERE id=?',[today,order.id]);
+  const seriesRequest=ok(await workshop.call('stock-requests','POST',{purpose:'SALE_ISSUE',business_plan_id:seriesSale.id,workshop_id:String(w.workshop_id),warehouse_id:String(location.warehouse_id),manager_id:ids.manager,requested_date:today,lines:[{item_id:item.id,quantity:'38.000'}]}),201);
+  const seriesPreview=ok(await manager.call('stock-requests/'+seriesRequest.id+'/allocations'));assert.ok(seriesPreview.lines[0].lots.some(l=>l.id===first.outputs[0].lot_id),'Final-report sale can allocate an earlier submitted portion');
+  const seriesAssigned=ok(await manager.call('stock-requests/'+seriesRequest.id+'/dispatch','POST',{version:seriesRequest.version,start_at:'2079-01-01T01:00:00Z',end_at:'2079-01-01T02:00:00Z',allocations:[{assignee_id:ids.staff,stock_request_line_id:seriesRequest.lines[0].id,lot_id:first.outputs[0].lot_id,location_id:String(location.id),quality_bucket:'AVAILABLE',quantity:'38.000'}]}));
+  const seriesTask=ok(await manager.call('tasks/'+seriesAssigned.tasks[0].id));ok(await manager.call('tasks/'+seriesTask.id+'/cancelAllocation','POST',{version:seriesTask.version}));
+  await pool.execute('UPDATE customer_orders SET latest_delivery_date=? WHERE id=?',[future,order.id]);
   assert.equal((await director.call('tasks','POST',{...taskBody,start_at:'2041-01-01T03:00:00Z',end_at:'2041-01-01T04:00:00Z'})).status,422);
   const next=ok(await director.call('tasks','POST',{...taskBody,finished_report_ids:[second.id],start_at:'2041-01-01T03:00:00Z',end_at:'2041-01-01T04:00:00Z'}),201);
   ok(await director.call('tasks/'+next.id,'DELETE',{version:next.version}));

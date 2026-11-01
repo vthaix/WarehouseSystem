@@ -1,5 +1,7 @@
 # Giao diện hiện hành
 
+Cập nhật 01/11/2026: giám đốc xem đơn hàng (không tạo/sửa/tiếp nhận); giữ nổi bật phần việc tới khi xử lý xong; phân biệt ngày thực tế và ngày dự kiến. [Quy tắc](CHO_XU_LY_VA_NGAY_GIO.md) · [Word, sequence và kiểm thử](review-20261101/README.md).
+
 Cập nhật 27/10: yêu cầu nhập/xuất tự chọn tên xưởng thật theo tài khoản chủ xưởng, khóa ô khi chỉ có một xưởng. Màn hình Biên bản vẫn mở được với QC/AC và Ban kiểm kê; chỉ người được chỉ định có đợt đã hoàn tất mới được tạo. Người được chỉ định thấy phân công trên màn hình và nhận thông báo riêng. Chi tiết: [XUONG_PHU_TRACH_VA_NGUOI_LAP_BIEN_BAN.md](XUONG_PHU_TRACH_VA_NGUOI_LAP_BIEN_BAN.md).
 
 Lập đợt kiểm kê của giám đốc có ô chọn phần lô NVL thực nhận ngay trong form, bên dưới nguồn lô/kế hoạch mua. Chọn các phần chờ QC cần kiểm, không phải lưu rồi mở Công việc để gắn lại. Chưa có hàng thực nhận thì hiển thị hướng dẫn lập đợt dự kiến. Hướng dẫn bù QC và kịch bản kiểm thử tại [TEST_BU_QC_VA_CHON_LO_KIEM_KE.md](TEST_BU_QC_VA_CHON_LO_KIEM_KE.md).
@@ -90,3 +92,14 @@ Tra cứu kho: chọn xưởng → một trong ba kho → khu → vị trí. M�
 Trong form phân công xuất, bảng Thứ tự xuất đề xuất hiển thị số ưu tiên, mã lô, hạn dùng, thời điểm nhập đầu tiên. Nút Bổ sung phân bổ theo hạn dùng và thứ tự nhập chia phần thiếu qua các lô; quản lý chọn nhân viên và xác nhận. Form nhập hiển thị vị trí gợi ý và lý do theo hạn dùng. Có thể điều chỉnh lựa chọn hợp lệ; gợi ý không tự ghi phiếu.
 
 Card đặt bánh có ảnh/thông tin ở phần trên; số lượng và ghi chú dùng toàn bộ chiều ngang phía dưới. Tham khảo [WORKSHOP_STORAGE.md](WORKSHOP_STORAGE.md).
+
+
+## Cập nhật 31/10/2026 — thực kiểm kế hoạch mua trước khi tạo lô
+
+Luồng NVL mới: giám đốc lập đợt từ kế hoạch mua; QC/AC và Ban kiểm kê đối chiếu hàng thực tế với các dòng mua trước khi có lô. Quản lý nhận kết quả và tạo lô phần đạt với mã tự sinh. Chỉ nhân viên ghi phiếu nhập mới tăng tồn. Chi tiết, thay đổi giao diện và kịch bản kiểm tra: [THUC_KIEM_KE_HOACH_MUA.md](THUC_KIEM_KE_HOACH_MUA.md). Quy tắc này cập nhật các UC-13, UC-15, UC-12.1, UC-08/09/10/22/23/28 và xử lý ngoại lệ; không đổi quyền actor ngoài phần việc được phân công.
+
+
+Cập nhật hạn dùng theo từng cặp NVL–NCC, bản chụp giá dự toán kế hoạch mua và kiểm tra lượng còn được nhận: [NCC_HAN_DUNG_VA_DU_TOAN.md](NCC_HAN_DUNG_VA_DU_TOAN.md). Hạn dùng được biết trước khi xác nhận QC; quản lý tạo lô không nhập lại hạn dùng.
+
+
+Cập nhật xuất bán và số lượng QC mặc định: [XUAT_BAN_VA_MAC_DINH_QC.md](XUAT_BAN_VA_MAC_DINH_QC.md). Khách/đơn lấy từ báo cáo và kế hoạch sản xuất; không chọn khách khác. Giữ điều kiện chỉ xuất từ ngày giao theo xác nhận 31/10/2026. QC tự điền số nguồn nhưng cho sửa trước khi xác nhận.

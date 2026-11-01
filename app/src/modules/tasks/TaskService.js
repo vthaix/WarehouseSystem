@@ -146,7 +146,7 @@ class TaskService {
     if(inspection){
       if(user.roles.includes('DIRECTOR')&&row.status!=='CANCELLED'&&inspection.BienBanTrangThai==='DRAFT')actions.push('assignMinuteAuthor');
       if(user.roles.includes('DIRECTOR')&&inspection.status==='PLANNED'){
-        if(inspection.lot_ids.length)actions.push('startInspection');
+        if(inspection.lot_ids.length||inspection.source_mode==='PURCHASE_PLAN')actions.push('startInspection');
         if(inspection.source_plan_id)actions.push('bindInspection');
       }
       if(user.roles.includes('QC_INSPECTOR')&&ids.includes(String(user.id))&&inspection.status==='IN_PROGRESS')actions.push('recordInspection');
@@ -172,8 +172,7 @@ class TaskService {
       "VALIDATION_ERROR",
       "Ưu tiên không hợp lệ.",
     );
-    const start = new Date(b.start_at),
-      end = new Date(b.end_at);
+    const {start,end}=require('../../shared/time-rules').range(b.start_at,b.end_at);
     C.fail(
       !Number.isFinite(+start) || !Number.isFinite(+end) || end <= start,
       "VALIDATION_ERROR",

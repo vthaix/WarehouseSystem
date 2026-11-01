@@ -4,7 +4,7 @@ const valid=id=>/^[1-9]\d*$/.test(String(id));
 function execution(body,existing=null){
   const day=body.requested_date||existing?.requested_date;
   const text=body.requested_at||(body.requested_date?day+'T08:00:00+07:00':existing?.ThoiDiemThucHien||day+'T08:00:00+07:00');
-  const value=new Date(text);
+  const value=text instanceof Date?text:require('../../shared/time-rules').timestamp(text,'requested_at');
   C.fail(!Number.isFinite(+value)||(body.requested_at!==undefined&&(typeof body.requested_at!=='string'||!/(Z|[+-]\d\d:\d\d)$/.test(body.requested_at))),'VALIDATION_ERROR','Ngày giờ thực hiện không hợp lệ.');
   const local=new Date(+value+7*3600000).toISOString().slice(0,10);
   const expected=day instanceof Date?day.toISOString().slice(0,10):String(day);

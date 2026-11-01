@@ -27,6 +27,7 @@ class LotService {
 
   async createLot(user, body, requestId, connectionOverride = null) {
     P.role(user, ["WAREHOUSE_MANAGER"]);
+    body={...body,code:connectionOverride?body.code:'LO-NVL-'+C.today().replace(/-/g,'')+'-'+require('node:crypto').randomBytes(6).toString('hex').toUpperCase()};
     if (body.lines !== undefined) {
       C.fields(body, ["code", "lines"]);
       C.text(body.code, "code", 50);
@@ -115,7 +116,7 @@ class LotService {
       );
     C.qty(body.received_quantity);
     if (body.manufactured_date)
-      C.date(body.manufactured_date, "manufactured_date", true);
+      require('../../shared/time-rules').actualDate(body.manufactured_date, "manufactured_date");
     if (body.expiry_date) C.date(body.expiry_date, "expiry_date", true);
     C.fail(
       body.expiry_date &&
@@ -129,11 +130,14 @@ class LotService {
       : this.transaction.bind(this);
     const id = await run(async (connection) => {
       const [lines] = await connection.execute(
-        "SELECT l.*,p.status AS purchase_status,i.kind AS item_kind FROM purchase_order_lines l JOIN purchase_orders p ON p.id=l.purchase_order_id JOIN items i ON i.id=l.item_id WHERE l.id=? FOR UPDATE",
+        "SELECT l.*,p.status AS purchase_status,COALESCE(l.supplier_id,p.supplier_id) AS receiving_supplier_id,i.kind AS item_kind,i.name AS item_name FROM purchase_order_lines l JOIN purchase_orders p ON p.id=l.purchase_order_id JOIN items i ON i.id=l.item_id WHERE l.id=? FOR UPDATE",
         [body.purchase_order_line_id],
       );
       C.fail(!lines.length, "NOT_FOUND", "Không tìm thấy dòng đơn mua.", 404);
       const line = lines[0];
+      const [[materialTerms]]=await connection.execute('SELECT BangGiaNCC FROM NguyenVatLieu WHERE MaMatHang=?',[line.item_id]);
+      const terms=require('../../shared/supplier-terms'),offer=terms.parse(materialTerms?.BangGiaNCC).find(o=>String(o.supplier_id)===String(line.receiving_supplier_id)),life=line.SoNgayHanDung??offer?.shelf_life_days;
+      if(life){body.manufactured_date=body.manufactured_date||C.today();body.expiry_date=terms.expiry(body.manufactured_date,life);C.fail(body.expiry_date<C.today(),'LOT_EXPIRED','Lô đã hết hạn theo thông tin NVL/NCC.');}
       C.fail(
         body.purchase_order_id &&
           String(body.purchase_order_id) !== String(line.purchase_order_id),
@@ -156,11 +160,12 @@ class LotService {
         "SELECT COALESCE(SUM(received_quantity),0) AS quantity FROM lots WHERE purchase_order_line_id=?",
         [line.id],
       );
+      const [[checked]]=await connection.execute('SELECT COALESCE(SUM(IF(MaLo IS NULL,ThucNhan,SoLoi)),0) AS quantity FROM ThucKiemKeHoachMua WHERE MaDongDonMua=?',[line.id]);
       C.fail(
-        C.qty(String(used.quantity), false) + C.qty(body.received_quantity) >
+        C.qty(String(used.quantity), false) + C.qty(String(checked.quantity),false) + C.qty(body.received_quantity) >
           C.qty(String(line.quantity)),
         "SOURCE_LIMIT_EXCEEDED",
-        "Tổng lô vượt lượng đơn mua.",
+        line.item_name+': đơn mua '+C.decimal(C.qty(String(line.quantity)))+', đã ghi nhận '+C.decimal(C.qty(String(used.quantity),false)+C.qty(String(checked.quantity),false))+'. Không tạo thêm lô cho lượng đã ghi nhận. Tải lại lượng còn được nhận trước khi lưu.',
       );
       const [created] = await connection.execute(
         "INSERT INTO lots (code,item_id,purchase_order_line_id,production_plan_id,manufactured_date,expiry_date,received_quantity,qc_status,version,lot_header_id) VALUES (?,?,?,NULL,?,?,?,'PENDING',1,?)",
@@ -199,7 +204,7 @@ class LotService {
       "Không có nội dung cần sửa.",
     );
     if (body.manufactured_date)
-      C.date(body.manufactured_date, "manufactured_date", true);
+      require('../../shared/time-rules').actualDate(body.manufactured_date, "manufactured_date");
     if (body.expiry_date) C.date(body.expiry_date, "expiry_date", true);
     await this.transaction(async (connection) => {
       const [rows] = await connection.execute(

@@ -17,7 +17,7 @@ const base=process.env.APP_URL||'http://127.0.0.1:3000',executablePath=['C:/Prog
     const category=new URL(page.url()).searchParams.get('category_id');await page.locator('#create').click();assert.equal(await page.locator('#f-category_id').inputValue(),category);assert.equal(await page.locator('#f-kind').inputValue(),'MATERIAL');const unit=await page.locator('#f-unit_id option:checked').textContent();assert.ok(unit.includes('kg'));await page.locator('#cancel').click();
     await page.goto(base+'/catalog/material-prices');const materials=(await page.evaluate(()=>api('material-prices?per_page=100'))).data,material=materials.find(m=>m.code==='NVL-001');await page.evaluate(r=>detail(r),material);
     const input=page.locator('[data-supplier-price]').first();await input.fill('18500,25');assert.equal(await input.evaluate(el=>Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').get.call(el)),'18500,25');
-    const price=await capture(page,'material-prices/'+material.id,'PATCH');assert.equal(price.supplier_prices[0].unit_price,'18500.25');assert.deepEqual(errors,[]);await context.close();
+    await page.locator('[data-supplier-life]').first().fill('180');const price=await capture(page,'material-prices/'+material.id,'PATCH');assert.equal(price.supplier_prices[0].unit_price,'18500.25');assert.equal(price.supplier_prices[0].shelf_life_days,180);assert.deepEqual(errors,[]);await context.close();
   }
   {
     const {context,page,errors}=await login('purchaser');await page.goto(base+'/purchases');

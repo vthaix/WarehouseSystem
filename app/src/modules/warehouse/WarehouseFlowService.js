@@ -116,9 +116,9 @@ class WarehouseFlowService {
     if(request.production_source_mode==='MANUAL'){lotScope=' AND l.production_receipt_request_id=?';lotParams=[requestId];}
     else if(request.purpose==='PURCHASE_RECEIPT'){lotScope=' AND l.purchase_order_line_id IN (SELECT id FROM purchase_order_lines WHERE purchase_order_id=?)';lotParams=[request.purchase_order_id];}
     else if(request.purpose==='PRODUCTION_RECEIPT'){lotScope=' AND l.id IN (SELECT lot_id FROM finished_report_outputs WHERE finished_report_id=?)';lotParams=[request.production_report_id];}
-    else if(request.purpose==='SALE_ISSUE'){lotScope=' AND l.id IN (SELECT o.lot_id FROM finished_report_outputs o JOIN business_plans p ON p.finished_report_id=o.finished_report_id WHERE p.id=?)';lotParams=[request.business_plan_id];}
+    else if(request.purpose==='SALE_ISSUE'){lotScope=' AND l.id IN (SELECT o.lot_id FROM finished_report_outputs o JOIN business_plans p ON p.id=? WHERE '+require('../../shared/sale-report-scope')('o','p.finished_report_id')+')';lotParams=[request.business_plan_id];}
     const [lots] = await this.pool.execute(
-      "SELECT l.id,l.code,l.item_id,l.expiry_date,l.received_quantity,l.qc_status,q.passed_quantity,(SELECT MIN(doc.posted_at) FROM stock_document_lines d JOIN stock_documents doc ON doc.id=d.stock_document_id JOIN warehouse_locations pos ON pos.id=d.location_id WHERE d.lot_id=l.id AND doc.type='IN' AND pos.warehouse_id=?) AS first_received_at,COALESCE((SELECT SUM(d.quantity) FROM stock_document_lines d JOIN stock_documents doc ON doc.id=d.stock_document_id WHERE d.lot_id=l.id AND doc.type='IN'),0) AS posted_quantity FROM lots l JOIN qc_inspection_lines q ON q.lot_id=l.id JOIN qc_inspections qi ON qi.id=q.qc_inspection_id AND qi.status='RECORDED' WHERE l.qc_status IN ('PASSED','PARTIAL') AND (l.expiry_date IS NULL OR l.expiry_date>=CURRENT_DATE)"+lotScope+" ORDER BY (l.expiry_date IS NULL),l.expiry_date,(first_received_at IS NULL),first_received_at,l.created_at,l.id LIMIT 500",
+      "SELECT l.id,l.code,l.item_id,l.expiry_date,l.received_quantity,l.qc_status,q.passed_quantity,(SELECT MIN(doc.posted_at) FROM stock_document_lines d JOIN stock_documents doc ON doc.id=d.stock_document_id JOIN warehouse_locations pos ON pos.id=d.location_id WHERE d.lot_id=l.id AND doc.type='IN' AND pos.warehouse_id=?) AS first_received_at,COALESCE((SELECT SUM(d.quantity) FROM stock_document_lines d JOIN stock_documents doc ON doc.id=d.stock_document_id WHERE d.lot_id=l.id AND doc.type='IN'),0) AS posted_quantity FROM lots l JOIN qc_inspection_lines q ON q.lot_id=l.id JOIN qc_inspections qi ON qi.id=q.qc_inspection_id AND qi.status='RECORDED' WHERE l.qc_status IN ('PASSED','PARTIAL') AND (l.expiry_date IS NULL OR l.expiry_date>=DATE(DATE_ADD(UTC_TIMESTAMP(),INTERVAL 7 HOUR)))"+lotScope+" ORDER BY (l.expiry_date IS NULL),l.expiry_date,(first_received_at IS NULL),first_received_at,l.created_at,l.id LIMIT 500",
       [request.warehouse_id,...lotParams],
     );
     lots.sort(require('../../shared/storage-queue').compare);
@@ -235,8 +235,8 @@ class WarehouseFlowService {
       "VALIDATION_ERROR",
       "Thiếu phiên bản yêu cầu.",
     );
-    const start = Date.parse(body.start_at),
-      end = Date.parse(body.end_at);
+    const range=require('../../shared/time-rules').range(body.start_at,body.end_at);
+    const start=+range.start,end=+range.end;
     C.fail(
       !Number.isFinite(start) || !Number.isFinite(end) || end <= start,
       "VALIDATION_ERROR",
@@ -430,7 +430,7 @@ class WarehouseFlowService {
         const lot = lotMap.get(String(line.lot_id));
         if (saleSource) {
           const [reported] = await connection.execute(
-            "SELECT id FROM finished_report_outputs WHERE finished_report_id=? AND lot_id=?",
+            "SELECT o.id FROM finished_report_outputs o WHERE "+require('../../shared/sale-report-scope')('o')+" AND o.lot_id=?",
             [saleSource, line.lot_id],
           );
           C.fail(

@@ -1,0 +1,101 @@
+﻿app/src/modules\quality\campaign-sources.js:16:  const [rows]=await c.execute("SELECT l.*,h.code AS lot_header_code,i.name AS item_name,i.kind,po.business_plan_id AS purchase_plan_id,COALESCE(sr.requested_date,CASE WHEN fr.KieuThanhPham='PART' THEN fr.completed_date ELSE NULL END,bp.planned_date,po.expected_delivery_date,DATE_FORMAT(DATE_ADD(l.created_at,INTERVAL 7 HOUR),'%Y-%m-%d')) AS expected_date FROM lots l JOIN items i ON i.id=l.item_id LEFT JOIN lot_headers h ON h.id=l.lot_header_id LEFT JOIN stock_requests sr ON sr.id=l.production_receipt_request_id LEFT JOIN finished_report_outputs fo ON fo.lot_id=l.id LEFT JOIN finished_reports fr ON fr.id=fo.finished_report_id LEFT JOIN purchase_order_lines pl ON pl.id=l.purchase_order_line_id LEFT JOIN purchase_orders po ON po.id=pl.purchase_order_id LEFT JOIN business_plans bp ON bp.id=po.business_plan_id WHERE l.qc_status='PENDING'"+(ids?' AND l.id IN ('+ids.map(()=>'?').join(',')+')':'')+" AND NOT EXISTS(SELECT 1 FROM quality_campaign_lots q JOIN stocktakes s ON s.id=q.campaign_id WHERE q.lot_id=l.id AND s.status IN ('PLANNED','IN_PROGRESS')) ORDER BY l.id DESC"+(ids?' FOR UPDATE':' LIMIT '+Math.min(1000,Math.max(1,Number(maxRows)||100))),ids||[]);
+app/src/modules\tasks\TaskService.js:162:      start_at: row.start_at.toISOString(),
+app/src/modules\tasks\TaskService.js:163:      end_at: row.end_at.toISOString(),
+app/src/modules\tasks\TaskService.js:175:    const start = new Date(b.start_at),
+app/src/modules\tasks\TaskService.js:176:      end = new Date(b.end_at);
+app/src/modules\tasks\TaskService.js:233:        ") AND t.status IN ('PLANNED','IN_PROGRESS') AND t.start_at<? AND t.end_at>?" +
+app/src/modules\tasks\TaskService.js:258:      "start_at",
+app/src/modules\tasks\TaskService.js:259:      "end_at",
+app/src/modules\tasks\TaskService.js:267:        "INSERT INTO tasks (code,title,description,priority,start_at,end_at,status,created_by,version) VALUES (?,?,?,?,?,?,'PLANNED',?,1)",
+app/src/modules\tasks\TaskService.js:298:      "start_at",
+app/src/modules\tasks\TaskService.js:299:      "end_at",
+app/src/modules\tasks\TaskService.js:320:        require('../../shared/qc-schedule-dates').validateStart(next.start_at,row.inspection.expected_date?[{received_date:row.inspection.expected_date}]:[]);
+app/src/modules\tasks\TaskService.js:321:        await c.execute('UPDATE stocktakes SET start_at=?,end_at=?,planned_date=?,version=version+1 WHERE id=?',[value.start,value.end,require('../../shared/qc-schedule-dates').localDay(next.start_at),row.stocktake_id]);
+app/src/modules\tasks\TaskService.js:331:        "UPDATE tasks SET title=?,description=?,priority=?,start_at=?,end_at=?,version=version+1 WHERE id=?",
+app/src/modules\quality\QualityService.js:380:        !Number.isFinite(Date.parse(body.inspected_at)) ||
+app/src/modules\quality\QualityService.js:398:          new Date(body.inspected_at),
+app/src/modules\tasks\inspection-task.js:56:    lot_ids:lotIds,planned_date:require('../../shared/qc-schedule-dates').localDay(b.start_at),start_at:b.start_at,end_at:b.end_at,
+app/src/modules\business-plans\BusinessPlanService.js:547:    C.date(body.planned_date, "planned_date", true);
+app/src/modules\business-plans\BusinessPlanService.js:630:      C.date(body.planned_date, "planned_date", true);
+app/src/modules\reporting\warehouse-lookup.js:16:  if(!warehouse)return {warehouses:[],categories,warehouse_id:null,locations:[],as_of:new Date().toISOString()};
+app/src/modules\reporting\warehouse-lookup.js:27:  return {workshops:workshops.map(normalize),workshop_id:warehouse.workshop_id==null?null:String(warehouse.workshop_id),warehouses:warehouses.map(normalize),categories:categories.map(normalize),warehouse_id:String(warehouse.id),locations:locations.map(l=>({...normalize(l),stock:stock.filter(s=>String(s.location_id)===String(l.id)).map(normalize)})),as_of:new Date().toISOString()};
+app/src/modules\quality\QualityCampaignService.js:66:      const [dates]=await connection.execute("SELECT COALESCE(sr.requested_date,CASE WHEN fr.KieuThanhPham='PART' THEN fr.completed_date ELSE NULL END,bp.planned_date,po.expected_delivery_date,DATE_FORMAT(DATE_ADD(l.created_at,INTERVAL 7 HOUR),'%Y-%m-%d')) AS expected_date FROM quality_campaign_lots q JOIN lots l ON l.id=q.lot_id LEFT JOIN stock_requests sr ON sr.id=l.production_receipt_request_id LEFT JOIN finished_report_outputs fo ON fo.lot_id=l.id LEFT JOIN finished_reports fr ON fr.id=fo.finished_report_id LEFT JOIN purchase_order_lines pl ON pl.id=l.purchase_order_line_id LEFT JOIN purchase_orders po ON po.id=pl.purchase_order_id LEFT JOIN business_plans bp ON bp.id=po.business_plan_id WHERE q.campaign_id=?",[id]);
+app/src/modules\quality\QualityCampaignService.js:82:    C.fields(body, ["campaign_type", "quality_kind", "planned_date", "start_at", "end_at", "location", "assignee_ids", "lot_ids", "note",'source_mode','source_plan_id']);
+app/src/modules\quality\QualityCampaignService.js:87:    C.date(body.planned_date, "planned_date", true);
+app/src/modules\quality\QualityCampaignService.js:90:    const start = Date.parse(body.start_at), end = Date.parse(body.end_at);
+app/src/modules\quality\QualityCampaignService.js:105:      require('../../shared/qc-schedule-dates').validateStart(body.start_at,planned?[{received_date:planned.expected_date}]:lots.map(l=>({received_date:l.expected_date})));
+app/src/modules\quality\QualityCampaignService.js:116:      const [created] = await connection.execute("INSERT INTO stocktakes (code,created_by,planned_date,start_at,end_at,item_kind,status,note,version,campaign_type,quality_kind,location) VALUES (?,?,?,?,?,?,'PLANNED',?,1,'QUALITY_CHECK',?,?)", [code, user.id, body.planned_date, new Date(start), new Date(end), body.quality_kind, body.note || null, body.quality_kind, body.location.trim()]);
+app/src/modules\quality\QualityCampaignService.js:147:        if(sourceId){const planned=await Sources.source(connection,mode,sourceId,true);require('../../shared/qc-schedule-dates').validateStart(rows[0].start_at,[{received_date:planned.expected_date}]);C.fail(!body.simulate_early_start&&C.today()<planned.expected_date,'SOURCE_NOT_READY','Chưa đến ngày nhận hàng dự kiến của kế hoạch. Có thể chọn giả lập thử nghiệm để bắt đầu sớm.',409);}
+app/src/modules\quality\purchase-plan-check.js:24: const terms=require('../../shared/supplier-terms'),manufactured=line.manufactured_date||src.manufactured_date;C.fail(!src.shelf_life_days,'SOURCE_REQUIRED','Chưa cấu hình hạn dùng của NVL theo nhà cung cấp.');C.date(manufactured,'manufactured_date');C.fail(manufactured>C.today(),'VALIDATION_ERROR','Ngày sản xuất thực tế không ở tương lai.');const expiry=terms.expiry(manufactured,src.shelf_life_days);
+app/src/modules\quality\purchase-plan-check.js:38: P.role(u,['WAREHOUSE_MANAGER']);C.fields(b,['version','expiry_date','manufactured_date']);if(b.expiry_date)C.date(b.expiry_date,'expiry_date',true);if(b.manufactured_date)C.date(b.manufactured_date,'manufactured_date',true);C.fail(b.expiry_date&&b.manufactured_date&&b.expiry_date<b.manufactured_date,'VALIDATION_ERROR','Hạn dùng phải sau ngày sản xuất.');
+app/src/modules\reporting\ReportService.js:26:    if (query.from) C.date(query.from, "from");
+app/src/modules\reporting\ReportService.js:27:    if (query.to) C.date(query.to, "to");
+app/src/modules\reporting\ReportService.js:30:      C.fail(typeof query.as_of !== "string" || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.test(query.as_of) || !Number.isFinite(Date.parse(query.as_of)) || Date.parse(query.as_of) > Date.now(), "VALIDATION_ERROR", "Mốc thời gian không hợp lệ.");
+app/src/modules\reporting\ReportService.js:38:    const filters = ["m.posted_at<=?"], params = [query.as_of ? new Date(query.as_of) : new Date()];
+app/src/modules\reporting\ReportService.js:69:    return { data: rows.map(normalize), meta: { page, per_page, total: Number(count.total), total_pages: Math.ceil(Number(count.total) / per_page), generated_at: new Date().toISOString() } };
+app/src/modules\reporting\ReportService.js:82:    return { data: rows.map(normalize), meta: { page, per_page, total: Number(count.total), total_pages: Math.ceil(Number(count.total) / per_page), generated_at: new Date().toISOString() } };
+app/src/modules\stock-requests\partial-receipt.js:35:  C.date(body.requested_date, "requested_date", true);
+app/src/modules\stock-requests\partial-receipt.js:52:    C.date(line.manufactured_date, "manufactured_date", true);
+app/src/modules\stock-requests\partial-receipt.js:58:    if (line.expiry_date) C.date(line.expiry_date, "expiry_date", true);
+app/src/modules\stock-requests\StockRequestService.js:96:    result.requested_at=result.ThoiDiemThucHien?new Date(result.ThoiDiemThucHien).toISOString():null;
+app/src/modules\stock-requests\StockRequestService.js:456:      C.fields(body,['purpose','workflow_source_id','sale_plan_id','workshop_id','warehouse_id','manager_id','requested_date','requested_at','note','lines']);
+app/src/modules\stock-requests\StockRequestService.js:468:      "requested_at",
+app/src/modules\stock-requests\StockRequestService.js:493:    C.date(body.requested_date, "requested_date", true);
+app/src/modules\stock-requests\StockRequestService.js:603:      "requested_at",
+app/src/modules\stock-requests\StockRequestService.js:615:      !["requested_date", "requested_at", "warehouse_id", "manager_id", "note", "lines"].some(
+app/src/modules\stock-requests\StockRequestService.js:622:      C.date(body.requested_date, "requested_date", true);
+app/src/modules\stock-requests\StockRequestService.js:639:      const executionAt=body.requested_date!==undefined||body.requested_at!==undefined?require('./request-workflow').execution(body,source[0]):null;
+app/src/modules\production\ProductionPlanService.js:230:        checked_at: new Date().toISOString(),
+app/src/modules\production\ProductionPlanService.js:327:    C.date(body.start_date, "start_date", true);
+app/src/modules\production\ProductionPlanService.js:328:    C.date(body.end_date, "end_date", true);
+app/src/modules\production\ProductionPlanService.js:547:    if (body.start_date !== undefined) C.date(body.start_date, "start_date");
+app/src/modules\production\ProductionPlanService.js:548:    if (body.end_date !== undefined) C.date(body.end_date, "end_date");
+app/src/modules\stock-requests\request-workflow.js:6:  const text=body.requested_at||(body.requested_date?day+'T08:00:00+07:00':existing?.ThoiDiemThucHien||day+'T08:00:00+07:00');
+app/src/modules\stock-requests\request-workflow.js:7:  const value=new Date(text);
+app/src/modules\stock-requests\request-workflow.js:8:  C.fail(!Number.isFinite(+value)||(body.requested_at!==undefined&&(typeof body.requested_at!=='string'||!/(Z|[+-]\d\d:\d\d)$/.test(body.requested_at))),'VALIDATION_ERROR','Ngày giờ thực hiện không hợp lệ.');
+app/src/modules\stock-requests\request-workflow.js:9:  const local=new Date(+value+7*3600000).toISOString().slice(0,10);
+app/src/modules\stock-requests\request-workflow.js:11:  C.fail(local!==expected,'VALIDATION_ERROR','Ngày giờ thực hiện phải cùng ngày yêu cầu.');C.date(local,'requested_at',true);
+app/src/modules\exceptions\quarantine.js:74:  if(row.action==='RELEASE') C.fail(line.expiry_date && new Date(line.expiry_date).toISOString().slice(0,10)<C.today(),'LOT_EXPIRED','Không giải phóng hàng đã hết hạn.',409);
+app/src/modules\warehouse\WarehouseFlowService.js:232:    C.fields(body, ["version", "start_at", "end_at", "allocations"]);
+app/src/modules\warehouse\WarehouseFlowService.js:238:    const start = Date.parse(body.start_at),
+app/src/modules\warehouse\WarehouseFlowService.js:239:      end = Date.parse(body.end_at);
+app/src/modules\warehouse\WarehouseFlowService.js:457:              new Date().toISOString().slice(0, 10),
+app/src/modules\warehouse\WarehouseFlowService.js:554:          "INSERT INTO tasks (code,title,description,start_at,end_at,priority,status,stocktake_id,purchase_order_id,stock_request_id,task_type,manager_id,created_by,version) VALUES (?,?,?,?,?,'NORMAL','PLANNED',NULL,NULL,?,?,?, ?,1)",
+app/src/modules\warehouse\WarehouseFlowService.js:559:            new Date(start),
+app/src/modules\warehouse\WarehouseFlowService.js:560:            new Date(end),
+app/src/modules\warehouse\WarehouseFlowService.js:890:              new Date().toISOString().slice(0, 10),
+app/src/modules\exceptions\ExceptionService.js:401:    C.fail(lot.expiry_date && new Date(lot.expiry_date).toISOString().slice(0,10) < C.today(), "LOT_EXPIRED", "Không sử dụng lại hàng hết hạn.", 409);
+app/src/modules\warehouse\LotService.js:119:      C.date(body.manufactured_date, "manufactured_date");
+app/src/modules\warehouse\LotService.js:120:    if (body.expiry_date) C.date(body.expiry_date, "expiry_date", true);
+app/src/modules\warehouse\LotService.js:207:      C.date(body.manufactured_date, "manufactured_date");
+app/src/modules\warehouse\LotService.js:208:    if (body.expiry_date) C.date(body.expiry_date, "expiry_date", true);
+app/src/modules\customer-orders\OrderService.js:87:      C.date(query.from, "from");
+app/src/modules\customer-orders\OrderService.js:92:      C.date(query.to, "to");
+app/src/modules\customer-orders\OrderService.js:232:    C.date(body.latest_delivery_date, "latest_delivery_date", true);
+app/src/modules\customer-orders\OrderService.js:271:      const date = body.latest_delivery_date === undefined ? asDate(order.latest_delivery_date) : C.date(body.latest_delivery_date, "latest_delivery_date", true);
+app/src/modules\production\FinishedReportService.js:192:      C.date(output.manufactured_date, "manufactured_date", !partial);
+app/src/modules\production\FinishedReportService.js:193:      if (output.expiry_date) C.date(output.expiry_date, "expiry_date", !partial);
+app/src/modules\production\FinishedReportService.js:344:    C.date(body.completed_date, "completed_date", true);
+app/src/modules\production\FinishedReportService.js:438:      C.date(body.completed_date, "completed_date", true);
+app/src/modules\purchasing\PurchaseOrderService.js:27:    result.expected_delivery_date = asDate(result.expected_delivery_date);
+app/src/modules\purchasing\PurchaseOrderService.js:108:    C.fields(body, ['source_mode','supplier_id','business_plan_id','production_report_id','expected_delivery_date','delivery_terms','lines']);
+app/src/modules\purchasing\PurchaseOrderService.js:118:      let plan = null, sourceLines = null, date = body.expected_delivery_date;
+app/src/modules\purchasing\PurchaseOrderService.js:126:        C.fail(body.expected_delivery_date != null && body.expected_delivery_date !== date, 'VALIDATION_ERROR', 'Ngày nhận nguyên vật liệu phải theo kế hoạch mua của bộ phận lập kế hoạch.');
+app/src/modules\purchasing\PurchaseOrderService.js:137:      C.date(date, 'expected_delivery_date', true);
+app/src/modules\purchasing\PurchaseOrderService.js:169:      const [created] = await c.execute("INSERT INTO purchase_orders (code,business_plan_id,production_report_id,source_mode,supplier_id,created_by,expected_delivery_date,delivery_terms,status,total_amount,version) VALUES (?,?,?,?,?,?,?,?,'PENDING',?,1)",
+app/src/modules\stocktakes\StocktakeService.js:171:      "start_at",
+app/src/modules\stocktakes\StocktakeService.js:172:      "end_at",
+app/src/modules\stocktakes\StocktakeService.js:177:    C.date(b.planned_date, "planned_date", true);
+app/src/modules\stocktakes\StocktakeService.js:178:    const start = new Date(b.start_at),
+app/src/modules\stocktakes\StocktakeService.js:179:      end = new Date(b.end_at);
+app/src/modules\stocktakes\StocktakeService.js:221:        "INSERT INTO stocktakes(code,created_by,planned_date,start_at,end_at,item_kind,status,note,version,campaign_type) VALUES (?,?,?,?,?,?,'PLANNED',?,1,'COUNT')",
+app/src/shared\planning-dates.js:4:  C.date(start, 'start_date', true);
+app/src/shared\planning-dates.js:5:  C.date(end, 'end_date', true);
+app/src/shared\planning-dates.js:10:  C.date(date, 'planned_date', true);
+app/src/shared\SourceImportService.js:112:        expected_delivery_date:plan.planned_date,
+app/src/shared\qc-schedule-dates.js:3:  const date = new Date(value);
+app/src/shared\qc-schedule-dates.js:5:  return new Date(date.getTime()+7*3600000).toISOString().slice(0,10);
+app/src/shared\qc-schedule-dates.js:9:  C.date(day,'start_at',true);
+app/src/shared\qc-schedule-dates.js:11:  C.fail(received && day<received,'LOT_RECEIPT_DATE_REQUIRED','Ngày bắt đầu kiểm tra không được trước ngày nhận lô hàng.',422,{start_at:['Phải từ ngày nhận lô hàng trở đi']});
+app/src/shared\supplier-terms.js:4:function expiry(manufactured,life){C.date(manufactured,'manufactured_date');const d=new Date(manufactured+'T00:00:00Z');d.setUTCDate(d.getUTCDate()+days(life));return d.toISOString().slice(0,10);}
+app/src/shared\storage-queue.js:2:const timestamp=value=>value instanceof Date?value.getTime():value?Date.parse(value):Infinity;

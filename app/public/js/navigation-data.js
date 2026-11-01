@@ -136,7 +136,8 @@ const warehouseNavigation = {
       "◫",
       [
         "CUSTOMER",
-        "PLANNER"
+        "PLANNER",
+        "DIRECTOR"
       ],
       [
         "CUSTOMER"
@@ -545,6 +546,10 @@ const warehouseNavigation = {
     "task_type": "Loại công việc",
     "returned_supplier_quantity": "Lượng trả NCC",
     "shortage_quantity": "Lượng thiếu",
+    "usable_quantity": "Lượng đạt có thể dùng",
+    "missing_received_quantity": "Thiếu so với lượng thực nhận/đếm",
+    "planned_compensation_quantity": "Đã lập kế hoạch bù",
+    "remaining_compensation_quantity": "Còn cần lập bù",
     "type": "Loại",
     "decision": "Quyết định",
     "difference": "Dòng chênh lệch",

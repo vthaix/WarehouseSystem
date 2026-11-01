@@ -27,7 +27,7 @@ async function sources(pool){
   const [plans]=await pool.execute("SELECT id,code,planned_date FROM business_plans WHERE type='PURCHASE' AND status IN ('APPROVED','IN_PROGRESS') ORDER BY id DESC LIMIT 100");
   for(const p of plans)material.set('PLAN:'+p.id,{id:'PLAN:'+p.id,code:'nguyên vật liệu dự kiến · '+p.code,purchase_plan_id:String(p.id),expected_date:p.planned_date instanceof Date?p.planned_date.toISOString().slice(0,10):p.planned_date,lot_ids:[],lines:[]});
   for(const group of material.values())group.eligible_lots=lots.filter(l=>l.kind==='MATERIAL'&&(group.id.startsWith('PLAN:')?String(l.purchase_plan_id)===group.purchase_plan_id:group.lot_ids.includes(l.id))).map(l=>({id:l.id,name:l.name,expected_date:l.expected_date}));
-  return {finished_lots:[...groups.values()],material_lots:[...material.values()]};
+  return {finished_lots:[...groups.values()],material_lots:[...material.values()].filter(m=>m.id.startsWith('PLAN:'))};
 }
 async function create(pool,c,user,b,value,requestId){
   C.fail(!['MATERIAL','FINISHED_PRODUCT'].includes(b.inspection_type),'VALIDATION_ERROR','Chọn kiểm tra thành phẩm hoặc kiểm tra nguyên vật liệu.');

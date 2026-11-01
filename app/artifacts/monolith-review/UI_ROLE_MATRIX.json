@@ -589,7 +589,7 @@
   {
     "username": "planner",
     "module": "customer-orders",
-    "title": "Đơn hàng",
+    "title": "Tiếp nhận đơn hàng",
     "url": "/customer/orders?module=customer-orders",
     "status": 200,
     "fields": [
@@ -733,7 +733,7 @@
     "createEnabled": true,
     "createForm": {
       "open": true,
-      "text": "SWEET BAKERY / CHI TIẾTTạo mới · Kế hoạch mua / bán✕Loại *MuaBánNhà cung cấpChọn nếu muaNCC-04 · Nhà cung cấp Bột và Đường Thành CôngNCC-03 · Nhà cung cấp Bơ sữa Đông NamNCC-02 · Nhà cung cấp Bao bì Minh AnNCC-01 · Công ty Nguyên liệu Bánh ViệtĐơn khách hàngChọn nếu bánDH-KHACHHANG-05 · DH-KHACHHANG-05 · Khách hàngDH-KHACHHANG-04 · DH-KHACHHANG-04 · Khách hàngDH-KHACHHANG-03 · DH-KHACHHANG-03 · Khách hàngDH-KHACHHANG-02 · DH-KHACHHANG-02 · Khách hàngDH-KHACHHANG-01 · DH-KHACHHANG-01 · Khách hàngKhách hàngChọn nếu bánKH-TK-27 · Tài khoản thử nghiệmKH-TK-25 · Tài khoản thử nghiệmKH-TK-23 · Tài khoản thử nghiệmKH-TK-21 · Tài khoản thử nghiệmKH-TK-19 · Tài khoản thử nghiệmKH-customer2 · Khách hàng thứ haiKH-customer · Khách hàngNgày mong nhận nguyên vật liệu *Ghi chúChi tiết kế hoạchMặt hàng *Bánh nhân đậu xanh · cáiBánh kem chocolate · cáiBánh kem vani · cáiCupcake · cáiBánh mì bơ sữa · cáiBánh mì sandwich · ổTem nhãn · cáiĐế bánh · cáiTúi bánh · cáiCốm màu · kgHạnh nhân lát · kgKem whipping · lítMứt dâu · kgChocolate · kgĐậu xanh · kgĐậu đỏ · kgBột nở · gMen nở · gSữa đặc · kgSữa tươi · lítMuối · kgĐường bột · kgBột cacao · kgBột bắp · kgBánh nhân đậu đỏ · cáiBánh quy chocolate · hộpBông lan cuộn · cáiHộp bánh · cáiTrứng gà · quảBơ lạt · kgĐường cát · kgBánh quy bơ · hộpBột mì · kgSố lượng *Đơn giá *✕＋ Thêm dòngHủyLưu thông tin",
+      "text": "← Quay lạiSWEET BAKERY / CHI TIẾTTạo mới · Kế hoạch mua / bán✕Loại *MuaBánNhà cung cấpChọn nếu muaNCC-04 · Bao bì An PhúcNCC-03 · Nguyên liệu Minh ChâuNCC-02 · Thực phẩm Xuân HoàiNCC-01 · Nguyên liệu Tâm AnhĐơn khách hàngChọn nếu bánDH-KHACHHANG-05 · DH-KHACHHANG-05 · Khách hàngDH-KHACHHANG-04 · DH-KHACHHANG-04 · Khách hàngDH-KHACHHANG-03 · DH-KHACHHANG-03 · Khách hàngDH-KHACHHANG-02 · DH-KHACHHANG-02 · Khách hàngDH-KHACHHANG-01 · DH-KHACHHANG-01 · Khách hàngKhách hàngChọn nếu bánKH-TK-63 · Tài khoản thử nghiệmKH-TK-61 · Tài khoản thử nghiệmKH-TK-59 · Tài khoản thử nghiệmKH-TK-57 · Tài khoản thử nghiệmKH-TK-55 · Tài khoản thử nghiệmKH-TK-53 · Tài khoản thử nghiệmKH-TK-51 · Tài khoản thử nghiệmKH-TK-49 · Tài khoản thử nghiệmKH-TK-47 · Tài khoản thử nghiệmKH-TK-45 · Tài khoản thử nghiệmKH-TK-43 · Tài khoản thử nghiệmKH-TK-41 · Tài khoản thử nghiệmKH-TK-39 · Tài khoản thử nghiệmKH-TK-37 · Tài khoản thử nghiệmKH-TK-35 · Tài khoản thử nghiệmKH-TK-33 · Tài khoản thử nghiệmKH-TK-31 · Tài khoản thử nghiệmKH-TK-29 · Tài khoản thử nghiệmKH-TK-27 · Tài khoản thử nghiệmKH-TK-25 · Tài khoản thử nghiệmKH-TK-23 · Tài khoản thử nghiệmKH-TK-21 · Tài khoản thử nghiệmKH-TK-19 · Tài khoản thử nghiệmKH-customer2 · Khách hàng thứ haiKH-customer · Khách hàngNgày mong nhận nguyên vật liệu *Ghi chúGhi chúChi tiết kế hoạchMặt hàng *Bánh quy cacao hộp 200g · hộpBánh bông lan đóng gói 120g · góiBánh quy bơ hộp 200g · hộpBánh mẫu để thử sửa xóa · hộpBánh nhân đậu xanh · cáiBánh kem chocolate · cáiBánh kem vani · cáiCupcake · cáiBánh mì bơ sữa · cáiBánh mì sandwich · ổTem nhãn · cáiĐế bánh · cáiTúi bánh · cáiCốm màu · kgHạnh nhân lát · kgKem whipping · lítMứt dâu · kgChocolate · kgĐậu xanh · kgĐậu đỏ · kgBột nở · gMen nở · gSữa đặc · kgSữa tươi · lítMuối · kgĐường bột · kgBột cacao · kgBột bắp · kgBánh nhân đậu đỏ · góiBánh quy chocolate · hộpBông lan cuộn · cáiHộp bánh · cáiTrứng gà · quảBơ lạt · kgĐường cát · kgBánh quy bơ · hộpBột mì · kgSố lượng *Đơn giá *✕＋ Thêm dòngHủyLưu thông tin",
       "fields": [
         {
           "name": "type",
@@ -765,19 +765,19 @@
             },
             {
               "value": "4",
-              "label": "NCC-04 · Nhà cung cấp Bột và Đường Thành Công"
+              "label": "NCC-04 · Bao bì An Phúc"
             },
             {
               "value": "3",
-              "label": "NCC-03 · Nhà cung cấp Bơ sữa Đông Nam"
+              "label": "NCC-03 · Nguyên liệu Minh Châu"
             },
             {
               "value": "2",
-              "label": "NCC-02 · Nhà cung cấp Bao bì Minh An"
+              "label": "NCC-02 · Thực phẩm Xuân Hoài"
             },
             {
               "value": "1",
-              "label": "NCC-01 · Công ty Nguyên liệu Bánh Việt"
+              "label": "NCC-01 · Nguyên liệu Tâm Anh"
             }
           ]
         },
@@ -793,23 +793,23 @@
               "label": "Chọn nếu bán"
             },
             {
-              "value": "54",
+              "value": "282",
               "label": "DH-KHACHHANG-05 · DH-KHACHHANG-05 · Khách hàng"
             },
             {
-              "value": "53",
+              "value": "281",
               "label": "DH-KHACHHANG-04 · DH-KHACHHANG-04 · Khách hàng"
             },
             {
-              "value": "52",
+              "value": "280",
               "label": "DH-KHACHHANG-03 · DH-KHACHHANG-03 · Khách hàng"
             },
             {
-              "value": "51",
+              "value": "279",
               "label": "DH-KHACHHANG-02 · DH-KHACHHANG-02 · Khách hàng"
             },
             {
-              "value": "50",
+              "value": "278",
               "label": "DH-KHACHHANG-01 · DH-KHACHHANG-01 · Khách hàng"
             }
           ]
@@ -824,6 +824,78 @@
             {
               "value": "",
               "label": "Chọn nếu bán"
+            },
+            {
+              "value": "25",
+              "label": "KH-TK-63 · Tài khoản thử nghiệm"
+            },
+            {
+              "value": "24",
+              "label": "KH-TK-61 · Tài khoản thử nghiệm"
+            },
+            {
+              "value": "23",
+              "label": "KH-TK-59 · Tài khoản thử nghiệm"
+            },
+            {
+              "value": "22",
+              "label": "KH-TK-57 · Tài khoản thử nghiệm"
+            },
+            {
+              "value": "21",
+              "label": "KH-TK-55 · Tài khoản thử nghiệm"
+            },
+            {
+              "value": "20",
+              "label": "KH-TK-53 · Tài khoản thử nghiệm"
+            },
+            {
+              "value": "19",
+              "label": "KH-TK-51 · Tài khoản thử nghiệm"
+            },
+            {
+              "value": "18",
+              "label": "KH-TK-49 · Tài khoản thử nghiệm"
+            },
+            {
+              "value": "17",
+              "label": "KH-TK-47 · Tài khoản thử nghiệm"
+            },
+            {
+              "value": "16",
+              "label": "KH-TK-45 · Tài khoản thử nghiệm"
+            },
+            {
+              "value": "15",
+              "label": "KH-TK-43 · Tài khoản thử nghiệm"
+            },
+            {
+              "value": "14",
+              "label": "KH-TK-41 · Tài khoản thử nghiệm"
+            },
+            {
+              "value": "13",
+              "label": "KH-TK-39 · Tài khoản thử nghiệm"
+            },
+            {
+              "value": "12",
+              "label": "KH-TK-37 · Tài khoản thử nghiệm"
+            },
+            {
+              "value": "11",
+              "label": "KH-TK-35 · Tài khoản thử nghiệm"
+            },
+            {
+              "value": "10",
+              "label": "KH-TK-33 · Tài khoản thử nghiệm"
+            },
+            {
+              "value": "9",
+              "label": "KH-TK-31 · Tài khoản thử nghiệm"
+            },
+            {
+              "value": "8",
+              "label": "KH-TK-29 · Tài khoản thử nghiệm"
             },
             {
               "value": "7",
@@ -861,7 +933,7 @@
           "label": "Ngày mong nhận nguyên vật liệu *",
           "required": true,
           "disabled": false,
-          "min": "2026-10-29",
+          "min": "2026-11-01",
           "max": "",
           "step": ""
         },
@@ -879,6 +951,22 @@
           "required": false,
           "disabled": false,
           "options": [
+            {
+              "value": "52",
+              "label": "Bánh quy cacao hộp 200g · hộp"
+            },
+            {
+              "value": "51",
+              "label": "Bánh bông lan đóng gói 120g · gói"
+            },
+            {
+              "value": "50",
+              "label": "Bánh quy bơ hộp 200g · hộp"
+            },
+            {
+              "value": "49",
+              "label": "Bánh mẫu để thử sửa xóa · hộp"
+            },
             {
               "value": "46",
               "label": "Bánh nhân đậu xanh · cái"
@@ -977,7 +1065,7 @@
             },
             {
               "value": "11",
-              "label": "Bánh nhân đậu đỏ · cái"
+              "label": "Bánh nhân đậu đỏ · gói"
             },
             {
               "value": "10",
@@ -1124,23 +1212,23 @@
               "label": "Chọn đơn hàng đã tiếp nhận"
             },
             {
-              "value": "54",
+              "value": "282",
               "label": "DH-KHACHHANG-05 · DH-KHACHHANG-05 · Khách hàng"
             },
             {
-              "value": "53",
+              "value": "281",
               "label": "DH-KHACHHANG-04 · DH-KHACHHANG-04 · Khách hàng"
             },
             {
-              "value": "52",
+              "value": "280",
               "label": "DH-KHACHHANG-03 · DH-KHACHHANG-03 · Khách hàng"
             },
             {
-              "value": "51",
+              "value": "279",
               "label": "DH-KHACHHANG-02 · DH-KHACHHANG-02 · Khách hàng"
             },
             {
-              "value": "50",
+              "value": "278",
               "label": "DH-KHACHHANG-01 · DH-KHACHHANG-01 · Khách hàng"
             }
           ]
@@ -1172,7 +1260,7 @@
           "label": "Bắt đầu *",
           "required": true,
           "disabled": false,
-          "min": "2026-10-29",
+          "min": "2026-11-01",
           "max": "",
           "step": ""
         },
@@ -1182,7 +1270,7 @@
           "label": "Kết thúc *",
           "required": true,
           "disabled": false,
-          "min": "2026-10-29",
+          "min": "2026-11-01",
           "max": "",
           "step": ""
         },
@@ -1321,7 +1409,7 @@
   {
     "username": "planner",
     "module": "production-reports",
-    "title": "Báo cáo sản xuất",
+    "title": "Báo cáo nhu cầu nhận được",
     "url": "/production/reports?module=production-reports",
     "status": 200,
     "fields": [
@@ -1395,82 +1483,8 @@
   {
     "username": "planner",
     "module": "finished-reports",
-    "title": "Báo cáo thành phẩm",
+    "title": "Báo cáo thành phẩm nhận được",
     "url": "/production/finished-reports?module=finished-reports",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "planner",
-    "module": "tasks",
-    "title": "Quản lý công việc",
-    "url": "/tasks?module=tasks",
     "status": 200,
     "fields": [
       {
@@ -1690,80 +1704,6 @@
   },
   {
     "username": "purchaser",
-    "module": "business-plans",
-    "title": "Kế hoạch mua / bán",
-    "url": "/plans?module=business-plans",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "purchaser",
     "module": "purchase-orders",
     "title": "Đơn mua hàng",
     "url": "/purchases?module=purchase-orders",
@@ -1835,7 +1775,7 @@
     "createEnabled": true,
     "createForm": {
       "open": true,
-      "text": "SWEET BAKERY / CHI TIẾTMua nguyên vật liệu✕Nguồn mua đã được duyệt *Theo kế hoạch mua nguyên vật liệu đã duyệtKế hoạch mua / bán *Chọn kế hoạch mua nguyên vật liệuKHMUA-NOIBO-05KHMUA-NOIBO-04KHMUA-NOIBO-03Ngày dự kiến nhận *Điều khoản giao *HủyLưu thông tin",
+      "text": "SWEET BAKERY / CHI TIẾTMua nguyên vật liệu✕Nguồn mua đã được duyệt *Theo kế hoạch mua nguyên vật liệu đã duyệtKế hoạch mua / bán *Chọn kế hoạch mua nguyên vật liệuKHMUA-NOIBO-04 · KHMUA-NOIBO-04Ngày dự kiến nhận *Điều khoản giao *HủyLưu thông tin",
       "fields": [
         {
           "name": "source_mode",
@@ -1862,16 +1802,8 @@
               "label": "Chọn kế hoạch mua nguyên vật liệu"
             },
             {
-              "value": "62",
-              "label": "KHMUA-NOIBO-05"
-            },
-            {
-              "value": "60",
-              "label": "KHMUA-NOIBO-04"
-            },
-            {
-              "value": "59",
-              "label": "KHMUA-NOIBO-03"
+              "value": "398",
+              "label": "KHMUA-NOIBO-04 · KHMUA-NOIBO-04"
             }
           ]
         },
@@ -1881,7 +1813,7 @@
           "label": "Ngày dự kiến nhận *",
           "required": true,
           "disabled": false,
-          "min": "2026-10-29",
+          "min": "2026-11-01",
           "max": "",
           "step": ""
         },
@@ -1894,80 +1826,6 @@
         }
       ]
     },
-    "errors": []
-  },
-  {
-    "username": "purchaser",
-    "module": "tasks",
-    "title": "Quản lý công việc",
-    "url": "/tasks?module=tasks",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
     "errors": []
   },
   {
@@ -2280,7 +2138,7 @@
     "createEnabled": true,
     "createForm": {
       "open": true,
-      "text": "SWEET BAKERY / CHI TIẾTThêm danh mục✕Nhóm danh mục *Thành phẩmNguyên vật liệu / vật tư đóng góiMã *Tên *Mô tảĐang hoạt động *CóKhôngẢnh danh mụcBỏ ảnhPNG, JPEG hoặc WebP, tối đa 5 MB. Ảnh không bắt buộc.HủyLưu thông tin",
+      "text": "SWEET BAKERY / CHI TIẾTThêm danh mục✕Nhóm danh mục *Thành phẩmNguyên vật liệu / vật tư đóng góiMã *Tên *Mô tảMô tảĐang hoạt động *CóKhôngẢnh danh mụcBỏ ảnhPNG, JPEG hoặc WebP, tối đa 5 MB. Ảnh không bắt buộc.HủyLưu thông tin",
       "fields": [
         {
           "name": "catalog_kind",
@@ -2439,7 +2297,7 @@
     "createEnabled": true,
     "createForm": {
       "open": true,
-      "text": "SWEET BAKERY / CHI TIẾTTạo mới · Mặt hàng✕Mã *Tên *Loại mặt hàng *Nguyên liệuThành phẩmDanh mục *Bánh nhânBánh kemBánh quyBánh bông lanBánh mìĐơn vị tính *O · ổCAI · cáiG · gQUA · quảLIT · lítKG · kgHOP · hộpBO · bộM · métUNI-0002 · cáiUNI-0001 · kgGiá tham khảo *Tiêu chuẩn nhập nguyên vật liệuHạn sử dụng mặc định (ngày)Hàng mẫu *KhôngCóĐã công bố *CóKhôngHủyLưu thông tin",
+      "text": "← Quay lạiSWEET BAKERY / CHI TIẾTTạo mới · Mặt hàng✕Mã *Tên *Loại mặt hàng *Nguyên liệuThành phẩmDanh mục *Danh mục thử xóaDanh mục thử UCBánh nhânBánh kemBánh quyBánh bông lanBánh mìĐơn vị tính *GOI · góiO · ổCAI · cáiG · gQUA · quảLIT · lítKG · kgHOP · hộpBO · bộM · métUNI-0002 · cáiUNI-0001 · kgGiá tham khảo *Tiêu chuẩn nhập nguyên vật liệuHạn sử dụng mặc định (ngày)Hàng mẫu *KhôngCóĐã công bố *CóKhôngẢnh mặt hàngBỏ ảnhPNG, JPEG hoặc WebP · Tối đa 5 MBHủyLưu thông tin",
       "fields": [
         {
           "name": "code",
@@ -2486,6 +2344,14 @@
           "disabled": false,
           "options": [
             {
+              "value": "23",
+              "label": "Danh mục thử xóa"
+            },
+            {
+              "value": "22",
+              "label": "Danh mục thử UC"
+            },
+            {
               "value": "16",
               "label": "Bánh nhân"
             },
@@ -2514,6 +2380,10 @@
           "required": true,
           "disabled": false,
           "options": [
+            {
+              "value": "13",
+              "label": "GOI · gói"
+            },
             {
               "value": "11",
               "label": "O · ổ"
@@ -2620,6 +2490,25 @@
               "label": "Không"
             }
           ]
+        },
+        {
+          "name": "item-photo",
+          "type": "file",
+          "label": "Ảnh mặt hàng",
+          "required": false,
+          "disabled": false,
+          "min": "",
+          "max": "",
+          "step": ""
+        },
+        {
+          "name": "image_path",
+          "type": "hidden",
+          "required": false,
+          "disabled": false,
+          "min": "",
+          "max": "",
+          "step": ""
         }
       ]
     },
@@ -2698,7 +2587,7 @@
     "createEnabled": true,
     "createForm": {
       "open": true,
-      "text": "SWEET BAKERY / CHI TIẾTTạo mới · Kho hàng✕Mã *Tên *Địa chỉHủyLưu thông tin",
+      "text": "← Quay lạiSWEET BAKERY / CHI TIẾTTạo mới · Kho hàng✕Mã *Tên *Địa chỉHủyLưu thông tin",
       "fields": [
         {
           "name": "code",
@@ -2804,7 +2693,7 @@
     "createEnabled": true,
     "createForm": {
       "open": true,
-      "text": "SWEET BAKERY / CHI TIẾTTạo mới · Vị trí lưu kho✕Mã *Tên *Kho *KHO-03 · Kho bao bì đóng gói bánhKHO-02 · Kho bánh đóng góiKHO-01 · Kho nguyên liệu làm bánhHủyLưu thông tin",
+      "text": "← Quay lạiSWEET BAKERY / CHI TIẾTTạo mới · Vị trí lưu kho✕Mã *Tên *Kho *XUONG-03-TRA · Kho hàng trả vềXUONG-03-TP · Kho thành phẩmXUONG-03-NVL · Kho nguyên vật liệuXUONG-02-TRA · Kho hàng trả vềXUONG-02-TP · Kho thành phẩmXUONG-02-NVL · Kho nguyên vật liệuDEMO-KK-AP-DUNG · [DEMO KK-AP-DUNG] Kho kiểm kê riêngDEMO-KK-DUYET · [DEMO KK-DUYET] Kho kiểm kê riêngDEMO-KK-CHENH-LECH · [DEMO KK-CHENH-LECH] Kho kiểm kê riêngDEMO-KK-BAO-CAO · [DEMO KK-BAO-CAO] Kho kiểm kê riêngDEMO-KK-BIEN-BAN · [DEMO KK-BIEN-BAN] Kho kiểm kê riêngDEMO-KK-DEM · [DEMO KK-DEM] Kho kiểm kê riêngDEMO-KK-CHO · [DEMO KK-CHO] Kho kiểm kê riêngDEMO-KHO · Kho thử UC nhập xuấtKHO-03 · Kho hàng trả vềKHO-02 · Kho thành phẩmKHO-01 · Kho nguyên vật liệuHủyLưu thông tin",
       "fields": [
         {
           "name": "code",
@@ -2834,16 +2723,72 @@
           "disabled": false,
           "options": [
             {
+              "value": "20",
+              "label": "XUONG-03-TRA · Kho hàng trả về"
+            },
+            {
+              "value": "19",
+              "label": "XUONG-03-TP · Kho thành phẩm"
+            },
+            {
+              "value": "18",
+              "label": "XUONG-03-NVL · Kho nguyên vật liệu"
+            },
+            {
+              "value": "17",
+              "label": "XUONG-02-TRA · Kho hàng trả về"
+            },
+            {
+              "value": "16",
+              "label": "XUONG-02-TP · Kho thành phẩm"
+            },
+            {
+              "value": "15",
+              "label": "XUONG-02-NVL · Kho nguyên vật liệu"
+            },
+            {
+              "value": "11",
+              "label": "DEMO-KK-AP-DUNG · [DEMO KK-AP-DUNG] Kho kiểm kê riêng"
+            },
+            {
+              "value": "10",
+              "label": "DEMO-KK-DUYET · [DEMO KK-DUYET] Kho kiểm kê riêng"
+            },
+            {
+              "value": "9",
+              "label": "DEMO-KK-CHENH-LECH · [DEMO KK-CHENH-LECH] Kho kiểm kê riêng"
+            },
+            {
+              "value": "8",
+              "label": "DEMO-KK-BAO-CAO · [DEMO KK-BAO-CAO] Kho kiểm kê riêng"
+            },
+            {
+              "value": "7",
+              "label": "DEMO-KK-BIEN-BAN · [DEMO KK-BIEN-BAN] Kho kiểm kê riêng"
+            },
+            {
+              "value": "6",
+              "label": "DEMO-KK-DEM · [DEMO KK-DEM] Kho kiểm kê riêng"
+            },
+            {
+              "value": "5",
+              "label": "DEMO-KK-CHO · [DEMO KK-CHO] Kho kiểm kê riêng"
+            },
+            {
+              "value": "4",
+              "label": "DEMO-KHO · Kho thử UC nhập xuất"
+            },
+            {
               "value": "3",
-              "label": "KHO-03 · Kho bao bì đóng gói bánh"
+              "label": "KHO-03 · Kho hàng trả về"
             },
             {
               "value": "2",
-              "label": "KHO-02 · Kho bánh đóng gói"
+              "label": "KHO-02 · Kho thành phẩm"
             },
             {
               "value": "1",
-              "label": "KHO-01 · Kho nguyên liệu làm bánh"
+              "label": "KHO-01 · Kho nguyên vật liệu"
             }
           ]
         }
@@ -2924,7 +2869,7 @@
     "createEnabled": true,
     "createForm": {
       "open": true,
-      "text": "SWEET BAKERY / CHI TIẾTTạo mới · Nhà cung cấp✕Mã *Tên *Địa chỉSố điện thoạiĐịa chỉ emailHủyLưu thông tin",
+      "text": "← Quay lạiSWEET BAKERY / CHI TIẾTTạo mới · Nhà cung cấp✕Mã *Tên *Địa chỉSố điện thoạiĐịa chỉ emailHủyLưu thông tin",
       "fields": [
         {
           "name": "code",
@@ -3050,7 +2995,7 @@
     "createEnabled": true,
     "createForm": {
       "open": true,
-      "text": "SWEET BAKERY / CHI TIẾTNhận nguyên vật liệu theo đơn mua✕Đơn mua *Chọn đơn muaDM-CONGTYNGUYENLIEUBANHVIET-01DM-NHIEUNHACUNGCAP-01Mã *Ngày sản xuấtHạn sử dụngHủyLưu thông tin",
+      "text": "SWEET BAKERY / CHI TIẾTNhận nguyên vật liệu theo đơn mua✕Đơn mua *Chọn đơn muaDM-NGUYENLIEUTAMANH-06DM-NGUYENLIEUTAMANH-02Mã lô được hệ thống tự sinh khi lưu.Ngày sản xuấtHạn dùng tự tính từ ngày sản xuất theo cấu hình NVL và nhà cung cấp.HủyLưu thông tin",
       "fields": [
         {
           "name": "purchase_order_id",
@@ -3064,24 +3009,14 @@
               "label": "Chọn đơn mua"
             },
             {
-              "value": "29",
-              "label": "DM-CONGTYNGUYENLIEUBANHVIET-01"
+              "value": "211",
+              "label": "DM-NGUYENLIEUTAMANH-06"
             },
             {
-              "value": "28",
-              "label": "DM-NHIEUNHACUNGCAP-01"
+              "value": "207",
+              "label": "DM-NGUYENLIEUTAMANH-02"
             }
           ]
-        },
-        {
-          "name": "code",
-          "type": "text",
-          "label": "Mã *",
-          "required": true,
-          "disabled": false,
-          "min": "",
-          "max": "",
-          "step": ""
         },
         {
           "name": "manufactured_date",
@@ -3089,170 +3024,12 @@
           "label": "Ngày sản xuất",
           "required": false,
           "disabled": false,
-          "min": "2026-10-29",
-          "max": "",
-          "step": ""
-        },
-        {
-          "name": "expiry_date",
-          "type": "date",
-          "label": "Hạn sử dụng",
-          "required": false,
-          "disabled": false,
-          "min": "2026-10-29",
-          "max": "",
+          "min": "",
+          "max": "2026-11-01",
           "step": ""
         }
       ]
     },
-    "errors": []
-  },
-  {
-    "username": "manager",
-    "module": "stock-requests",
-    "title": "Yêu cầu nhập / xuất",
-    "url": "/workshop/requests?module=stock-requests",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "manager",
-    "module": "stock-documents",
-    "title": "Phiếu nhập / xuất",
-    "url": "/warehouse/documents?module=stock-documents",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
     "errors": []
   },
   {
@@ -3383,80 +3160,6 @@
   },
   {
     "username": "manager",
-    "module": "tasks",
-    "title": "Quản lý công việc",
-    "url": "/tasks?module=tasks",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "manager",
     "module": "reports/inventory",
     "title": "Báo cáo tồn kho",
     "url": "/reports/inventory?module=reports%2Finventory",
@@ -3481,9 +3184,9 @@
   },
   {
     "username": "manager",
-    "module": "warehouse-records",
-    "title": "Hồ sơ kho tổng hợp",
-    "url": "/warehouse/records?module=warehouse-records",
+    "module": "notifications",
+    "title": "Thông báo",
+    "url": "/notifications?module=notifications",
     "status": 200,
     "fields": [
       {
@@ -3555,9 +3258,83 @@
   },
   {
     "username": "manager",
-    "module": "notifications",
-    "title": "Thông báo",
-    "url": "/notifications?module=notifications",
+    "module": "warehouse-inbound",
+    "title": "Quản lý nhập kho",
+    "url": "/warehouse/inbound?module=warehouse-inbound",
+    "status": 200,
+    "fields": [
+      {
+        "name": "module",
+        "type": "hidden"
+      },
+      {
+        "name": "q",
+        "type": "text"
+      },
+      {
+        "name": "status",
+        "type": "select-one",
+        "options": [
+          {
+            "value": "",
+            "label": "Tất cả trạng thái"
+          },
+          {
+            "value": "SUBMITTED",
+            "label": "Đã gửi"
+          },
+          {
+            "value": "RECEIVED",
+            "label": "Đã tiếp nhận"
+          },
+          {
+            "value": "PENDING",
+            "label": "Chờ xử lý"
+          },
+          {
+            "value": "PENDING_APPROVAL",
+            "label": "Chờ duyệt"
+          },
+          {
+            "value": "APPROVED",
+            "label": "Đã duyệt"
+          },
+          {
+            "value": "DRAFT",
+            "label": "Bản nháp"
+          },
+          {
+            "value": "IN_PROGRESS",
+            "label": "Đang thực hiện"
+          },
+          {
+            "value": "COMPLETED",
+            "label": "Hoàn thành"
+          },
+          {
+            "value": "POSTED",
+            "label": "Đã ghi sổ"
+          },
+          {
+            "value": "CLOSED",
+            "label": "Đã đóng"
+          },
+          {
+            "value": "REJECTED",
+            "label": "Bị từ chối"
+          }
+        ]
+      }
+    ],
+    "createEnabled": false,
+    "createForm": null,
+    "errors": []
+  },
+  {
+    "username": "manager",
+    "module": "warehouse-outbound",
+    "title": "Quản lý xuất kho",
+    "url": "/warehouse/outbound?module=warehouse-outbound",
     "status": 200,
     "fields": [
       {
@@ -3703,231 +3480,157 @@
   },
   {
     "username": "staff",
-    "module": "stock-requests",
-    "title": "Yêu cầu nhập / xuất",
-    "url": "/workshop/requests?module=stock-requests",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "staff",
-    "module": "stock-documents",
-    "title": "Phiếu nhập / xuất",
-    "url": "/warehouse/documents?module=stock-documents",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "staff",
-    "module": "tasks",
-    "title": "Quản lý công việc",
-    "url": "/tasks?module=tasks",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "staff",
     "module": "notifications",
     "title": "Thông báo",
     "url": "/notifications?module=notifications",
+    "status": 200,
+    "fields": [
+      {
+        "name": "module",
+        "type": "hidden"
+      },
+      {
+        "name": "q",
+        "type": "text"
+      },
+      {
+        "name": "status",
+        "type": "select-one",
+        "options": [
+          {
+            "value": "",
+            "label": "Tất cả trạng thái"
+          },
+          {
+            "value": "SUBMITTED",
+            "label": "Đã gửi"
+          },
+          {
+            "value": "RECEIVED",
+            "label": "Đã tiếp nhận"
+          },
+          {
+            "value": "PENDING",
+            "label": "Chờ xử lý"
+          },
+          {
+            "value": "PENDING_APPROVAL",
+            "label": "Chờ duyệt"
+          },
+          {
+            "value": "APPROVED",
+            "label": "Đã duyệt"
+          },
+          {
+            "value": "DRAFT",
+            "label": "Bản nháp"
+          },
+          {
+            "value": "IN_PROGRESS",
+            "label": "Đang thực hiện"
+          },
+          {
+            "value": "COMPLETED",
+            "label": "Hoàn thành"
+          },
+          {
+            "value": "POSTED",
+            "label": "Đã ghi sổ"
+          },
+          {
+            "value": "CLOSED",
+            "label": "Đã đóng"
+          },
+          {
+            "value": "REJECTED",
+            "label": "Bị từ chối"
+          }
+        ]
+      }
+    ],
+    "createEnabled": false,
+    "createForm": null,
+    "errors": []
+  },
+  {
+    "username": "staff",
+    "module": "warehouse-inbound",
+    "title": "Nhập kho",
+    "url": "/warehouse/inbound?module=warehouse-inbound",
+    "status": 200,
+    "fields": [
+      {
+        "name": "module",
+        "type": "hidden"
+      },
+      {
+        "name": "q",
+        "type": "text"
+      },
+      {
+        "name": "status",
+        "type": "select-one",
+        "options": [
+          {
+            "value": "",
+            "label": "Tất cả trạng thái"
+          },
+          {
+            "value": "SUBMITTED",
+            "label": "Đã gửi"
+          },
+          {
+            "value": "RECEIVED",
+            "label": "Đã tiếp nhận"
+          },
+          {
+            "value": "PENDING",
+            "label": "Chờ xử lý"
+          },
+          {
+            "value": "PENDING_APPROVAL",
+            "label": "Chờ duyệt"
+          },
+          {
+            "value": "APPROVED",
+            "label": "Đã duyệt"
+          },
+          {
+            "value": "DRAFT",
+            "label": "Bản nháp"
+          },
+          {
+            "value": "IN_PROGRESS",
+            "label": "Đang thực hiện"
+          },
+          {
+            "value": "COMPLETED",
+            "label": "Hoàn thành"
+          },
+          {
+            "value": "POSTED",
+            "label": "Đã ghi sổ"
+          },
+          {
+            "value": "CLOSED",
+            "label": "Đã đóng"
+          },
+          {
+            "value": "REJECTED",
+            "label": "Bị từ chối"
+          }
+        ]
+      }
+    ],
+    "createEnabled": false,
+    "createForm": null,
+    "errors": []
+  },
+  {
+    "username": "staff",
+    "module": "warehouse-outbound",
+    "title": "Xuất kho",
+    "url": "/warehouse/outbound?module=warehouse-outbound",
     "status": 200,
     "fields": [
       {
@@ -4073,228 +3776,6 @@
   },
   {
     "username": "staff2",
-    "module": "stock-requests",
-    "title": "Yêu cầu nhập / xuất",
-    "url": "/workshop/requests?module=stock-requests",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "staff2",
-    "module": "stock-documents",
-    "title": "Phiếu nhập / xuất",
-    "url": "/warehouse/documents?module=stock-documents",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "staff2",
-    "module": "tasks",
-    "title": "Quản lý công việc",
-    "url": "/tasks?module=tasks",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "staff2",
     "module": "notifications",
     "title": "Thông báo",
     "url": "/notifications?module=notifications",
@@ -4368,10 +3849,84 @@
     "errors": []
   },
   {
-    "username": "qc",
-    "module": "customer-returns",
-    "title": "Hàng khách trả",
-    "url": "/customer-returns?module=customer-returns",
+    "username": "staff2",
+    "module": "warehouse-inbound",
+    "title": "Nhập kho",
+    "url": "/warehouse/inbound?module=warehouse-inbound",
+    "status": 200,
+    "fields": [
+      {
+        "name": "module",
+        "type": "hidden"
+      },
+      {
+        "name": "q",
+        "type": "text"
+      },
+      {
+        "name": "status",
+        "type": "select-one",
+        "options": [
+          {
+            "value": "",
+            "label": "Tất cả trạng thái"
+          },
+          {
+            "value": "SUBMITTED",
+            "label": "Đã gửi"
+          },
+          {
+            "value": "RECEIVED",
+            "label": "Đã tiếp nhận"
+          },
+          {
+            "value": "PENDING",
+            "label": "Chờ xử lý"
+          },
+          {
+            "value": "PENDING_APPROVAL",
+            "label": "Chờ duyệt"
+          },
+          {
+            "value": "APPROVED",
+            "label": "Đã duyệt"
+          },
+          {
+            "value": "DRAFT",
+            "label": "Bản nháp"
+          },
+          {
+            "value": "IN_PROGRESS",
+            "label": "Đang thực hiện"
+          },
+          {
+            "value": "COMPLETED",
+            "label": "Hoàn thành"
+          },
+          {
+            "value": "POSTED",
+            "label": "Đã ghi sổ"
+          },
+          {
+            "value": "CLOSED",
+            "label": "Đã đóng"
+          },
+          {
+            "value": "REJECTED",
+            "label": "Bị từ chối"
+          }
+        ]
+      }
+    ],
+    "createEnabled": false,
+    "createForm": null,
+    "errors": []
+  },
+  {
+    "username": "staff2",
+    "module": "warehouse-outbound",
+    "title": "Xuất kho",
+    "url": "/warehouse/outbound?module=warehouse-outbound",
     "status": 200,
     "fields": [
       {
@@ -4589,82 +4144,69 @@
         ]
       }
     ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "qc",
-    "module": "tasks",
-    "title": "Quản lý công việc",
-    "url": "/tasks?module=tasks",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
+    "createEnabled": true,
+    "createForm": {
+      "open": true,
+      "text": "SWEET BAKERY / CHI TIẾTLập kết luận kiểm kê✕Đợt kiểm kê *LQC-KHMUANOIBO11-01 · Kiểm tra lôLQC-KHMUANOIBO10-01 · Kiểm tra lôKho *Kết luận biên bản *Ngoại lệ *Không có ngoại lệNhập mô tả ngoại lệMô tả ngoại lệBiên bản tự tổng hợp kết quả QC/AC và số đếm của các dòng lô thuộc đợt. Nhập kết luận, lưu nháp rồi gửi cho Ban giám đốc.HủyLưu thông tin",
+      "fields": [
+        {
+          "name": "stocktake_id",
+          "type": "select-one",
+          "label": "Đợt kiểm kê *",
+          "required": true,
+          "disabled": false,
+          "options": [
+            {
+              "value": "LOT-390",
+              "label": "LQC-KHMUANOIBO11-01 · Kiểm tra lô"
+            },
+            {
+              "value": "LOT-389",
+              "label": "LQC-KHMUANOIBO10-01 · Kiểm tra lô"
+            }
+          ]
+        },
+        {
+          "name": "warehouse_id",
+          "type": "select-one",
+          "label": "Kho *",
+          "required": false,
+          "disabled": true,
+          "options": []
+        },
+        {
+          "name": "remarks",
+          "type": "textarea",
+          "label": "Kết luận biên bản *",
+          "required": true,
+          "disabled": false
+        },
+        {
+          "name": "exception_mode",
+          "type": "select-one",
+          "label": "Ngoại lệ *",
+          "required": true,
+          "disabled": false,
+          "options": [
+            {
+              "value": "NONE",
+              "label": "Không có ngoại lệ"
+            },
+            {
+              "value": "DESCRIBE",
+              "label": "Nhập mô tả ngoại lệ"
+            }
+          ]
+        },
+        {
+          "name": "exception_description",
+          "type": "textarea",
+          "label": "Mô tả ngoại lệ",
+          "required": false,
+          "disabled": true
+        }
+      ]
+    },
     "errors": []
   },
   {
@@ -4672,80 +4214,6 @@
     "module": "notifications",
     "title": "Thông báo",
     "url": "/notifications?module=notifications",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "qc2",
-    "module": "customer-returns",
-    "title": "Hàng khách trả",
-    "url": "/customer-returns?module=customer-returns",
     "status": 200,
     "fields": [
       {
@@ -4969,157 +4437,9 @@
   },
   {
     "username": "qc2",
-    "module": "tasks",
-    "title": "Quản lý công việc",
-    "url": "/tasks?module=tasks",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "qc2",
     "module": "notifications",
     "title": "Thông báo",
     "url": "/notifications?module=notifications",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "qc3",
-    "module": "customer-returns",
-    "title": "Hàng khách trả",
-    "url": "/customer-returns?module=customer-returns",
     "status": 200,
     "fields": [
       {
@@ -5343,80 +4663,6 @@
   },
   {
     "username": "qc3",
-    "module": "tasks",
-    "title": "Quản lý công việc",
-    "url": "/tasks?module=tasks",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "qc3",
     "module": "notifications",
     "title": "Thông báo",
     "url": "/notifications?module=notifications",
@@ -5492,7 +4738,7 @@
   {
     "username": "stocktaker",
     "module": "inspection-counts",
-    "title": "Quản lý kiểm kê",
+    "title": "Thực hiện kiểm kê",
     "url": "/inspection-counts?module=inspection-counts",
     "status": 200,
     "fields": [
@@ -5643,80 +4889,6 @@
   },
   {
     "username": "stocktaker",
-    "module": "tasks",
-    "title": "Quản lý công việc",
-    "url": "/tasks?module=tasks",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "stocktaker",
     "module": "notifications",
     "title": "Thông báo",
     "url": "/notifications?module=notifications",
@@ -5792,7 +4964,7 @@
   {
     "username": "stocktaker2",
     "module": "inspection-counts",
-    "title": "Quản lý kiểm kê",
+    "title": "Thực hiện kiểm kê",
     "url": "/inspection-counts?module=inspection-counts",
     "status": 200,
     "fields": [
@@ -5943,80 +5115,6 @@
   },
   {
     "username": "stocktaker2",
-    "module": "tasks",
-    "title": "Quản lý công việc",
-    "url": "/tasks?module=tasks",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "stocktaker2",
     "module": "notifications",
     "title": "Thông báo",
     "url": "/notifications?module=notifications",
@@ -6092,7 +5190,7 @@
   {
     "username": "stocktaker3",
     "module": "inspection-counts",
-    "title": "Quản lý kiểm kê",
+    "title": "Thực hiện kiểm kê",
     "url": "/inspection-counts?module=inspection-counts",
     "status": 200,
     "fields": [
@@ -6172,80 +5270,6 @@
     "module": "stocktake-minutes",
     "title": "Biên bản kiểm kê",
     "url": "/stocktake-minutes?module=stocktake-minutes",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "stocktaker3",
-    "module": "tasks",
-    "title": "Quản lý công việc",
-    "url": "/tasks?module=tasks",
     "status": 200,
     "fields": [
       {
@@ -6403,7 +5427,7 @@
   {
     "username": "workshop",
     "module": "stock-requests",
-    "title": "Yêu cầu nhập / xuất",
+    "title": "Yêu cầu nhập / xuất kho",
     "url": "/workshop/requests?module=stock-requests",
     "status": 200,
     "fields": [
@@ -6473,7 +5497,7 @@
     "createEnabled": true,
     "createForm": {
       "open": true,
-      "text": "SWEET BAKERY / CHI TIẾTGửi yêu cầu nhập / xuất kho✕Thao tác *Nhập khoXuất khoMục đích *Nhập nguyên vật liệu từ kế hoạch muaNhập thành phẩm từ báo cáo thành phẩmKế hoạch mua nguyên vật liệu *KHMUA-NOIBO-05KHMUA-NOIBO-03Kế hoạch bánXưởng phụ trách *XUONG-01 · Xưởng ahtorKho *KHO-03 · Kho bao bì đóng gói bánhKHO-02 · Kho bánh đóng góiKHO-01 · Kho nguyên liệu làm bánhQuản lý kho phụ trách *Quản lý khoNgày giờ đề nghị thực hiện *Ghi chúHủyGửi yêu cầu",
+      "text": "SWEET BAKERY / CHI TIẾTGửi yêu cầu nhập / xuất kho✕Thao tác *Nhập khoXuất khoMục đích *Nhập nguyên vật liệu từ kế hoạch muaNhập thành phẩm từ báo cáo thành phẩmKế hoạch mua nguyên vật liệu *KHMUA-NOIBO-13KHMUA-NOIBO-12KHMUA-NOIBO-11KHMUA-NOIBO-10KHMUA-NOIBO-07KHMUA-NOIBO-06KHMUA-NOIBO-05KHMUA-NOIBO-03Kế hoạch bánXưởng phụ trách *XUONG-01 · Xưởng ahtorKho *[DEMO KK-AP-DUNG] Kho kiểm kê riêng[DEMO KK-DUYET] Kho kiểm kê riêng[DEMO KK-CHENH-LECH] Kho kiểm kê riêng[DEMO KK-BAO-CAO] Kho kiểm kê riêng[DEMO KK-BIEN-BAN] Kho kiểm kê riêng[DEMO KK-DEM] Kho kiểm kê riêng[DEMO KK-CHO] Kho kiểm kê riêngKho thử UC nhập xuấtKho nguyên vật liệuQuản lý kho phụ trách *Quản lý khoNgày giờ đề nghị thực hiện *Ghi chúGhi chúHủyGửi yêu cầu",
       "fields": [
         {
           "name": "request_direction",
@@ -6517,11 +5541,35 @@
           "disabled": false,
           "options": [
             {
-              "value": "62",
+              "value": "409",
+              "label": "KHMUA-NOIBO-13"
+            },
+            {
+              "value": "408",
+              "label": "KHMUA-NOIBO-12"
+            },
+            {
+              "value": "407",
+              "label": "KHMUA-NOIBO-11"
+            },
+            {
+              "value": "406",
+              "label": "KHMUA-NOIBO-10"
+            },
+            {
+              "value": "403",
+              "label": "KHMUA-NOIBO-07"
+            },
+            {
+              "value": "402",
+              "label": "KHMUA-NOIBO-06"
+            },
+            {
+              "value": "401",
               "label": "KHMUA-NOIBO-05"
             },
             {
-              "value": "59",
+              "value": "397",
               "label": "KHMUA-NOIBO-03"
             }
           ]
@@ -6555,16 +5603,40 @@
           "disabled": false,
           "options": [
             {
-              "value": "3",
-              "label": "KHO-03 · Kho bao bì đóng gói bánh"
+              "value": "11",
+              "label": "[DEMO KK-AP-DUNG] Kho kiểm kê riêng"
             },
             {
-              "value": "2",
-              "label": "KHO-02 · Kho bánh đóng gói"
+              "value": "10",
+              "label": "[DEMO KK-DUYET] Kho kiểm kê riêng"
+            },
+            {
+              "value": "9",
+              "label": "[DEMO KK-CHENH-LECH] Kho kiểm kê riêng"
+            },
+            {
+              "value": "8",
+              "label": "[DEMO KK-BAO-CAO] Kho kiểm kê riêng"
+            },
+            {
+              "value": "7",
+              "label": "[DEMO KK-BIEN-BAN] Kho kiểm kê riêng"
+            },
+            {
+              "value": "6",
+              "label": "[DEMO KK-DEM] Kho kiểm kê riêng"
+            },
+            {
+              "value": "5",
+              "label": "[DEMO KK-CHO] Kho kiểm kê riêng"
+            },
+            {
+              "value": "4",
+              "label": "Kho thử UC nhập xuất"
             },
             {
               "value": "1",
-              "label": "KHO-01 · Kho nguyên liệu làm bánh"
+              "label": "Kho nguyên vật liệu"
             }
           ]
         },
@@ -6587,7 +5659,7 @@
           "label": "Ngày giờ đề nghị thực hiện *",
           "required": true,
           "disabled": false,
-          "min": "2026-10-29T00:00",
+          "min": "2026-11-01T00:00",
           "max": "",
           "step": ""
         },
@@ -6605,7 +5677,7 @@
   {
     "username": "workshop",
     "module": "stock-documents",
-    "title": "Phiếu nhập / xuất",
+    "title": "Hồ sơ nhập / xuất kho",
     "url": "/warehouse/documents?module=stock-documents",
     "status": 200,
     "fields": [
@@ -6679,7 +5751,7 @@
   {
     "username": "workshop",
     "module": "production-plans",
-    "title": "Kế hoạch sản xuất",
+    "title": "Kế hoạch được giao",
     "url": "/production/plans?module=production-plans",
     "status": 200,
     "fields": [
@@ -6823,7 +5895,7 @@
     "createEnabled": true,
     "createForm": {
       "open": true,
-      "text": "SWEET BAKERY / CHI TIẾTBáo cáo khi đang sản xuất✕Kế hoạch sản xuất *Chọn kế hoạch đang sản xuấtKHSX-KHACHHANG-05KHSX-KHACHHANG-04KHSX-KHACHHANG-02Mục đích báo cáo *Báo cáo tiến độBáo cáo sự cốBáo cáo thiếu / nhu cầu nguyên vật liệuTiến độ (%)Mô tả / ghi chú *Ảnh mô tả (PNG/JPEG/WebP, tối đa 5 MB/ảnh, 6 ảnh)Có thể dán ảnh từ clipboard vào ô mô tả. Ảnh chỉ được xem bởi người có quyền xem báo cáo.Gửi bộ phận lập kế hoạch *Chỉ gửi Ban giám đốcGửi Ban giám đốc và Bộ phận lập kế hoạchBan giám đốc luôn nhận khi gửi báo cáo. Báo cáo nhu cầu còn thiếu nguyên vật liệu sẽ tự gửi thêm Bộ phận lập kế hoạch. Sự cố/tiến độ không bắt nhập nguyên vật liệu. Báo cáo thành phẩm được lập riêng khi hoàn tất toàn bộ.HủyLưu thông tin",
+      "text": "SWEET BAKERY / CHI TIẾTBáo cáo khi đang sản xuất✕Kế hoạch sản xuất *Chọn kế hoạch đang sản xuấtKHSX-KHACHHANG-03-02KHSX-KHACHHANG-05KHSX-KHACHHANG-04KHSX-KHACHHANG-02Mục đích báo cáo *Báo cáo tiến độBáo cáo sự cốBáo cáo thiếu / nhu cầu nguyên vật liệuTiến độ (%)Mô tả / ghi chú *Ảnh mô tả (PNG/JPEG/WebP, tối đa 5 MB/ảnh, 6 ảnh)Có thể dán ảnh từ clipboard vào ô mô tả. Ảnh chỉ được xem bởi người có quyền xem báo cáo.Gửi bộ phận lập kế hoạch *Chỉ gửi Ban giám đốcGửi Ban giám đốc và Bộ phận lập kế hoạchBan giám đốc luôn nhận khi gửi báo cáo. Báo cáo nhu cầu còn thiếu nguyên vật liệu sẽ tự gửi thêm Bộ phận lập kế hoạch. Sự cố/tiến độ không bắt nhập nguyên vật liệu. Báo cáo thành phẩm được lập riêng khi hoàn tất toàn bộ.HủyLưu thông tin",
       "fields": [
         {
           "name": "production_plan_id",
@@ -6837,15 +5909,19 @@
               "label": "Chọn kế hoạch đang sản xuất"
             },
             {
-              "value": "58",
+              "value": "299",
+              "label": "KHSX-KHACHHANG-03-02"
+            },
+            {
+              "value": "298",
               "label": "KHSX-KHACHHANG-05"
             },
             {
-              "value": "57",
+              "value": "297",
               "label": "KHSX-KHACHHANG-04"
             },
             {
-              "value": "55",
+              "value": "295",
               "label": "KHSX-KHACHHANG-02"
             }
           ]
@@ -6991,7 +6067,7 @@
     "createEnabled": true,
     "createForm": {
       "open": true,
-      "text": "SWEET BAKERY / CHI TIẾTBáo cáo thành phẩm từng phần✕Kế hoạch sản xuất *Chọn kế hoạch sản xuấtKHSX-KHACHHANG-05KHSX-KHACHHANG-04KHSX-KHACHHANG-02Ngày hoàn thành phần này *Ghi chúĐây là đợt cuối, đã hoàn tất toàn bộ kế hoạchMỗi báo cáo tạo một phần trong cùng lô thành phẩm của KHSX. Gửi báo cáo để phần này xuất hiện trong Công việc. QC và nhập kho theo từng phần; báo cáo tiến độ không tạo phần lô.HủyLưu thông tin",
+      "text": "SWEET BAKERY / CHI TIẾTBáo cáo thành phẩm từng phần✕Kế hoạch sản xuất *Chọn kế hoạch sản xuấtKHSX-KHACHHANG-03-02KHSX-KHACHHANG-05KHSX-KHACHHANG-04KHSX-KHACHHANG-02Ngày hoàn thành phần này *Ghi chúĐây là đợt cuối, đã hoàn tất toàn bộ kế hoạchMỗi báo cáo tạo một phần trong cùng lô thành phẩm của KHSX. Gửi báo cáo để phần này xuất hiện trong Công việc. QC và nhập kho theo từng phần; báo cáo tiến độ không tạo phần lô.HủyLưu thông tin",
       "fields": [
         {
           "name": "production_plan_id",
@@ -7005,15 +6081,19 @@
               "label": "Chọn kế hoạch sản xuất"
             },
             {
-              "value": "58",
+              "value": "299",
+              "label": "KHSX-KHACHHANG-03-02"
+            },
+            {
+              "value": "298",
               "label": "KHSX-KHACHHANG-05"
             },
             {
-              "value": "57",
+              "value": "297",
               "label": "KHSX-KHACHHANG-04"
             },
             {
-              "value": "55",
+              "value": "295",
               "label": "KHSX-KHACHHANG-02"
             }
           ]
@@ -7024,8 +6104,8 @@
           "label": "Ngày hoàn thành phần này *",
           "required": true,
           "disabled": false,
-          "min": "2026-10-29",
-          "max": "",
+          "min": "",
+          "max": "2026-11-01",
           "step": ""
         },
         {
@@ -7051,82 +6131,8 @@
   {
     "username": "workshop",
     "module": "exception-proposals",
-    "title": "Xử lý ngoại lệ",
+    "title": "Phê duyệt đề xuất ngoại lệ",
     "url": "/approvals/exceptions?module=exception-proposals",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "workshop",
-    "module": "tasks",
-    "title": "Quản lý công việc",
-    "url": "/tasks?module=tasks",
     "status": 200,
     "fields": [
       {
@@ -7222,108 +6228,6 @@
   },
   {
     "username": "workshop",
-    "module": "reports/stock-documents",
-    "title": "Báo cáo nhập / xuất",
-    "url": "/reports/stock-documents?module=reports%2Fstock-documents",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "warehouse_id",
-        "type": "text"
-      },
-      {
-        "name": "from",
-        "type": "date"
-      },
-      {
-        "name": "to",
-        "type": "date"
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "workshop",
-    "module": "warehouse-records",
-    "title": "Hồ sơ kho tổng hợp",
-    "url": "/warehouse/records?module=warehouse-records",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "workshop",
     "module": "notifications",
     "title": "Thông báo",
     "url": "/notifications?module=notifications",
@@ -7410,7 +6314,7 @@
   {
     "username": "workshop2",
     "module": "stock-requests",
-    "title": "Yêu cầu nhập / xuất",
+    "title": "Yêu cầu nhập / xuất kho",
     "url": "/workshop/requests?module=stock-requests",
     "status": 200,
     "fields": [
@@ -7480,7 +6384,7 @@
     "createEnabled": true,
     "createForm": {
       "open": true,
-      "text": "SWEET BAKERY / CHI TIẾTGửi yêu cầu nhập / xuất kho✕Thao tác *Nhập khoXuất khoMục đích *Nhập nguyên vật liệu từ kế hoạch muaNhập thành phẩm từ báo cáo thành phẩmKế hoạch mua nguyên vật liệu *Kế hoạch bánXưởng phụ trách *XUONG-02 · Xưởng edxnKho *KHO-03 · Kho bao bì đóng gói bánhKHO-02 · Kho bánh đóng góiKHO-01 · Kho nguyên liệu làm bánhQuản lý kho phụ trách *Quản lý khoNgày giờ đề nghị thực hiện *Ghi chúChưa có nguồn phù hợp. Nhập nguyên vật liệu cần đơn mua; nhập thành phẩm cần báo cáo đã gửi.HủyGửi yêu cầu",
+      "text": "SWEET BAKERY / CHI TIẾTGửi yêu cầu nhập / xuất kho✕Thao tác *Nhập khoXuất khoMục đích *Nhập nguyên vật liệu từ kế hoạch muaNhập thành phẩm từ báo cáo thành phẩmKế hoạch mua nguyên vật liệu *KHMUA-NOIBO-13KHMUA-NOIBO-12KHMUA-NOIBO-11KHMUA-NOIBO-10KHMUA-NOIBO-07KHMUA-NOIBO-06Kế hoạch bánXưởng phụ trách *XUONG-02 · Xưởng edxnKho *Kho nguyên vật liệu[DEMO KK-AP-DUNG] Kho kiểm kê riêng[DEMO KK-DUYET] Kho kiểm kê riêng[DEMO KK-CHENH-LECH] Kho kiểm kê riêng[DEMO KK-BAO-CAO] Kho kiểm kê riêng[DEMO KK-BIEN-BAN] Kho kiểm kê riêng[DEMO KK-DEM] Kho kiểm kê riêng[DEMO KK-CHO] Kho kiểm kê riêngKho thử UC nhập xuấtQuản lý kho phụ trách *Quản lý khoNgày giờ đề nghị thực hiện *Ghi chúGhi chúHủyGửi yêu cầu",
       "fields": [
         {
           "name": "request_direction",
@@ -7522,7 +6426,32 @@
           "label": "Kế hoạch mua nguyên vật liệu *",
           "required": true,
           "disabled": false,
-          "options": []
+          "options": [
+            {
+              "value": "409",
+              "label": "KHMUA-NOIBO-13"
+            },
+            {
+              "value": "408",
+              "label": "KHMUA-NOIBO-12"
+            },
+            {
+              "value": "407",
+              "label": "KHMUA-NOIBO-11"
+            },
+            {
+              "value": "406",
+              "label": "KHMUA-NOIBO-10"
+            },
+            {
+              "value": "403",
+              "label": "KHMUA-NOIBO-07"
+            },
+            {
+              "value": "402",
+              "label": "KHMUA-NOIBO-06"
+            }
+          ]
         },
         {
           "name": "sale_plan_id",
@@ -7553,16 +6482,40 @@
           "disabled": false,
           "options": [
             {
-              "value": "3",
-              "label": "KHO-03 · Kho bao bì đóng gói bánh"
+              "value": "15",
+              "label": "Kho nguyên vật liệu"
             },
             {
-              "value": "2",
-              "label": "KHO-02 · Kho bánh đóng gói"
+              "value": "11",
+              "label": "[DEMO KK-AP-DUNG] Kho kiểm kê riêng"
             },
             {
-              "value": "1",
-              "label": "KHO-01 · Kho nguyên liệu làm bánh"
+              "value": "10",
+              "label": "[DEMO KK-DUYET] Kho kiểm kê riêng"
+            },
+            {
+              "value": "9",
+              "label": "[DEMO KK-CHENH-LECH] Kho kiểm kê riêng"
+            },
+            {
+              "value": "8",
+              "label": "[DEMO KK-BAO-CAO] Kho kiểm kê riêng"
+            },
+            {
+              "value": "7",
+              "label": "[DEMO KK-BIEN-BAN] Kho kiểm kê riêng"
+            },
+            {
+              "value": "6",
+              "label": "[DEMO KK-DEM] Kho kiểm kê riêng"
+            },
+            {
+              "value": "5",
+              "label": "[DEMO KK-CHO] Kho kiểm kê riêng"
+            },
+            {
+              "value": "4",
+              "label": "Kho thử UC nhập xuất"
             }
           ]
         },
@@ -7585,7 +6538,7 @@
           "label": "Ngày giờ đề nghị thực hiện *",
           "required": true,
           "disabled": false,
-          "min": "2026-10-29T00:00",
+          "min": "2026-11-01T00:00",
           "max": "",
           "step": ""
         },
@@ -7603,7 +6556,7 @@
   {
     "username": "workshop2",
     "module": "stock-documents",
-    "title": "Phiếu nhập / xuất",
+    "title": "Hồ sơ nhập / xuất kho",
     "url": "/warehouse/documents?module=stock-documents",
     "status": 200,
     "fields": [
@@ -7677,7 +6630,7 @@
   {
     "username": "workshop2",
     "module": "production-plans",
-    "title": "Kế hoạch sản xuất",
+    "title": "Kế hoạch được giao",
     "url": "/production/plans?module=production-plans",
     "status": 200,
     "fields": [
@@ -7998,8 +6951,8 @@
           "label": "Ngày hoàn thành phần này *",
           "required": true,
           "disabled": false,
-          "min": "2026-10-29",
-          "max": "",
+          "min": "",
+          "max": "2026-11-01",
           "step": ""
         },
         {
@@ -8025,82 +6978,8 @@
   {
     "username": "workshop2",
     "module": "exception-proposals",
-    "title": "Xử lý ngoại lệ",
+    "title": "Phê duyệt đề xuất ngoại lệ",
     "url": "/approvals/exceptions?module=exception-proposals",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "workshop2",
-    "module": "tasks",
-    "title": "Quản lý công việc",
-    "url": "/tasks?module=tasks",
     "status": 200,
     "fields": [
       {
@@ -8188,108 +7067,6 @@
       {
         "name": "as_of",
         "type": "datetime-local"
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "workshop2",
-    "module": "reports/stock-documents",
-    "title": "Báo cáo nhập / xuất",
-    "url": "/reports/stock-documents?module=reports%2Fstock-documents",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "warehouse_id",
-        "type": "text"
-      },
-      {
-        "name": "from",
-        "type": "date"
-      },
-      {
-        "name": "to",
-        "type": "date"
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "workshop2",
-    "module": "warehouse-records",
-    "title": "Hồ sơ kho tổng hợp",
-    "url": "/warehouse/records?module=warehouse-records",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
       }
     ],
     "createEnabled": false,
@@ -8384,7 +7161,7 @@
   {
     "username": "workshop3",
     "module": "stock-requests",
-    "title": "Yêu cầu nhập / xuất",
+    "title": "Yêu cầu nhập / xuất kho",
     "url": "/workshop/requests?module=stock-requests",
     "status": 200,
     "fields": [
@@ -8454,7 +7231,7 @@
     "createEnabled": true,
     "createForm": {
       "open": true,
-      "text": "SWEET BAKERY / CHI TIẾTGửi yêu cầu nhập / xuất kho✕Thao tác *Nhập khoXuất khoMục đích *Nhập nguyên vật liệu từ kế hoạch muaNhập thành phẩm từ báo cáo thành phẩmKế hoạch mua nguyên vật liệu *Kế hoạch bánXưởng phụ trách *XUONG-03 · Xưởng trnvnthKho *KHO-03 · Kho bao bì đóng gói bánhKHO-02 · Kho bánh đóng góiKHO-01 · Kho nguyên liệu làm bánhQuản lý kho phụ trách *Quản lý khoNgày giờ đề nghị thực hiện *Ghi chúChưa có nguồn phù hợp. Nhập nguyên vật liệu cần đơn mua; nhập thành phẩm cần báo cáo đã gửi.HủyGửi yêu cầu",
+      "text": "SWEET BAKERY / CHI TIẾTGửi yêu cầu nhập / xuất kho✕Thao tác *Nhập khoXuất khoMục đích *Nhập nguyên vật liệu từ kế hoạch muaNhập thành phẩm từ báo cáo thành phẩmKế hoạch mua nguyên vật liệu *KHMUA-NOIBO-13KHMUA-NOIBO-12KHMUA-NOIBO-11KHMUA-NOIBO-10KHMUA-NOIBO-07KHMUA-NOIBO-06Kế hoạch bánXưởng phụ trách *XUONG-03 · Xưởng trnvnthKho *Kho nguyên vật liệu[DEMO KK-AP-DUNG] Kho kiểm kê riêng[DEMO KK-DUYET] Kho kiểm kê riêng[DEMO KK-CHENH-LECH] Kho kiểm kê riêng[DEMO KK-BAO-CAO] Kho kiểm kê riêng[DEMO KK-BIEN-BAN] Kho kiểm kê riêng[DEMO KK-DEM] Kho kiểm kê riêng[DEMO KK-CHO] Kho kiểm kê riêngKho thử UC nhập xuấtQuản lý kho phụ trách *Quản lý khoNgày giờ đề nghị thực hiện *Ghi chúGhi chúHủyGửi yêu cầu",
       "fields": [
         {
           "name": "request_direction",
@@ -8496,7 +7273,32 @@
           "label": "Kế hoạch mua nguyên vật liệu *",
           "required": true,
           "disabled": false,
-          "options": []
+          "options": [
+            {
+              "value": "409",
+              "label": "KHMUA-NOIBO-13"
+            },
+            {
+              "value": "408",
+              "label": "KHMUA-NOIBO-12"
+            },
+            {
+              "value": "407",
+              "label": "KHMUA-NOIBO-11"
+            },
+            {
+              "value": "406",
+              "label": "KHMUA-NOIBO-10"
+            },
+            {
+              "value": "403",
+              "label": "KHMUA-NOIBO-07"
+            },
+            {
+              "value": "402",
+              "label": "KHMUA-NOIBO-06"
+            }
+          ]
         },
         {
           "name": "sale_plan_id",
@@ -8527,16 +7329,40 @@
           "disabled": false,
           "options": [
             {
-              "value": "3",
-              "label": "KHO-03 · Kho bao bì đóng gói bánh"
+              "value": "18",
+              "label": "Kho nguyên vật liệu"
             },
             {
-              "value": "2",
-              "label": "KHO-02 · Kho bánh đóng gói"
+              "value": "11",
+              "label": "[DEMO KK-AP-DUNG] Kho kiểm kê riêng"
             },
             {
-              "value": "1",
-              "label": "KHO-01 · Kho nguyên liệu làm bánh"
+              "value": "10",
+              "label": "[DEMO KK-DUYET] Kho kiểm kê riêng"
+            },
+            {
+              "value": "9",
+              "label": "[DEMO KK-CHENH-LECH] Kho kiểm kê riêng"
+            },
+            {
+              "value": "8",
+              "label": "[DEMO KK-BAO-CAO] Kho kiểm kê riêng"
+            },
+            {
+              "value": "7",
+              "label": "[DEMO KK-BIEN-BAN] Kho kiểm kê riêng"
+            },
+            {
+              "value": "6",
+              "label": "[DEMO KK-DEM] Kho kiểm kê riêng"
+            },
+            {
+              "value": "5",
+              "label": "[DEMO KK-CHO] Kho kiểm kê riêng"
+            },
+            {
+              "value": "4",
+              "label": "Kho thử UC nhập xuất"
             }
           ]
         },
@@ -8559,7 +7385,7 @@
           "label": "Ngày giờ đề nghị thực hiện *",
           "required": true,
           "disabled": false,
-          "min": "2026-10-29T00:00",
+          "min": "2026-11-01T00:00",
           "max": "",
           "step": ""
         },
@@ -8577,7 +7403,7 @@
   {
     "username": "workshop3",
     "module": "stock-documents",
-    "title": "Phiếu nhập / xuất",
+    "title": "Hồ sơ nhập / xuất kho",
     "url": "/warehouse/documents?module=stock-documents",
     "status": 200,
     "fields": [
@@ -8651,7 +7477,7 @@
   {
     "username": "workshop3",
     "module": "production-plans",
-    "title": "Kế hoạch sản xuất",
+    "title": "Kế hoạch được giao",
     "url": "/production/plans?module=production-plans",
     "status": 200,
     "fields": [
@@ -8972,8 +7798,8 @@
           "label": "Ngày hoàn thành phần này *",
           "required": true,
           "disabled": false,
-          "min": "2026-10-29",
-          "max": "",
+          "min": "",
+          "max": "2026-11-01",
           "step": ""
         },
         {
@@ -8999,82 +7825,8 @@
   {
     "username": "workshop3",
     "module": "exception-proposals",
-    "title": "Xử lý ngoại lệ",
+    "title": "Phê duyệt đề xuất ngoại lệ",
     "url": "/approvals/exceptions?module=exception-proposals",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "workshop3",
-    "module": "tasks",
-    "title": "Quản lý công việc",
-    "url": "/tasks?module=tasks",
     "status": 200,
     "fields": [
       {
@@ -9162,108 +7914,6 @@
       {
         "name": "as_of",
         "type": "datetime-local"
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "workshop3",
-    "module": "reports/stock-documents",
-    "title": "Báo cáo nhập / xuất",
-    "url": "/reports/stock-documents?module=reports%2Fstock-documents",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "warehouse_id",
-        "type": "text"
-      },
-      {
-        "name": "from",
-        "type": "date"
-      },
-      {
-        "name": "to",
-        "type": "date"
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "workshop3",
-    "module": "warehouse-records",
-    "title": "Hồ sơ kho tổng hợp",
-    "url": "/warehouse/records?module=warehouse-records",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
       }
     ],
     "createEnabled": false,
@@ -9346,9 +7996,9 @@
   },
   {
     "username": "director",
-    "module": "customer-returns",
-    "title": "Hàng khách trả",
-    "url": "/customer-returns?module=customer-returns",
+    "module": "customer-orders",
+    "title": "Đơn hàng",
+    "url": "/customer/orders?module=customer-orders",
     "status": 200,
     "fields": [
       {
@@ -9421,7 +8071,7 @@
   {
     "username": "director",
     "module": "business-plans",
-    "title": "Kế hoạch mua / bán",
+    "title": "Phê duyệt kế hoạch mua / bán",
     "url": "/plans?module=business-plans",
     "status": 200,
     "fields": [
@@ -9495,7 +8145,7 @@
   {
     "username": "director",
     "module": "stock-documents",
-    "title": "Phiếu nhập / xuất",
+    "title": "Hồ sơ nhập / xuất kho",
     "url": "/warehouse/documents?module=stock-documents",
     "status": 200,
     "fields": [
@@ -9569,7 +8219,7 @@
   {
     "username": "director",
     "module": "production-plans",
-    "title": "Kế hoạch sản xuất",
+    "title": "Phê duyệt kế hoạch sản xuất",
     "url": "/production/plans?module=production-plans",
     "status": 200,
     "fields": [
@@ -9643,7 +8293,7 @@
   {
     "username": "director",
     "module": "production-reports",
-    "title": "Báo cáo sản xuất",
+    "title": "Báo cáo sản xuất nhận được",
     "url": "/production/reports?module=production-reports",
     "status": 200,
     "fields": [
@@ -9717,7 +8367,7 @@
   {
     "username": "director",
     "module": "finished-reports",
-    "title": "Báo cáo thành phẩm",
+    "title": "Báo cáo thành phẩm nhận được",
     "url": "/production/finished-reports?module=finished-reports",
     "status": 200,
     "fields": [
@@ -9861,7 +8511,7 @@
     "createEnabled": true,
     "createForm": {
       "open": true,
-      "text": "SWEET BAKERY / CHI TIẾTLập đợt kiểm kê✕Nhóm hàng *Thành phẩmNguyên vật liệuLô hàng *TP-SX-56TP-SX-54Các phần của lô theo báo cáo thành phẩmBCTP-KHACHHANG-03Bánh nhân đậu xanh: 60.000 · 29/10/2026 · Đã giao kiểm tra / đã có kết quảBCTP-KHACHHANG-02Bánh nhân đậu xanh: 40.000 · 29/10/2026 · Đã giao kiểm tra / đã có kết quảTên đợt kiểm kê *Ưu tiên *Bình thườngCaoThấpBắt đầu *Kết thúc *Địa điểm *Ban kiểm kêLê Hoàng NamPhạm Thanh MaiKiểm tra QC/ACNguyễn Minh AnhTrần Ngọc HàBan kiểm kêChọn nhân viênQC/ACChọn nhân viênNhân viên lập biên bản chung *Chọn người lập biên bảnBan kiểm kê kiểm số lượng; QC/AC kiểm chất lượng. Chọn cả hai bộ phận để thực hiện cả hai nội dung trong cùng đợt.Mô tảHủyLưu thông tin",
+      "text": "SWEET BAKERY / CHI TIẾTLập đợt kiểm kê✕Nhóm hàng *Thành phẩmNguyên vật liệuLô hàng *TP-SX-296TP-SX-294Các phần của lô theo báo cáo thành phẩmBCTP-KHACHHANG-03Bánh quy cacao hộp 200g: 60.000 · 01/11/2026 · Đã giao kiểm tra / đã có kết quảBCTP-KHACHHANG-02Bánh quy cacao hộp 200g: 40.000 · 01/11/2026 · Đã giao kiểm tra / đã có kết quảTên đợt kiểm kê *Ưu tiên *Bình thườngCaoThấpBắt đầu *Kết thúc *Địa điểm *Ban kiểm kêLê Hoàng NamPhạm Thanh MaiKiểm tra QC/ACNguyễn Minh AnhTrần Ngọc HàBan kiểm kêChọn nhân viênQC/ACChọn nhân viênNhân viên lập biên bản chung *Chọn người lập biên bảnBan kiểm kê kiểm số lượng; QC/AC kiểm chất lượng. Chọn cả hai bộ phận để thực hiện cả hai nội dung trong cùng đợt.Mô tảMô tảHủyLưu thông tin",
       "fields": [
         {
           "name": "inspection_type",
@@ -9888,12 +8538,12 @@
           "disabled": false,
           "options": [
             {
-              "value": "90",
-              "label": "TP-SX-56"
+              "value": "489",
+              "label": "TP-SX-296"
             },
             {
-              "value": "84",
-              "label": "TP-SX-54"
+              "value": "483",
+              "label": "TP-SX-294"
             }
           ]
         },
@@ -9952,7 +8602,7 @@
           "label": "Bắt đầu *",
           "required": true,
           "disabled": false,
-          "min": "2026-10-29T00:00",
+          "min": "2026-11-01T00:00",
           "max": "",
           "step": ""
         },
@@ -9962,7 +8612,7 @@
           "label": "Kết thúc *",
           "required": true,
           "disabled": false,
-          "min": "2026-10-29T08:00",
+          "min": "2026-11-01T08:00",
           "max": "",
           "step": ""
         },
@@ -10034,82 +8684,8 @@
   },
   {
     "username": "director",
-    "module": "stocktake-minutes",
-    "title": "Biên bản kiểm kê",
-    "url": "/stocktake-minutes?module=stocktake-minutes",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "director",
     "module": "exception-proposals",
-    "title": "Xử lý ngoại lệ",
+    "title": "Phê duyệt xử lý hàng cách ly",
     "url": "/approvals/exceptions?module=exception-proposals",
     "status": 200,
     "fields": [
@@ -10280,34 +8856,6 @@
   },
   {
     "username": "director",
-    "module": "reports/stock-documents",
-    "title": "Báo cáo nhập / xuất",
-    "url": "/reports/stock-documents?module=reports%2Fstock-documents",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "warehouse_id",
-        "type": "text"
-      },
-      {
-        "name": "from",
-        "type": "date"
-      },
-      {
-        "name": "to",
-        "type": "date"
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "director",
     "module": "reports/stocktakes",
     "title": "Báo cáo kiểm kê",
     "url": "/reports/stocktakes?module=reports%2Fstocktakes",
@@ -10328,80 +8876,6 @@
       {
         "name": "to",
         "type": "date"
-      }
-    ],
-    "createEnabled": false,
-    "createForm": null,
-    "errors": []
-  },
-  {
-    "username": "director",
-    "module": "warehouse-records",
-    "title": "Hồ sơ kho tổng hợp",
-    "url": "/warehouse/records?module=warehouse-records",
-    "status": 200,
-    "fields": [
-      {
-        "name": "module",
-        "type": "hidden"
-      },
-      {
-        "name": "q",
-        "type": "text"
-      },
-      {
-        "name": "status",
-        "type": "select-one",
-        "options": [
-          {
-            "value": "",
-            "label": "Tất cả trạng thái"
-          },
-          {
-            "value": "SUBMITTED",
-            "label": "Đã gửi"
-          },
-          {
-            "value": "RECEIVED",
-            "label": "Đã tiếp nhận"
-          },
-          {
-            "value": "PENDING",
-            "label": "Chờ xử lý"
-          },
-          {
-            "value": "PENDING_APPROVAL",
-            "label": "Chờ duyệt"
-          },
-          {
-            "value": "APPROVED",
-            "label": "Đã duyệt"
-          },
-          {
-            "value": "DRAFT",
-            "label": "Bản nháp"
-          },
-          {
-            "value": "IN_PROGRESS",
-            "label": "Đang thực hiện"
-          },
-          {
-            "value": "COMPLETED",
-            "label": "Hoàn thành"
-          },
-          {
-            "value": "POSTED",
-            "label": "Đã ghi sổ"
-          },
-          {
-            "value": "CLOSED",
-            "label": "Đã đóng"
-          },
-          {
-            "value": "REJECTED",
-            "label": "Bị từ chối"
-          }
-        ]
       }
     ],
     "createEnabled": false,

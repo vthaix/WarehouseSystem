@@ -136,6 +136,7 @@ class BusinessPlanService {
   async get(user, id, connection = this.pool) {
     P.role(user, P.read["business-plans"]);
     const plan = await this.load(connection, id);
+    if(plan.type==='SALE'){const [[source]]=await connection.execute('SELECT o.code AS customer_order_code,c.name AS customer_name FROM customer_orders o JOIN customers c ON c.id=o.customer_id WHERE o.id=?',[plan.customer_order_id]);if(source)Object.assign(plan,source);}
     const [lines] = await connection.execute(
       "SELECT l.*,i.code AS item_code,i.name AS item_name FROM business_plan_lines l JOIN items i ON i.id=l.item_id WHERE l.business_plan_id=? ORDER BY l.id",
       [id],
@@ -144,6 +145,7 @@ class BusinessPlanService {
       ...this.present(user, plan),
       lines: lines.map((line) => ({
         ...line,
+        price_estimate:line.BangGiaUocLuong?require('../../shared/supplier-terms').parse(line.BangGiaUocLuong):null,
         id: String(line.id),
         item_id: String(line.item_id),
         business_plan_id: String(line.business_plan_id),
@@ -151,7 +153,7 @@ class BusinessPlanService {
     };
   }
 
-  async validateLines(connection, type, lines, orderId, excludeId = null, confirmed = false) {
+  async validateLines(connection, type, lines, orderId, excludeId = null, confirmed = false, estimate = true) {
     C.fail(
       !Array.isArray(lines) || !lines.length || lines.length > 100,
       "VALIDATION_ERROR",
@@ -191,6 +193,7 @@ class BusinessPlanService {
         unit_price: C.money(C.price(line.unit_price)),
       };
     });
+    if(type==='PURCHASE'&&estimate){const quotes=await require('../../shared/supplier-terms').catalogue(connection);for(const line of normalized){const quote=quotes.find(m=>m.id===line.item_id)?.estimate;if(quote){line.unit_price=quote.unit_price;line.price_estimate=quote;}}}
     if (type === "SALE") {
       const [orderLines] = await connection.execute(
         "SELECT item_id,quantity FROM customer_order_lines WHERE customer_order_id=?",
@@ -331,16 +334,17 @@ class BusinessPlanService {
         finished_report_id: null,
       };
     }
-    const orderId = body.customer_order_id || existing?.customer_order_id;
+    const finishedId=existing?.finished_report_id||body.finished_report_id||null;
+    let orderId=body.customer_order_id||existing?.customer_order_id;
+    if(!orderId&&finishedId){const [[reportOrder]]=await connection.execute('SELECT p.customer_order_id FROM finished_reports r JOIN production_plans p ON p.id=r.production_plan_id WHERE r.id=?',[finishedId]);orderId=reportOrder?.customer_order_id;}
     C.fail(
       !isId(orderId) ||
-        !isId(body.customer_id || existing?.customer_id) ||
         body.supplier_id ||
         body.production_plan_id ||
         body.source_request_id ||
         body.production_report_id,
       "VALIDATION_ERROR",
-      "Kế hoạch bán cần khách hàng và đơn hàng, không chọn nguồn sản xuất/mua nguyên vật liệu.",
+      "Kế hoạch bán cần báo cáo thành phẩm của đơn hàng gốc; không chọn nguồn mua NVL.",
     );
     const [rows] = await connection.execute(
       "SELECT customer_id,status FROM customer_orders WHERE id=? FOR UPDATE",
@@ -349,14 +353,12 @@ class BusinessPlanService {
     C.fail(
       !rows.length ||
         !["APPROVED", "IN_PROGRESS"].includes(rows[0].status) ||
-        String(rows[0].customer_id) !==
-          String(body.customer_id || existing?.customer_id),
+        (body.customer_id!==undefined&&String(rows[0].customer_id)!==String(body.customer_id)),
       "INVALID_STATE",
       "Đơn hàng không hợp lệ hoặc chưa duyệt.",
       409,
     );
-    const finishedId =
-      existing?.finished_report_id || body.finished_report_id || null;
+
     C.fail(
       !finishedId && !existing,
       "VALIDATION_ERROR",
@@ -404,7 +406,7 @@ class BusinessPlanService {
     if (source.type === "SALE") {
       if (!source.finished_report_id) return;
       const [outputs] = await connection.execute(
-        "SELECT l.item_id,o.quantity FROM finished_report_outputs o JOIN lots l ON l.id=o.lot_id WHERE o.finished_report_id=?",
+        "SELECT l.item_id,o.quantity FROM finished_report_outputs o JOIN lots l ON l.id=o.lot_id WHERE "+require('../../shared/sale-report-scope')('o')+"",
         [source.finished_report_id],
       );
       const remaining = new Map();
@@ -415,7 +417,7 @@ class BusinessPlanService {
             C.qty(String(row.quantity)),
         );
       const [allocated] = await connection.execute(
-        "SELECT l.item_id,l.quantity FROM business_plan_lines l JOIN business_plans p ON p.id=l.business_plan_id WHERE p.finished_report_id=? AND p.type='SALE' AND p.status NOT IN ('REJECTED','CANCELLED')" +
+        "SELECT l.item_id,l.quantity FROM business_plan_lines l JOIN business_plans p ON p.id=l.business_plan_id WHERE "+require('../../shared/sale-report-scope')('p')+" AND p.type='SALE' AND p.status NOT IN ('REJECTED','CANCELLED')" +
           (excludeId ? " AND p.id<>?" : "") +
           " FOR UPDATE",
         excludeId
@@ -430,7 +432,7 @@ class BusinessPlanService {
       }
       if (approving) {
         const [stock] = await connection.execute(
-          "SELECT l.item_id,b.quantity FROM finished_report_outputs o JOIN lots l ON l.id=o.lot_id JOIN inventory_balances b ON b.lot_id=l.id WHERE o.finished_report_id=? AND l.qc_status IN ('PASSED','PARTIAL') AND b.quality_bucket='AVAILABLE' AND (l.expiry_date IS NULL OR l.expiry_date>=CURRENT_DATE) ORDER BY b.id FOR UPDATE",
+          "SELECT l.item_id,b.quantity FROM finished_report_outputs o JOIN lots l ON l.id=o.lot_id JOIN inventory_balances b ON b.lot_id=l.id WHERE "+require('../../shared/sale-report-scope')('o')+" AND l.qc_status IN ('PASSED','PARTIAL') AND b.quality_bucket='AVAILABLE' AND (l.expiry_date IS NULL OR l.expiry_date>=DATE(DATE_ADD(UTC_TIMESTAMP(),INTERVAL 7 HOUR))) ORDER BY b.id FOR UPDATE",
           [source.finished_report_id],
         );
         const available = new Map();
@@ -529,7 +531,7 @@ class BusinessPlanService {
   async create(user, body, requestId) {
     P.role(user, ["PLANNER"]);
     confirmation.validate(body);
-    C.fields(body, ["confirm_plan_overage",
+    C.fields(body, ["confirm_plan_overage", "compensation_minute_id",
       "type",
       "supplier_id",
       "customer_id",
@@ -555,6 +557,10 @@ class BusinessPlanService {
         null,body.confirm_plan_overage,
       );
       await this.validatePurchaseSource(connection, source, data.lines,null,false,body.confirm_plan_overage);
+      if(body.compensation_minute_id){
+        C.fail(source.type!=='PURCHASE'||source.production_report_id||source.source_request_id||source.production_plan_id,'VALIDATION_ERROR','Kế hoạch mua bù chỉ sử dụng biên bản làm nguồn.');
+        await require('../../shared/minute-compensations').validate(connection,body.compensation_minute_id,'MATERIAL',data.lines);
+      }
       const [owners] = source.customer_id
         ? await connection.execute("SELECT id,name FROM customers WHERE id=? FOR UPDATE", [source.customer_id])
         : source.customer_order_id
@@ -583,10 +589,11 @@ class BusinessPlanService {
           data.total_amount,
         ],
       );
+      if(body.compensation_minute_id)await connection.execute('UPDATE business_plans SET MaBienBanBu=? WHERE id=?',[body.compensation_minute_id,created.insertId]);
       for (const line of data.lines)
         await connection.execute(
-          "INSERT INTO business_plan_lines (business_plan_id,item_id,quantity,unit_price) VALUES (?,?,?,?)",
-          [created.insertId, line.item_id, line.quantity, line.unit_price],
+          "INSERT INTO business_plan_lines (business_plan_id,item_id,quantity,unit_price,BangGiaUocLuong) VALUES (?,?,?,?,?)",
+          [created.insertId, line.item_id, line.quantity, line.unit_price,line.price_estimate?JSON.stringify(line.price_estimate):null],
         );
       await connection.execute(
         "INSERT INTO audit_logs (actor_id,resource_type,resource_id,action,after_data,request_id) VALUES (?,'business-plans',?,'CREATE',?,?)",
@@ -657,10 +664,11 @@ class BusinessPlanService {
         );
         for (const line of data.lines)
           await connection.execute(
-            "INSERT INTO business_plan_lines (business_plan_id,item_id,quantity,unit_price) VALUES (?,?,?,?)",
-            [id, line.item_id, line.quantity, line.unit_price],
+            "INSERT INTO business_plan_lines (business_plan_id,item_id,quantity,unit_price,BangGiaUocLuong) VALUES (?,?,?,?,?)",
+            [id, line.item_id, line.quantity, line.unit_price,line.price_estimate?JSON.stringify(line.price_estimate):null],
           );
       }
+      if(current.MaBienBanBu){const [lines]=await connection.execute('SELECT item_id,quantity FROM business_plan_lines WHERE business_plan_id=?',[id]);await require('../../shared/minute-compensations').validate(connection,current.MaBienBanBu,'MATERIAL',lines,id);}
       await connection.execute(
         "UPDATE business_plans SET supplier_id=?,planned_date=?,note=?,total_amount=?,status='PENDING_APPROVAL',rejection_reason=NULL,version=version+1 WHERE id=?",
         [
@@ -743,7 +751,7 @@ class BusinessPlanService {
             unit_price: String(line.unit_price),
           })),
           plan.customer_order_id,
-          id,body.confirm_plan_overage,
+          id,body.confirm_plan_overage,false,
         );
         await this.validatePurchaseSource(connection, source, lines, id, true,body.confirm_plan_overage);
       }

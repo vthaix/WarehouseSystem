@@ -1,0 +1,12 @@
+{
+  "originalUCs": 50,
+  "supplementalUCs": 4,
+  "tests": 951,
+  "flowParagraphs": 822,
+  "unmappedFlowParagraphs": 0,
+  "routes": 178,
+  "unmappedRoutes": 0,
+  "executedUnderNewIDs": 0,
+  "caseStatus": "Chưa chạy",
+  "scope": "Bao phủ các đoạn luồng và ánh xạ tuyến đã liệt kê; không chứng minh mọi tổ hợp đầu vào hoặc mọi nhánh code đã được thực thi."
+}

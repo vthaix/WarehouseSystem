@@ -1,9 +1,9 @@
-param([string]$Directory=(Join-Path $PSScriptRoot '../docs/review-20261030'))
+param([string]$Directory=(Join-Path $PSScriptRoot '../docs/review-20261030'),[string]$OutputName='Tuan6_DacTaUC_KemSequence_CapNhatKho_20261030.docx')
 $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $Directory=[IO.Path]::GetFullPath($Directory)
 $source=Join-Path $Directory 'NGUON_GOC.docx'
-$output=Join-Path $Directory 'Tuan6_DacTaUC_KemSequence_CapNhatKho_20261030.docx'
+$output=Join-Path $Directory $OutputName
 $plan=Get-Content -LiteralPath (Join-Path $Directory 'storage-content-plan.json') -Raw -Encoding UTF8|ConvertFrom-Json
 $uri='http://schemas.openxmlformats.org/wordprocessingml/2006/main'
 $a=[IO.Compression.ZipFile]::OpenRead($source)

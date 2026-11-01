@@ -1,0 +1,127 @@
+[
+  {
+    "name": "browser",
+    "code": 1,
+    "ms": 61927
+  },
+  {
+    "name": "ssr",
+    "code": 0,
+    "ms": 1556
+  },
+  {
+    "name": "source-imports",
+    "code": 0,
+    "ms": 9671
+  },
+  {
+    "name": "warehouse-request-workflow",
+    "code": 0,
+    "ms": 3827
+  },
+  {
+    "name": "inspection-workflow",
+    "code": 0,
+    "ms": 22448
+  },
+  {
+    "name": "accounts-catalog",
+    "code": 0,
+    "ms": 3163
+  },
+  {
+    "name": "warehouse-lookup",
+    "code": 1,
+    "ms": 31921
+  },
+  {
+    "name": "preproduction",
+    "code": 0,
+    "ms": 2626
+  },
+  {
+    "name": "customer-order",
+    "code": 0,
+    "ms": 1951
+  },
+  {
+    "name": "reset-data",
+    "code": 0,
+    "ms": 5636
+  },
+  {
+    "name": "warehouse-exceptions",
+    "code": 0,
+    "ms": 1556
+  },
+  {
+    "name": "admin-theme",
+    "code": 0,
+    "ms": 1431
+  },
+  {
+    "name": "category-images",
+    "code": 0,
+    "ms": 1184
+  },
+  {
+    "name": "planning-confirmation",
+    "code": 0,
+    "ms": 1531
+  },
+  {
+    "name": "workspace-ux",
+    "code": 0,
+    "ms": 5870
+  },
+  {
+    "name": "actor-storage",
+    "code": 0,
+    "ms": 5299
+  },
+  {
+    "name": "workshop-storage",
+    "code": 1,
+    "ms": 1129
+  },
+  {
+    "name": "supplier-terms",
+    "code": 0,
+    "ms": 1785
+  },
+  {
+    "name": "receipt-remaining",
+    "code": 0,
+    "ms": 1268
+  },
+  {
+    "name": "purchase-plan-check",
+    "code": 0,
+    "ms": 2749
+  },
+  {
+    "name": "sale-qc-defaults",
+    "code": 0,
+    "ms": 1751
+  },
+  {
+    "name": "minute-compensations",
+    "code": 0,
+    "ms": 1180
+  },
+  {
+    "name": "pending-work",
+    "code": 0,
+    "ms": 1417
+  },
+  {
+    "name": "monolith-role-audit",
+    "code": 0,
+    "ms": 21013
+  },
+  {
+    "name": "monolith-export-audit",
+    "code": 1,
+    "ms": 31164
+  }
+]

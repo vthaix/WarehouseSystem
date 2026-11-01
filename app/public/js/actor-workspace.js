@@ -23,7 +23,10 @@
    for(const r of result.data){const b=document.createElement('button');b.type='button';b.className='posted-document';b.innerHTML='<span><strong>'+esc(r.code)+'</strong><small>'+esc(format(r.posted_at,'posted_at'))+'</small></span><span>Xem phiếu →</span>';b.onclick=async()=>{try{detail((await api('stock-documents/'+r.id)).data);}catch(e){toast(e.message);}};list.append(b);}section.append(list);
   }catch(e){section.insertAdjacentHTML('beforeend',errorHTML(e));}
  }
- loadTable=async function(){await baseLoad();itemCards();supplierLabels();await history();};
+ function lotGroups(){if(current!=='lots')return;const target=document.querySelector('#table'),pager=target?.querySelector('.pagination');if(!target)return;const groups=new Map();cached.forEach((r,index)=>{const key=r.lot_header_code||r.code;if(!groups.has(key))groups.set(key,[]);groups.get(key).push({...r,index});});target.innerHTML=[...groups].map(([key,rows])=>'<details class="lot-summary"><summary><strong>'+esc(key)+'</strong><span>'+rows.length+' dòng · Xem trong lô</span></summary>'+rows.map(r=>'<div class="lot-line"><span>'+esc(r.item_name)+' · '+esc(format(r.received_quantity))+' · '+esc(labels[r.qc_status]||r.qc_status)+'</span><button class="button small" data-lot-detail="'+r.index+'">Chi tiết</button></div>').join('')+'</details>').join('');if(pager)target.append(pager);target.querySelectorAll('[data-lot-detail]').forEach(b=>b.onclick=()=>showDetail(cached[Number(b.dataset.lotDetail)]));
+ for(const [index,entry]of [...groups].entries()){const details=target.querySelectorAll('.lot-summary')[index],header=entry[1][0].lot_header_id;details.ontoggle=async()=>{if(!details.open||details.dataset.loaded||!header)return;details.dataset.loaded='true';try{const result=await api('lots?lot_header_id='+encodeURIComponent(header)+'&per_page=100');details.querySelector('summary span').textContent=result.data.length+' dòng · Xem trong lô';details.querySelectorAll('.lot-line').forEach(n=>n.remove());for(const r of result.data){const line=document.createElement('div');line.className='lot-line';line.innerHTML='<span>'+esc(r.item_name)+' · '+esc(format(r.received_quantity))+' · '+esc(labels[r.qc_status]||r.qc_status)+'</span><button class="button small">Chi tiết</button>';line.querySelector('button').onclick=()=>showDetail(r);details.append(line);}}catch(e){delete details.dataset.loaded;toast(e.message);}};}
+ }
+ loadTable=async function(){await baseLoad();itemCards();supplierLabels();lotGroups();await history();};
  detail=function(r){baseDetail(r);if(current==='suppliers'){const box=document.createElement('section');box.className='form-section';box.innerHTML='<h3>Mặt hàng cung cấp</h3><div class="supplier-chips">'+(r.supplied_items||[]).map(i=>'<span>'+esc(i.name)+'</span>').join('')+'</div>';modalBody.querySelector('.detail-grid')?.after(box);}
   if(warehouseModules.includes(current)&&has(['WAREHOUSE_MANAGER'])&&r.status!=='POSTED'){
    const button=document.createElement('button');button.className='button';button.textContent='Xem phân công và phần chưa thực hiện';button.onclick=async()=>{try{
@@ -37,10 +40,11 @@
  };
  async function locationFields(record={}){
   if(current!=='warehouse-locations'||!document.querySelector('#data-form'))return;
-  const categories=await options('categories');const form=document.querySelector('#data-form');
+  const form=document.querySelector('#data-form');const categories=await options('categories');
+  if(current!=='warehouse-locations'||!form?.isConnected||!modal.open)return;
   form.querySelector('.form-grid').insertAdjacentHTML('beforeend',inputField('zone_name','text',false,[],record.zone_name||'')+inputField('zone_category_id','select',false,[{id:'',name:'Khu chung / chưa phân loại'},...categories],record.zone_category_id||'')+inputField('depth','number',true,[],record.depth||1));
  }
  createForm=async function(...args){await baseCreate(...args);await locationFields();};
  editForm=async function(r){await baseEdit(r);await locationFields(r);};
- window.addEventListener('DOMContentLoaded',()=>{if(!user)return;itemCards();supplierLabels();history();});
+ window.addEventListener('DOMContentLoaded',()=>{if(!user)return;itemCards();supplierLabels();lotGroups();history();});
 })();

@@ -309,7 +309,7 @@ class ProductionPlanService {
   async create(user, body, requestId) {
     P.role(user, ["PLANNER"]);
     confirmation.validate(body);
-    C.fields(body, ["confirm_plan_overage",
+    C.fields(body, ["confirm_plan_overage", "compensation_minute_id",
       "customer_order_id",
       "workshop_id",
       "start_date",
@@ -359,6 +359,7 @@ class ProductionPlanService {
         "FINISHED_PRODUCT",
         "quantity",
       );
+      if(body.compensation_minute_id)await require('../../shared/minute-compensations').validate(connection,body.compensation_minute_id,'FINISHED_PRODUCT',outputs,null,body);
       C.fail(
         body.material_source &&
           !["RECIPE", "MANUAL"].includes(body.material_source),
@@ -398,7 +399,7 @@ class ProductionPlanService {
         const key = String(line.item_id);
         C.fail(!remaining.has(key),'SOURCE_MISMATCH','Mặt hàng không thuộc đơn hàng nguồn.');
         const rest = (remaining.get(key) || 0n) - C.qty(String(line.quantity));
-        confirmation.check(rest < 0n,body.confirm_plan_overage,"Tổng kế hoạch vượt số lượng đơn hàng.");
+        confirmation.check(rest < 0n,!!body.compensation_minute_id||body.confirm_plan_overage,"Tổng kế hoạch vượt số lượng đơn hàng.");
         remaining.set(key, rest);
       }
       const [[customer]] = await connection.execute("SELECT c.id,c.name FROM customer_orders o JOIN customers c ON c.id=o.customer_id WHERE o.id=? FOR UPDATE", [body.customer_order_id]);
@@ -419,6 +420,7 @@ class ProductionPlanService {
         ],
       );
       id = created.insertId;
+      if(body.compensation_minute_id)await connection.execute('UPDATE production_plans SET MaBienBanBu=? WHERE id=?',[body.compensation_minute_id,id]);
       for (const line of outputs)
         await connection.execute(
           "INSERT INTO production_plan_outputs (production_plan_id,item_id,quantity) VALUES (?,?,?)",
@@ -597,6 +599,7 @@ class ProductionPlanService {
               "MATERIAL",
               "required_quantity",
             );
+      if(plan.MaBienBanBu){const [saved]=await connection.execute('SELECT item_id,quantity FROM production_plan_outputs WHERE production_plan_id=?',[id]);await require('../../shared/minute-compensations').validate(connection,plan.MaBienBanBu,'FINISHED_PRODUCT',outputs||saved,id,{customer_order_id:plan.customer_order_id,workshop_id:workshopId});}
       if (outputs) {
         const [orderLines] = await connection.execute(
           "SELECT item_id,quantity FROM customer_order_lines WHERE customer_order_id=?",
@@ -616,7 +619,7 @@ class ProductionPlanService {
           const key = String(line.item_id);
           C.fail(!remaining.has(key),'SOURCE_MISMATCH','Mặt hàng không thuộc đơn hàng nguồn.');
         const rest = (remaining.get(key) || 0n) - C.qty(String(line.quantity));
-          confirmation.check(rest < 0n,body.confirm_plan_overage,"Tổng kế hoạch vượt số lượng đơn hàng.");
+          confirmation.check(rest < 0n,!!plan.MaBienBanBu||body.confirm_plan_overage,"Tổng kế hoạch vượt số lượng đơn hàng.");
           remaining.set(key, rest);
         }
         await connection.execute(
@@ -738,6 +741,7 @@ class ProductionPlanService {
       C.version(plan, body.version);
       C.state(plan, ["DRAFT"]);
       if (body.decision === "APPROVE") {
+        if(plan.MaBienBanBu){const [saved]=await connection.execute('SELECT item_id,quantity FROM production_plan_outputs WHERE production_plan_id=?',[id]);await require('../../shared/minute-compensations').validate(connection,plan.MaBienBanBu,'FINISHED_PRODUCT',saved,id,plan);}
         C.fail(!orders.length, 'NOT_FOUND', 'Không tìm thấy đơn nguồn.', 404);
         require('../../shared/planning-dates').window(asDate(plan.start_date), asDate(plan.end_date), orders[0].latest_delivery_date);
         C.fail(
@@ -765,7 +769,7 @@ class ProductionPlanService {
           const key = String(line.item_id);
           C.fail(!remaining.has(key),'SOURCE_MISMATCH','Mặt hàng không thuộc đơn hàng nguồn.');
         const rest = (remaining.get(key) || 0n) - C.qty(String(line.quantity));
-          confirmation.check(rest < 0n,body.confirm_plan_overage,"Kế hoạch vượt số lượng đơn hàng.");
+          confirmation.check(rest < 0n,!!plan.MaBienBanBu||body.confirm_plan_overage,"Kế hoạch vượt số lượng đơn hàng.");
           remaining.set(key, rest);
         }
         await connection.execute(

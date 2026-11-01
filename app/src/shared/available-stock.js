@@ -10,7 +10,7 @@ async function availableStock(connection, itemIds) {
       WHERE a.lot_id=b.lot_id AND a.location_id=b.location_id AND a.quality_bucket='AVAILABLE' AND t.task_type='WAREHOUSE_OUT' AND t.status<>'CANCELLED'),0) AS reserved
     FROM inventory_balances b JOIN lots l ON l.id=b.lot_id JOIN warehouse_locations loc ON loc.id=b.location_id
     JOIN warehouses w ON w.id=loc.warehouse_id WHERE b.quality_bucket='AVAILABLE' AND w.is_active=1
-    AND l.qc_status IN ('PASSED','PARTIAL') AND (l.expiry_date IS NULL OR l.expiry_date>=CURRENT_DATE)
+    AND l.qc_status IN ('PASSED','PARTIAL') AND (l.expiry_date IS NULL OR l.expiry_date>=DATE(DATE_ADD(UTC_TIMESTAMP(),INTERVAL 7 HOUR)))
     AND l.item_id IN (${itemIds.map(() => "?").join(",")}) ORDER BY b.lot_id,b.location_id FOR UPDATE`,
     itemIds,
   );

@@ -1,0 +1,10 @@
+﻿{
+    "sourceUntouched":  true,
+    "pass":  123,
+    "sha256":  "F817F4EE4D399A84678B86A1B2D2E0400C29C6A242D96D417CC29381263CEA14",
+    "fail":  0,
+    "output":  "DacTa_TestCase_KetQua_20261101.docx",
+    "total":  951,
+    "notRun":  828,
+    "matchedEvidence":  123
+}

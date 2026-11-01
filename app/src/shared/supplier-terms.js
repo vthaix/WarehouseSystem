@@ -1,0 +1,7 @@
+const C=require('../services/domain/core');
+const parse=v=>typeof v==='string'?JSON.parse(v):v||[];
+function days(value){C.fail(!Number.isInteger(Number(value))||Number(value)<1||Number(value)>36500,'VALIDATION_ERROR','Hạn dùng NCC phải là số ngày nguyên từ 1 đến 36.500.');return Number(value);}
+function expiry(manufactured,life){C.date(manufactured,'manufactured_date');const d=new Date(manufactured+'T00:00:00Z');d.setUTCDate(d.getUTCDate()+days(life));return d.toISOString().slice(0,10);}
+function quote(offers){if(!offers.length)return null;const prices=offers.map(o=>C.price(String(o.unit_price)));const sum=prices.reduce((a,b)=>a+b,0n),n=BigInt(prices.length);return {method:'SUPPLIER_AVERAGE',unit_price:C.money((sum+n/2n)/n),min_unit_price:C.money(prices.reduce((a,b)=>a<b?a:b)),max_unit_price:C.money(prices.reduce((a,b)=>a>b?a:b)),offers};}
+async function catalogue(c){const [materials]=await c.execute("SELECT i.id,i.name,n.BangGiaNCC FROM items i JOIN NguyenVatLieu n ON n.MaMatHang=i.id WHERE i.is_active=1");const [suppliers]=await c.execute('SELECT id,name FROM suppliers WHERE is_active=1');return materials.map(m=>({id:String(m.id),name:m.name,estimate:quote(parse(m.BangGiaNCC).filter(o=>suppliers.some(s=>String(s.id)===String(o.supplier_id))).map(o=>({...o,supplier_name:suppliers.find(s=>String(s.id)===String(o.supplier_id)).name})))}));}
+module.exports={parse,days,expiry,quote,catalogue};

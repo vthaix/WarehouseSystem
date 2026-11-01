@@ -470,6 +470,16 @@ function tableData(rows) {
   );
   return `<div class="table-wrap"><table><thead><tr>${keys.map((k) => `<th>${esc(fieldLabel(k))}</th>`).join("")}</tr></thead><tbody>${rows.map((r) => `<tr>${keys.map((k) => `<td>${esc(format(r[k],k,r))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
 }
+function groupedLotHTML(rows){
+ const groups=new Map();for(const row of rows){const key=row.lot_header_code||row.lot_header_id||row.lot_code||row.code;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(row);}
+ return [...groups].map(([key,lines])=>'<details class="lot-summary"><summary><strong>'+esc(String(key))+'</strong><span>'+lines.length+' dòng hàng · Xem chi tiết</span></summary>'+tableData(lines)+'</details>').join('');
+}
+function wireQcQuantities(root,received,passed,failed){
+ const inputs=[received,passed,failed].map(selector=>root.querySelector(selector));if(inputs.some(x=>!x))return;
+ const qty=input=>{const raw=input.value.replace(',','.');if(!/^\d+(\.\d{1,3})?$/.test(raw))return null;const [a,b='']=raw.split('.');return BigInt(a)*1000n+BigInt(b.padEnd(3,'0'));};
+ const decimal=n=>(n/1000n)+'.'+String(n%1000n).padStart(3,'0');
+ inputs.forEach((input,index)=>input.addEventListener('input',()=>{const total=qty(inputs[0]),value=qty(index===1?inputs[1]:inputs[2]);if(total===null||value===null||value>total)return;inputs[index===1?2:1].value=decimal(total-value);}));
+}
 const fieldNames = warehouseNavigation.fieldNames;
 function fieldLabel(k) {
   return warehousePresentation.fieldLabel(k);

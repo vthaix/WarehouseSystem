@@ -27,9 +27,9 @@ test('explicit simulation permits early start and records consent in audit',asyn
   const audit=writes.find(w=>w.sql.startsWith('INSERT INTO audit_logs'));
   assert.equal(JSON.parse(audit.args[4]).simulate_early_start,true);
 });
-test('simulation cannot replace actual lots or director permission',async()=>{
+test('simulation cannot replace a purchase source or director permission',async()=>{
   const {service}=fixture(false);
-  await assert.rejects(service.action(director,'1',{version:1,simulate_early_start:true},'start','req'),e=>e.code==='ACTUAL_LOT_REQUIRED');
+  await assert.rejects(service.action(director,'1',{version:1,simulate_early_start:true},'start','req'),e=>e.code==='SOURCE_REQUIRED');
   await assert.rejects(service.action({id:'2',roles:['QC_INSPECTOR']},'1',{version:1,simulate_early_start:true},'start','req'),e=>e.code==='FORBIDDEN');
 });
 test('simulation rejects truthy strings and is not accepted when closing',async()=>{

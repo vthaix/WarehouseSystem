@@ -175,8 +175,7 @@ class StocktakeService {
       "warehouses",
     ]);
     C.date(b.planned_date, "planned_date", true);
-    const start = new Date(b.start_at),
-      end = new Date(b.end_at);
+    const {start,end}=require('../../shared/time-rules').range(b.start_at,b.end_at);
     C.fail(
       !Number.isFinite(+start) || !Number.isFinite(+end) || end <= start,
       "VALIDATION_ERROR",

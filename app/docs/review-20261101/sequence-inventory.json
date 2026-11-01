@@ -1,0 +1,4604 @@
+﻿[
+    {
+        "text":  "Sequence UC-29 — Luồng cơ bản — Phần 1/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-29 — Luồng cơ bản — Phần 2/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-29 — Luồng cơ bản — Phần 3/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-29 — Luồng cơ bản — Phần 4/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-29 — Không có đơn hàng nào (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-29 — Đơn đã tiếp nhận hoặc không còn được phép (5.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-29 — Phiên hết hạn hoặc không có quyền (5.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-29 — Phiên hết hạn hoặc không có quyền (5.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-29 — Dữ liệu đã thay đổi hoặc không còn tồn tại (5.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-29 — Mất kết nối khi xác nhận (5.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06 — Luồng cơ bản — Phần 1/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06 — Luồng cơ bản — Phần 2/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06 — Luồng cơ bản — Phần 3/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06 — Chọn nhóm danh mục (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06 — Chọn Thêm (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06 — Chọn Xóa (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06 — Chọn Sửa (4.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06 — Không có danh mục (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06 — Phiên hết hạn hoặc không có quyền (3.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06 — Phiên hết hạn hoặc không có quyền (3.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06 — Dữ liệu đã thay đổi hoặc không còn tồn tại (3.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06 — Mất kết nối khi xác nhận (3.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.1 — Luồng cơ bản — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.1 — Luồng cơ bản — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.1 — Hủy hoặc quay lại trước xác nhận (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.1 — Tên danh mục đã tồn tại (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.1 — Dữ liệu bắt buộc bỏ trống (4.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.1 — Nhóm danh mục không hợp lệ (4.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.1 — Ảnh không hợp lệ (4.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.1 — Phiên hết hạn hoặc không có quyền (3.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.1 — Phiên hết hạn hoặc không có quyền (3.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.1 — Dữ liệu đã thay đổi hoặc không còn tồn tại (3.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.1 — Mất kết nối khi xác nhận (3.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.2 — Luồng cơ bản — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.2 — Luồng cơ bản — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.2 — Hủy hoặc quay lại trước xác nhận (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.2 — Danh mục đang được sử dụng (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.2 — Phiên hết hạn hoặc không có quyền (3.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.2 — Phiên hết hạn hoặc không có quyền (3.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.2 — Dữ liệu đã thay đổi hoặc không còn tồn tại (3.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.2 — Mất kết nối khi xác nhận (3.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.3 — Luồng cơ bản — Phần 1/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.3 — Luồng cơ bản — Phần 2/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.3 — Luồng cơ bản — Phần 3/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.3 — Hủy hoặc quay lại trước xác nhận (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.3 — Tên danh mục đã tồn tại (5.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.3 — Nhóm không hợp lệ hoặc không được phép đổi (5.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.3 — Ảnh không hợp lệ (5.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.3 — Bỏ trống thông tin bắt buộc (5.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.3 — Phiên hết hạn hoặc không có quyền (4.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.3 — Phiên hết hạn hoặc không có quyền (4.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.3 — Dữ liệu đã thay đổi hoặc không còn tồn tại (4.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-06.3 — Mất kết nối khi xác nhận (4.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07 — Luồng cơ bản — Phần 1/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07 — Luồng cơ bản — Phần 2/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07 — Luồng cơ bản — Phần 3/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07 — Chọn Thêm (3.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07 — Chọn Xóa (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07 — Chọn Sửa (4.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07 — Tìm kiếm hoặc lọc (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07 — Không có dữ liệu (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07 — Phiên hết hạn hoặc không có quyền (13.3) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07 — Phiên hết hạn hoặc không có quyền (13.3) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07 — Dữ liệu đã thay đổi hoặc không còn tồn tại (3.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07 — Mất kết nối khi xác nhận (3.5)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.1 — Luồng cơ bản — Phần 1/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.1 — Luồng cơ bản — Phần 2/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.1 — Luồng cơ bản — Phần 3/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.1 — Hủy hoặc quay lại trước xác nhận (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.1 — Tên đã tồn tại (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.1 — Dữ liệu để trống (3.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.1 — Nhập chữ vào dữ liệu số (3.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.1 — Nhập giá trị âm (3.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.1 — Đơn vị, danh mục hoặc dữ liệu liên quan ngừng sử dụng (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.1 — Phiên hết hạn hoặc không có quyền (3.5) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.1 — Phiên hết hạn hoặc không có quyền (3.5) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.1 — Dữ liệu đã thay đổi hoặc không còn tồn tại (3.6)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.1 — Mất kết nối khi xác nhận (3.7)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.2 — Luồng cơ bản — Phần 1/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.2 — Luồng cơ bản — Phần 2/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.2 — Luồng cơ bản — Phần 3/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.2 — Luồng cơ bản — Phần 4/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.2 — Luồng cơ bản — Phần 5/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.2 — Hủy hoặc quay lại trước xác nhận (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.2 — Dữ liệu còn tồn hoặc đang được sử dụng (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.2 — Phiên hết hạn hoặc không có quyền (4.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.2 — Phiên hết hạn hoặc không có quyền (4.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.2 — Dữ liệu đã thay đổi hoặc không còn tồn tại (4.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.2 — Mất kết nối khi xác nhận (4.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.3 — Luồng cơ bản — Phần 1/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.3 — Luồng cơ bản — Phần 2/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.3 — Luồng cơ bản — Phần 3/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.3 — Hủy hoặc quay lại trước xác nhận (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.3 — Tên bị trùng (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.3 — Sai định dạng (4.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.3 — Dữ liệu để trống (4.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.3 — Thay đổi ảnh hưởng dữ liệu đã sử dụng (4.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.3 — Phiên hết hạn hoặc không có quyền (3.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.3 — Phiên hết hạn hoặc không có quyền (3.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.3 — Dữ liệu đã thay đổi hoặc không còn tồn tại (3.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-07.3 — Mất kết nối khi xác nhận (3.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-08 — Luồng cơ bản — Phần 1/6",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-08 — Luồng cơ bản — Phần 2/6",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-08 — Luồng cơ bản — Phần 3/6",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-08 — Luồng cơ bản — Phần 4/6",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-08 — Luồng cơ bản — Phần 5/6",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-08 — Luồng cơ bản — Phần 6/6",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-08 — Tìm kiếm hoặc lọc (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-08 — Không có phiếu nhập (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-08 — Phiên hết hạn hoặc không có quyền (3.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-08 — Phiên hết hạn hoặc không có quyền (3.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-08 — Dữ liệu đã thay đổi hoặc không còn tồn tại (3.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-08 — Mất kết nối khi xác nhận (3.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-09 — Luồng cơ bản — Phần 1/6",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-09 — Luồng cơ bản — Phần 2/6",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-09 — Luồng cơ bản — Phần 3/6",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-09 — Luồng cơ bản — Phần 4/6",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-09 — Luồng cơ bản — Phần 5/6",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-09 — Luồng cơ bản — Phần 6/6",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-09 — Tìm kiếm hoặc lọc (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-09 — Không có phiếu xuất phù hợp (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-09 — Phiên hết hạn hoặc không có quyền (13.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-09 — Phiên hết hạn hoặc không có quyền (13.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-09 — Dữ liệu đã thay đổi hoặc không còn tồn tại (3.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-09 — Mất kết nối khi xác nhận (3.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-13 — Luồng cơ bản — Phần 1/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-13 — Luồng cơ bản — Phần 2/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-13 — Luồng cơ bản — Phần 3/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-13 — Luồng cơ bản — Phần 4/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-13 — Luồng cơ bản — Phần 5/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-13 — Luồng cơ bản — Phần 6/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-13 — Luồng cơ bản — Phần 7/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-13 — Luồng cơ bản — Phần 8/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-13 — Chọn nhân viên (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-13 — Chọn lô thành phẩm (3.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-13 — Chọn lô NVL sắp nhận (3.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-13 — Kiểm tra sớm trong chế độ thử nghiệm (4.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-13 — Hủy hoặc quay lại trước xác nhận (5.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-13 — Thời gian hoặc phạm vi kiểm kê không hợp lệ (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-13 — Chưa có nhân viên hoặc người lập biên bản sai phân công (4.3) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-13 — Chưa có nhân viên hoặc người lập biên bản sai phân công (4.3) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-13 — Bắt đầu trước nhận hàng hoặc kết thúc trước bắt đầu (4.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-13 — Phần lô sai, đã kiểm hoặc đang ở đợt còn hiệu lực (4.5)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-13 — Phiên hết hạn hoặc không có quyền (5.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-13 — Phiên hết hạn hoặc không có quyền (5.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-13 — Dữ liệu đã thay đổi hoặc không còn tồn tại (5.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-13 — Mất kết nối khi xác nhận (5.4) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-13 — Mất kết nối khi xác nhận (5.4) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-17 — Luồng cơ bản — Phần 1/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-17 — Luồng cơ bản — Phần 2/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-17 — Luồng cơ bản — Phần 3/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-17 — Luồng cơ bản — Phần 4/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-17 — Luồng cơ bản — Phần 5/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-17 — Luồng cơ bản — Phần 6/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-17 — Luồng cơ bản — Phần 7/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-17 — Luồng cơ bản — Phần 8/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-17 — Không đồng ý phương án (5.1) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-17 — Không đồng ý phương án (5.1) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-17 — Thiếu nội dung khi không đồng ý (5.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-17 — Không có đề xuất chờ duyệt (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-17 — Đề xuất đã được người khác xử lý (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-17 — Phiên hết hạn hoặc không có quyền (15.3) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-17 — Phiên hết hạn hoặc không có quyền (15.3) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-17 — Dữ liệu đã thay đổi hoặc không còn tồn tại (5.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-17 — Mất kết nối khi xác nhận (5.5)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-18 — Luồng cơ bản — Phần 1/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-18 — Luồng cơ bản — Phần 2/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-18 — Luồng cơ bản — Phần 3/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-18 — Luồng cơ bản — Phần 4/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-18 — Luồng cơ bản — Phần 5/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-18 — Xuất báo cáo ra file (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-18 — Từ ngày lớn hơn đến ngày (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-18 — Không có tồn kho phù hợp (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-18 — Phiên hết hạn hoặc không có quyền (3.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-18 — Phiên hết hạn hoặc không có quyền (3.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-18 — Dữ liệu đã thay đổi hoặc không còn tồn tại (3.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-18 — Mất kết nối khi xác nhận (3.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-18 — Không tải được báo cáo (4.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-19 — Luồng cơ bản — Phần 1/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-19 — Luồng cơ bản — Phần 2/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-19 — Luồng cơ bản — Phần 3/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-19 — Luồng cơ bản — Phần 4/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-19 — Luồng cơ bản — Phần 5/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-19 — Xuất báo cáo ra file (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-19 — Chủ xưởng xem hồ sơ xưởng (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-19 — Khoảng thời gian lọc không hợp lệ (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-19 — Không có phiếu xuất phù hợp (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-19 — Phiên hết hạn hoặc không có quyền (3.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-19 — Phiên hết hạn hoặc không có quyền (3.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-19 — Dữ liệu đã thay đổi hoặc không còn tồn tại (3.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-19 — Mất kết nối khi xác nhận (3.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-19 — Không tải được báo cáo (4.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-20 — Luồng cơ bản — Phần 1/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-20 — Luồng cơ bản — Phần 2/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-20 — Luồng cơ bản — Phần 3/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-20 — Luồng cơ bản — Phần 4/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-20 — Luồng cơ bản — Phần 5/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-20 — Xuất báo cáo ra file (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-20 — Chủ xưởng xem hồ sơ xưởng (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-20 — Khoảng thời gian lọc không hợp lệ (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-20 — Không có phiếu nhập phù hợp (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-20 — Phiên hết hạn hoặc không có quyền (3.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-20 — Phiên hết hạn hoặc không có quyền (3.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-20 — Dữ liệu đã thay đổi hoặc không còn tồn tại (3.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-20 — Mất kết nối khi xác nhận (3.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-20 — Không tải được báo cáo (4.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-21 — Luồng cơ bản — Phần 1/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-21 — Luồng cơ bản — Phần 2/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-21 — Luồng cơ bản — Phần 3/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-21 — Luồng cơ bản — Phần 4/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-21 — Xuất báo cáo ra file (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-21 — Khoảng thời gian lọc không hợp lệ (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-21 — Không có kiểm kê phù hợp (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-21 — Phiên hết hạn hoặc không có quyền (3.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-21 — Phiên hết hạn hoặc không có quyền (3.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-21 — Dữ liệu đã thay đổi hoặc không còn tồn tại (3.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-21 — Mất kết nối khi xác nhận (3.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-21 — Không tải được báo cáo (4.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25 — Luồng cơ bản — Phần 1/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25 — Luồng cơ bản — Phần 2/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25 — Luồng cơ bản — Phần 3/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25 — Luồng cơ bản — Phần 4/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25 — Luồng cơ bản — Phần 5/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25 — Nhân viên xem việc được giao (4.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25 — Chọn Chỉnh sửa (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25 — Chọn Xóa (4.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25 — Lập đợt kiểm kê mới (4.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25 — Danh sách công việc trống (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25 — Phiên hết hạn hoặc không có quyền (3.1) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25 — Phiên hết hạn hoặc không có quyền (3.1) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25 — Dữ liệu đã thay đổi hoặc không còn tồn tại (3.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25 — Mất kết nối khi xác nhận (3.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.1 — Luồng cơ bản — Phần 1/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.1 — Luồng cơ bản — Phần 2/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.1 — Luồng cơ bản — Phần 3/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.1 — Luồng cơ bản — Phần 4/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.1 — Luồng cơ bản — Phần 5/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.1 — Hủy hoặc quay lại trước xác nhận (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.1 — Nhập chữ vào ô số (5.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.1 — Nhập số âm (5.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.1 — Bỏ trống thông tin bắt buộc (5.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.1 — Ngày bắt đầu/kết thúc không hợp lệ (5.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.1 — Nhân viên hoặc người lập biên bản không đúng phân công (6.1) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.1 — Nhân viên hoặc người lập biên bản không đúng phân công (6.1) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.1 — Phiên hết hạn hoặc không có quyền (3.1) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.1 — Phiên hết hạn hoặc không có quyền (3.1) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.1 — Dữ liệu đã thay đổi hoặc không còn tồn tại (3.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.1 — Mất kết nối khi xác nhận (3.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.1 — Công việc không còn được phép chỉnh sửa (5.5)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.2 — Luồng cơ bản — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.2 — Luồng cơ bản — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.2 — Hủy hoặc quay lại trước xác nhận (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.2 — Công việc đang thực hiện (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.2 — Phiên hết hạn hoặc không có quyền (3.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.2 — Phiên hết hạn hoặc không có quyền (3.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.2 — Dữ liệu đã thay đổi hoặc không còn tồn tại (3.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.2 — Mất kết nối khi xác nhận (3.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-25.2 — Công việc hoàn thành, hủy hoặc phát sinh kết quả (4.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-31 — Luồng cơ bản — Phần 1/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-31 — Luồng cơ bản — Phần 2/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-31 — Luồng cơ bản — Phần 3/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-31 — Luồng cơ bản — Phần 4/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-31 — Luồng cơ bản — Phần 5/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-31 — Luồng cơ bản — Phần 6/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-31 — Luồng cơ bản — Phần 7/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-31 — Từ chối kế hoạch sản xuất (5.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-31 — Lượng dự kiến vượt nguồn (5.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-31 — Không có KHSX chờ duyệt (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-31 — KHSX không còn chờ duyệt (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-31 — Phiên hết hạn hoặc không có quyền (5.4) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-31 — Phiên hết hạn hoặc không có quyền (5.4) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-31 — Dữ liệu đã thay đổi hoặc không còn tồn tại (5.5)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-31 — Mất kết nối khi xác nhận (5.6)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-31 — Từ chối chưa nhập lý do (5.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-31 — Lịch sai hoặc vượt ngày nhận trễ nhất của đơn (4.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-14 — Luồng cơ bản — Phần 1/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-14 — Luồng cơ bản — Phần 2/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-14 — Luồng cơ bản — Phần 3/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-14 — Luồng cơ bản — Phần 4/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-14 — Xem chi tiết đơn mua (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-14 — Ghi nhận hàng thực nhận (2.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-14 — Ghi nhận hàng thực nhận (2.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-14 — Không có đơn mua (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-14 — Phiên hết hạn hoặc không có quyền (1.1) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-14 — Phiên hết hạn hoặc không có quyền (1.1) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-14 — Dữ liệu đã thay đổi hoặc không còn tồn tại (1.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-14 — Mất kết nối khi xác nhận (1.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Luồng cơ bản — Phần 1/14",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Luồng cơ bản — Phần 2/14",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Luồng cơ bản — Phần 3/14",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Luồng cơ bản — Phần 4/14",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Luồng cơ bản — Phần 5/14",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Luồng cơ bản — Phần 6/14",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Luồng cơ bản — Phần 7/14",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Luồng cơ bản — Phần 8/14",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Luồng cơ bản — Phần 9/14",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Luồng cơ bản — Phần 10/14",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Luồng cơ bản — Phần 11/14",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Luồng cơ bản — Phần 12/14",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Luồng cơ bản — Phần 13/14",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Luồng cơ bản — Phần 14/14",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Nhập nguyên vật liệu (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Nhập thành phẩm (3.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Xuất nguyên vật liệu (3.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Xuất thành phẩm (3.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Hủy hoặc quay lại trước xác nhận (3.5)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Nguồn hoặc lô không hợp lệ (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Chưa có thực nhận hoặc báo cáo thành phẩm đã gửi (3.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Thiếu thông tin hoặc số lượng không hợp lệ (6.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Không đủ điều kiện, trùng hoặc vượt lượng (7.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Phiên hết hạn hoặc không có quyền (5.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Phiên hết hạn hoặc không có quyền (5.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Dữ liệu đã thay đổi hoặc không còn tồn tại (5.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-23 — Mất kết nối khi xác nhận (5.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24 — Luồng cơ bản — Phần 1/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24 — Luồng cơ bản — Phần 2/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24 — Luồng cơ bản — Phần 3/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24 — Luồng cơ bản — Phần 4/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24 — Luồng cơ bản — Phần 5/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24 — Chọn Sửa (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24 — Chọn Xóa (4.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24 — Tìm kiếm hoặc lọc (1.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24 — Tìm kiếm/lọc không có kết quả (1.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24 — Không có yêu cầu (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24 — Phiên hết hạn hoặc không có quyền (13.1) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24 — Phiên hết hạn hoặc không có quyền (13.1) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24 — Dữ liệu đã thay đổi hoặc không còn tồn tại (3.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24 — Mất kết nối khi xác nhận (3.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24.1 — Luồng cơ bản — Phần 1/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24.1 — Luồng cơ bản — Phần 2/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24.1 — Luồng cơ bản — Phần 3/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24.1 — Luồng cơ bản — Phần 4/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24.1 — Hủy hoặc quay lại trước xác nhận (5.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24.1 — Yêu cầu đã được xử lý (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24.1 — Thông tin không hợp lệ (6.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24.1 — Phiên hết hạn hoặc không có quyền (5.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24.1 — Phiên hết hạn hoặc không có quyền (5.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24.1 — Dữ liệu đã thay đổi hoặc không còn tồn tại (5.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24.1 — Mất kết nối khi xác nhận (5.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24.1 — Vượt nhu cầu, nguồn sai hoặc yêu cầu đã phân công (6.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24.2 — Luồng cơ bản — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24.2 — Luồng cơ bản — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24.2 — Hủy hoặc quay lại trước xác nhận (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24.2 — Yêu cầu đã được xử lý (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24.2 — Phiên hết hạn hoặc không có quyền (3.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24.2 — Phiên hết hạn hoặc không có quyền (3.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24.2 — Dữ liệu đã thay đổi hoặc không còn tồn tại (3.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-24.2 — Mất kết nối khi xác nhận (3.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-27 — Luồng cơ bản — Phần 1/6",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-27 — Luồng cơ bản — Phần 2/6",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-27 — Luồng cơ bản — Phần 3/6",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-27 — Luồng cơ bản — Phần 4/6",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-27 — Luồng cơ bản — Phần 5/6",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-27 — Luồng cơ bản — Phần 6/6",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-27 — Lập đơn mua trực tiếp (3.1) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-27 — Lập đơn mua trực tiếp (3.1) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-27 — Chọn NCC và giá (5.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-27 — Hủy hoặc quay lại trước xác nhận (7.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-27 — Không có kế hoạch mua cần xử lý (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-27 — Thông tin đơn mua không hợp lệ (6.1) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-27 — Thông tin đơn mua không hợp lệ (6.1) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-27 — Phiên hết hạn hoặc không có quyền (7.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-27 — Phiên hết hạn hoặc không có quyền (7.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-27 — Dữ liệu đã thay đổi hoặc không còn tồn tại (7.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-27 — Mất kết nối khi xác nhận (7.4) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-27 — Mất kết nối khi xác nhận (7.4) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-27 — Kế hoạch chưa duyệt, sai loại, đã có đơn hoặc đã đổi (6.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-27 — Ngày nhận sai, khác kế hoạch hoặc vượt giới hạn giao (6.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-27 — Trùng NVL, NCC ngừng hoạt động, lượng hoặc giá sai (6.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Luồng cơ bản — Phần 1/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Luồng cơ bản — Phần 2/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Luồng cơ bản — Phần 3/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Luồng cơ bản — Phần 4/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Luồng cơ bản — Phần 5/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Luồng cơ bản — Phần 6/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Luồng cơ bản — Phần 7/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Luồng cơ bản — Phần 8/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Lập kế hoạch bán (3.1) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Lập kế hoạch bán (3.1) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Lập kế hoạch sản xuất (3.2) — Phần 1/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Lập kế hoạch sản xuất (3.2) — Phần 2/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Lập kế hoạch sản xuất (3.2) — Phần 3/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Lập kế hoạch mua trực tiếp (3.3) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Lập kế hoạch mua trực tiếp (3.3) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Lập từ chi tiết báo cáo (3.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Hủy hoặc quay lại trước xác nhận (7.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Lượng dự kiến vượt nguồn (5.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Số nhập âm (5.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Nhập chữ thay dữ liệu số (5.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — KHSX chưa có đơn hoặc xưởng (5.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Phiên hết hạn hoặc không có quyền (7.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Phiên hết hạn hoặc không có quyền (7.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Dữ liệu đã thay đổi hoặc không còn tồn tại (7.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Mất kết nối khi xác nhận (7.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Ngày kế hoạch hoặc ngày nhận trong quá khứ (5.5)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Kết thúc trước bắt đầu hoặc lịch vượt ngày nhận đơn (5.6)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Báo cáo sai mục đích, chưa gửi hoặc không còn được dùng (5.7)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-04 — Trùng mặt hàng, thiếu dữ liệu, lượng không dương hoặc giá âm (5.8)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05 — Luồng cơ bản — Phần 1/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05 — Luồng cơ bản — Phần 2/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05 — Luồng cơ bản — Phần 3/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05 — Luồng cơ bản — Phần 4/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05 — Luồng cơ bản — Phần 5/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05 — Luồng cơ bản — Phần 6/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05 — Luồng cơ bản — Phần 7/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05 — Chọn Sửa (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05 — Chọn Xóa (4.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05 — Tìm kiếm hoặc lọc (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05 — Không có kế hoạch (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05 — Phiên hết hạn hoặc không có quyền (13.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05 — Phiên hết hạn hoặc không có quyền (13.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05 — Dữ liệu đã thay đổi hoặc không còn tồn tại (3.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05 — Mất kết nối khi xác nhận (3.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.1 — Luồng cơ bản — kế hoạch MUA/BAN — Phần 1/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.1 — Luồng cơ bản — kế hoạch MUA/BAN — Phần 2/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.1 — Luồng cơ bản — kế hoạch MUA/BAN — Phần 3/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.1 — Luồng cơ bản — kế hoạch MUA/BAN — Phần 4/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.1 — Luồng cơ bản — kế hoạch sản xuất — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.1 — Luồng cơ bản — kế hoạch sản xuất — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.1 — Hủy hoặc quay lại trước xác nhận (1.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.1 — Lượng dự kiến vượt nguồn (4.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.1 — Thông tin nhập không hợp lệ (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.1 — Phiên hết hạn hoặc không có quyền (3.1) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.1 — Phiên hết hạn hoặc không có quyền (3.1) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.1 — Dữ liệu đã thay đổi hoặc không còn tồn tại (3.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.1 — Mất kết nối khi xác nhận (3.3) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.1 — Mất kết nối khi xác nhận (3.3) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.1 — Kế hoạch đã duyệt hoặc thực hiện (4.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.1 — Ngày, nguồn hoặc dòng mặt hàng không hợp lệ (4.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.2 — Luồng cơ bản — kế hoạch MUA/BAN — Phần 1/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.2 — Luồng cơ bản — kế hoạch MUA/BAN — Phần 2/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.2 — Luồng cơ bản — kế hoạch MUA/BAN — Phần 3/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.2 — Luồng cơ bản — kế hoạch MUA/BAN — Phần 4/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.2 — Luồng cơ bản — kế hoạch sản xuất — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.2 — Luồng cơ bản — kế hoạch sản xuất — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.2 — Hủy hoặc quay lại trước xác nhận (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.2 — Kế hoạch đã duyệt hoặc đang thực hiện (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.2 — Phiên hết hạn hoặc không có quyền (4.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.2 — Phiên hết hạn hoặc không có quyền (4.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.2 — Dữ liệu đã thay đổi hoặc không còn tồn tại (4.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-05.2 — Mất kết nối khi xác nhận (4.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-10 — Luồng cơ bản — Phần 1/10",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-10 — Luồng cơ bản — Phần 2/10",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-10 — Luồng cơ bản — Phần 3/10",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-10 — Luồng cơ bản — Phần 4/10",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-10 — Luồng cơ bản — Phần 5/10",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-10 — Luồng cơ bản — Phần 6/10",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-10 — Luồng cơ bản — Phần 7/10",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-10 — Luồng cơ bản — Phần 8/10",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-10 — Luồng cơ bản — Phần 9/10",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-10 — Luồng cơ bản — Phần 10/10",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-10 — Nhập kho một phần (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-10 — Thông tin thực nhập không hợp lệ (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-10 — Hàng chưa đạt, đã nhập hết, cách ly hoặc vượt phân công (4.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-10 — Phiên hết hạn hoặc không có quyền (5.1) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-10 — Phiên hết hạn hoặc không có quyền (5.1) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-10 — Dữ liệu đã thay đổi hoặc không còn tồn tại (5.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-10 — Mất kết nối khi xác nhận (5.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-10 — Kho khóa kiểm kê hoặc vị trí ngoài kho (4.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11 — Luồng cơ bản — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11 — Luồng cơ bản — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11 — Chọn Xuất NVL (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11 — Chọn Xuất TP (2.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11 — Phiên hết hạn hoặc không có quyền (1.1) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11 — Phiên hết hạn hoặc không có quyền (1.1) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11 — Dữ liệu đã thay đổi hoặc không còn tồn tại (1.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11 — Mất kết nối khi xác nhận (1.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.01 — Luồng cơ bản — Phần 1/13",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.01 — Luồng cơ bản — Phần 2/13",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.01 — Luồng cơ bản — Phần 3/13",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.01 — Luồng cơ bản — Phần 4/13",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.01 — Luồng cơ bản — Phần 5/13",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.01 — Luồng cơ bản — Phần 6/13",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.01 — Luồng cơ bản — Phần 7/13",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.01 — Luồng cơ bản — Phần 8/13",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.01 — Luồng cơ bản — Phần 9/13",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.01 — Luồng cơ bản — Phần 10/13",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.01 — Luồng cơ bản — Phần 11/13",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.01 — Luồng cơ bản — Phần 12/13",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.01 — Luồng cơ bản — Phần 13/13",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.01 — Chưa thể xuất theo thực tế (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.01 — Xuất một phần (3.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.01 — Tồn không đủ hoặc lô không khả dụng (6.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.01 — Sai người, lô/vị trí ngoài phân công, hết hạn hoặc cách ly (6.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.01 — Kho khóa kiểm kê hoặc dữ liệu thay đổi (6.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.01 — Phiên hết hạn hoặc không có quyền (5.1) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.01 — Phiên hết hạn hoặc không có quyền (5.1) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.01 — Dữ liệu đã thay đổi hoặc không còn tồn tại (5.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.01 — Mất kết nối khi xác nhận (5.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.02 — Luồng cơ bản — Phần 1/15",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.02 — Luồng cơ bản — Phần 2/15",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.02 — Luồng cơ bản — Phần 3/15",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.02 — Luồng cơ bản — Phần 4/15",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.02 — Luồng cơ bản — Phần 5/15",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.02 — Luồng cơ bản — Phần 6/15",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.02 — Luồng cơ bản — Phần 7/15",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.02 — Luồng cơ bản — Phần 8/15",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.02 — Luồng cơ bản — Phần 9/15",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.02 — Luồng cơ bản — Phần 10/15",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.02 — Luồng cơ bản — Phần 11/15",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.02 — Luồng cơ bản — Phần 12/15",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.02 — Luồng cơ bản — Phần 13/15",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.02 — Luồng cơ bản — Phần 14/15",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.02 — Luồng cơ bản — Phần 15/15",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.02 — Chưa thể xuất theo thực tế (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.02 — Xuất một phần (3.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.02 — Tồn không đủ hoặc lô không khả dụng (6.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.02 — Sai người, lô/vị trí ngoài phân công, hết hạn hoặc cách ly (6.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.02 — Kho khóa kiểm kê hoặc dữ liệu thay đổi (6.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.02 — Phiên hết hạn hoặc không có quyền (5.1) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.02 — Phiên hết hạn hoặc không có quyền (5.1) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.02 — Dữ liệu đã thay đổi hoặc không còn tồn tại (5.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-11.02 — Mất kết nối khi xác nhận (5.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-35 — Luồng cơ bản — Phần 1/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-35 — Luồng cơ bản — Phần 2/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-35 — Luồng cơ bản — Phần 3/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-35 — Luồng cơ bản — Phần 4/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-35 — Luồng cơ bản — Phần 5/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-35 — Luồng cơ bản — Phần 6/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-35 — Luồng cơ bản — Phần 7/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-35 — Luồng cơ bản — Phần 8/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-35 — Điền lượng còn lại (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-35 — Đợt cuối (3.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-35 — Còn NVL chưa dùng (3.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-35 — Lưu nháp báo cáo thành phẩm (5.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-35 — Lưu nháp báo cáo thành phẩm (5.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-35 — Hủy hoặc quay lại trước xác nhận (5.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-35 — Thông tin thiếu hoặc không hợp lệ (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-35 — Vượt sản lượng còn báo cáo, sai mặt hàng hoặc lô (4.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-35 — Đợt cuối chưa đủ điều kiện hoặc đã có chốt cuối (4.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-35 — NVL thực dùng vượt lượng đã xuất còn quyết toán (4.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-35 — Ngày sản xuất, hoàn thành hoặc hạn dùng không hợp lệ (4.5)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-35 — Báo cáo đã gửi (5.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-35 — Phiên hết hạn hoặc không có quyền (5.4) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-35 — Phiên hết hạn hoặc không có quyền (5.4) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-35 — Dữ liệu đã thay đổi hoặc không còn tồn tại (5.5)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-35 — Mất kết nối khi xác nhận (5.6)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-01 — Luồng cơ bản — Phần 1/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-01 — Luồng cơ bản — Phần 2/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-01 — Luồng cơ bản — Phần 3/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-01 — Sai tên đăng nhập hoặc mật khẩu (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-01 — Bỏ trống thông tin đăng nhập (3.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-01 — Tài khoản bị khóa (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-01 — Phiên hết hạn hoặc không có quyền (5.1) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-01 — Phiên hết hạn hoặc không có quyền (5.1) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-01 — Dữ liệu đã thay đổi hoặc không còn tồn tại (5.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-01 — Mất kết nối khi xác nhận (5.3) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-01 — Mất kết nối khi xác nhận (5.3) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-01 — Đăng nhập sai nhiều lần liên tiếp (4.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12 — Luồng cơ bản — Phần 1/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12 — Luồng cơ bản — Phần 2/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12 — Luồng cơ bản — Phần 3/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12 — Luồng cơ bản — Phần 4/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12 — Luồng cơ bản — Phần 5/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12 — Xem kết quả đã ghi (4.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12 — Kết quả không đạt (4.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12 — Chọn Thêm (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12 — Chọn Sửa (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12 — Tìm kiếm hoặc lọc (1.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12 — Không có kết quả phù hợp (1.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12 — Phiên hết hạn hoặc không có quyền (13.1) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12 — Phiên hết hạn hoặc không có quyền (13.1) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12 — Dữ liệu đã thay đổi hoặc không còn tồn tại (3.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12 — Mất kết nối khi xác nhận (3.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.1 — Luồng cơ bản — Phần 1/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.1 — Luồng cơ bản — Phần 2/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.1 — Luồng cơ bản — Phần 3/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.1 — Luồng cơ bản — Phần 4/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.1 — Luồng cơ bản — Phần 5/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.1 — Luồng cơ bản — Phần 6/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.1 — Luồng cơ bản — Phần 7/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.1 — Toàn bộ đạt hoặc không đạt (3.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.1 — Đợt có QC/AC và Ban kiểm kê (3.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.1 — Hủy hoặc quay lại trước xác nhận (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.1 — Thông tin nhập không hợp lệ (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.1 — Thông tin bị bỏ trống (3.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.1 — Phiên hết hạn hoặc không có quyền (3.4) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.1 — Phiên hết hạn hoặc không có quyền (3.4) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.1 — Dữ liệu đã thay đổi hoặc không còn tồn tại (3.5)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.1 — Mất kết nối khi xác nhận (3.6)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.1 — Chưa có phần lô thực tế hoặc đợt chưa bắt đầu (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.1 — Đạt cộng lỗi khác lượng phải kiểm hoặc dòng đã có kết quả (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.2 — Luồng cơ bản — Phần 1/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.2 — Luồng cơ bản — Phần 2/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.2 — Luồng cơ bản — Phần 3/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.2 — Hủy hoặc quay lại trước xác nhận (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.2 — Thông tin nhập không hợp lệ (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.2 — Thông tin bị bỏ trống (3.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.2 — Phiên hết hạn hoặc không có quyền (3.3) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.2 — Phiên hết hạn hoặc không có quyền (3.3) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.2 — Dữ liệu đã thay đổi hoặc không còn tồn tại (3.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.2 — Mất kết nối khi xác nhận (3.5) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.2 — Mất kết nối khi xác nhận (3.5) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.2 — Kết quả đã dùng để nhập, phân công, trả hoặc xử lý ngoại lệ (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.2 — Không phải người lập gốc hoặc thiếu lý do (4.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.3 — Luồng cơ bản — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.3 — Luồng cơ bản — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.3 — Cần sửa sai kết quả (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.3 — Yêu cầu xóa kết quả đã ghi (2.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.3 — Phiên hết hạn hoặc không có quyền (4.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.3 — Phiên hết hạn hoặc không có quyền (4.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.3 — Dữ liệu đã thay đổi hoặc không còn tồn tại (4.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-12.3 — Mất kết nối khi xác nhận (4.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-34 — Luồng cơ bản — Phần 1/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-34 — Luồng cơ bản — Phần 2/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-34 — Luồng cơ bản — Phần 3/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-34 — Luồng cơ bản — Phần 4/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-34 — Luồng cơ bản — Phần 5/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-34 — Luồng cơ bản — Phần 6/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-34 — Luồng cơ bản — Phần 7/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-34 — Báo cáo tiến độ hoặc sự cố (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-34 — Báo cáo từ đối chiếu NVL (3.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-34 — Báo cáo từ đối chiếu NVL (3.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-34 — Lưu nháp báo cáo sản xuất (12.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-34 — Lưu nháp báo cáo sản xuất (12.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-34 — Hủy hoặc quay lại trước xác nhận (12.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-34 — Thông tin báo cáo thiếu hoặc không hợp lệ (13.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-34 — KHSX không hợp lệ hoặc không thuộc xưởng (13.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-34 — Tiến độ ngoài khoảng 0% đến dưới 100% (13.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-34 — Đã có báo cáo nhu cầu đang hiệu lực (13.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-34 — Ảnh không hợp lệ hoặc tải ảnh lỗi (13.5)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-34 — Báo cáo đã gửi hoặc đã được dùng làm nguồn (13.6)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-34 — Phiên hết hạn hoặc không có quyền (12.3) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-34 — Phiên hết hạn hoặc không có quyền (12.3) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-34 — Dữ liệu đã thay đổi hoặc không còn tồn tại (12.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-34 — Mất kết nối khi xác nhận (12.5)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-15 — Luồng cơ bản — Phần 1/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-15 — Luồng cơ bản — Phần 2/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-15 — Luồng cơ bản — Phần 3/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-15 — Luồng cơ bản — Phần 4/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-15 — Luồng cơ bản — Phần 5/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-15 — Luồng cơ bản — Phần 6/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-15 — Luồng cơ bản — Phần 7/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-15 — Luồng cơ bản — Phần 8/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-15 — Điền nhanh số lượng đạt (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-15 — Mất kết nối khi nhập số liệu (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-15 — Phiên hết hạn hoặc không có quyền (5.1) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-15 — Phiên hết hạn hoặc không có quyền (5.1) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-15 — Dữ liệu đã thay đổi hoặc không còn tồn tại (5.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-15 — Mất kết nối khi xác nhận (5.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-15 — Thiếu số đếm, số âm hoặc số không hợp lệ (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-15 — Việc chưa bắt đầu, đã xong hoặc sai phân công (4.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-28 — Luồng cơ bản — Phần 1/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-28 — Luồng cơ bản — Phần 2/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-28 — Luồng cơ bản — Phần 3/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-28 — Luồng cơ bản — Phần 4/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-28 — Luồng cơ bản — Phần 5/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-28 — Luồng cơ bản — Phần 6/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-28 — Luồng cơ bản — Phần 7/7",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-28 — Lưu tạm biên bản (3.1) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-28 — Lưu tạm biên bản (3.1) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-28 — Không phải người chỉ định (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-28 — Nhập ngoại lệ (3.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-28 — Gửi biên bản nháp (3.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-28 — Đợt chưa đủ nội dung được giao (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-28 — Phiên hết hạn hoặc không có quyền (3.4) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-28 — Phiên hết hạn hoặc không có quyền (3.4) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-28 — Dữ liệu đã thay đổi hoặc không còn tồn tại (3.5)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-28 — Mất kết nối khi xác nhận (3.6)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-28 — Có ngoại lệ nhưng thiếu mô tả/kết luận/bắt buộc (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-28 — Biên bản đã gửi, đã có người tạo hoặc phân công đã đổi (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-32 — Luồng cơ bản — Phần 1/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-32 — Luồng cơ bản — Phần 2/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-32 — Luồng cơ bản — Phần 3/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-32 — Luồng cơ bản — Phần 4/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-32 — Luồng cơ bản — Phần 5/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-32 — Luồng cơ bản — Phần 6/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-32 — Luồng cơ bản — Phần 7/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-32 — Luồng cơ bản — Phần 8/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-32 — Từ chối có lý do (5.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-32 — Lượng dự kiến vượt nguồn (5.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-32 — Từ chối thiếu lý do (5.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-32 — Không có kế hoạch chờ duyệt (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-32 — Kế hoạch không còn chờ duyệt (4.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-32 — Phiên hết hạn hoặc không có quyền (5.4) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-32 — Phiên hết hạn hoặc không có quyền (5.4) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-32 — Dữ liệu đã thay đổi hoặc không còn tồn tại (5.5)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-32 — Mất kết nối khi xác nhận (5.6)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-32 — Nguồn hoặc lịch kế hoạch không hợp lệ (4.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-02 — Luồng cơ bản — Phần 1/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-02 — Luồng cơ bản — Phần 2/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-02 — Luồng cơ bản — Phần 3/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-02 — Luồng cơ bản — Phần 4/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-02 — Luồng cơ bản — Phần 5/5",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-02 — Hủy hoặc quay lại trước xác nhận (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-02 — Danh sách hàng mẫu rỗng (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-02 — Thiếu thông tin hoặc số lượng không hợp lệ (5.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-02 — Ngày nhận trong quá khứ (5.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-02 — Phiên hết hạn hoặc không có quyền (4.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-02 — Phiên hết hạn hoặc không có quyền (4.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-02 — Dữ liệu đã thay đổi hoặc không còn tồn tại (4.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-02 — Mất kết nối khi xác nhận (4.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-02 — Mặt hàng ngừng dùng, không được đặt hoặc bị trùng (5.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-02 — Số lượng hoặc ghi chú vượt giới hạn (5.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03 — Luồng cơ bản — Phần 1/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03 — Luồng cơ bản — Phần 2/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03 — Luồng cơ bản — Phần 3/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03 — Luồng cơ bản — Phần 4/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03 — Chọn Sửa đơn hàng (4.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03 — Tìm kiếm hoặc lọc (1.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03 — Không có đơn của khách hàng (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03 — Phiên hết hạn hoặc không có quyền (3.1) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03 — Phiên hết hạn hoặc không có quyền (3.1) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03 — Dữ liệu đã thay đổi hoặc không còn tồn tại (3.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03 — Mất kết nối khi xác nhận (3.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03.1 — Luồng cơ bản — Phần 1/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03.1 — Luồng cơ bản — Phần 2/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03.1 — Luồng cơ bản — Phần 3/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03.1 — Luồng cơ bản — Phần 4/4",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03.1 — Xác nhận tăng số lượng (5.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03.1 — Xác nhận giảm số lượng (5.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03.1 — Hủy hoặc quay lại trước xác nhận (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03.1 — Đơn không còn được sửa (1.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03.1 — Thiếu thông tin hoặc lượng không hợp lệ (5.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03.1 — Phiên hết hạn hoặc không có quyền (4.1) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03.1 — Phiên hết hạn hoặc không có quyền (4.1) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03.1 — Dữ liệu đã thay đổi hoặc không còn tồn tại (4.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03.1 — Mất kết nối khi xác nhận (4.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03.1 — Giảm dưới tổng đã lập KH hoặc ngày nhận trước kết thúc KH (5.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-03.1 — Ngày nhận mới trong quá khứ hoặc mặt hàng không hợp lệ (5.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-22 — Luồng cơ bản — tra cứu mặt hàng — Phần 1/6",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-22 — Luồng cơ bản — tra cứu mặt hàng — Phần 2/6",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-22 — Luồng cơ bản — tra cứu mặt hàng — Phần 3/6",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-22 — Luồng cơ bản — tra cứu mặt hàng — Phần 4/6",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-22 — Luồng cơ bản — tra cứu mặt hàng — Phần 5/6",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-22 — Luồng cơ bản — tra cứu mặt hàng — Phần 6/6",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-22 — Luồng cơ bản — tra cứu kho — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-22 — Luồng cơ bản — tra cứu kho — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-22 — Luồng cơ bản — tra cứu danh mục — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-22 — Luồng cơ bản — tra cứu danh mục — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-22 — Luồng cơ bản — tra cứu tồn kho — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-22 — Luồng cơ bản — tra cứu tồn kho — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-22 — Luồng cơ bản — tra cứu lô NVL — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-22 — Luồng cơ bản — tra cứu lô NVL — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-22 — Luồng cơ bản — tra cứu lô thành phẩm — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-22 — Luồng cơ bản — tra cứu lô thành phẩm — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-22 — Chỉ xem danh sách (5.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-22 — Tra cứu theo sơ đồ vị trí (3.1) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-22 — Tra cứu theo sơ đồ vị trí (3.1) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-22 — Đối chiếu NVL từ KHSX (3.2)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-22 — Không tìm thấy dữ liệu (3.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-22 — Phiên hết hạn hoặc không có quyền (5.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-22 — Phiên hết hạn hoặc không có quyền (5.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-22 — Dữ liệu đã thay đổi hoặc không còn tồn tại (5.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-22 — Mất kết nối khi xác nhận (5.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-16 — Luồng cơ bản — Phần 1/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-16 — Luồng cơ bản — Phần 2/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-16 — Luồng cơ bản — Phần 3/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-16 — Luồng cơ bản — Phần 4/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-16 — Luồng cơ bản — Phần 5/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-16 — Luồng cơ bản — Phần 6/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-16 — Luồng cơ bản — Phần 7/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-16 — Luồng cơ bản — Phần 8/8",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-16 — Gửi đề xuất cho Chủ xưởng (5.1) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-16 — Gửi đề xuất cho Chủ xưởng (5.1) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-16 — Chủ xưởng đã cho ý kiến (5.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-16 — Chủ xưởng đã cho ý kiến (5.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-16 — Điều chỉnh tồn theo phiếu kiểm kê kho (5.3) — Phần 1/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-16 — Điều chỉnh tồn theo phiếu kiểm kê kho (5.3) — Phần 2/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-16 — Điều chỉnh tồn theo phiếu kiểm kê kho (5.3) — Phần 3/3",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-16 — Không có chênh lệch cần xử lý (2.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-16 — Phiên hết hạn hoặc không có quyền (4.2) — Phần 1/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-16 — Phiên hết hạn hoặc không có quyền (4.2) — Phần 2/2",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-16 — Dữ liệu đã thay đổi hoặc không còn tồn tại (4.3)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-16 — Mất kết nối khi xác nhận (4.4)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-16 — Thiếu cách xử lý/đề xuất hoặc vấn đề đã xử lý (6.1)",
+        "images":  [
+
+                   ]
+    },
+    {
+        "text":  "Sequence UC-16 — Điều chỉnh tồn chưa duyệt hoặc không đủ điều kiện (6.2)",
+        "images":  [
+
+                   ]
+    }
+]

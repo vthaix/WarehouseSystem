@@ -31,7 +31,7 @@ class QualityCampaignService {
       source_mode:sourceMode,source_plan_id:sourceId?String(sourceId):null,source_code:planned?.code||null,expected_date:planned?.expected_date||null,
       lot_ids: lotRows.map((lot) => String(lot.lot_id)),
       planned_date: row.planned_date instanceof Date ? row.planned_date.toISOString().slice(0, 10) : row.planned_date,
-      actions: user.roles.includes("DIRECTOR") && row.status === "PLANNED" ? [...(sourceId?['bindLots']:[]),...(lotRows.length?['start']:[])] : user.roles.includes("DIRECTOR") && row.status === "COMPLETED" ? ["close"] : [],
+      actions: user.roles.includes("DIRECTOR") && row.status === "PLANNED" ? [...(sourceId?['bindLots']:[]),...((lotRows.length||sourceMode==='PURCHASE_PLAN')?['start']:[])] : user.roles.includes("DIRECTOR") && row.status === "COMPLETED" ? ["close"] : [],
     };
   }
 
@@ -87,7 +87,8 @@ class QualityCampaignService {
     C.date(body.planned_date, "planned_date", true);
     C.text(body.location, "location", 500);
     if (body.note !== undefined) C.text(body.note, "note", 5000, false);
-    const start = Date.parse(body.start_at), end = Date.parse(body.end_at);
+    const range=require('../../shared/time-rules').range(body.start_at,body.end_at);
+    const start=+range.start,end=+range.end;
     C.fail(!Number.isFinite(start) || !Number.isFinite(end) || end <= start, "VALIDATION_ERROR", "Thời gian lịch QC không hợp lệ.");
     C.fail(!Array.isArray(body.assignee_ids) || !body.assignee_ids.length || body.assignee_ids.length > 50 || new Set(body.assignee_ids.map(String)).size !== body.assignee_ids.length || body.assignee_ids.some((id) => !isId(id)), "VALIDATION_ERROR", "Nhân viên QC không hợp lệ.");
     C.fail(!Array.isArray(body.lot_ids) || (mode==='ACTUAL'&&!body.lot_ids.length) || body.lot_ids.length > 100 || new Set(body.lot_ids.map(String)).size !== body.lot_ids.length || body.lot_ids.some((id) => !isId(id)), "VALIDATION_ERROR", "Chọn phần lô thực tế hoặc lập lịch dự kiến theo kế hoạch.");
@@ -140,7 +141,8 @@ class QualityCampaignService {
       C.state(rows[0], [action === "start" ? "PLANNED" : "COMPLETED"]);
       if(action==='start'){
         const [lots]=await connection.execute('SELECT lot_id FROM quality_campaign_lots WHERE campaign_id=?',[id]);
-        C.fail(!lots.length,'ACTUAL_LOT_REQUIRED','Hàng chưa được ghi nhận. Chọn phần lô thực tế trước khi bắt đầu QC.',409);
+        if(!lots.length&&rows[0].MaKeHoachMuaQC){const [orders]=await connection.execute('SELECT id FROM purchase_orders WHERE business_plan_id=?',[rows[0].MaKeHoachMuaQC]);C.fail(!orders.length,'SOURCE_REQUIRED','Kế hoạch mua chưa có đơn mua để thực kiểm.',409);await connection.execute('UPDATE stocktakes SET KiemTheoKeHoach=1 WHERE id=?',[id]);}
+        C.fail(!lots.length&&!rows[0].MaKeHoachMuaQC,'ACTUAL_LOT_REQUIRED','Hàng chưa được ghi nhận. Chọn phần lô thực tế trước khi bắt đầu QC.',409);
         const mode=rows[0].MaKeHoachMuaQC?'PURCHASE_PLAN':'PRODUCTION_PLAN';
         const sourceId=rows[0].MaKeHoachMuaQC||rows[0].MaKeHoachSanXuatQC;
         if(sourceId){const planned=await Sources.source(connection,mode,sourceId,true);require('../../shared/qc-schedule-dates').validateStart(rows[0].start_at,[{received_date:planned.expected_date}]);C.fail(!body.simulate_early_start&&C.today()<planned.expected_date,'SOURCE_NOT_READY','Chưa đến ngày nhận hàng dự kiến của kế hoạch. Có thể chọn giả lập thử nghiệm để bắt đầu sớm.',409);}

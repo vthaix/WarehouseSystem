@@ -93,6 +93,7 @@ class PurchaseOrderService {
       ...this.present(rows[0]),
       lines: lines.map((line) => ({
         ...line,
+        shelf_life_days:line.SoNgayHanDung??null,
         id: String(line.id),
         item_id: String(line.item_id),
         supplier_id: line.supplier_id == null ? null : String(line.supplier_id),
@@ -156,7 +157,7 @@ class PurchaseOrderService {
       const itemIds = [...seen];
       const [items] = await c.execute("SELECT i.id,n.BangGiaNCC FROM items i JOIN NguyenVatLieu n ON n.MaMatHang=i.id WHERE i.kind='MATERIAL' AND i.is_active=1 AND i.id IN (" + itemIds.map(() => '?').join(',') + ')', itemIds);
       C.fail(items.length !== itemIds.length, 'VALIDATION_ERROR', 'Chỉ mua nguyên vật liệu đang hoạt động.');
-      for(const line of lines){const material=items.find(i=>String(i.id)===line.item_id);const offers=typeof material.BangGiaNCC==='string'?JSON.parse(material.BangGiaNCC):material.BangGiaNCC||[];C.fail(!offers.some(o=>String(o.supplier_id)===line.supplier_id),'SUPPLIER_ITEM_MISMATCH','Nhà cung cấp không cung cấp nguyên vật liệu này. Chọn đúng nhà cung cấp trong danh mục cung ứng.',422);}
+      for(const line of lines){const material=items.find(i=>String(i.id)===line.item_id);const offers=typeof material.BangGiaNCC==='string'?JSON.parse(material.BangGiaNCC):material.BangGiaNCC||[];line.shelf_life_days=offers.find(o=>String(o.supplier_id)===line.supplier_id)?.shelf_life_days??null;C.fail(!offers.some(o=>String(o.supplier_id)===line.supplier_id),'SUPPLIER_ITEM_MISMATCH','Nhà cung cấp không cung cấp nguyên vật liệu này. Chọn đúng nhà cung cấp trong danh mục cung ứng.',422);}
       let total = 0n;
       for (const l of lines) total += (C.qty(l.quantity) * C.price(l.unit_price) + 500n) / 1000n;
       C.fail(total > 9999999999999999999n, 'VALIDATION_ERROR', 'Tổng tiền vượt giới hạn.');
@@ -168,8 +169,8 @@ class PurchaseOrderService {
       const [created] = await c.execute("INSERT INTO purchase_orders (code,business_plan_id,production_report_id,source_mode,supplier_id,created_by,expected_delivery_date,delivery_terms,status,total_amount,version) VALUES (?,?,?,?,?,?,?,?,'PENDING',?,1)",
         [code, plan?.id || null, plan?.production_report_id || null, mode, supplierIds.length === 1 ? supplierIds[0] : null, user.id, date, body.delivery_terms.trim(), C.money(total)]);
       id = created.insertId;
-      for (const l of lines) await c.execute('INSERT INTO purchase_order_lines (purchase_order_id,business_plan_line_id,item_id,quantity,unit_price,supplier_id) VALUES (?,?,?,?,?,?)',
-        [id,l.business_plan_line_id,l.item_id,l.quantity,l.unit_price,l.supplier_id]);
+      for (const l of lines) await c.execute('INSERT INTO purchase_order_lines (purchase_order_id,business_plan_line_id,item_id,quantity,unit_price,supplier_id,SoNgayHanDung) VALUES (?,?,?,?,?,?,?)',
+        [id,l.business_plan_line_id,l.item_id,l.quantity,l.unit_price,l.supplier_id,l.shelf_life_days]);
       await c.execute("INSERT INTO audit_logs (actor_id,resource_type,resource_id,action,after_data,request_id) VALUES (?,'purchase-orders',?,'CREATE',?,?)",
         [user.id,id,JSON.stringify({code,source_mode:mode,business_plan_id:plan?.id || null,suppliers:supplierIds}),requestId]);
       await c.commit();

@@ -12,10 +12,11 @@ async function row(c,u,id,lock=false){
 async function get(service,u,id,c=service.pool){
   const r=await row(c,u,id);
   let minuteLines=r.BienBanDuLieu;if(typeof minuteLines==='string')minuteLines=JSON.parse(minuteLines);
-  const [workshops]=u.roles.includes('WAREHOUSE_MANAGER')?await c.execute("SELECT DISTINCT w.id,w.name FROM workshops w JOIN workshop_users wu ON wu.workshop_id=w.id JOIN users u ON u.id=wu.user_id JOIN user_roles ur ON ur.user_id=u.id JOIN roles ro ON ro.id=ur.role_id WHERE u.status='ACTIVE' AND ro.code='WORKSHOP_OWNER' ORDER BY w.id"):[[]];
+  const sourceWorkshop=await require('./source-workshop').resolve(c,r);
+  const workshops=sourceWorkshop?[sourceWorkshop]:[];
   const [history]=await c.execute("SELECT actor_id,action,after_data,created_at FROM audit_logs WHERE resource_type='minute-exceptions' AND resource_id=? ORDER BY id",[id]);
   const decisionHistory=history.map(h=>{const d=typeof h.after_data==='string'?JSON.parse(h.after_data):h.after_data||{};return {actor_id:String(h.actor_id),action:h.action,decision_status:d.status,resolution_note:d.description,workshop_id:d.workshop_id?String(d.workshop_id):null,created_at:h.created_at};});
-  return {minute_lines:minuteLines||[],minute_conclusion:r.BienBanKetLuan,id:'LOT-'+r.id,code:'NL-'+r.code,type:'MINUTE_EXCEPTION',stocktake_id:String(r.id),minute_id:'LOT-'+r.id,reason:r.NgoaiLeMoTa,resolution_note:r.NgoaiLeCachXuLy||'',status:r.NgoaiLeTrangThai,workshop_id:r.NgoaiLeMaXuong?String(r.NgoaiLeMaXuong):null,owner_instruction:r.NgoaiLeYKienPheDuyet||'',version:r.version,eligible_workshops:workshops.map(w=>({id:String(w.id),name:w.name})),decision_history:decisionHistory,actions:u.roles.includes('WAREHOUSE_MANAGER')&&['OPEN','REJECTED','APPROVED'].includes(r.NgoaiLeTrangThai)?['handleMinuteException']:u.roles.includes('WORKSHOP_OWNER')&&(u.workshop_ids||[]).map(String).includes(String(r.NgoaiLeMaXuong))&&r.NgoaiLeTrangThai==='PENDING_APPROVAL'?['reviewMinuteException']:[]};
+  return {minute_lines:minuteLines||[],minute_conclusion:r.BienBanKetLuan,id:'LOT-'+r.id,code:'NL-'+r.code,type:'MINUTE_EXCEPTION',stocktake_id:String(r.id),minute_id:'LOT-'+r.id,reason:r.NgoaiLeMoTa,resolution_note:r.NgoaiLeCachXuLy||'',status:r.NgoaiLeTrangThai,workshop_id:r.NgoaiLeMaXuong?String(r.NgoaiLeMaXuong):null,owner_instruction:r.NgoaiLeYKienPheDuyet||'',version:r.version,source_workshop:sourceWorkshop,eligible_workshops:workshops.map(w=>({id:String(w.id),name:w.name})),decision_history:decisionHistory,actions:u.roles.includes('WAREHOUSE_MANAGER')&&['OPEN','REJECTED','APPROVED'].includes(r.NgoaiLeTrangThai)?['handleMinuteException']:u.roles.includes('WORKSHOP_OWNER')&&(u.workshop_ids||[]).map(String).includes(String(r.NgoaiLeMaXuong))&&r.NgoaiLeTrangThai==='PENDING_APPROVAL'?['reviewMinuteException']:[]};
 }
 async function act(service,u,id,b,action,request){
   P.role(u,action==='review'?['WORKSHOP_OWNER']:['WAREHOUSE_MANAGER']);
@@ -41,9 +42,10 @@ async function act(service,u,id,b,action,request){
       status=b.request_approval===true?'PENDING_APPROVAL':'RESOLVED';description=b.resolution_note;
       workshopId=r.NgoaiLeMaXuong;
       if(b.request_approval===true){
-        C.fail(!/^[1-9]\d*$/.test(String(b.workshop_id)),'VALIDATION_ERROR','Chọn xưởng nhận đề xuất.');
-        const [owners]=await c.execute("SELECT wu.user_id FROM workshop_users wu JOIN users u ON u.id=wu.user_id JOIN user_roles ur ON ur.user_id=u.id JOIN roles ro ON ro.id=ur.role_id WHERE wu.workshop_id=? AND u.status='ACTIVE' AND ro.code='WORKSHOP_OWNER' AND u.id<>?",[b.workshop_id,u.id]);
-        C.fail(!owners.length,'VALIDATION_ERROR','Xưởng chưa có chủ xưởng khác đang hoạt động để phê duyệt.');workshopId=b.workshop_id;
+        const assigned=await require('./source-workshop').resolve(c,r);
+        workshopId=require('./source-workshop').validate(assigned,b.workshop_id);
+        const [owners]=await c.execute("SELECT wu.user_id FROM workshop_users wu JOIN users u ON u.id=wu.user_id JOIN user_roles ur ON ur.user_id=u.id JOIN roles ro ON ro.id=ur.role_id WHERE wu.workshop_id=? AND u.status='ACTIVE' AND ro.code='WORKSHOP_OWNER' AND u.id<>?",[workshopId,u.id]);
+        C.fail(!owners.length,'VALIDATION_ERROR','Xưởng chưa có chủ xưởng khác đang hoạt động để phê duyệt.');
       }
       await c.execute('UPDATE stocktakes SET NgoaiLeTrangThai=?,NgoaiLeCachXuLy=?,NgoaiLeMaXuong=?,NgoaiLeNguoiXuLy=?,version=version+1 WHERE id=?',[status,description,workshopId,u.id,id]);
       if(b.request_approval===true)await c.execute("INSERT INTO notifications(user_id,subject,body,resource_type,resource_id,business_key) SELECT DISTINCT u.id,?,?,'minute-exceptions',?,? FROM workshop_users wu JOIN users u ON u.id=wu.user_id JOIN user_roles ur ON ur.user_id=u.id JOIN roles ro ON ro.id=ur.role_id WHERE wu.workshop_id=? AND u.status='ACTIVE' AND ro.code='WORKSHOP_OWNER' AND u.id<>? ON DUPLICATE KEY UPDATE id=notifications.id",['Đề xuất xử lý ngoại lệ '+r.code,description,id,'minute-exception-'+id+'-proposal-'+r.version,workshopId,u.id]);

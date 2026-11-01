@@ -49,9 +49,9 @@ try{
   }
   {
     const {context,page,errors}=await pageFor('manager','exception-proposals');
-    const record={id:'LOT-301',code:'NL-301',version:2,status:'OPEN',reason:'Bao bi rach',resolution_note:'',actions:['handleMinuteException'],eligible_workshops:[{id:'1',name:'Xuong banh'}],minute_lines:[{lot_code:'LO-A',item_name:'Banh quy',system_quantity:'20',counted_quantity:'19',difference_quantity:'-1',passed_quantity:'18',failed_quantity:'2',issue:'Rach bao bi'}]};
+    const record={id:'LOT-301',code:'NL-301',version:2,status:'OPEN',reason:'Bao bi rach',resolution_note:'',actions:['handleMinuteException'],source_workshop:{id:'1',name:'Xuong banh'},eligible_workshops:[{id:'1',name:'Xuong banh'}],minute_lines:[{lot_code:'LO-A',item_name:'Banh quy',system_quantity:'20',counted_quantity:'19',difference_quantity:'-1',passed_quantity:'18',failed_quantity:'2',issue:'Rach bao bi'}]};
     await page.evaluate(r=>detail(r),record);assert.equal(await page.locator('#f-resolution_note').count(),1);assert.ok((await page.locator('#modal-body').textContent()).includes('Rach bao bi'));
-    await page.locator('#f-resolution_note').fill('De xuat dong goi lai');await page.locator('#request-owner-approval').check();await page.locator('#f-workshop_id').selectOption('1');
+    await page.locator('#f-resolution_note').fill('De xuat dong goi lai');await page.locator('#request-owner-approval').check();assert.equal(await page.locator('#f-workshop_id').isDisabled(),true);assert.equal(await page.locator('#f-workshop_id').inputValue(),'1');
     const body=await capture(page,'exception-proposals/LOT-301/apply');assert.equal(body.request_approval,true);assert.equal(body.workshop_id,'1');assert.deepEqual(errors,[]);await context.close();
   }
   for(const [username,author]of [['qc',true],['stocktaker',false]]){

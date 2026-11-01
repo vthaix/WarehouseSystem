@@ -12,13 +12,14 @@ class MaterialCatalogService{
   async update(u,id,b,requestId){
     P.role(u,['WAREHOUSE_MANAGER']);C.fields(b,['version','unit_id','reference_price','supplier_prices']);C.price(b.reference_price);
     C.fail(!Array.isArray(b.supplier_prices)||b.supplier_prices.length>100,'VALIDATION_ERROR','Bảng giá nhà cung cấp không hợp lệ.');const seen=new Set();
-    for(const row of b.supplier_prices){C.fields(row,['supplier_id','unit_price']);C.fail(!/^[1-9]\d*$/.test(String(row.supplier_id))||seen.has(String(row.supplier_id)),'VALIDATION_ERROR','Nhà cung cấp không hợp lệ hoặc trùng.');seen.add(String(row.supplier_id));C.price(row.unit_price);}
+    for(const row of b.supplier_prices){C.fields(row,['supplier_id','unit_price','shelf_life_days']);C.fail(!/^[1-9]\d*$/.test(String(row.supplier_id))||seen.has(String(row.supplier_id)),'VALIDATION_ERROR','Nhà cung cấp không hợp lệ hoặc trùng.');seen.add(String(row.supplier_id));C.price(row.unit_price);if(row.shelf_life_days!==undefined)require('../../shared/supplier-terms').days(row.shelf_life_days);}
     C.fail(!/^[1-9]\d*$/.test(String(b.unit_id)),'VALIDATION_ERROR','Đơn vị tính không hợp lệ.');
     const c=await this.pool.getConnection();try{await c.beginTransaction();await this.get(u,id,c);const [[r]]=await c.execute('SELECT * FROM items WHERE id=? FOR UPDATE',[id]);C.version(r,b.version);
       const [[unit]]=await c.execute('SELECT id FROM units WHERE id=?',[b.unit_id]);C.fail(!unit,'VALIDATION_ERROR','Đơn vị tính không tồn tại.');
       if(String(r.unit_id)!==String(b.unit_id)){const [[used]]=await c.execute('SELECT (SELECT COUNT(*) FROM lots WHERE item_id=?)+(SELECT COUNT(*) FROM purchase_order_lines WHERE item_id=?)+(SELECT COUNT(*) FROM business_plan_lines WHERE item_id=?) AS total',[id,id,id]);C.fail(Number(used.total)>0,'IN_USE','nguyên vật liệu đã có chứng từ; không đổi đơn vị để tránh sai số lượng lịch sử.',409);}
       if(seen.size){const [suppliers]=await c.execute('SELECT id FROM suppliers WHERE is_active=1 AND id IN ('+[...seen].map(()=>'?').join(',')+')',[...seen]);C.fail(suppliers.length!==seen.size,'VALIDATION_ERROR','Nhà cung cấp không tồn tại hoặc ngừng hoạt động.');}
-      const prices=b.supplier_prices.map(r=>({supplier_id:String(r.supplier_id),unit_price:C.money(C.price(r.unit_price))}));
+      const [[catalog]]=await c.execute('SELECT BangGiaNCC FROM NguyenVatLieu WHERE MaMatHang=?',[id]);const previous=parse(catalog.BangGiaNCC);
+      const prices=b.supplier_prices.map(r=>({supplier_id:String(r.supplier_id),unit_price:C.money(C.price(r.unit_price)),shelf_life_days:r.shelf_life_days===undefined?(previous.find(o=>String(o.supplier_id)===String(r.supplier_id))?.shelf_life_days??null):require('../../shared/supplier-terms').days(r.shelf_life_days)}));
       await c.execute('UPDATE items SET unit_id=?,reference_price=?,version=version+1 WHERE id=?',[b.unit_id,C.money(C.price(b.reference_price)),id]);
       await c.execute('UPDATE NguyenVatLieu SET BangGiaNCC=? WHERE MaMatHang=?',[JSON.stringify(prices),id]);
       await c.execute("INSERT INTO audit_logs(actor_id,resource_type,resource_id,action,request_id) VALUES (?,'material-prices',?,'UPDATE',?)",[u.id,id,requestId]);await c.commit();

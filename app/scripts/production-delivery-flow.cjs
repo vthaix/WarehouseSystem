@@ -129,9 +129,11 @@ module.exports = async function ({
     );
     requests.push(issue.id);
     const materialPreview=expect(await workshop.call('/api/v1/source-imports/stock-requests?purpose=PRODUCTION_ISSUE&source_id='+productionReportId+'&warehouse_id='+warehouseId),200);
-    assert.equal(materialPreview.lines.find(l=>l.item_id===materialId).quantity,'4.500');
+    assert.equal(materialPreview.lines.find(l=>l.item_id===materialId).required_quantity,'4.500');
+    assert.equal(materialPreview.lines.find(l=>l.item_id===materialId).quantity,'0.500');
     const planPreview=expect(await workshop.call('/api/v1/source-imports/stock-requests?purpose=PRODUCTION_ISSUE&production_source_mode=PLAN&source_id='+productionPlanId+'&warehouse_id='+warehouseId),200);
-    assert.equal(planPreview.lines.find(l=>l.item_id===materialId).quantity,'4.500');
+    assert.equal(planPreview.lines.find(l=>l.item_id===materialId).required_quantity,'4.500');
+    assert.equal(planPreview.lines.find(l=>l.item_id===materialId).quantity,'0.500');
     expect(await workshop.call('/api/v1/stock-requests','POST',requestBody('PRODUCTION_ISSUE',productionReportId,materialId,'4.501')),422);
     let dispatched = await dispatch(issue, lotId, "0.500", 3);
     const task = expect(
@@ -157,14 +159,14 @@ module.exports = async function ({
         item_id: finishedItemId,
         lot_code: "FLOW-FIN-" + crypto.randomBytes(6).toString("hex"),
         quantity: "1.000",
-        manufactured_date: date,
+        manufactured_date: require('../src/services/domain/core').today(),
       },
     ];
     expect(
       await workshop.call("/api/v1/finished-reports", "POST", {
         production_completed:true,
         production_plan_id: productionPlanId,
-        completed_date: date,
+        completed_date: require('../src/services/domain/core').today(),
         outputs,
         materials: [{ item_id: materialId, used_quantity: "0.501" }],
       }),
@@ -174,7 +176,7 @@ module.exports = async function ({
       await workshop.call("/api/v1/finished-reports", "POST", {
         production_completed:true,
         production_plan_id: productionPlanId,
-        completed_date: date,
+        completed_date: require('../src/services/domain/core').today(),
         outputs,
         materials: [{ item_id: materialId, used_quantity: "0.500" }],
       }),
@@ -287,8 +289,6 @@ module.exports = async function ({
     let sell = expect(
       await planner.call("/api/v1/business-plans", "POST", {
         type: "SALE",
-        customer_order_id: customerOrderId,
-        customer_id: String(order.customer_id),
         finished_report_id: finished,
         planned_date: date,
         lines: [
@@ -298,6 +298,8 @@ module.exports = async function ({
       201,
     );
     sale = sell.id;
+    assert.equal(sell.customer_order_id,String(customerOrderId));
+    assert.equal(sell.customer_id,String(order.customer_id));
     const reviewKey = crypto.randomUUID();
     keys.push(reviewKey);
     sell = expect(

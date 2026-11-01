@@ -1,0 +1,5003 @@
+﻿[
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-29-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-29-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-29-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-29-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-29-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-29-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-29-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-29-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-29-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-29-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-29-TC011"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST customer-orders/999999999/receive; request efc41b34-a6e2-45a0-a205-6aa7fa66906c",
+        "id":  "UC-29-TC012",
+        "started_at":  "2026-11-01T15:28:11.432Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại POST customer-orders/999999999/receive; nghiệp vụ không được thực thi.",
+        "id":  "UC-29-TC013",
+        "started_at":  "2026-11-01T15:28:11.441Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-29-TC014"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-29-TC015"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-29-TC016"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06-TC011"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET categories; request ae3f1b4b-5669-4096-801c-11eb0ac25df0",
+        "id":  "UC-06-TC012",
+        "started_at":  "2026-11-01T15:28:11.455Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại GET categories; nghiệp vụ không được thực thi.",
+        "id":  "UC-06-TC013",
+        "started_at":  "2026-11-01T15:28:11.464Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.1-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.1-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.1-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.1-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.1-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.1-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.1-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.1-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.1-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.1-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.1-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.1-TC012"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST categories; request 846450e0-b7c4-48b5-8d0a-12f32c9bd2fb",
+        "id":  "UC-06.1-TC013",
+        "started_at":  "2026-11-01T15:28:11.473Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại POST categories; nghiệp vụ không được thực thi.",
+        "id":  "UC-06.1-TC014",
+        "started_at":  "2026-11-01T15:28:11.482Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.1-TC015"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.1-TC016"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.1-TC017"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.2-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.2-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.2-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.2-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.2-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.2-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.2-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.2-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.2-TC009"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến DELETE categories/999999999; request 0fab5061-cea6-4065-bded-fddb40ffd475",
+        "id":  "UC-06.2-TC010",
+        "started_at":  "2026-11-01T15:28:11.494Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại DELETE categories/999999999; nghiệp vụ không được thực thi.",
+        "id":  "UC-06.2-TC011",
+        "started_at":  "2026-11-01T15:28:11.505Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.2-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.2-TC013"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.3-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.3-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.3-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.3-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.3-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.3-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.3-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.3-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.3-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.3-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.3-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.3-TC012"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến PATCH categories/999999999; request f0aeddb0-ac1c-4135-8e44-8463670b425f",
+        "id":  "UC-06.3-TC013",
+        "started_at":  "2026-11-01T15:28:11.516Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại PATCH categories/999999999; nghiệp vụ không được thực thi.",
+        "id":  "UC-06.3-TC014",
+        "started_at":  "2026-11-01T15:28:11.526Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.3-TC015"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.3-TC016"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-06.3-TC017"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07-TC011"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET items; request 57d0ca68-2e00-4a6e-8c67-d3bbbdcc13ce",
+        "id":  "UC-07-TC012",
+        "started_at":  "2026-11-01T15:28:11.538Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại GET items; nghiệp vụ không được thực thi.",
+        "id":  "UC-07-TC013",
+        "started_at":  "2026-11-01T15:28:11.548Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.1-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.1-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.1-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.1-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.1-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.1-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.1-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.1-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.1-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.1-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.1-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.1-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.1-TC013"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST items; request 59fcc057-6f01-4725-bd1b-81bf1fd8bf3a",
+        "id":  "UC-07.1-TC014",
+        "started_at":  "2026-11-01T15:28:11.560Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại POST items; nghiệp vụ không được thực thi.",
+        "id":  "UC-07.1-TC015",
+        "started_at":  "2026-11-01T15:28:11.569Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.1-TC016"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.1-TC017"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.1-TC018"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.2-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.2-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.2-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.2-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.2-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.2-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.2-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.2-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.2-TC009"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến DELETE items/999999999; request 842ec6e4-8fc4-42b1-8c7f-857ebcce83f2",
+        "id":  "UC-07.2-TC010",
+        "started_at":  "2026-11-01T15:28:11.580Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại DELETE items/999999999; nghiệp vụ không được thực thi.",
+        "id":  "UC-07.2-TC011",
+        "started_at":  "2026-11-01T15:28:11.590Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.2-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.2-TC013"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.3-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.3-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.3-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.3-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.3-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.3-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.3-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.3-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.3-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.3-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.3-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.3-TC012"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến PATCH items/999999999; request eecebdca-1e5e-4973-96db-fc12467e4b69",
+        "id":  "UC-07.3-TC013",
+        "started_at":  "2026-11-01T15:28:11.600Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại PATCH items/999999999; nghiệp vụ không được thực thi.",
+        "id":  "UC-07.3-TC014",
+        "started_at":  "2026-11-01T15:28:11.610Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.3-TC015"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.3-TC016"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-07.3-TC017"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-08-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-08-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-08-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-08-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-08-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-08-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-08-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-08-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-08-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-08-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-08-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-08-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-08-TC013"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET warehouse-inbound; request 63b2a6a3-01a0-40b5-9f35-787589760f77",
+        "id":  "UC-08-TC014",
+        "started_at":  "2026-11-01T15:28:11.620Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại GET warehouse-inbound; nghiệp vụ không được thực thi.",
+        "id":  "UC-08-TC015",
+        "started_at":  "2026-11-01T15:28:11.632Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-08-TC016"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-08-TC017"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-08-TC018"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-08-TC019"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-08-TC020"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-08-TC021"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-09-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-09-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-09-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-09-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-09-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-09-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-09-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-09-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-09-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-09-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-09-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-09-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-09-TC013"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET warehouse-outbound; request d5c1bb7b-5afd-4478-8d9f-f7d1811321e3",
+        "id":  "UC-09-TC014",
+        "started_at":  "2026-11-01T15:28:11.643Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại GET warehouse-outbound; nghiệp vụ không được thực thi.",
+        "id":  "UC-09-TC015",
+        "started_at":  "2026-11-01T15:28:11.653Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-09-TC016"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-09-TC017"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-09-TC018"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-09-TC019"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-09-TC020"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-09-TC021"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-09-TC022"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-09-TC023"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-09-TC024"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-13-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-13-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-13-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-13-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-13-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-13-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-13-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-13-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-13-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-13-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-13-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-13-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-13-TC013"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-13-TC014"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-13-TC015"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-13-TC016"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST tasks; request b960a2c2-9655-467d-82e0-739ec9ecf5ca",
+        "id":  "UC-13-TC017",
+        "started_at":  "2026-11-01T15:28:11.662Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại POST tasks; nghiệp vụ không được thực thi.",
+        "id":  "UC-13-TC018",
+        "started_at":  "2026-11-01T15:28:11.671Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-13-TC019"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-13-TC020"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-13-TC021"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-13-TC022"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-13-TC023"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-17-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-17-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-17-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-17-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-17-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-17-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-17-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-17-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-17-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-17-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-17-TC011"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST exception-proposals/999999999/review; request ad96ad58-e3da-4004-9731-f859365ca60c",
+        "id":  "UC-17-TC012",
+        "started_at":  "2026-11-01T15:28:11.686Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại POST exception-proposals/999999999/review; nghiệp vụ không được thực thi.",
+        "id":  "UC-17-TC013",
+        "started_at":  "2026-11-01T15:28:11.696Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-17-TC014"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-17-TC015"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-17-TC016"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-18-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-18-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-18-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-18-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-18-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-18-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-18-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-18-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-18-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-18-TC010"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET reports/inventory; request 06723280-fc42-441e-bb09-d034a23d0ae6",
+        "id":  "UC-18-TC011",
+        "started_at":  "2026-11-01T15:28:11.707Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại GET reports/inventory; nghiệp vụ không được thực thi.",
+        "id":  "UC-18-TC012",
+        "started_at":  "2026-11-01T15:28:11.716Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-19-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-19-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-19-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-19-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-19-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-19-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-19-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-19-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-19-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-19-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-19-TC011"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET stock-documents; request 96471ccb-38f1-4332-b0a3-732be0d67798",
+        "id":  "UC-19-TC012",
+        "started_at":  "2026-11-01T15:28:11.726Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại GET stock-documents; nghiệp vụ không được thực thi.",
+        "id":  "UC-19-TC013",
+        "started_at":  "2026-11-01T15:28:11.735Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-20-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-20-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-20-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-20-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-20-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-20-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-20-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-20-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-20-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-20-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-20-TC011"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET stock-documents; request b1af192d-2d24-4000-968b-77e1e50a496f",
+        "id":  "UC-20-TC012",
+        "started_at":  "2026-11-01T15:28:11.745Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại GET stock-documents; nghiệp vụ không được thực thi.",
+        "id":  "UC-20-TC013",
+        "started_at":  "2026-11-01T15:28:11.757Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-21-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-21-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-21-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-21-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-21-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-21-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-21-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-21-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-21-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-21-TC010"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET reports/stocktakes; request 8b4ff819-f36f-45c0-94d1-435048a3cbf8",
+        "id":  "UC-21-TC011",
+        "started_at":  "2026-11-01T15:28:11.767Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại GET reports/stocktakes; nghiệp vụ không được thực thi.",
+        "id":  "UC-21-TC012",
+        "started_at":  "2026-11-01T15:28:11.777Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25-TC013"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25-TC014"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET tasks; request b90436e9-8056-4658-8caf-c752df66f58e",
+        "id":  "UC-25-TC015",
+        "started_at":  "2026-11-01T15:28:11.787Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại GET tasks; nghiệp vụ không được thực thi.",
+        "id":  "UC-25-TC016",
+        "started_at":  "2026-11-01T15:28:11.797Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.1-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.1-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.1-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.1-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.1-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.1-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.1-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.1-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.1-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.1-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.1-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.1-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.1-TC013"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.1-TC014"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.1-TC015"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.1-TC016"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến PATCH tasks/999999999; request 42f612c3-5105-4eb9-bafb-15c99e4bf11b",
+        "id":  "UC-25.1-TC017",
+        "started_at":  "2026-11-01T15:28:11.807Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại PATCH tasks/999999999; nghiệp vụ không được thực thi.",
+        "id":  "UC-25.1-TC018",
+        "started_at":  "2026-11-01T15:28:11.818Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.1-TC019"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.1-TC020"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.1-TC021"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.2-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.2-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.2-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.2-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.2-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.2-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.2-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.2-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.2-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.2-TC010"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến DELETE tasks/999999999; request 874c58cf-4b89-44cd-8a4d-767db08d3bf6",
+        "id":  "UC-25.2-TC011",
+        "started_at":  "2026-11-01T15:28:11.832Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại DELETE tasks/999999999; nghiệp vụ không được thực thi.",
+        "id":  "UC-25.2-TC012",
+        "started_at":  "2026-11-01T15:28:11.841Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.2-TC013"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-25.2-TC014"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-31-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-31-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-31-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-31-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-31-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-31-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-31-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-31-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-31-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-31-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-31-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-31-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-31-TC013"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST production-plans/999999999/review; request 44b51c24-0433-4243-a608-4b9a7375fbc5",
+        "id":  "UC-31-TC014",
+        "started_at":  "2026-11-01T15:28:11.853Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại POST production-plans/999999999/review; nghiệp vụ không được thực thi.",
+        "id":  "UC-31-TC015",
+        "started_at":  "2026-11-01T15:28:11.863Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-31-TC016"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-31-TC017"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-31-TC018"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-31-TC019"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-14-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-14-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-14-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-14-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-14-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-14-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-14-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-14-TC008"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET purchase-orders; request 1e8639c4-81b8-4e98-b5a6-741c19e03362",
+        "id":  "UC-14-TC009",
+        "started_at":  "2026-11-01T15:28:11.876Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại GET purchase-orders; nghiệp vụ không được thực thi.",
+        "id":  "UC-14-TC010",
+        "started_at":  "2026-11-01T15:28:11.887Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC013"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC014"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC015"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC016"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC017"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC018"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC019"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC020"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC021"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC022"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST stock-requests; request 78a33a72-1547-4ada-a39a-861a23a04757",
+        "id":  "UC-23-TC023",
+        "started_at":  "2026-11-01T15:28:11.897Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại POST stock-requests; nghiệp vụ không được thực thi.",
+        "id":  "UC-23-TC024",
+        "started_at":  "2026-11-01T15:28:11.906Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC025"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC026"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC027"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC028"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC029"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC030"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC031"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC032"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-23-TC033"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24-TC012"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET stock-requests; request ac154eda-30e9-4080-8e94-cfd3ea92f553",
+        "id":  "UC-24-TC013",
+        "started_at":  "2026-11-01T15:28:11.919Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại GET stock-requests; nghiệp vụ không được thực thi.",
+        "id":  "UC-24-TC014",
+        "started_at":  "2026-11-01T15:28:11.929Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24-TC015"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24-TC016"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24-TC017"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.1-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.1-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.1-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.1-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.1-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.1-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.1-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.1-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.1-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.1-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.1-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.1-TC012"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến PATCH stock-requests/999999999; request f937f893-ceff-4b37-b985-2063601c3c82",
+        "id":  "UC-24.1-TC013",
+        "started_at":  "2026-11-01T15:28:11.939Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại PATCH stock-requests/999999999; nghiệp vụ không được thực thi.",
+        "id":  "UC-24.1-TC014",
+        "started_at":  "2026-11-01T15:28:11.950Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.1-TC015"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.1-TC016"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.1-TC017"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.1-TC018"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.1-TC019"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.1-TC020"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.1-TC021"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.2-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.2-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.2-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.2-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.2-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.2-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.2-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.2-TC008"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến DELETE stock-requests/999999999; request 1340a0b4-40c3-4055-be4c-b3c813b24c70",
+        "id":  "UC-24.2-TC009",
+        "started_at":  "2026-11-01T15:28:11.960Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại DELETE stock-requests/999999999; nghiệp vụ không được thực thi.",
+        "id":  "UC-24.2-TC010",
+        "started_at":  "2026-11-01T15:28:11.970Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.2-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-24.2-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-27-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-27-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-27-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-27-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-27-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-27-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-27-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-27-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-27-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-27-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-27-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-27-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-27-TC013"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-27-TC014"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-27-TC015"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-27-TC016"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST purchase-orders; request a1af8ada-1210-483c-be52-8dddc8915e21",
+        "id":  "UC-27-TC017",
+        "started_at":  "2026-11-01T15:28:11.983Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại POST purchase-orders; nghiệp vụ không được thực thi.",
+        "id":  "UC-27-TC018",
+        "started_at":  "2026-11-01T15:28:11.993Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-27-TC019"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-27-TC020"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-27-TC021"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-27-TC022"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-27-TC023"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-27-TC024"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Kế hoạch KHMUA-NOIBO-17 chưa duyệt: đặt mua bị 409 INVALID_STATE, không có đơn mua được tạo.",
+        "id":  "UC-27-TC025",
+        "started_at":  "2026-11-01T15:28:12.672Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-27-TC026"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-27-TC027"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC013"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC014"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC015"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC016"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC017"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC018"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC019"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC020"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC021"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST business-plans; request 2bbce483-b841-4928-ae2a-e1bbd12c7f1c",
+        "id":  "UC-04-TC022",
+        "started_at":  "2026-11-01T15:28:12.004Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại POST business-plans; nghiệp vụ không được thực thi.",
+        "id":  "UC-04-TC023",
+        "started_at":  "2026-11-01T15:28:12.014Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC024"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC025"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC026"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Kế hoạch MUA, NVL hợp lệ, ngày hôm nay, lượng -1: 422 VALIDATION_ERROR; không tạo kế hoạch.",
+        "id":  "UC-04-TC027",
+        "started_at":  "2026-11-01T15:28:17.375Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Kế hoạch MUA, NVL hợp lệ, ngày hôm nay, lượng abc: 422 VALIDATION_ERROR; không tạo kế hoạch.",
+        "id":  "UC-04-TC028",
+        "started_at":  "2026-11-01T15:28:17.447Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC029"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Thực kiểm 55, đạt 50/lỗi 5: biên bản BB-LQC-KHMUANOIBO18-01 cần bù đúng 5, không phải 10.",
+        "id":  "UC-04-TC030",
+        "started_at":  "2026-11-01T15:28:15.235Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "KHMUA-NOIBO-19 bù 2, KHMUA-NOIBO-20 bù 3; thêm 1 bị 422 SOURCE_LIMIT_EXCEEDED; còn phải lập bù 0.",
+        "id":  "UC-04-TC031",
+        "started_at":  "2026-11-01T15:28:15.245Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Kế hoạch KHMUA-NOIBO-21: hai NCC giá 18.000/20.000; đơn giá 19.000 × 13,2 = 250.800đ; lưu hai báo giá. Cấu hình giá thử được khôi phục.",
+        "id":  "UC-04-TC032",
+        "started_at":  "2026-11-01T15:28:15.313Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Kế hoạch KHBAN-KHACHHANG-06 lấy đúng khách/đơn DH-KHACHHANG-10 từ báo cáo cuối; ô chọn khách bị ẩn và khóa trong UI.",
+        "id":  "UC-04-TC033",
+        "started_at":  "2026-11-01T15:28:18.722Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-04-TC034"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05-TC011"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET business-plans; request e1a41a54-6ce2-4fc5-a9dd-38a451183e04",
+        "id":  "UC-05-TC012",
+        "started_at":  "2026-11-01T15:28:12.026Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại GET business-plans; nghiệp vụ không được thực thi.",
+        "id":  "UC-05-TC013",
+        "started_at":  "2026-11-01T15:28:12.038Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.1-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.1-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.1-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.1-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.1-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.1-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.1-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.1-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.1-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.1-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.1-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.1-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.1-TC013"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến PATCH business-plans/999999999; request e253bc6e-19d6-4841-9b2e-af8dfbd68e31",
+        "id":  "UC-05.1-TC014",
+        "started_at":  "2026-11-01T15:28:12.049Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại PATCH business-plans/999999999; nghiệp vụ không được thực thi.",
+        "id":  "UC-05.1-TC015",
+        "started_at":  "2026-11-01T15:28:12.060Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.1-TC016"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.1-TC017"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.1-TC018"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.1-TC019"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.1-TC020"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.1-TC021"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.1-TC022"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.2-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.2-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.2-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.2-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.2-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.2-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.2-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.2-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.2-TC009"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến DELETE business-plans/999999999; request 5b870d82-1866-47de-b0e9-c847be7275e4",
+        "id":  "UC-05.2-TC010",
+        "started_at":  "2026-11-01T15:28:12.071Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại DELETE business-plans/999999999; nghiệp vụ không được thực thi.",
+        "id":  "UC-05.2-TC011",
+        "started_at":  "2026-11-01T15:28:12.081Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.2-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-05.2-TC013"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-10-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-10-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-10-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-10-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-10-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-10-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-10-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-10-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-10-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-10-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-10-TC011"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST stock-documents; request ca39c38b-2f49-4417-bdea-0cc315b1a909",
+        "id":  "UC-10-TC012",
+        "started_at":  "2026-11-01T15:28:12.098Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại POST stock-documents; nghiệp vụ không được thực thi.",
+        "id":  "UC-10-TC013",
+        "started_at":  "2026-11-01T15:28:12.113Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-10-TC014"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-10-TC015"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-10-TC016"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-10-TC017"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-10-TC018"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-10-TC019"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11-TC008"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST stock-documents; request 9009a3ee-8b0b-48d0-96da-cbe387ad7f9a",
+        "id":  "UC-11-TC009",
+        "started_at":  "2026-11-01T15:28:12.128Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại POST stock-documents; nghiệp vụ không được thực thi.",
+        "id":  "UC-11-TC010",
+        "started_at":  "2026-11-01T15:28:12.139Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11-TC013"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11-TC014"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11-TC015"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11-TC016"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.01-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.01-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.01-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.01-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.01-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.01-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.01-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.01-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.01-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.01-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.01-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.01-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.01-TC013"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.01-TC014"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.01-TC015"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST stock-documents; request 90935cc3-4bf9-46c5-a769-fdc29a035014",
+        "id":  "UC-11.01-TC016",
+        "started_at":  "2026-11-01T15:28:12.148Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại POST stock-documents; nghiệp vụ không được thực thi.",
+        "id":  "UC-11.01-TC017",
+        "started_at":  "2026-11-01T15:28:12.157Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.01-TC018"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.01-TC019"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.01-TC020"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.01-TC021"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.01-TC022"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.01-TC023"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.02-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.02-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.02-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.02-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.02-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.02-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.02-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.02-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.02-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.02-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.02-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.02-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.02-TC013"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.02-TC014"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.02-TC015"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST stock-documents; request 1ef4f0cc-27ce-4a2f-98bb-cc8fbc6797b6",
+        "id":  "UC-11.02-TC016",
+        "started_at":  "2026-11-01T15:28:12.167Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại POST stock-documents; nghiệp vụ không được thực thi.",
+        "id":  "UC-11.02-TC017",
+        "started_at":  "2026-11-01T15:28:12.178Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.02-TC018"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.02-TC019"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.02-TC020"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.02-TC021"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.02-TC022"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-11.02-TC023"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-35-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-35-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-35-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-35-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-35-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-35-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-35-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-35-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-35-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-35-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-35-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-35-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-35-TC013"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-35-TC014"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-35-TC015"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-35-TC016"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-35-TC017"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-35-TC018"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST finished-reports; request 311d6fc9-7128-45c5-a55c-34cc376039e5",
+        "id":  "UC-35-TC019",
+        "started_at":  "2026-11-01T15:28:12.190Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại POST finished-reports; nghiệp vụ không được thực thi.",
+        "id":  "UC-35-TC020",
+        "started_at":  "2026-11-01T15:28:12.200Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-35-TC021"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-35-TC022"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-35-TC023"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Phần TP dùng KHSX đúng xưởng, NSX/ngày hoàn thành hợp lệ, lượng -1: 422; tiến độ/lượng báo cáo trước và sau giữ nguyên.",
+        "id":  "UC-35-TC024",
+        "started_at":  "2026-11-01T15:28:17.408Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Phần TP dùng KHSX đúng xưởng, NSX/ngày hoàn thành hợp lệ, lượng abc: 422; tiến độ/lượng báo cáo trước và sau giữ nguyên.",
+        "id":  "UC-35-TC025",
+        "started_at":  "2026-11-01T15:28:17.483Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-35-TC026"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "KHSX 100, đã báo 40: nhập 20 còn 40; tick đợt cuối điền 60 và còn 0, đợt cuối được tích. Screenshot finished-remaining-60.png; chưa gửi phần này từ UI.",
+        "id":  "UC-35-TC027",
+        "started_at":  "2026-11-01T15:28:17.565Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-35-TC028"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Hai phần 40/60 có lot_id riêng, cùng lot_header_id 501; tổng báo cáo/bán 100, KHSX COMPLETED, không cộng trùng phần trước.",
+        "id":  "UC-35-TC029",
+        "started_at":  "2026-11-01T15:28:18.710Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-01-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-01-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-01-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-01-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-01-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-01-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-01-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-01-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-01-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-01-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-01-TC011"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET auth/me; request 107831b8-742c-4a63-88e2-542dc760ee9d",
+        "id":  "UC-01-TC012",
+        "started_at":  "2026-11-01T15:28:12.210Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Sai thông tin đăng nhập: HTTP 401, auth/me vẫn 401, không tạo phiên người dùng. Đã sửa ca sai vai trò đăng nhập cũ.",
+        "id":  "UC-01-TC013",
+        "started_at":  "2026-11-01T15:28:12.220Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12-TC012"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET qc-inspections; request 94c9dfe8-5909-4a64-887b-3aa0c74eb51c",
+        "id":  "UC-12-TC013",
+        "started_at":  "2026-11-01T15:28:12.274Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại GET qc-inspections; nghiệp vụ không được thực thi.",
+        "id":  "UC-12-TC014",
+        "started_at":  "2026-11-01T15:28:12.283Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12-TC015"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12-TC016"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12-TC017"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.1-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.1-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.1-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.1-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.1-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.1-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.1-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.1-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.1-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.1-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.1-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.1-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.1-TC013"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST qc-inspections; request baf30c06-6d79-4c35-b4cf-f319a9a63c88",
+        "id":  "UC-12.1-TC014",
+        "started_at":  "2026-11-01T15:28:12.294Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại POST qc-inspections; nghiệp vụ không được thực thi.",
+        "id":  "UC-12.1-TC015",
+        "started_at":  "2026-11-01T15:28:12.304Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.1-TC016"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.1-TC017"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.1-TC018"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.1-TC019"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.1-TC020"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.1-TC021"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "UI mặc định 55 đạt/0 lỗi; lỗi 5 → đạt 50; đạt 48 → lỗi 7; ô vẫn sửa được. Screenshot qc-defaults-55.png; chưa lưu trong ca UI này.",
+        "id":  "UC-12.1-TC022",
+        "started_at":  "2026-11-01T15:28:13.232Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Kết quả QC QC-452-cea09a chỉ đọc; không nút sửa/chứng từ bù; PATCH bị 409 COMPENSATION_REQUIRED; kết quả và tồn kho giữ nguyên.",
+        "id":  "UC-12.2-TC001",
+        "started_at":  "2026-11-01T15:28:19.789Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.2-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.2-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.2-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.2-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.2-TC006"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến PATCH qc-inspections/999999999; request 4a4703de-1e64-4dfe-b536-ad5e1e2e158e",
+        "id":  "UC-12.2-TC007",
+        "started_at":  "2026-11-01T15:28:12.318Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại PATCH qc-inspections/999999999; nghiệp vụ không được thực thi.",
+        "id":  "UC-12.2-TC008",
+        "started_at":  "2026-11-01T15:28:12.328Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Đã mở chi tiết QC, không có nút xóa; đóng phần xem bình thường. Thử DELETE đường cũ bị 409 COMPENSATION_REQUIRED; kết quả/lịch sử giữ nguyên.",
+        "id":  "UC-12.3-TC001",
+        "started_at":  "2026-11-01T15:28:20.627Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.3-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.3-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.3-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.3-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.3-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.3-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.3-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-12.3-TC009"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến DELETE qc-inspections/999999999; request 6ecc30b2-a210-437c-9e65-dba24da44731",
+        "id":  "UC-12.3-TC010",
+        "started_at":  "2026-11-01T15:28:12.338Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại DELETE qc-inspections/999999999; nghiệp vụ không được thực thi.",
+        "id":  "UC-12.3-TC011",
+        "started_at":  "2026-11-01T15:28:12.348Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC013"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC014"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC015"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC016"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC017"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC018"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC019"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC020"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC021"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC022"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC023"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC024"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC025"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC026"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC027"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC028"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC029"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST production-reports; request 0fd40dc7-6c68-4828-a07c-c84c7146b69c",
+        "id":  "UC-34-TC030",
+        "started_at":  "2026-11-01T15:28:12.360Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại POST production-reports; nghiệp vụ không được thực thi.",
+        "id":  "UC-34-TC031",
+        "started_at":  "2026-11-01T15:28:12.370Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC032"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC033"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC034"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC035"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC036"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-34-TC037"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-15-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-15-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-15-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-15-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-15-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-15-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-15-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-15-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-15-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-15-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-15-TC011"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET inspection-counts; request f1409994-0128-4fc0-9dff-601bb4c5b477",
+        "id":  "UC-15-TC012",
+        "started_at":  "2026-11-01T15:28:12.381Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại GET inspection-counts; nghiệp vụ không được thực thi.",
+        "id":  "UC-15-TC013",
+        "started_at":  "2026-11-01T15:28:12.390Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-15-TC014"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-15-TC015"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-15-TC016"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-15-TC017"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-15-TC018"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-15-TC019"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-28-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-28-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-28-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-28-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-28-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-28-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-28-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-28-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-28-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-28-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-28-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-28-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-28-TC013"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST stocktake-minutes; request 279646eb-f180-4d0f-8026-52717431446f",
+        "id":  "UC-28-TC014",
+        "started_at":  "2026-11-01T15:28:12.400Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại POST stocktake-minutes; nghiệp vụ không được thực thi.",
+        "id":  "UC-28-TC015",
+        "started_at":  "2026-11-01T15:28:12.412Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-28-TC016"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-28-TC017"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-28-TC018"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Biên bản BB-LQC-KHMUANOIBO17-01: cần 55, đếm/kiểm 52, đạt 50, lỗi 2, giao thiếu 3, tổng thiếu 5; có thông báo planner.",
+        "id":  "UC-28-TC019",
+        "started_at":  "2026-11-01T15:28:14.989Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "qc được chọn lập, biên bản có đủ QC và số đếm; stocktaker xem được nhưng tạo thay nhận 403.",
+        "id":  "UC-28-TC020",
+        "started_at":  "2026-11-01T15:28:15.000Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-32-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-32-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-32-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-32-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-32-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-32-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-32-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-32-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-32-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-32-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-32-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-32-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-32-TC013"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST business-plans/999999999/review; request 009514f3-a574-478b-9daf-2dc516829b8f",
+        "id":  "UC-32-TC014",
+        "started_at":  "2026-11-01T15:28:12.424Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại POST business-plans/999999999/review; nghiệp vụ không được thực thi.",
+        "id":  "UC-32-TC015",
+        "started_at":  "2026-11-01T15:28:12.434Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-32-TC016"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-32-TC017"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-32-TC018"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-32-TC019"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-02-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-02-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-02-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-02-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-02-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-02-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-02-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-02-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-02-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-02-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-02-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-02-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-02-TC013"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST customer-orders; request 43c0aaa5-156b-44c0-83cb-e88dd3ee19d1",
+        "id":  "UC-02-TC014",
+        "started_at":  "2026-11-01T15:28:12.444Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại POST customer-orders; nghiệp vụ không được thực thi.",
+        "id":  "UC-02-TC015",
+        "started_at":  "2026-11-01T15:28:12.453Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-02-TC016"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-02-TC017"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-02-TC018"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03-TC010"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET customer-orders; request af66eb9a-aacb-4687-bded-92323343d8b5",
+        "id":  "UC-03-TC011",
+        "started_at":  "2026-11-01T15:28:12.463Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại GET customer-orders; nghiệp vụ không được thực thi.",
+        "id":  "UC-03-TC012",
+        "started_at":  "2026-11-01T15:28:12.472Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Giám đốc xem DH-KHACHHANG-10; không nút tạo/sửa/tiếp nhận/duyệt; API ghi đều 403. Đã kiểm trên UI và backend.",
+        "id":  "UC-03-TC013",
+        "started_at":  "2026-11-01T15:28:16.382Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03.1-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03.1-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03.1-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03.1-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03.1-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03.1-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03.1-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03.1-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03.1-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03.1-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03.1-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03.1-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03.1-TC013"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03.1-TC014"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03.1-TC015"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến PATCH customer-orders/999999999; request ebca90a4-90bf-481e-94b2-c55647d565e9",
+        "id":  "UC-03.1-TC016",
+        "started_at":  "2026-11-01T15:28:12.483Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại PATCH customer-orders/999999999; nghiệp vụ không được thực thi.",
+        "id":  "UC-03.1-TC017",
+        "started_at":  "2026-11-01T15:28:12.493Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03.1-TC018"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03.1-TC019"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-03.1-TC020"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-22-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-22-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-22-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-22-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-22-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-22-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-22-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-22-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-22-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-22-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-22-TC011"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET warehouse-lookup; request 344ab0d7-c0a7-4346-bb1d-41ba8144f596",
+        "id":  "UC-22-TC012",
+        "started_at":  "2026-11-01T15:28:12.505Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại GET warehouse-lookup; nghiệp vụ không được thực thi.",
+        "id":  "UC-22-TC013",
+        "started_at":  "2026-11-01T15:28:12.516Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-16-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-16-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-16-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-16-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-16-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-16-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-16-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-16-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-16-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-16-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-16-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-16-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-16-TC013"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET exception-proposals; request edacabfc-7ead-4972-adfc-e009fc719dcc",
+        "id":  "UC-16-TC014",
+        "started_at":  "2026-11-01T15:28:12.526Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại GET exception-proposals; nghiệp vụ không được thực thi.",
+        "id":  "UC-16-TC015",
+        "started_at":  "2026-11-01T15:28:12.536Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-16-TC016"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-16-TC017"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-16-TC018"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-01-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-01-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-01-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-01-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-01-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-01-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-01-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-01-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-01-TC009"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-01-TC010"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET accounts; request c01d3da8-3e10-4fd8-a102-9aaaf85b5457",
+        "id":  "UC-BS-01-TC011",
+        "started_at":  "2026-11-01T15:28:12.549Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại GET accounts; nghiệp vụ không được thực thi.",
+        "id":  "UC-BS-01-TC012",
+        "started_at":  "2026-11-01T15:28:12.558Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-01-TC013"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-01-TC014"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-01-TC015"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-02-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-02-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-02-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-02-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-02-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-02-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-02-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-02-TC008"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-02-TC009"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET customer-returns; request b3aaa296-61e9-4f97-9b2a-3b24893f8ab4",
+        "id":  "UC-BS-02-TC010",
+        "started_at":  "2026-11-01T15:28:12.569Z"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Tài khoản ngoài quyền nhận HTTP 403 tại GET customer-returns; nghiệp vụ không được thực thi.",
+        "id":  "UC-BS-02-TC011",
+        "started_at":  "2026-11-01T15:28:12.578Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-02-TC012"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-02-TC013"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-02-TC014"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-03-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-03-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-03-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-03-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-03-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-03-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-03-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-03-TC008"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET notifications; request bdc052bb-3bb3-42b0-99b7-575a6adca780",
+        "id":  "UC-BS-03-TC009",
+        "started_at":  "2026-11-01T15:28:12.589Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-04-TC001"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-04-TC002"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-04-TC003"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-04-TC004"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-04-TC005"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-04-TC006"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-04-TC007"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-04-TC008"
+    },
+    {
+        "status":  "Pass",
+        "evidence":  "documented-http-evidence.json",
+        "actual":  "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST test-data/reset; request 46dae2ef-3cac-4d74-8b4a-a9b028befe7b",
+        "id":  "UC-BS-04-TC009",
+        "started_at":  "2026-11-01T15:28:12.599Z"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-04-TC010"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-04-TC011"
+    },
+    {
+        "status":  "Chưa chạy",
+        "actual":  "Chưa có bằng chứng riêng theo mã.",
+        "id":  "UC-BS-04-TC012"
+    }
+]

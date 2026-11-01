@@ -1,0 +1,1621 @@
+[
+  {
+    "id": "UC-29-TC012",
+    "uc": "UC-29",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST customer-orders/999999999/receive; request efc41b34-a6e2-45a0-a205-6aa7fa66906c",
+    "request_ids": [
+      "efc41b34-a6e2-45a0-a205-6aa7fa66906c"
+    ],
+    "started_at": "2026-11-01T15:28:11.432Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-29-TC013",
+    "uc": "UC-29",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại POST customer-orders/999999999/receive; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "9b5ba575-2a6c-46d0-985f-d834394a121e"
+    ],
+    "started_at": "2026-11-01T15:28:11.441Z",
+    "duration_ms": 14,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-06-TC012",
+    "uc": "UC-06",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET categories; request ae3f1b4b-5669-4096-801c-11eb0ac25df0",
+    "request_ids": [
+      "ae3f1b4b-5669-4096-801c-11eb0ac25df0"
+    ],
+    "started_at": "2026-11-01T15:28:11.455Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-06-TC013",
+    "uc": "UC-06",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại GET categories; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "0b4bc9b9-1771-4423-8c8f-c39f21e49335"
+    ],
+    "started_at": "2026-11-01T15:28:11.464Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-06.1-TC013",
+    "uc": "UC-06.1",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST categories; request 846450e0-b7c4-48b5-8d0a-12f32c9bd2fb",
+    "request_ids": [
+      "846450e0-b7c4-48b5-8d0a-12f32c9bd2fb"
+    ],
+    "started_at": "2026-11-01T15:28:11.473Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-06.1-TC014",
+    "uc": "UC-06.1",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại POST categories; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "c4446dcf-8687-40f9-9243-da65e15f7265"
+    ],
+    "started_at": "2026-11-01T15:28:11.482Z",
+    "duration_ms": 11,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-06.2-TC010",
+    "uc": "UC-06.2",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến DELETE categories/999999999; request 0fab5061-cea6-4065-bded-fddb40ffd475",
+    "request_ids": [
+      "0fab5061-cea6-4065-bded-fddb40ffd475"
+    ],
+    "started_at": "2026-11-01T15:28:11.494Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-06.2-TC011",
+    "uc": "UC-06.2",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại DELETE categories/999999999; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "e005f69c-0a87-4851-bbce-9ff34f3d846f"
+    ],
+    "started_at": "2026-11-01T15:28:11.505Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-06.3-TC013",
+    "uc": "UC-06.3",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến PATCH categories/999999999; request f0aeddb0-ac1c-4135-8e44-8463670b425f",
+    "request_ids": [
+      "f0aeddb0-ac1c-4135-8e44-8463670b425f"
+    ],
+    "started_at": "2026-11-01T15:28:11.516Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-06.3-TC014",
+    "uc": "UC-06.3",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại PATCH categories/999999999; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "0d07eef0-778d-4940-825f-71a4eaf8f05e"
+    ],
+    "started_at": "2026-11-01T15:28:11.526Z",
+    "duration_ms": 12,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-07-TC012",
+    "uc": "UC-07",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET items; request 57d0ca68-2e00-4a6e-8c67-d3bbbdcc13ce",
+    "request_ids": [
+      "57d0ca68-2e00-4a6e-8c67-d3bbbdcc13ce"
+    ],
+    "started_at": "2026-11-01T15:28:11.538Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-07-TC013",
+    "uc": "UC-07",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại GET items; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "5691c448-011c-4b49-849c-a4632a0d91eb"
+    ],
+    "started_at": "2026-11-01T15:28:11.548Z",
+    "duration_ms": 11,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-07.1-TC014",
+    "uc": "UC-07.1",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST items; request 59fcc057-6f01-4725-bd1b-81bf1fd8bf3a",
+    "request_ids": [
+      "59fcc057-6f01-4725-bd1b-81bf1fd8bf3a"
+    ],
+    "started_at": "2026-11-01T15:28:11.560Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-07.1-TC015",
+    "uc": "UC-07.1",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại POST items; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "8c70490f-7c18-44b7-8dd0-1afe312e2675"
+    ],
+    "started_at": "2026-11-01T15:28:11.569Z",
+    "duration_ms": 11,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-07.2-TC010",
+    "uc": "UC-07.2",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến DELETE items/999999999; request 842ec6e4-8fc4-42b1-8c7f-857ebcce83f2",
+    "request_ids": [
+      "842ec6e4-8fc4-42b1-8c7f-857ebcce83f2"
+    ],
+    "started_at": "2026-11-01T15:28:11.580Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-07.2-TC011",
+    "uc": "UC-07.2",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại DELETE items/999999999; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "32ee3252-87d6-4984-a5e5-41ac2f05a40d"
+    ],
+    "started_at": "2026-11-01T15:28:11.590Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-07.3-TC013",
+    "uc": "UC-07.3",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến PATCH items/999999999; request eecebdca-1e5e-4973-96db-fc12467e4b69",
+    "request_ids": [
+      "eecebdca-1e5e-4973-96db-fc12467e4b69"
+    ],
+    "started_at": "2026-11-01T15:28:11.600Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-07.3-TC014",
+    "uc": "UC-07.3",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại PATCH items/999999999; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "19d6b986-f56d-46ce-a276-8dfe01615a2f"
+    ],
+    "started_at": "2026-11-01T15:28:11.610Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-08-TC014",
+    "uc": "UC-08",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET warehouse-inbound; request 63b2a6a3-01a0-40b5-9f35-787589760f77",
+    "request_ids": [
+      "63b2a6a3-01a0-40b5-9f35-787589760f77"
+    ],
+    "started_at": "2026-11-01T15:28:11.620Z",
+    "duration_ms": 11,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-08-TC015",
+    "uc": "UC-08",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại GET warehouse-inbound; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "601cfc17-bedc-4d6a-a78b-ef44fed12862"
+    ],
+    "started_at": "2026-11-01T15:28:11.632Z",
+    "duration_ms": 11,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-09-TC014",
+    "uc": "UC-09",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET warehouse-outbound; request d5c1bb7b-5afd-4478-8d9f-f7d1811321e3",
+    "request_ids": [
+      "d5c1bb7b-5afd-4478-8d9f-f7d1811321e3"
+    ],
+    "started_at": "2026-11-01T15:28:11.643Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-09-TC015",
+    "uc": "UC-09",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại GET warehouse-outbound; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "6278c3f5-ef39-4061-9342-7974d6d96e77"
+    ],
+    "started_at": "2026-11-01T15:28:11.653Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-13-TC017",
+    "uc": "UC-13",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST tasks; request b960a2c2-9655-467d-82e0-739ec9ecf5ca",
+    "request_ids": [
+      "b960a2c2-9655-467d-82e0-739ec9ecf5ca"
+    ],
+    "started_at": "2026-11-01T15:28:11.662Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-13-TC018",
+    "uc": "UC-13",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại POST tasks; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "0ae1d67c-bb96-405d-b207-21396aceb5ce"
+    ],
+    "started_at": "2026-11-01T15:28:11.671Z",
+    "duration_ms": 14,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-17-TC012",
+    "uc": "UC-17",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST exception-proposals/999999999/review; request ad96ad58-e3da-4004-9731-f859365ca60c",
+    "request_ids": [
+      "ad96ad58-e3da-4004-9731-f859365ca60c"
+    ],
+    "started_at": "2026-11-01T15:28:11.686Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-17-TC013",
+    "uc": "UC-17",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại POST exception-proposals/999999999/review; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "eec30d78-51d6-4abf-bf81-cd98e7a7a262"
+    ],
+    "started_at": "2026-11-01T15:28:11.696Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-18-TC011",
+    "uc": "UC-18",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET reports/inventory; request 06723280-fc42-441e-bb09-d034a23d0ae6",
+    "request_ids": [
+      "06723280-fc42-441e-bb09-d034a23d0ae6"
+    ],
+    "started_at": "2026-11-01T15:28:11.707Z",
+    "duration_ms": 7,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-18-TC012",
+    "uc": "UC-18",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại GET reports/inventory; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "92bb8c7b-0e8e-45ba-85c1-128d961e86b0"
+    ],
+    "started_at": "2026-11-01T15:28:11.716Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-19-TC012",
+    "uc": "UC-19",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET stock-documents; request 96471ccb-38f1-4332-b0a3-732be0d67798",
+    "request_ids": [
+      "96471ccb-38f1-4332-b0a3-732be0d67798"
+    ],
+    "started_at": "2026-11-01T15:28:11.726Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-19-TC013",
+    "uc": "UC-19",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại GET stock-documents; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "59a299c3-ceb9-4bdd-b446-de335262ca4a"
+    ],
+    "started_at": "2026-11-01T15:28:11.735Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-20-TC012",
+    "uc": "UC-20",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET stock-documents; request b1af192d-2d24-4000-968b-77e1e50a496f",
+    "request_ids": [
+      "b1af192d-2d24-4000-968b-77e1e50a496f"
+    ],
+    "started_at": "2026-11-01T15:28:11.745Z",
+    "duration_ms": 11,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-20-TC013",
+    "uc": "UC-20",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại GET stock-documents; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "347ae4c0-02bd-40f4-92d7-90e87426dc55"
+    ],
+    "started_at": "2026-11-01T15:28:11.757Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-21-TC011",
+    "uc": "UC-21",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET reports/stocktakes; request 8b4ff819-f36f-45c0-94d1-435048a3cbf8",
+    "request_ids": [
+      "8b4ff819-f36f-45c0-94d1-435048a3cbf8"
+    ],
+    "started_at": "2026-11-01T15:28:11.767Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-21-TC012",
+    "uc": "UC-21",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại GET reports/stocktakes; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "6f8b8581-a34d-4689-a48d-9ec9d919c467"
+    ],
+    "started_at": "2026-11-01T15:28:11.777Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-25-TC015",
+    "uc": "UC-25",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET tasks; request b90436e9-8056-4658-8caf-c752df66f58e",
+    "request_ids": [
+      "b90436e9-8056-4658-8caf-c752df66f58e"
+    ],
+    "started_at": "2026-11-01T15:28:11.787Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-25-TC016",
+    "uc": "UC-25",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại GET tasks; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "6d7c249c-3040-4585-be89-5b67ddde2413"
+    ],
+    "started_at": "2026-11-01T15:28:11.797Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-25.1-TC017",
+    "uc": "UC-25.1",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến PATCH tasks/999999999; request 42f612c3-5105-4eb9-bafb-15c99e4bf11b",
+    "request_ids": [
+      "42f612c3-5105-4eb9-bafb-15c99e4bf11b"
+    ],
+    "started_at": "2026-11-01T15:28:11.807Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-25.1-TC018",
+    "uc": "UC-25.1",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại PATCH tasks/999999999; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "4e154212-0f65-4c25-a5b1-e2020a9eda05"
+    ],
+    "started_at": "2026-11-01T15:28:11.818Z",
+    "duration_ms": 14,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-25.2-TC011",
+    "uc": "UC-25.2",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến DELETE tasks/999999999; request 874c58cf-4b89-44cd-8a4d-767db08d3bf6",
+    "request_ids": [
+      "874c58cf-4b89-44cd-8a4d-767db08d3bf6"
+    ],
+    "started_at": "2026-11-01T15:28:11.832Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-25.2-TC012",
+    "uc": "UC-25.2",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại DELETE tasks/999999999; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "62d30170-2e42-428b-8342-c2933a772e70"
+    ],
+    "started_at": "2026-11-01T15:28:11.841Z",
+    "duration_ms": 11,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-31-TC014",
+    "uc": "UC-31",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST production-plans/999999999/review; request 44b51c24-0433-4243-a608-4b9a7375fbc5",
+    "request_ids": [
+      "44b51c24-0433-4243-a608-4b9a7375fbc5"
+    ],
+    "started_at": "2026-11-01T15:28:11.853Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-31-TC015",
+    "uc": "UC-31",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại POST production-plans/999999999/review; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "16ad8c08-0d6f-43ec-84db-a13136c41649"
+    ],
+    "started_at": "2026-11-01T15:28:11.863Z",
+    "duration_ms": 12,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-14-TC009",
+    "uc": "UC-14",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET purchase-orders; request 1e8639c4-81b8-4e98-b5a6-741c19e03362",
+    "request_ids": [
+      "1e8639c4-81b8-4e98-b5a6-741c19e03362"
+    ],
+    "started_at": "2026-11-01T15:28:11.876Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-14-TC010",
+    "uc": "UC-14",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại GET purchase-orders; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "6786d758-9d86-425f-99b4-d125ddb1cc12"
+    ],
+    "started_at": "2026-11-01T15:28:11.887Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-23-TC023",
+    "uc": "UC-23",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST stock-requests; request 78a33a72-1547-4ada-a39a-861a23a04757",
+    "request_ids": [
+      "78a33a72-1547-4ada-a39a-861a23a04757"
+    ],
+    "started_at": "2026-11-01T15:28:11.897Z",
+    "duration_ms": 8,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-23-TC024",
+    "uc": "UC-23",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại POST stock-requests; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "5850963a-0341-4f95-aaae-593eedaf911f"
+    ],
+    "started_at": "2026-11-01T15:28:11.906Z",
+    "duration_ms": 12,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-24-TC013",
+    "uc": "UC-24",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET stock-requests; request ac154eda-30e9-4080-8e94-cfd3ea92f553",
+    "request_ids": [
+      "ac154eda-30e9-4080-8e94-cfd3ea92f553"
+    ],
+    "started_at": "2026-11-01T15:28:11.919Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-24-TC014",
+    "uc": "UC-24",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại GET stock-requests; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "9a7a57c1-93f4-4ab3-86f2-ce6981be994a"
+    ],
+    "started_at": "2026-11-01T15:28:11.929Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-24.1-TC013",
+    "uc": "UC-24.1",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến PATCH stock-requests/999999999; request f937f893-ceff-4b37-b985-2063601c3c82",
+    "request_ids": [
+      "f937f893-ceff-4b37-b985-2063601c3c82"
+    ],
+    "started_at": "2026-11-01T15:28:11.939Z",
+    "duration_ms": 11,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-24.1-TC014",
+    "uc": "UC-24.1",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại PATCH stock-requests/999999999; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "3df0e16d-db72-444b-af4d-b96f1a73da5f"
+    ],
+    "started_at": "2026-11-01T15:28:11.950Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-24.2-TC009",
+    "uc": "UC-24.2",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến DELETE stock-requests/999999999; request 1340a0b4-40c3-4055-be4c-b3c813b24c70",
+    "request_ids": [
+      "1340a0b4-40c3-4055-be4c-b3c813b24c70"
+    ],
+    "started_at": "2026-11-01T15:28:11.960Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-24.2-TC010",
+    "uc": "UC-24.2",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại DELETE stock-requests/999999999; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "c9f740fa-eff5-4b26-859f-e7fda7267bd4"
+    ],
+    "started_at": "2026-11-01T15:28:11.970Z",
+    "duration_ms": 12,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-27-TC017",
+    "uc": "UC-27",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST purchase-orders; request a1af8ada-1210-483c-be52-8dddc8915e21",
+    "request_ids": [
+      "a1af8ada-1210-483c-be52-8dddc8915e21"
+    ],
+    "started_at": "2026-11-01T15:28:11.983Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-27-TC018",
+    "uc": "UC-27",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại POST purchase-orders; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "0318dbac-c170-4c4f-a05f-0afcf74b8c9c"
+    ],
+    "started_at": "2026-11-01T15:28:11.993Z",
+    "duration_ms": 11,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-04-TC022",
+    "uc": "UC-04",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST business-plans; request 2bbce483-b841-4928-ae2a-e1bbd12c7f1c",
+    "request_ids": [
+      "2bbce483-b841-4928-ae2a-e1bbd12c7f1c"
+    ],
+    "started_at": "2026-11-01T15:28:12.004Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-04-TC023",
+    "uc": "UC-04",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại POST business-plans; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "5ed7f9ce-a4d0-4371-aa4d-9bd243556564"
+    ],
+    "started_at": "2026-11-01T15:28:12.014Z",
+    "duration_ms": 11,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-05-TC012",
+    "uc": "UC-05",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET business-plans; request e1a41a54-6ce2-4fc5-a9dd-38a451183e04",
+    "request_ids": [
+      "e1a41a54-6ce2-4fc5-a9dd-38a451183e04"
+    ],
+    "started_at": "2026-11-01T15:28:12.026Z",
+    "duration_ms": 11,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-05-TC013",
+    "uc": "UC-05",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại GET business-plans; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "263fa6aa-8dc2-4c4f-90ac-093a10fbc53d"
+    ],
+    "started_at": "2026-11-01T15:28:12.038Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-05.1-TC014",
+    "uc": "UC-05.1",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến PATCH business-plans/999999999; request e253bc6e-19d6-4841-9b2e-af8dfbd68e31",
+    "request_ids": [
+      "e253bc6e-19d6-4841-9b2e-af8dfbd68e31"
+    ],
+    "started_at": "2026-11-01T15:28:12.049Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-05.1-TC015",
+    "uc": "UC-05.1",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại PATCH business-plans/999999999; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "f09d018a-e0fe-4f0b-a485-a458399dfd3b"
+    ],
+    "started_at": "2026-11-01T15:28:12.060Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-05.2-TC010",
+    "uc": "UC-05.2",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến DELETE business-plans/999999999; request 5b870d82-1866-47de-b0e9-c847be7275e4",
+    "request_ids": [
+      "5b870d82-1866-47de-b0e9-c847be7275e4"
+    ],
+    "started_at": "2026-11-01T15:28:12.071Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-05.2-TC011",
+    "uc": "UC-05.2",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại DELETE business-plans/999999999; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "506545e3-1565-4ccc-b67a-804ff56b818b"
+    ],
+    "started_at": "2026-11-01T15:28:12.081Z",
+    "duration_ms": 16,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-10-TC012",
+    "uc": "UC-10",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST stock-documents; request ca39c38b-2f49-4417-bdea-0cc315b1a909",
+    "request_ids": [
+      "ca39c38b-2f49-4417-bdea-0cc315b1a909"
+    ],
+    "started_at": "2026-11-01T15:28:12.098Z",
+    "duration_ms": 15,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-10-TC013",
+    "uc": "UC-10",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại POST stock-documents; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "889f58e1-9495-419c-a195-97488d928847"
+    ],
+    "started_at": "2026-11-01T15:28:12.113Z",
+    "duration_ms": 15,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-11-TC009",
+    "uc": "UC-11",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST stock-documents; request 9009a3ee-8b0b-48d0-96da-cbe387ad7f9a",
+    "request_ids": [
+      "9009a3ee-8b0b-48d0-96da-cbe387ad7f9a"
+    ],
+    "started_at": "2026-11-01T15:28:12.128Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-11-TC010",
+    "uc": "UC-11",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại POST stock-documents; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "61c1c88c-b154-42d9-acd2-09e3beca311b"
+    ],
+    "started_at": "2026-11-01T15:28:12.139Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-11.01-TC016",
+    "uc": "UC-11.01",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST stock-documents; request 90935cc3-4bf9-46c5-a769-fdc29a035014",
+    "request_ids": [
+      "90935cc3-4bf9-46c5-a769-fdc29a035014"
+    ],
+    "started_at": "2026-11-01T15:28:12.148Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-11.01-TC017",
+    "uc": "UC-11.01",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại POST stock-documents; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "d9927d6b-5091-47b4-8cc1-67b9f9139766"
+    ],
+    "started_at": "2026-11-01T15:28:12.157Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-11.02-TC016",
+    "uc": "UC-11.02",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST stock-documents; request 1ef4f0cc-27ce-4a2f-98bb-cc8fbc6797b6",
+    "request_ids": [
+      "1ef4f0cc-27ce-4a2f-98bb-cc8fbc6797b6"
+    ],
+    "started_at": "2026-11-01T15:28:12.167Z",
+    "duration_ms": 11,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-11.02-TC017",
+    "uc": "UC-11.02",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại POST stock-documents; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "89f2ea87-b552-4b04-a765-0e5b2ac4d847"
+    ],
+    "started_at": "2026-11-01T15:28:12.178Z",
+    "duration_ms": 11,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-35-TC019",
+    "uc": "UC-35",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST finished-reports; request 311d6fc9-7128-45c5-a55c-34cc376039e5",
+    "request_ids": [
+      "311d6fc9-7128-45c5-a55c-34cc376039e5"
+    ],
+    "started_at": "2026-11-01T15:28:12.190Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-35-TC020",
+    "uc": "UC-35",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại POST finished-reports; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "a191abf1-9b03-4b96-a2e8-f79d20ffb9ef"
+    ],
+    "started_at": "2026-11-01T15:28:12.200Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-01-TC012",
+    "uc": "UC-01",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET auth/me; request 107831b8-742c-4a63-88e2-542dc760ee9d",
+    "request_ids": [
+      "107831b8-742c-4a63-88e2-542dc760ee9d"
+    ],
+    "started_at": "2026-11-01T15:28:12.210Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-01-TC013",
+    "uc": "UC-01",
+    "description": "Đăng nhập bằng tài khoản không tồn tại và mật khẩu sai.",
+    "status": "Pass",
+    "actual": "Sai thông tin đăng nhập: HTTP 401, auth/me vẫn 401, không tạo phiên người dùng. Đã sửa ca sai vai trò đăng nhập cũ.",
+    "request_ids": [
+      "98c5fc91-7154-4e44-b05b-5883dd898b2c",
+      "afa01a89-fe08-4b64-8180-2c589a0b769e"
+    ],
+    "amendment": {
+      "description": "Đăng nhập bằng tên tài khoản không tồn tại và mật khẩu sai.",
+      "pre": "Không có phiên đăng nhập; tên tài khoản thử không tồn tại.",
+      "data": "Tên tài khoản khong_ton_tai_<mã ngẫu nhiên>; mật khẩu Wrong123.",
+      "expected": "Từ chối đăng nhập; không tạo phiên người dùng. Đăng nhập không bị giới hạn theo vai trò."
+    },
+    "started_at": "2026-11-01T15:28:12.220Z",
+    "duration_ms": 54,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-12-TC013",
+    "uc": "UC-12",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET qc-inspections; request 94c9dfe8-5909-4a64-887b-3aa0c74eb51c",
+    "request_ids": [
+      "94c9dfe8-5909-4a64-887b-3aa0c74eb51c"
+    ],
+    "started_at": "2026-11-01T15:28:12.274Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-12-TC014",
+    "uc": "UC-12",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại GET qc-inspections; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "52d8beb0-4b0c-4201-9f8b-d76c5bc388ea"
+    ],
+    "started_at": "2026-11-01T15:28:12.283Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-12.1-TC014",
+    "uc": "UC-12.1",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST qc-inspections; request baf30c06-6d79-4c35-b4cf-f319a9a63c88",
+    "request_ids": [
+      "baf30c06-6d79-4c35-b4cf-f319a9a63c88"
+    ],
+    "started_at": "2026-11-01T15:28:12.294Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-12.1-TC015",
+    "uc": "UC-12.1",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại POST qc-inspections; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "001aae8b-ae9c-40d5-b6ec-6691efeb9c5e"
+    ],
+    "started_at": "2026-11-01T15:28:12.304Z",
+    "duration_ms": 13,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-12.2-TC007",
+    "uc": "UC-12.2",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến PATCH qc-inspections/999999999; request 4a4703de-1e64-4dfe-b536-ad5e1e2e158e",
+    "request_ids": [
+      "4a4703de-1e64-4dfe-b536-ad5e1e2e158e"
+    ],
+    "started_at": "2026-11-01T15:28:12.318Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-12.2-TC008",
+    "uc": "UC-12.2",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại PATCH qc-inspections/999999999; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "b7ac92a2-4c78-4e38-9f35-eaa1d4bf6acd"
+    ],
+    "started_at": "2026-11-01T15:28:12.328Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-12.3-TC010",
+    "uc": "UC-12.3",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến DELETE qc-inspections/999999999; request 6ecc30b2-a210-437c-9e65-dba24da44731",
+    "request_ids": [
+      "6ecc30b2-a210-437c-9e65-dba24da44731"
+    ],
+    "started_at": "2026-11-01T15:28:12.338Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-12.3-TC011",
+    "uc": "UC-12.3",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại DELETE qc-inspections/999999999; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "76bcc1d6-87d5-4b71-a59f-3216124ec0bb"
+    ],
+    "started_at": "2026-11-01T15:28:12.348Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-34-TC030",
+    "uc": "UC-34",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST production-reports; request 0fd40dc7-6c68-4828-a07c-c84c7146b69c",
+    "request_ids": [
+      "0fd40dc7-6c68-4828-a07c-c84c7146b69c"
+    ],
+    "started_at": "2026-11-01T15:28:12.360Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-34-TC031",
+    "uc": "UC-34",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại POST production-reports; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "7dab4274-e61f-4429-b779-6e94dc214bfc"
+    ],
+    "started_at": "2026-11-01T15:28:12.370Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-15-TC012",
+    "uc": "UC-15",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET inspection-counts; request f1409994-0128-4fc0-9dff-601bb4c5b477",
+    "request_ids": [
+      "f1409994-0128-4fc0-9dff-601bb4c5b477"
+    ],
+    "started_at": "2026-11-01T15:28:12.381Z",
+    "duration_ms": 8,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-15-TC013",
+    "uc": "UC-15",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại GET inspection-counts; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "36054155-8fe5-4a27-be17-094e4ba749d1"
+    ],
+    "started_at": "2026-11-01T15:28:12.390Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-28-TC014",
+    "uc": "UC-28",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST stocktake-minutes; request 279646eb-f180-4d0f-8026-52717431446f",
+    "request_ids": [
+      "279646eb-f180-4d0f-8026-52717431446f"
+    ],
+    "started_at": "2026-11-01T15:28:12.400Z",
+    "duration_ms": 11,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-28-TC015",
+    "uc": "UC-28",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại POST stocktake-minutes; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "4a94b825-8ecb-4159-b571-1ec0756f6d49"
+    ],
+    "started_at": "2026-11-01T15:28:12.412Z",
+    "duration_ms": 11,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-32-TC014",
+    "uc": "UC-32",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST business-plans/999999999/review; request 009514f3-a574-478b-9daf-2dc516829b8f",
+    "request_ids": [
+      "009514f3-a574-478b-9daf-2dc516829b8f"
+    ],
+    "started_at": "2026-11-01T15:28:12.424Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-32-TC015",
+    "uc": "UC-32",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại POST business-plans/999999999/review; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "e2a8495d-bb74-471c-bfef-cc2ecbcff164"
+    ],
+    "started_at": "2026-11-01T15:28:12.434Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-02-TC014",
+    "uc": "UC-02",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST customer-orders; request 43c0aaa5-156b-44c0-83cb-e88dd3ee19d1",
+    "request_ids": [
+      "43c0aaa5-156b-44c0-83cb-e88dd3ee19d1"
+    ],
+    "started_at": "2026-11-01T15:28:12.444Z",
+    "duration_ms": 8,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-02-TC015",
+    "uc": "UC-02",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại POST customer-orders; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "a4f5a4ae-4fed-44ed-9cb2-c782e2d91430"
+    ],
+    "started_at": "2026-11-01T15:28:12.453Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-03-TC011",
+    "uc": "UC-03",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET customer-orders; request af66eb9a-aacb-4687-bded-92323343d8b5",
+    "request_ids": [
+      "af66eb9a-aacb-4687-bded-92323343d8b5"
+    ],
+    "started_at": "2026-11-01T15:28:12.463Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-03-TC012",
+    "uc": "UC-03",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại GET customer-orders; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "bab6deea-6fd4-4075-b513-0297afd39be8"
+    ],
+    "started_at": "2026-11-01T15:28:12.472Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-03.1-TC016",
+    "uc": "UC-03.1",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến PATCH customer-orders/999999999; request ebca90a4-90bf-481e-94b2-c55647d565e9",
+    "request_ids": [
+      "ebca90a4-90bf-481e-94b2-c55647d565e9"
+    ],
+    "started_at": "2026-11-01T15:28:12.483Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-03.1-TC017",
+    "uc": "UC-03.1",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại PATCH customer-orders/999999999; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "ea040608-620c-4bc8-ac7e-7dbf9285c03f"
+    ],
+    "started_at": "2026-11-01T15:28:12.493Z",
+    "duration_ms": 11,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-22-TC012",
+    "uc": "UC-22",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET warehouse-lookup; request 344ab0d7-c0a7-4346-bb1d-41ba8144f596",
+    "request_ids": [
+      "344ab0d7-c0a7-4346-bb1d-41ba8144f596"
+    ],
+    "started_at": "2026-11-01T15:28:12.505Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-22-TC013",
+    "uc": "UC-22",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại GET warehouse-lookup; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "dc1511e5-d0b0-4842-abd7-29d16792f0de"
+    ],
+    "started_at": "2026-11-01T15:28:12.516Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-16-TC014",
+    "uc": "UC-16",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET exception-proposals; request edacabfc-7ead-4972-adfc-e009fc719dcc",
+    "request_ids": [
+      "edacabfc-7ead-4972-adfc-e009fc719dcc"
+    ],
+    "started_at": "2026-11-01T15:28:12.526Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-16-TC015",
+    "uc": "UC-16",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại GET exception-proposals; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "48fd093d-de3f-4f97-84e4-98519e047efd"
+    ],
+    "started_at": "2026-11-01T15:28:12.536Z",
+    "duration_ms": 12,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-BS-01-TC011",
+    "uc": "UC-BS-01",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET accounts; request c01d3da8-3e10-4fd8-a102-9aaaf85b5457",
+    "request_ids": [
+      "c01d3da8-3e10-4fd8-a102-9aaaf85b5457"
+    ],
+    "started_at": "2026-11-01T15:28:12.549Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-BS-01-TC012",
+    "uc": "UC-BS-01",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại GET accounts; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "08497d89-78d0-4e51-a751-4d67ac509a81"
+    ],
+    "started_at": "2026-11-01T15:28:12.558Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-BS-02-TC010",
+    "uc": "UC-BS-02",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET customer-returns; request b3aaa296-61e9-4f97-9b2a-3b24893f8ab4",
+    "request_ids": [
+      "b3aaa296-61e9-4f97-9b2a-3b24893f8ab4"
+    ],
+    "started_at": "2026-11-01T15:28:12.569Z",
+    "duration_ms": 9,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-BS-02-TC011",
+    "uc": "UC-BS-02",
+    "description": "Tài khoản khác vai trò thử mở và thao tác chức năng.",
+    "status": "Pass",
+    "actual": "Tài khoản ngoài quyền nhận HTTP 403 tại GET customer-returns; nghiệp vụ không được thực thi.",
+    "request_ids": [
+      "f6f506ec-2c95-405f-8dc9-58a5c0caa316"
+    ],
+    "started_at": "2026-11-01T15:28:12.578Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-BS-03-TC009",
+    "uc": "UC-BS-03",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến GET notifications; request bdc052bb-3bb3-42b0-99b7-575a6adca780",
+    "request_ids": [
+      "bdc052bb-3bb3-42b0-99b7-575a6adca780"
+    ],
+    "started_at": "2026-11-01T15:28:12.589Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-BS-04-TC009",
+    "uc": "UC-BS-04",
+    "description": "Mở chức năng khi chưa đăng nhập.",
+    "status": "Pass",
+    "actual": "Không đăng nhập: HTTP 401; không trả dữ liệu riêng. Tuyến POST test-data/reset; request 46dae2ef-3cac-4d74-8b4a-a9b028befe7b",
+    "request_ids": [
+      "46dae2ef-3cac-4d74-8b4a-a9b028befe7b"
+    ],
+    "started_at": "2026-11-01T15:28:12.599Z",
+    "duration_ms": 12,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-27-TC025",
+    "uc": "UC-27",
+    "description": "Không mua trước duyệt",
+    "status": "Pass",
+    "actual": "Kế hoạch KHMUA-NOIBO-17 chưa duyệt: đặt mua bị 409 INVALID_STATE, không có đơn mua được tạo.",
+    "request_ids": [
+      "e543a5aa-0760-45a9-ac6a-4a0689a3bfd2"
+    ],
+    "started_at": "2026-11-01T15:28:12.672Z",
+    "duration_ms": 11,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-12.1-TC022",
+    "uc": "UC-12.1",
+    "description": "Điền sẵn và tính lại đạt/lỗi",
+    "status": "Pass",
+    "actual": "UI mặc định 55 đạt/0 lỗi; lỗi 5 → đạt 50; đạt 48 → lỗi 7; ô vẫn sửa được. Screenshot qc-defaults-55.png; chưa lưu trong ca UI này.",
+    "request_ids": [],
+    "started_at": "2026-11-01T15:28:13.232Z",
+    "duration_ms": 1505,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-28-TC019",
+    "uc": "UC-28",
+    "description": "Kết quả QC và số đếm không cộng thiếu hai lần",
+    "status": "Pass",
+    "actual": "Biên bản BB-LQC-KHMUANOIBO17-01: cần 55, đếm/kiểm 52, đạt 50, lỗi 2, giao thiếu 3, tổng thiếu 5; có thông báo planner.",
+    "request_ids": [
+      "cc755852-f3a1-440f-a24d-7e01988e4ebe"
+    ],
+    "started_at": "2026-11-01T15:28:14.989Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-28-TC020",
+    "uc": "UC-28",
+    "description": "Người lập chung được chỉ định",
+    "status": "Pass",
+    "actual": "qc được chọn lập, biên bản có đủ QC và số đếm; stocktaker xem được nhưng tạo thay nhận 403.",
+    "request_ids": [
+      "783c77b7-bad2-4f44-bf71-276140e59a01",
+      "99bce777-5b38-434b-9c87-d69c2f793077"
+    ],
+    "started_at": "2026-11-01T15:28:15.000Z",
+    "duration_ms": 20,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-04-TC030",
+    "uc": "UC-04",
+    "description": "Mua bù không tính trùng hàng lỗi",
+    "status": "Pass",
+    "actual": "Thực kiểm 55, đạt 50/lỗi 5: biên bản BB-LQC-KHMUANOIBO18-01 cần bù đúng 5, không phải 10.",
+    "request_ids": [
+      "527f39c8-53ce-494d-b778-950b9d922582"
+    ],
+    "started_at": "2026-11-01T15:28:15.235Z",
+    "duration_ms": 10,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-04-TC031",
+    "uc": "UC-04",
+    "description": "Nhiều kế hoạch bù cùng nguồn",
+    "status": "Pass",
+    "actual": "KHMUA-NOIBO-19 bù 2, KHMUA-NOIBO-20 bù 3; thêm 1 bị 422 SOURCE_LIMIT_EXCEEDED; còn phải lập bù 0.",
+    "request_ids": [
+      "a968a3d0-6582-4ed0-ab5b-cf391d820c22",
+      "e1bb5093-d6cd-4dc6-9e72-033698101d09",
+      "95d6ae0b-edea-4116-875b-8194011fb355",
+      "0e3086fa-702c-488f-b529-2d5134401449"
+    ],
+    "started_at": "2026-11-01T15:28:15.245Z",
+    "duration_ms": 68,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-04-TC032",
+    "uc": "UC-04",
+    "description": "Dự toán theo báo giá NCC",
+    "status": "Pass",
+    "actual": "Kế hoạch KHMUA-NOIBO-21: hai NCC giá 18.000/20.000; đơn giá 19.000 × 13,2 = 250.800đ; lưu hai báo giá. Cấu hình giá thử được khôi phục.",
+    "request_ids": [
+      "09eb38ed-0c45-4a9d-973b-66f6b01cc754",
+      "791e3a6c-c6e0-48c8-b5da-0e25601737d9",
+      "b9176eec-533f-4ebf-b832-cc8b22368e76",
+      "0cf9d665-1554-4831-8aa8-d1133409e825",
+      "6645957a-b01b-4ac4-8e7f-2593684e2d43"
+    ],
+    "started_at": "2026-11-01T15:28:15.313Z",
+    "duration_ms": 73,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-03-TC013",
+    "uc": "UC-03",
+    "status": "Pass",
+    "actual": "Giám đốc xem DH-KHACHHANG-10; không nút tạo/sửa/tiếp nhận/duyệt; API ghi đều 403. Đã kiểm trên UI và backend.",
+    "request_ids": [
+      "f42cefa3-1b3b-4faf-a8f3-b0b25f8ec2bc",
+      "0c418a38-7c8d-40d7-a0bf-53e8373482cb",
+      "71687cf1-8b5d-4a1c-a102-377909ab2b86",
+      "819da96d-655e-43a1-8e97-d79c1ddffe73"
+    ],
+    "started_at": "2026-11-01T15:28:16.382Z",
+    "duration_ms": 992,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-04-TC027",
+    "uc": "UC-04",
+    "status": "Pass",
+    "actual": "Kế hoạch MUA, NVL hợp lệ, ngày hôm nay, lượng -1: 422 VALIDATION_ERROR; không tạo kế hoạch.",
+    "request_ids": [
+      "ff78f4c0-9da9-401b-9ff2-cd84041240dc",
+      "8a34b016-4837-4a25-9b20-4f74f48e01d1",
+      "344dde4c-632d-4551-ae05-9103addde670"
+    ],
+    "started_at": "2026-11-01T15:28:17.375Z",
+    "duration_ms": 33,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-35-TC024",
+    "uc": "UC-35",
+    "status": "Pass",
+    "actual": "Phần TP dùng KHSX đúng xưởng, NSX/ngày hoàn thành hợp lệ, lượng -1: 422; tiến độ/lượng báo cáo trước và sau giữ nguyên.",
+    "request_ids": [
+      "8426ac66-6819-4b8e-a5e4-735e698d1a1d",
+      "69619b79-5bd3-4bbf-b0c4-774920e33308",
+      "a73def81-527b-41dd-ad0c-6dfc17c195cf"
+    ],
+    "started_at": "2026-11-01T15:28:17.408Z",
+    "duration_ms": 38,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-04-TC028",
+    "uc": "UC-04",
+    "status": "Pass",
+    "actual": "Kế hoạch MUA, NVL hợp lệ, ngày hôm nay, lượng abc: 422 VALIDATION_ERROR; không tạo kế hoạch.",
+    "request_ids": [
+      "ba51ef48-7d91-4008-8a71-b7b8f097134a",
+      "e920800c-aed4-452d-ae54-c2b2ceba58c4",
+      "b66f4da3-443a-4f0a-84bd-f3f0443eee5a"
+    ],
+    "started_at": "2026-11-01T15:28:17.447Z",
+    "duration_ms": 34,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-35-TC025",
+    "uc": "UC-35",
+    "status": "Pass",
+    "actual": "Phần TP dùng KHSX đúng xưởng, NSX/ngày hoàn thành hợp lệ, lượng abc: 422; tiến độ/lượng báo cáo trước và sau giữ nguyên.",
+    "request_ids": [
+      "34158bfc-419d-4edc-953e-0c84bd899da8",
+      "fc302e62-31e6-4304-8df6-7eaec89f8e60",
+      "75bb1d8f-b535-470a-961c-ecf3d8239106"
+    ],
+    "started_at": "2026-11-01T15:28:17.483Z",
+    "duration_ms": 39,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-35-TC027",
+    "uc": "UC-35",
+    "status": "Pass",
+    "actual": "KHSX 100, đã báo 40: nhập 20 còn 40; tick đợt cuối điền 60 và còn 0, đợt cuối được tích. Screenshot finished-remaining-60.png; chưa gửi phần này từ UI.",
+    "request_ids": [],
+    "started_at": "2026-11-01T15:28:17.565Z",
+    "duration_ms": 1086,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-35-TC029",
+    "uc": "UC-35",
+    "status": "Pass",
+    "actual": "Hai phần 40/60 có lot_id riêng, cùng lot_header_id 501; tổng báo cáo/bán 100, KHSX COMPLETED, không cộng trùng phần trước.",
+    "request_ids": [
+      "22042ab8-4a15-4a1b-86ee-64fff96f1224"
+    ],
+    "started_at": "2026-11-01T15:28:18.710Z",
+    "duration_ms": 11,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-04-TC033",
+    "uc": "UC-04",
+    "status": "Pass",
+    "actual": "Kế hoạch KHBAN-KHACHHANG-06 lấy đúng khách/đơn DH-KHACHHANG-10 từ báo cáo cuối; ô chọn khách bị ẩn và khóa trong UI.",
+    "request_ids": [
+      "1b457003-aa91-45ba-b94c-69a245e1713c"
+    ],
+    "started_at": "2026-11-01T15:28:18.722Z",
+    "duration_ms": 1065,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-12.2-TC001",
+    "uc": "UC-12.2",
+    "status": "Pass",
+    "actual": "Kết quả QC QC-452-cea09a chỉ đọc; không nút sửa/chứng từ bù; PATCH bị 409 COMPENSATION_REQUIRED; kết quả và tồn kho giữ nguyên.",
+    "request_ids": [
+      "558ddb2a-c372-4216-942b-ecb2de85f59f",
+      "7c17acf7-b96a-4c02-b88b-3ef94a2780df",
+      "09dda6e2-9a56-4984-9526-345bfacecdd6",
+      "f08491d2-cb1e-4a6a-b186-892c94eb6f85",
+      "7e76fa14-feb8-4e04-8a8c-dc234a294063",
+      "755c5d7a-8703-4607-a5cf-842c1a54c0ca"
+    ],
+    "started_at": "2026-11-01T15:28:19.789Z",
+    "duration_ms": 837,
+    "evidence": "documented-http-evidence.json"
+  },
+  {
+    "id": "UC-12.3-TC001",
+    "uc": "UC-12.3",
+    "status": "Pass",
+    "actual": "Đã mở chi tiết QC, không có nút xóa; đóng phần xem bình thường. Thử DELETE đường cũ bị 409 COMPENSATION_REQUIRED; kết quả/lịch sử giữ nguyên.",
+    "request_ids": [
+      "6ca4604c-c093-4869-b0d9-9194493cdbc9",
+      "ca192c61-9753-4e21-a787-3af1a93346dd",
+      "4a7d78a3-1429-4740-97e7-6b24022a50fb",
+      "d46278f7-a297-4e26-aeb8-0038e8525bcc"
+    ],
+    "started_at": "2026-11-01T15:28:20.627Z",
+    "duration_ms": 947,
+    "evidence": "documented-http-evidence.json"
+  }
+]

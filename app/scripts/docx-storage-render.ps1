@@ -1,5 +1,6 @@
+param([string]$Directory=(Join-Path $PSScriptRoot '../docs/review-20261030/render'),[string]$PdfName='', [switch]$SampleInserted)
 $ErrorActionPreference='Stop'
-$base=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../docs/review-20261030/render'))
+$base=[IO.Path]::GetFullPath($Directory)
 Add-Type -AssemblyName System.Drawing
 Add-Type @'
 using System;
@@ -28,19 +29,21 @@ public static class StoragePdf {
 }
 '@
 [void][StoragePdf]::SetDllDirectory('C:/Program Files/LibreOffice/program');[StoragePdf]::FPDF_InitLibrary()
-$pdf=(Get-ChildItem -LiteralPath $base -Filter '*.pdf'|Select-Object -First 1).FullName
+$pdf=if($PdfName){Join-Path $base $PdfName}else{(Get-ChildItem -LiteralPath $base -Filter '*.pdf'|Select-Object -First 1).FullName}
+$stem=if($PdfName){[IO.Path]::GetFileNameWithoutExtension($PdfName)+'-'}else{''}
 $doc=[StoragePdf]::FPDF_LoadDocument([Text.Encoding]::UTF8.GetBytes($pdf+[char]0),[IntPtr]::Zero)
 if($doc-eq [IntPtr]::Zero){throw 'PDF did not load'}
 $samples=[Collections.Generic.List[object]]::new();$texts=[Collections.Generic.List[string]]::new()
 try{$count=[StoragePdf]::FPDF_GetPageCount($doc)
  for($i=0;$i-lt $count;$i++){
   $page=[StoragePdf]::FPDF_LoadPage($doc,$i);$tp=[StoragePdf]::FPDFText_LoadPage($page);$chars=[StoragePdf]::FPDFText_CountChars($tp);$sb=[Text.StringBuilder]::new($chars+1);[void][StoragePdf]::FPDFText_GetText($tp,0,$chars,$sb);$text=$sb.ToString();$texts.Add($text);[StoragePdf]::FPDFText_ClosePage($tp)
-  if((($text-match 'UC-08 |UC-09 |UC-22 ')-and ($text-match 'Actor|Alternative flow|Basic flow'))-or ($i -in @(121,122,136,137,138))){
+  $sample=if($SampleInserted){$samples.Count-lt 3-and $text-match 'Test ID|Sequence'}else{(($text-match 'UC-08 |UC-09 |UC-22 ')-and ($text-match 'Actor|Alternative flow|Basic flow'))-or ($i -in @(121,122,136,137,138))}
+  if($sample){
    $w=[int]([StoragePdf]::FPDF_GetPageWidth($page)*1.5);$h=[int]([StoragePdf]::FPDF_GetPageHeight($page)*1.5);$bmp=[StoragePdf]::FPDFBitmap_Create($w,$h,0);[StoragePdf]::FPDFBitmap_FillRect($bmp,0,0,$w,$h,4294967295);[StoragePdf]::FPDF_RenderPageBitmap($bmp,$page,0,0,$w,$h,0,0)
-   $image=[Drawing.Bitmap]::new($w,$h,[StoragePdf]::FPDFBitmap_GetStride($bmp),[Drawing.Imaging.PixelFormat]::Format32bppRgb,[StoragePdf]::FPDFBitmap_GetBuffer($bmp));$file='page-'+($i+1)+'.png';$image.Save((Join-Path $base $file),[Drawing.Imaging.ImageFormat]::Png);$image.Dispose();[StoragePdf]::FPDFBitmap_Destroy($bmp);$samples.Add(@{page=$i+1;image=$file})
+   $image=[Drawing.Bitmap]::new($w,$h,[StoragePdf]::FPDFBitmap_GetStride($bmp),[Drawing.Imaging.PixelFormat]::Format32bppRgb,[StoragePdf]::FPDFBitmap_GetBuffer($bmp));$file=$stem+'page-'+($i+1)+'.png';$image.Save((Join-Path $base $file),[Drawing.Imaging.ImageFormat]::Png);$image.Dispose();[StoragePdf]::FPDFBitmap_Destroy($bmp);$samples.Add(@{page=$i+1;image=$file})
   }
   [StoragePdf]::FPDF_ClosePage($page)
  }
- [IO.File]::WriteAllText((Join-Path $base 'NOI_DUNG_PDF.txt'),($texts-join [char]12),[Text.UTF8Encoding]::new($false));@{pdfPages=$count;samples=$samples}|ConvertTo-Json -Depth 5|Set-Content (Join-Path $base 'RENDER_CHECK.json') -Encoding UTF8
+ [IO.File]::WriteAllText((Join-Path $base ($stem+'NOI_DUNG_PDF.txt')),($texts-join [char]12),[Text.UTF8Encoding]::new($false));@{pdfPages=$count;samples=$samples}|ConvertTo-Json -Depth 5|Set-Content (Join-Path $base ($stem+'RENDER_CHECK.json')) -Encoding UTF8
  Write-Output ('PDF readable: '+$count+' pages; '+$samples.Count+' sampled specification pages.')
 }finally{[StoragePdf]::FPDF_CloseDocument($doc)}

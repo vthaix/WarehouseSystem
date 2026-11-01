@@ -16,7 +16,8 @@ const executablePath=['C:/Program Files (x86)/Microsoft/Edge/Application/msedge.
    await page.screenshot({path:path.join(out,username+'-dashboard.png'),fullPage:true});
    if(username==='director'){
     const url=await page.evaluate(()=>warehouseNavigation.modules.find(m=>m[0]==='production-plans')[5]);await page.goto(base+url+'?module=production-plans');
-    if(await page.locator('#table tbody tr').count()){await page.locator('.record-freshness').first().waitFor();}
+    const pending=await page.evaluate(async()=>(await api('workspace/pending')).data['production-plans']||[]);
+    if(pending.length&&await page.locator('#table tbody tr').count()){await page.locator('.record-pending').first().waitFor();}
    }
    if(username==='purchaser'){
     await page.goto(base+'/purchases?module=purchase-orders');await page.locator('.purchase-ready').waitFor();

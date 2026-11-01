@@ -1,0 +1,17 @@
+﻿{
+    "samples":  [
+                    {
+                        "page":  3,
+                        "image":  "DacTa_Kem_Sequence_20261101-page-3.png"
+                    },
+                    {
+                        "page":  6,
+                        "image":  "DacTa_Kem_Sequence_20261101-page-6.png"
+                    },
+                    {
+                        "page":  10,
+                        "image":  "DacTa_Kem_Sequence_20261101-page-10.png"
+                    }
+                ],
+    "pdfPages":  246
+}

@@ -164,12 +164,7 @@ class QualityService {
     const result = { ...row };
     for (const field of ["id", "inspector_id", "campaign_id"])
       if (result[field] != null) result[field] = String(result[field]);
-    result.actions =
-      user.roles.includes("QC_INSPECTOR") &&
-      String(row.inspector_id) === String(user.id) &&
-      row.status === "RECORDED"
-        ? ["correct"]
-        : [];
+    result.actions = [];
     return result;
   }
 
@@ -380,6 +375,8 @@ class QualityService {
   async create(user, body, requestId) {
     P.role(user, ["QC_INSPECTOR"]);
     C.fields(body, ["campaign_id", "inspected_at", "note", "lines"]);
+    const actualAt=require('../../shared/time-rules').timestamp(body.inspected_at,'inspected_at');
+    C.fail(+actualAt>Date.now()+60000,'VALIDATION_ERROR','Thời điểm kiểm tra thực tế không được ở tương lai.');
     C.fail(
       typeof body.inspected_at !== "string" ||
         !Number.isFinite(Date.parse(body.inspected_at)) ||

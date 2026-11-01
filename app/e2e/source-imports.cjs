@@ -365,7 +365,7 @@ const executablePath =
       await page.waitForFunction(
         () => document.querySelector("[data-key=quantity]")?.value === "2",
       );
-      await page.locator("#f-code").fill("LOT-UI");
+      assert.equal(await page.locator("#f-code").count(),0);
       const submit = await capture(page, "lots");
       const body = await submit();
       assert.equal(body.lines[0].purchase_order_line_id, "902");
@@ -491,12 +491,12 @@ const executablePath =
     }
     {
       const {context,page,errors}=await pageFor('manager','exception-proposals');
-      const record={id:'LOT-8401',version:2,status:'OPEN',reason:'Bao bi loi',resolution_note:'',eligible_workshops:[{id:'1',name:'Xuong banh'}]};
+      const record={id:'LOT-8401',version:2,status:'OPEN',reason:'Bao bi loi',resolution_note:'',source_workshop:{id:'1',name:'Xuong banh'},eligible_workshops:[{id:'1',name:'Xuong banh'}]};
       await page.evaluate(r=>actionForm(r,'handleMinuteException'),record);
       await page.locator('#f-resolution_note').fill('Thay nhan bao bi');
       const saveSimple=await capture(page,'exception-proposals/LOT-8401/apply');const simple=await saveSimple();assert.equal(simple.request_approval,false);
       await page.evaluate(r=>actionForm(r,'handleMinuteException'),record);
-      await page.locator('#f-resolution_note').fill('De xuat thay bao bi');await page.locator('#request-owner-approval').check();await page.locator('#f-workshop_id').selectOption('1');
+      await page.locator('#f-resolution_note').fill('De xuat thay bao bi');await page.locator('#request-owner-approval').check();assert.equal(await page.locator('#f-workshop_id').isDisabled(),true);assert.equal(await page.locator('#f-workshop_id').inputValue(),'1');
       const saveProposal=await capture(page,'exception-proposals/LOT-8401/apply');const proposal=await saveProposal();assert.equal(proposal.request_approval,true);assert.equal(proposal.workshop_id,'1');
       await page.evaluate(r=>actionForm(r,'handleMinuteException'),{...record,status:'REJECTED',owner_instruction:'Kiem tra may dong goi truoc'});
       assert.equal(await page.locator('#f-resolution_note').inputValue(),'Kiem tra may dong goi truoc');assert.equal(await page.locator('#f-resolution_note').getAttribute('readonly'),'');

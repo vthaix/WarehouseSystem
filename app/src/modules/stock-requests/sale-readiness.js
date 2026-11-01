@@ -16,7 +16,7 @@ function assertReady(row, today = C.today()) {
   C.fail(
     !/^\d{4}-\d{2}-\d{2}$/.test(date) || date > today,
     "DELIVERY_NOT_DUE",
-    "Chưa đến ngày giao hàng của đơn khách.",
+    'Chưa đến ngày giao hàng của đơn khách'+(/^\d{4}-\d{2}-\d{2}$/.test(date)?' ('+date.split('-').reverse().join('/')+')':'')+'. Chỉ xuất từ ngày giao đã ghi trên đơn.',
     409,
   );
   return row;

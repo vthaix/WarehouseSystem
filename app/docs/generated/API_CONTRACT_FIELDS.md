@@ -9,7 +9,7 @@ Danh sách trích từ C.fields trong service/helper. Đây là các field đư�
 | src/modules/auth/AuthService.js | authenticate | body | username, password |
 | src/modules/business-plans/BusinessPlanService.js | list | query | page, per_page, q, status, type, sort |
 | src/modules/business-plans/BusinessPlanService.js | validateLines | line | item_id, quantity, unit_price |
-| src/modules/business-plans/BusinessPlanService.js | create | body | confirm_plan_overage, type, supplier_id, customer_id, customer_order_id, production_plan_id, source_request_id, production_report_id, finished_report_id, planned_date, note, lines |
+| src/modules/business-plans/BusinessPlanService.js | create | body | confirm_plan_overage, compensation_minute_id, type, supplier_id, customer_id, customer_order_id, production_plan_id, source_request_id, production_report_id, finished_report_id, planned_date, note, lines |
 | src/modules/business-plans/BusinessPlanService.js | update | body | confirm_plan_overage, version, supplier_id, planned_date, note, lines |
 | src/modules/business-plans/BusinessPlanService.js | review | body | confirm_plan_overage, version, decision, reason |
 | src/modules/customer-orders/OrderService.js | list | query | page, per_page, q, status, from, to, sort |
@@ -32,7 +32,7 @@ Danh sách trích từ C.fields trong service/helper. Đây là các field đư�
 | src/modules/production/FinishedReportService.js | submit | body | version |
 | src/modules/production/ProductionPlanService.js | list | query | page, per_page, q, status, sort |
 | src/modules/production/ProductionPlanService.js | validateLines | line | item_id |
-| src/modules/production/ProductionPlanService.js | create | body | confirm_plan_overage, customer_order_id, workshop_id, start_date, end_date, outputs, materials, material_source, note |
+| src/modules/production/ProductionPlanService.js | create | body | confirm_plan_overage, compensation_minute_id, customer_order_id, workshop_id, start_date, end_date, outputs, materials, material_source, note |
 | src/modules/production/ProductionPlanService.js | cancel | body | version |
 | src/modules/production/ProductionPlanService.js | update | body | confirm_plan_overage, version, workshop_id, start_date, end_date, outputs, materials, note |
 | src/modules/production/ProductionPlanService.js | review | body | confirm_plan_overage, version, decision, reason |
@@ -43,9 +43,11 @@ Danh sách trích từ C.fields trong service/helper. Đây là các field đư�
 | src/modules/production/ProductionReportService.js | submit | body | version |
 | src/modules/purchasing/MaterialCatalogService.js | list | q | q, page, per_page, sort, status |
 | src/modules/purchasing/MaterialCatalogService.js | update | b | version, unit_id, reference_price, supplier_prices |
-| src/modules/purchasing/MaterialCatalogService.js | update | row | supplier_id, unit_price |
+| src/modules/purchasing/MaterialCatalogService.js | update | row | supplier_id, unit_price, shelf_life_days |
 | src/modules/purchasing/PurchaseOrderService.js | list | query | page, per_page, q, status, sort |
 | src/modules/purchasing/PurchaseOrderService.js | create | body | source_mode, supplier_id, business_plan_id, production_report_id, expected_delivery_date, delivery_terms, lines |
+| src/modules/quality/purchase-plan-check.js | save | b | version, kind, lines |
+| src/modules/quality/purchase-plan-check.js | createLots | b | version, expiry_date, manufactured_date |
 | src/modules/quality/QualityCampaignService.js | list | query | page, per_page, q, status, sort |
 | src/modules/quality/QualityCampaignService.js | create | body | campaign_type, quality_kind, planned_date, start_at, end_at, location, assignee_ids, lot_ids, note, source_mode, source_plan_id |
 | src/modules/quality/QualityCampaignService.js | bindLots | body | version, lot_ids |

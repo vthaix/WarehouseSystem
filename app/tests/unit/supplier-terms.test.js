@@ -1,0 +1,3 @@
+const test=require('node:test'),assert=require('node:assert/strict'),terms=require('../../src/shared/supplier-terms');
+test('supplier estimate uses all quotations with exact four-decimal rounding',()=>{const q=terms.quote([{supplier_id:'1',unit_price:'100.0000'},{supplier_id:'2',unit_price:'200.0001'}]);assert.equal(q.unit_price,'150.0001');assert.equal(q.min_unit_price,'100.0000');assert.equal(q.max_unit_price,'200.0001');assert.equal(terms.quote([]),null);});
+test('expiry is based on production date and supplier shelf life, across leap days',()=>{assert.equal(terms.expiry('2028-02-28',2),'2028-03-01');assert.equal(terms.expiry('2026-12-31',30),'2027-01-30');for(const n of [0,-1,1.5,'abc',36501])assert.throws(()=>terms.days(n),e=>e.code==='VALIDATION_ERROR');});

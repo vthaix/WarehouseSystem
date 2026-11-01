@@ -9,7 +9,10 @@
     "004_item_type_integrity.sql",
     "005_material_supplier_prices.sql",
     "006_storage_zones.sql",
-    "007_workshop_warehouses.sql"
+    "007_workshop_warehouses.sql",
+    "008_purchase_plan_checks.sql",
+    "009_supplier_shelf_life_estimates.sql",
+    "010_minute_compensation_sources.sql"
   ],
   "services": [
     {
@@ -664,6 +667,10 @@
             {
               "name": "MaBaoCaoThanhPham",
               "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "MaBienBanBu",
+              "definition": "BIGINT UNSIGNED NULL"
             }
           ]
         },
@@ -698,6 +705,10 @@
             {
               "name": "NgayCapNhat",
               "definition": "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)"
+            },
+            {
+              "name": "BangGiaUocLuong",
+              "definition": "JSON NULL"
             }
           ]
         },
@@ -802,6 +813,10 @@
             {
               "name": "MaNhaCungCap",
               "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "SoNgayHanDung",
+              "definition": "INT NULL"
             }
           ]
         },
@@ -856,6 +871,10 @@
             {
               "name": "GhiChu",
               "definition": "text COLLATE utf8mb4_unicode_ci"
+            },
+            {
+              "name": "MaBienBanBu",
+              "definition": "BIGINT UNSIGNED NULL"
             }
           ]
         },
@@ -1818,6 +1837,10 @@
             {
               "name": "NguoiLapBienBanDuocChon",
               "definition": "bigint unsigned DEFAULT NULL"
+            },
+            {
+              "name": "KiemTheoKeHoach",
+              "definition": "TINYINT NOT NULL DEFAULT 0"
             }
           ]
         },
@@ -2694,6 +2717,72 @@
               "definition": "INT UNSIGNED NULL"
             }
           ]
+        },
+        {
+          "name": "ThucKiemKeHoachMua",
+          "kind": "TABLE",
+          "columns": [
+            {
+              "name": "MaDot",
+              "definition": "BIGINT UNSIGNED NOT NULL"
+            },
+            {
+              "name": "MaDongDonMua",
+              "definition": "BIGINT UNSIGNED NOT NULL"
+            },
+            {
+              "name": "SoDem",
+              "definition": "DECIMAL(18,3) NULL"
+            },
+            {
+              "name": "ThucNhan",
+              "definition": "DECIMAL(18,3) NULL"
+            },
+            {
+              "name": "SoDat",
+              "definition": "DECIMAL(18,3) NULL"
+            },
+            {
+              "name": "SoLoi",
+              "definition": "DECIMAL(18,3) NULL"
+            },
+            {
+              "name": "MoTaLoi",
+              "definition": "VARCHAR(5000) NULL"
+            },
+            {
+              "name": "NguoiDem",
+              "definition": "BIGINT UNSIGNED NULL"
+            },
+            {
+              "name": "NguoiQC",
+              "definition": "BIGINT UNSIGNED NULL"
+            },
+            {
+              "name": "NgayDem",
+              "definition": "DATETIME(6) NULL"
+            },
+            {
+              "name": "NgayQC",
+              "definition": "DATETIME(6) NULL"
+            },
+            {
+              "name": "MaLo",
+              "definition": "BIGINT UNSIGNED NULL"
+            },
+            {
+              "name": "NgaySanXuat",
+              "definition": "DATE NULL"
+            },
+            {
+              "name": "HanSuDung",
+              "definition": "DATE NULL"
+            },
+            {
+              "name": "SoNgayHanDung",
+              "definition": "INT NULL"
+            }
+          ]
         }
       ]
     }
@@ -2725,6 +2814,42 @@
     },
     {
       "method": "GET",
+      "path": "/compensation-sources",
+      "owner": "warehouse-app",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/compensation-sources/:id",
+      "owner": "warehouse-app",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/purchase-plan-price-options",
+      "owner": "warehouse-app",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/quality-campaigns/:id/purchase-check",
+      "owner": "warehouse-app",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/quality-campaigns/:id/purchase-check",
+      "owner": "warehouse-app",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/quality-campaigns/:id/material-lots",
+      "owner": "warehouse-app",
+      "pending": false
+    },
+    {
+      "method": "GET",
       "path": "/warehouse-inbound",
       "owner": "warehouse-app",
       "pending": false
@@ -2750,6 +2875,12 @@
     {
       "method": "GET",
       "path": "/workspace/updates",
+      "owner": "warehouse-app",
+      "pending": false
+    },
+    {
+      "method": "GET",
+      "path": "/workspace/pending",
       "owner": "warehouse-app",
       "pending": false
     },
@@ -4064,7 +4195,8 @@
       "◫",
       [
         "CUSTOMER",
-        "PLANNER"
+        "PLANNER",
+        "DIRECTOR"
       ],
       [
         "CUSTOMER"

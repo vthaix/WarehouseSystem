@@ -1,5 +1,9 @@
 # Test case — WarehouseSystem
 
+Thực thi mới nhất: [Word kết quả theo mã TC](review-20261101/DacTa_TestCase_KetQua_20261101.docx), [báo cáo và bằng chứng](review-20261101/KET_QUA_KIEM_THU_HE_THONG.md). 123/951 mã Pass, 0 Fail, 828 chưa chạy riêng; kết quả các nhóm hệ thống được báo cáo riêng, không thay thế từng mã TC.
+
+Cập nhật 01/11/2026: giám đốc xem đơn hàng (không tạo/sửa/tiếp nhận); giữ nổi bật phần việc tới khi xử lý xong; phân biệt ngày thực tế và ngày dự kiến. [Quy tắc](CHO_XU_LY_VA_NGAY_GIO.md) · [Word, sequence và kiểm thử](review-20261101/README.md).
+
 Ngày lập: 14/10/2026. Nguồn chính: [DacTa_WarehouseSystem.md](DacTa_WarehouseSystem.md).
 
 ## 1. Phạm vi và cách sử dụng

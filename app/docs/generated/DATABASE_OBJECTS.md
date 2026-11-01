@@ -23,11 +23,11 @@ Tài khoản runtime: `warehouse`.
 | MatHang | TABLE | `MaBanGhi`, `MaLoaiHang`, `MaDonViTinh`, `Ma`, `Ten`, `Loai`, `MoTa`, `DonGiaThamKhao`, `LaHangMau`, `DuongDanAnh`, `DaCongBo`, `ConHoatDong`, `PhienBan`, `NgayTao`, `NgayCapNhat` |
 | DonHang | TABLE | `MaBanGhi`, `Ma`, `MaKhachHang`, `DiaChiGiaoHang`, `NgayGiaoChamNhat`, `GhiChu`, `TrangThai`, `MaNguoiTiepNhan`, `NgayTiepNhan`, `MaNguoiDuyet`, `NgayDuyet`, `LyDoTuChoi`, `TongTienBaoGia`, `PhienBan`, `NgayTao`, `NgayCapNhat` |
 | ChiTietDonHang | TABLE | `MaBanGhi`, `MaDonHang`, `MaMatHang`, `SoLuong`, `DonGia`, `GhiChu`, `NgayTao`, `NgayCapNhat` |
-| KeHoachMuaBan | TABLE | `MaBanGhi`, `Ma`, `Kieu`, `MaNhaCungCap`, `MaKhachHang`, `MaDonHang`, `NgayDuKien`, `GhiChu`, `TrangThai`, `MaNguoiTao`, `MaNguoiDuyet`, `NgayDuyet`, `LyDoTuChoi`, `TongTien`, `PhienBan`, `NgayTao`, `NgayCapNhat`, `MaYeuCauNguon`, `MaKeHoachSanXuat`, `MaBaoCaoSanXuat`, `MaBaoCaoThanhPham` |
-| ChiTietKeHoachMuaBan | TABLE | `MaBanGhi`, `MaKeHoachKinhDoanh`, `MaMatHang`, `SoLuong`, `DonGia`, `NgayTao`, `NgayCapNhat` |
+| KeHoachMuaBan | TABLE | `MaBanGhi`, `Ma`, `Kieu`, `MaNhaCungCap`, `MaKhachHang`, `MaDonHang`, `NgayDuKien`, `GhiChu`, `TrangThai`, `MaNguoiTao`, `MaNguoiDuyet`, `NgayDuyet`, `LyDoTuChoi`, `TongTien`, `PhienBan`, `NgayTao`, `NgayCapNhat`, `MaYeuCauNguon`, `MaKeHoachSanXuat`, `MaBaoCaoSanXuat`, `MaBaoCaoThanhPham`, `MaBienBanBu` |
+| ChiTietKeHoachMuaBan | TABLE | `MaBanGhi`, `MaKeHoachKinhDoanh`, `MaMatHang`, `SoLuong`, `DonGia`, `NgayTao`, `NgayCapNhat`, `BangGiaUocLuong` |
 | DonMuaHang | TABLE | `MaBanGhi`, `Ma`, `MaKeHoachKinhDoanh`, `MaNhaCungCap`, `MaNguoiTao`, `NgayGiaoDuKien`, `DieuKhoanGiaoHang`, `TrangThai`, `TongTien`, `PhienBan`, `NgayTao`, `NgayCapNhat`, `MaBaoCaoSanXuat`, `LoaiNguonDonMua` |
-| ChiTietDonMuaHang | TABLE | `MaBanGhi`, `MaDonMuaHang`, `MaChiTietKeHoachKinhDoanh`, `MaMatHang`, `SoLuong`, `DonGia`, `NgayTao`, `NgayCapNhat`, `MaNhaCungCap` |
-| KeHoachSanXuat | TABLE | `MaBanGhi`, `Ma`, `MaDonHang`, `MaXuong`, `MaNguoiTao`, `NgayBatDau`, `NgayKetThuc`, `TrangThai`, `PhienBan`, `NgayTao`, `NgayCapNhat`, `GhiChu` |
+| ChiTietDonMuaHang | TABLE | `MaBanGhi`, `MaDonMuaHang`, `MaChiTietKeHoachKinhDoanh`, `MaMatHang`, `SoLuong`, `DonGia`, `NgayTao`, `NgayCapNhat`, `MaNhaCungCap`, `SoNgayHanDung` |
+| KeHoachSanXuat | TABLE | `MaBanGhi`, `Ma`, `MaDonHang`, `MaXuong`, `MaNguoiTao`, `NgayBatDau`, `NgayKetThuc`, `TrangThai`, `PhienBan`, `NgayTao`, `NgayCapNhat`, `GhiChu`, `MaBienBanBu` |
 | ChiTietKeHoachSanXuat | TABLE | `MaBanGhi`, `MaKeHoachSanXuat`, `MaMatHang`, `SoLuong`, `NgayTao`, `NgayCapNhat`, `LoaiChiTiet`, `SoLuongCan`, `SoLuongConThieu`, `MaNguyenLieuCu`, `SoLuongGoc`, `TyLeDuPhong` |
 | BanBaoCaoSanXuat | TABLE | `MaBanGhi`, `Ma`, `MaKeHoachSanXuat`, `MaNguoiTao`, `GhiChu`, `TrangThai`, `NgayGui`, `PhienBan`, `NgayTao`, `NgayCapNhat`, `LoaiBaoCao`, `NgayHoanThanh`, `MaThanhPhamCu`, `MucDichBaoCao`, `PhanTramTienDo`, `GuiBoPhanLapKeHoach`, `XacNhanHoanTat`, `KieuThanhPham` |
 | ChiTietBaoCaoSanXuat | TABLE | `MaBanGhi`, `MaBaoCaoSanXuat`, `MaMatHang`, `SoLuongHienCo`, `SoLuongCan`, `NgayTao`, `NgayCapNhat`, `LoaiChiTiet`, `SoLuong`, `SoLuongSuDung` |
@@ -44,7 +44,7 @@ Tài khoản runtime: `warehouse`.
 | ChiTietPhieuKho | TABLE | `MaBanGhi`, `MaPhieuKho`, `MaChiTietYeuCauKho`, `MaChiTietLo`, `MaViTriKho`, `NhomChatLuong`, `SoLuong`, `LyDoChenhLech`, `NgayTao`, `NgayCapNhat`, `MaPhanCongKho`, `MaChiTietTraVe` |
 | TonKho | TABLE | `MaBanGhi`, `MaChiTietLo`, `MaViTriKho`, `NhomChatLuong`, `SoLuong`, `PhienBan`, `NgayTao`, `NgayCapNhat` |
 | BienDongKho | TABLE | `MaBanGhi`, `MaChiTietLo`, `MaViTriKho`, `NhomChatLuong`, `BienDongSoLuong`, `MaChiTietPhieuKho`, `MaDeXuatXuLy`, `MaChiTietKiemKe`, `NgayGhiSo`, `MaNguoiTao`, `KhoaNghiepVu`, `NgayTao`, `NgayCapNhat` |
-| DotKiemKe | TABLE | `MaBanGhi`, `Ma`, `MaNguoiTao`, `NgayDuKien`, `BatDauLuc`, `KetThucLuc`, `LoaiMatHang`, `TrangThai`, `GhiChu`, `PhienBan`, `NgayTao`, `NgayCapNhat`, `LoaiDot`, `LoaiKiemTra`, `DiaDiem`, `MaKeHoachMuaQC`, `MaKeHoachSanXuatQC`, `KiemSoLuong`, `KiemChatLuong`, `BienBanKetLuan`, `BienBanTrangThai`, `BienBanNguoiLap`, `BienBanNgayGui`, `BienBanDuLieu`, `NgoaiLeMoTa`, `NgoaiLeTrangThai`, `NgoaiLeCachXuLy`, `NgoaiLeMaXuong`, `NgoaiLeNguoiXuLy`, `NgoaiLeYKienPheDuyet`, `NgoaiLeNguoiDuyet`, `NguoiLapBienBanDuocChon` |
+| DotKiemKe | TABLE | `MaBanGhi`, `Ma`, `MaNguoiTao`, `NgayDuKien`, `BatDauLuc`, `KetThucLuc`, `LoaiMatHang`, `TrangThai`, `GhiChu`, `PhienBan`, `NgayTao`, `NgayCapNhat`, `LoaiDot`, `LoaiKiemTra`, `DiaDiem`, `MaKeHoachMuaQC`, `MaKeHoachSanXuatQC`, `KiemSoLuong`, `KiemChatLuong`, `BienBanKetLuan`, `BienBanTrangThai`, `BienBanNguoiLap`, `BienBanNgayGui`, `BienBanDuLieu`, `NgoaiLeMoTa`, `NgoaiLeTrangThai`, `NgoaiLeCachXuLy`, `NgoaiLeMaXuong`, `NgoaiLeNguoiXuLy`, `NgoaiLeYKienPheDuyet`, `NgoaiLeNguoiDuyet`, `NguoiLapBienBanDuocChon`, `KiemTheoKeHoach` |
 | PhieuKiemKe | TABLE | `MaBanGhi`, `MaDotKiemKe`, `MaKho`, `TrangThai`, `NgayChotSo`, `NgayHoanTat`, `PhienBan`, `NgayTao`, `NgayCapNhat`, `NhanXet`, `TrangThaiBienBan`, `NgayGui`, `MaNguoiTao` |
 | PhanCongKiemKe | TABLE | `MaBanGhi`, `MaKhoKiemKe`, `MaNguoiDung`, `NgayTao`, `NgayCapNhat` |
 | ChiTietPhieuKiemKe | TABLE | `MaBanGhi`, `MaKhoKiemKe`, `MaChiTietLo`, `MaViTriKho`, `NhomChatLuong`, `SoLuongHeThong`, `SoLuongThucTe`, `MaNguoiDem`, `NgayDem`, `NguyenNhan`, `TrangThaiXuLy`, `PhienBan`, `NgayTao`, `NgayCapNhat` |
@@ -74,3 +74,4 @@ Tài khoản runtime: `warehouse`.
 | HoSoKho | VIEW |  |
 | NguyenVatLieu | TABLE | `MaMatHang`, `TieuChuanNhap`, `BangGiaNCC` |
 | ThanhPham | TABLE | `MaMatHang`, `HanSuDungMacDinhNgay` |
+| ThucKiemKeHoachMua | TABLE | `MaDot`, `MaDongDonMua`, `SoDem`, `ThucNhan`, `SoDat`, `SoLoi`, `MoTaLoi`, `NguoiDem`, `NguoiQC`, `NgayDem`, `NgayQC`, `MaLo`, `NgaySanXuat`, `HanSuDung`, `SoNgayHanDung` |

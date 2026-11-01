@@ -264,7 +264,7 @@ function ok(r, status = 200) {
   const plannedQcBody={campaign_type:'QUALITY_CHECK',quality_kind:'MATERIAL',source_mode:'PURCHASE_PLAN',source_plan_id:buy.id,planned_date:date,start_at:date+'T08:00:00+07:00',end_at:date+'T09:00:00+07:00',location:'QC dự kiến từ kế hoạch mua',assignee_ids:[String(inspector.id)],lot_ids:[]};
   const plannedQc=ok(await director.call('quality-campaigns','POST',plannedQcBody),201);
   assert.equal(plannedQc.source_plan_id,buy.id);assert.deepEqual(plannedQc.lot_ids,[]);
-  assert.equal((await director.call('quality-campaigns/'+plannedQc.id+'/start','POST',{version:plannedQc.version})).status,409);
+  assert.ok(ok(await director.call('quality-campaigns/'+plannedQc.id)).actions.includes('start'),'Purchase-plan check can start without precreated lots');
   assert.equal((await director.call('quality-campaigns','POST',{...plannedQcBody,start_at:shiftDay(-1)+'T08:00:00+07:00'})).status,422);
   const futureBuy=ok(await planner.call('business-plans','POST',{type:'PURCHASE',planned_date:shiftDay(2),lines:[{item_id:comparison.lines[0].item_id,quantity:'1.000',unit_price:'1.0000'}]}),201);
   ok(await director.call('business-plans/'+futureBuy.id+'/review','POST',{version:futureBuy.version,decision:'APPROVE'}));

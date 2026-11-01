@@ -1,0 +1,3 @@
+const test=require('node:test'),assert=require('node:assert/strict'),source=require('../../src/modules/exceptions/source-workshop');
+test('exception recipient comes from source and cannot be selected arbitrarily',()=>{assert.equal(source.validate({id:'2'},undefined),'2');assert.equal(source.validate({id:'2'},'2'),'2');assert.throws(()=>source.validate({id:'2'},'3'),e=>e.code==='VALIDATION_ERROR');assert.throws(()=>source.validate(null,'3'),e=>e.code==='SOURCE_REQUIRED');});
+test('ambiguous source workshops are not guessed',async()=>{assert.equal(await source.resolve({execute:async()=>[[{workshop_id:1},{workshop_id:2}]]},{id:1}),null);});

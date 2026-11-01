@@ -75,3 +75,11 @@ Kho liên kết Xuong bằng MaXuong, phân biệt ba loại bằng LoaiKho: MAT
 Thời điểm nhập đầu tiên được tính từ PhieuKho loại nhập và ChiTietPhieuKho tại kho đang điều phối; không thêm một bảng hàng đợi và không lấy NgayTao của lô làm ngày nhập. PhanCongKho tiếp tục lưu nhân viên, phần lô, vị trí và lượng. Quy tắc chỉ sắp thứ tự gợi ý; quyền và kiểm tra khi lưu không đổi.
 
 Migration 007_workshop_warehouses.sql bổ sung liên kết kho/xưởng và loại kho; dữ liệu và vị trí cũ vẫn được bảo toàn. MatHang có hai bảng con NguyenVatLieu và ThanhPham; LoHang/ChiTietLo vẫn dùng chung, không tách lại bảng lô NVL/thành phẩm. Chi tiết: [WORKSHOP_STORAGE.md](WORKSHOP_STORAGE.md).
+
+
+## Cập nhật 31/10/2026 — thực kiểm kế hoạch mua trước khi tạo lô
+
+Luồng NVL mới: giám đốc lập đợt từ kế hoạch mua; QC/AC và Ban kiểm kê đối chiếu hàng thực tế với các dòng mua trước khi có lô. Quản lý nhận kết quả và tạo lô phần đạt với mã tự sinh. Chỉ nhân viên ghi phiếu nhập mới tăng tồn. Chi tiết, thay đổi giao diện và kịch bản kiểm tra: [THUC_KIEM_KE_HOACH_MUA.md](THUC_KIEM_KE_HOACH_MUA.md). Quy tắc này cập nhật các UC-13, UC-15, UC-12.1, UC-08/09/10/22/23/28 và xử lý ngoại lệ; không đổi quyền actor ngoài phần việc được phân công.
+
+
+Cập nhật hạn dùng theo từng cặp NVL–NCC, bản chụp giá dự toán kế hoạch mua và kiểm tra lượng còn được nhận: [NCC_HAN_DUNG_VA_DU_TOAN.md](NCC_HAN_DUNG_VA_DU_TOAN.md). Hạn dùng được biết trước khi xác nhận QC; quản lý tạo lô không nhập lại hạn dùng.

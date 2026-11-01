@@ -12,7 +12,9 @@ async function campaign(service,c,u,id,lock=false){
   return {row,allowed,author:allowed&&String(row.NguoiLapBienBanDuocChon)===String(u.id)};
 }
 async function lines(c,id){
-  const [rows]=await c.execute("SELECT l.id AS lot_id,h.code AS lot_header_code,l.code AS lot_code,i.name AS item_name,u.name AS unit,l.received_quantity AS system_quantity,q.SoLuongDem AS counted_quantity,(q.SoLuongDem-l.received_quantity) AS difference_quantity,q.NguoiDem AS counted_by,q.ThoiDiemDem AS counted_at,l.qc_status,x.inspected_quantity,x.passed_quantity,x.failed_quantity,x.issue FROM quality_campaign_lots q JOIN lots l ON l.id=q.lot_id JOIN items i ON i.id=l.item_id JOIN units u ON u.id=i.unit_id LEFT JOIN lot_headers h ON h.id=l.lot_header_id LEFT JOIN (SELECT d.* FROM qc_inspection_lines d JOIN qc_inspections r ON r.id=d.qc_inspection_id WHERE r.status='RECORDED') x ON x.lot_id=l.id WHERE q.campaign_id=? ORDER BY l.id",[id]);
+  const [[campaign]]=await c.execute('SELECT * FROM stocktakes WHERE id=?',[id]);
+  if(campaign?.KiemTheoKeHoach)return (await require('../quality/purchase-plan-check').lines(c,campaign)).map(l=>({...l,lot_code:l.lot_id?'Lô đã tạo':'Thực kiểm theo kế hoạch',system_quantity:l.planned_quantity,difference_quantity:l.counted_quantity===null?null:C.decimal(C.qty(String(l.counted_quantity),false)-C.qty(String(l.planned_quantity),false)),inspected_quantity:l.received_quantity}));
+  const [rows]=await c.execute("SELECT l.id AS lot_id,l.item_id,i.kind,p.customer_order_id,p.workshop_id,h.code AS lot_header_code,l.code AS lot_code,i.name AS item_name,u.name AS unit,l.received_quantity AS system_quantity,q.SoLuongDem AS counted_quantity,(q.SoLuongDem-l.received_quantity) AS difference_quantity,q.NguoiDem AS counted_by,q.ThoiDiemDem AS counted_at,l.qc_status,x.inspected_quantity,x.passed_quantity,x.failed_quantity,x.issue FROM quality_campaign_lots q JOIN lots l ON l.id=q.lot_id JOIN items i ON i.id=l.item_id LEFT JOIN production_plans p ON p.id=l.production_plan_id JOIN units u ON u.id=i.unit_id LEFT JOIN lot_headers h ON h.id=l.lot_header_id LEFT JOIN (SELECT d.* FROM qc_inspection_lines d JOIN qc_inspections r ON r.id=d.qc_inspection_id WHERE r.status='RECORDED') x ON x.lot_id=l.id WHERE q.campaign_id=? ORDER BY l.id",[id]);
   return rows.map(r=>({...r,lot_id:String(r.lot_id),counted_by:r.counted_by?String(r.counted_by):null}));
 }
 async function get(service,u,id,c=service.pool){
@@ -22,7 +24,7 @@ async function get(service,u,id,c=service.pool){
   let snapshot=row.BienBanDuLieu;
   if(typeof snapshot==='string')snapshot=JSON.parse(snapshot);
   const exception={exception_mode:row.NgoaiLeMoTa?'DESCRIBE':'NONE',exception_description:row.NgoaiLeMoTa||'',exception_status:row.NgoaiLeTrangThai};
-  return {...exception,id:'LOT-'+row.id,code:'BB-'+row.code,stocktake_id:String(row.id),source_kind:'LOT_INSPECTION',source_code:row.code,remarks:row.BienBanKetLuan,status:row.BienBanTrangThai,created_by:row.BienBanNguoiLap?String(row.BienBanNguoiLap):null,submitted_at:row.BienBanNgayGui,version:row.version,lines:snapshot||await lines(c,id),actions:allowed&&u.roles.some(r=>['QC_INSPECTOR','STOCKTAKER'].includes(r))&&row.BienBanTrangThai==='DRAFT'?['edit','submit']:[]};
+  return {...exception,id:'LOT-'+row.id,code:'BB-'+row.code,stocktake_id:String(row.id),source_kind:'LOT_INSPECTION',source_code:row.code,remarks:row.BienBanKetLuan,status:row.BienBanTrangThai,created_by:row.BienBanNguoiLap?String(row.BienBanNguoiLap):null,submitted_at:row.BienBanNgayGui,version:row.version,lines:require('../../shared/minute-compensations').deficits(snapshot||await lines(c,id)),actions:allowed&&u.roles.some(r=>['QC_INSPECTOR','STOCKTAKER'].includes(r))&&row.BienBanTrangThai==='DRAFT'?['edit','submit']:[]};
 }
 async function write(service,u,id,b,action,request){
   P.role(u,['STOCKTAKER','QC_INSPECTOR']);
@@ -35,7 +37,7 @@ async function write(service,u,id,b,action,request){
     C.state(row,['COMPLETED','CLOSED']);
     if(action!=='create')C.version(row,b.version);
     C.fail(row.BienBanTrangThai!=='DRAFT'||(action==='create'?row.BienBanKetLuan!==null:row.BienBanKetLuan===null),'INVALID_STATE','Biên bản đã tồn tại, chưa được lập hoặc đã gửi.',409);
-    const snapshot=action==='submit'?await lines(c,target):null;
+    const snapshot=action==='submit'?require('../../shared/minute-compensations').deficits(await lines(c,target)):null;
     if(action!=='submit'){
       const mode=b.exception_mode??(row.NgoaiLeMoTa?'DESCRIBE':'NONE');
       C.fail(!['NONE','DESCRIBE'].includes(mode),'VALIDATION_ERROR','Lựa chọn ngoại lệ không hợp lệ.');
@@ -43,6 +45,11 @@ async function write(service,u,id,b,action,request){
       if(mode==='DESCRIBE')C.text(description,'exception_description',5000);
       await c.execute('UPDATE stocktakes SET NgoaiLeMoTa=? WHERE id=?',[description,target]);
     }else {
+      const shortages=snapshot.filter(l=>l.shortage_quantity&&C.qty(l.shortage_quantity,false)>0n);
+      if(shortages.length){
+        if(!row.NgoaiLeMoTa){row.NgoaiLeMoTa=shortages.map(l=>l.item_name+': thiếu '+l.shortage_quantity+' '+(l.unit||'')).join('; ');await c.execute('UPDATE stocktakes SET NgoaiLeMoTa=? WHERE id=?',[row.NgoaiLeMoTa,target]);}
+        await c.execute("INSERT INTO notifications(user_id,subject,body,resource_type,resource_id,business_key) SELECT DISTINCT u.id,?,?,'compensation-sources',?,? FROM users u JOIN user_roles ur ON ur.user_id=u.id JOIN roles r ON r.id=ur.role_id WHERE u.status='ACTIVE' AND r.code='PLANNER' ON DUPLICATE KEY UPDATE id=notifications.id",['Biên bản '+row.code+' cần lập kế hoạch bù',row.NgoaiLeMoTa+'; mở Kế hoạch mua/bán hoặc Kế hoạch sản xuất để lập bù từ biên bản.',target,'minute-compensation-'+target]);
+      }
       await c.execute("INSERT INTO notifications(user_id,subject,body,resource_type,resource_id,business_key) SELECT DISTINCT u.id,?,?,'stocktake-minutes',?,? FROM users u JOIN user_roles ur ON ur.user_id=u.id JOIN roles r ON r.id=ur.role_id WHERE u.status='ACTIVE' AND r.code='DIRECTOR' ON DUPLICATE KEY UPDATE id=notifications.id",['Biên bản kiểm kê mới: '+row.code,row.BienBanKetLuan,target,'minute-'+target+'-submitted']);
       await c.execute("UPDATE stocktakes SET NgoaiLeTrangThai=IF(NgoaiLeMoTa IS NULL,'NONE','OPEN') WHERE id=?",[target]);
       if(row.NgoaiLeMoTa)await c.execute("INSERT INTO notifications(user_id,subject,body,resource_type,resource_id,business_key) SELECT DISTINCT u.id,?,?,'minute-exceptions',?,? FROM users u JOIN user_roles ur ON ur.user_id=u.id JOIN roles r ON r.id=ur.role_id WHERE u.status='ACTIVE' AND r.code='WAREHOUSE_MANAGER' ON DUPLICATE KEY UPDATE id=notifications.id",['Biên bản '+row.code+' có ngoại lệ',row.NgoaiLeMoTa,target,'minute-exception-'+target+'-submitted']);

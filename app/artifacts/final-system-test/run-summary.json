@@ -1,0 +1,10 @@
+{
+  "completed_at": "2026-11-01T15:18:55.275Z",
+  "target": "http://127.0.0.1:3310",
+  "test_instance": true,
+  "mainDatabaseReset": false,
+  "passed": 32,
+  "failed": 0,
+  "suites": 32,
+  "unexecutedLegacy": "e2e/browser.cjs uses obsolete in-memory ordering UI; MySQL scenarios and current customer-order UI tested instead."
+}

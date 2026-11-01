@@ -1,0 +1,24 @@
+﻿{
+    "uniqueIDs":  951,
+    "documents":  [
+                      {
+                          "sha256":  "9FD462771AC423F6F0DFE1C08116ADE3C53D1F31240A3886BA0D26F8130D5348",
+                          "sourceModelMatches":  true,
+                          "tables":  54,
+                          "correctOrder":  true,
+                          "specifications":  54,
+                          "file":  "DacTa_Kem_Sequence_20261101.docx"
+                      },
+                      {
+                          "sha256":  "AD15AA4DEE9982505604B9EB9276BC958135EFBB5E48C04C078BE3962341D1B2",
+                          "sourceModelMatches":  true,
+                          "tables":  108,
+                          "correctOrder":  true,
+                          "specifications":  54,
+                          "file":  "DacTa_Kem_TestCase_20261101.docx"
+                      }
+                  ],
+    "testCases":  951,
+    "eachSpecificationFollowedByItsOwnSequenceOrTestTable":  true,
+    "newResultsAllNotRun":  true
+}
