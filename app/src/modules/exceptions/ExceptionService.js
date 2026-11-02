@@ -172,7 +172,7 @@ class ExceptionService {
       const [r] = await c.execute(
         "INSERT INTO exception_proposals(code,type,qc_inspection_line_id,stocktake_line_id,created_by,action,quantity,reason,resolution_note,status,version) VALUES (?,?,?,?,?,?,?,?,?,'PENDING_APPROVAL',1)",
         [
-          await recordCode.next(c, 'exception_proposals', 'DX', `${type}-${b.reason}`),
+          await require('../../shared/readable-codes').next(c,'exception_proposals',type==='QC_FAILURE'?'DX-HANG-LOI':'DX-CHENH-LECH',b.reason),
           type,
           b.qc_inspection_line_id || null,
           b.stocktake_line_id || null,
@@ -347,7 +347,7 @@ class ExceptionService {
           const [header] = await c.execute(
             "INSERT INTO lot_headers(code,lot_kind,return_direction,note) VALUES (?,'TRA_VE','NCC',?)",
             [
-              await recordCode.next(c, 'lot_headers', 'TRANCC', row.code),
+              await require('../../shared/readable-codes').supplierReturn(c,line.lot_id),
               row.resolution_note,
             ],
           );

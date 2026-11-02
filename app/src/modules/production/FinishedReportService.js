@@ -185,6 +185,7 @@ class FinishedReportService {
         "VALIDATION_ERROR",
         "Thành phẩm không hợp lệ.",
       );
+      if(partReport&&(!output.lot_code||/^TP-PHAN-|[a-f0-9]{8}-[a-f0-9]{4}-/i.test(output.lot_code)))output.lot_code=await require('../../shared/readable-codes').finishedLot(connection,plan.id,output.item_id);
       C.text(output.lot_code, "lot_code", 50);
       C.fail(
         codes.has(output.lot_code),
@@ -294,8 +295,7 @@ class FinishedReportService {
   async saveLines(connection, reportId, planId, data,partReport=false) {
     let headerId=null;
     if(partReport){
-      await connection.execute("INSERT INTO lot_headers(code,lot_kind,partial_production_plan_id) VALUES (?,'THANH_PHAM',?) ON DUPLICATE KEY UPDATE id=id",['TP-SX-'+planId,planId]);
-      const [[header]]=await connection.execute('SELECT id FROM lot_headers WHERE partial_production_plan_id=?',[planId]);headerId=header.id;
+      headerId=await require('../../shared/readable-codes').finishedHeader(connection,planId);
     }
     for (const output of data.outputs) {
       let lot={insertId:output.existing_lot_id};

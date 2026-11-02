@@ -20,9 +20,9 @@ test('related documents continue their own sequence', async () => {
 });
 
 test('customers with identical names keep distinct readable codes', async () => {
-  const connection = { async execute(_sql, values) { assert.deepEqual(values, ['DH-TRANVANA-01']); return [[{id: 1}]]; } };
+  const connection = { async execute(sql, values) { if(sql.includes('LIKE')){assert.deepEqual(values,['DH-TRANVANA-01-KH-%']);return [[]];}assert.deepEqual(values, ['DH-TRANVANA-01']); return [[{id: 1}]]; } };
   const code = await codes.distinguishNames(connection, 'customer_orders', 'DH-TRANVANA-01', 7);
-  assert.equal(code, 'DH-TRANVANA-01-KH7');
+  assert.equal(code, 'DH-TRANVANA-01-KH-001');
   assert.equal(codes.displayCode(code, 'DH-TRANVANA-01'), code);
 });
 

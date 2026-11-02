@@ -1,0 +1,20 @@
+const {chromium}=require('@playwright/test'),assert=require('node:assert/strict'),fs=require('node:fs');
+const base=process.env.APP_URL||'http://127.0.0.1:3000';
+const executablePath=['C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe','C:/Program Files/Google/Chrome/Application/chrome.exe'].find(p=>fs.existsSync(p));
+(async()=>{const browser=await chromium.launch({headless:true,executablePath});try{
+ const page=await browser.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(base+'/login');await page.locator('#username').fill('manager');await page.locator('#password').fill('123456');await page.locator('#login-form button').click();await page.waitForURL('**/dashboard');await page.goto(base+'/warehouse/outbound');
+ // Verify the real pending request can be reopened without writing or releasing reservations.
+ const real=await page.evaluate(async()=>{const rows=(await api('warehouse-outbound?per_page=100')).data;for(const r of rows){const p=(await api('stock-requests/'+r.id+'/allocations')).data;if(p.allocations.length&&p.lines.every(l=>Number(l.remaining_quantity)<=p.allocations.filter(a=>String(a.stock_request_line_id)===String(l.id)).reduce((n,a)=>n+Number(a.quantity)-Number(a.posted_quantity),0)))return {r,p};}return null;});
+ if(real){await page.evaluate(r=>dispatchForm(r),real.r);await page.locator('[data-dispatch]').first().waitFor();assert.equal(await page.locator('#assigned-task-links').count(),0);assert.ok((await page.locator('[data-key=quantity]').evaluateAll(nodes=>nodes.map(n=>Number(n.value)))).every(q=>q>0));await page.evaluate(()=>modal.close());}
+ const request={id:'99300',code:'QTY-TEST',type:'OUT',requested_date:new Date(Date.now()+86400000).toISOString().slice(0,10)},location={id:'99301',code:'C10',name:'C10',zone_name:'Khu test',depth:1};
+ let reserved='0',available='4.400',remaining='4.400',quantity='4.400',posted='0';
+ await page.route('**/api/v1/stock-requests/99300/allocations',r=>r.fulfill({json:{data:{request:{version:1},lines:[{id:'99302',item_id:'99303',item_name:'Sugar',remaining_quantity:remaining,lots:[{id:'99304',code:'LOT-SUGAR',passed_quantity:'4.400',posted_quantity:'4.400'}],locations:[location],balances:[{lot_id:'99304',location_id:location.id,quality_bucket:'AVAILABLE',quantity:'4.400',available_quantity:available}]}],locations:[location],eligible_lots:[{id:'99304',code:'LOT-SUGAR'}],allocations:reserved==='0'?[]:[{task_id:'99305',stock_request_line_id:'99302',user_id:'6',quality_bucket:'AVAILABLE',lot_id:'99304',location_id:location.id,quantity,posted_quantity:posted}]}}}));
+ const open=async()=>{await page.evaluate(r=>dispatchForm(r),request);};
+ const input=page.locator('[data-key=quantity]');
+ await open();await input.waitFor();assert.equal(Number((await input.inputValue()).replace(',','.')),4.4);await input.fill('2');assert.equal(Number((await input.inputValue()).replace(',','.')),2);await page.evaluate(()=>modal.close());
+ reserved='1.1';quantity='1.100';available='2.200';await open();await input.waitFor();assert.equal(Number((await input.inputValue()).replace(',','.')),1.1);await page.evaluate(()=>modal.close());
+ quantity='3.100';posted='2.000';remaining='2.400';available='1.300';await open();await input.waitFor();assert.equal(Number((await input.inputValue()).replace(',','.')),1.1);await page.evaluate(()=>modal.close());
+ quantity='4.400';posted='0';remaining='4.400';available='0';await open();await input.waitFor();assert.equal(Number((await input.inputValue()).replace(',','.')),4.4);await page.evaluate(()=>modal.close());
+ reserved='0';available='0';await open();await input.waitFor();assert.equal(Number((await input.inputValue()).replace(',','.')),0);
+ assert.deepEqual(errors,[]);console.log('PASS: original allocation form preserved; maximum defaults to 4.4; existing quantities for this request remain visible; foreign reservations excluded; edit preserved; empty stock stays zero. Read-only; allocation previews mocked for boundary cases.');
+}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

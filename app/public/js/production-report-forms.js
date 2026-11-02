@@ -60,7 +60,7 @@
             ],
             String(record?.send_to_planner ?? initial?.has_shortage ?? false),
           ) +
-          '<div class="span2 notice">Ban giám đốc luôn nhận khi gửi báo cáo. Báo cáo nhu cầu còn thiếu nguyên vật liệu sẽ tự gửi thêm Bộ phận lập kế hoạch. Sự cố/tiến độ không bắt nhập nguyên vật liệu. Báo cáo thành phẩm được lập riêng khi hoàn tất toàn bộ.</div><div class="span2" id="report-materials"></div>',
+          '<div class="span2" id="report-materials"></div>',
       ),
     );
     const progress = document.querySelector("#f-progress_percentage");

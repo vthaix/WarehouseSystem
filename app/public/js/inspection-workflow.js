@@ -7,7 +7,8 @@
     let panel=document.querySelector('#minute-assignment-info');if(!panel){panel=document.createElement('div');panel.id='minute-assignment-info';panel.className='notice';document.querySelector('#content')?.prepend(panel);}
     try{
       const campaigns=(await api('quality-campaigns?per_page=100')).data;if(token!==minuteRefresh||current!=='stocktake-minutes')return;
-      const assigned=campaigns.filter(c=>c.assigned_minute_author),ready=assigned.filter(c=>c.can_create_minute);
+      const assigned=campaigns.filter(c=>c.assigned_minute_author&&c.BienBanKetLuan==null),ready=assigned.filter(c=>c.can_create_minute);
+      if(!assigned.length){panel.remove();if(button)button.disabled=true;return;}
       panel.innerHTML=assigned.length?'<strong>Bạn được phân công lập biên bản chung</strong><div>'+assigned.map(c=>esc(c.code)+' · '+(c.BienBanKetLuan!=null?'Đã có biên bản':c.can_create_minute?'Đã đủ kết quả, có thể lập biên bản':'Đang chờ hoàn tất kiểm đếm / QC')).join('<br>')+'</div>':'Bạn chưa được chỉ định lập biên bản. Bạn vẫn có thể xem các biên bản thuộc phạm vi được phân công.';
       if(button){button.disabled=!ready.length;button.title=ready.length?'Lập biên bản cho đợt được chỉ định':'Chỉ nhân viên được chỉ định mới có thể tạo khi đợt đã đủ kết quả.';}
     }catch(e){panel.textContent='Chưa tải được thông tin phân công lập biên bản. Vui lòng tải lại trang.';}
@@ -33,6 +34,7 @@
       for(const input of inputs){
         const lot=lots.find(l=>String(l.id)===input.dataset.countLot),tick=document.querySelector('[data-count-match="'+CSS.escape(input.dataset.countLot)+'"]');
         input.addEventListener('input',()=>{const value=input.value.replace(',','.');tick.checked=/^\d+(\.\d+)?$/.test(value)&&Number(value)===Number(lot.received_quantity);});
+        input.value=numericInputValue(lot.received_quantity);input.dispatchEvent(new Event('input',{bubbles:true}));
         tick.onchange=()=>{input.value=tick.checked?numericInputValue(lot.received_quantity):'';input.dispatchEvent(new Event('input',{bubbles:true}));};
       }
       all.onclick=()=>{for(const input of inputs){input.value=numericInputValue(lots.find(l=>String(l.id)===input.dataset.countLot).received_quantity);input.dispatchEvent(new Event('input',{bubbles:true}));}};

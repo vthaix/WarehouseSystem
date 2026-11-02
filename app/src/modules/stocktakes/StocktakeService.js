@@ -97,7 +97,7 @@ class StocktakeService {
       404,
     );
     const [rows] = await c.execute(
-      "SELECT w.* FROM stocktake_warehouses w JOIN stocktakes s ON s.id=w.stocktake_id WHERE w.stocktake_id=? AND w.warehouse_id=? AND s.campaign_type='COUNT'" +
+      "SELECT w.*,k.name AS warehouse_name,k.code AS warehouse_code FROM stocktake_warehouses w JOIN stocktakes s ON s.id=w.stocktake_id JOIN warehouses k ON k.id=w.warehouse_id WHERE w.stocktake_id=? AND w.warehouse_id=? AND s.campaign_type='COUNT'" +
         (lock ? " FOR UPDATE" : ""),
       [stocktake, warehouse],
     );
@@ -123,7 +123,7 @@ class StocktakeService {
     P.role(u, ["DIRECTOR", "WAREHOUSE_MANAGER", "STOCKTAKER", "QC_INSPECTOR"]);
     const scope = await this.scope(c, u, s, w);
     const [rows] = await c.execute(
-      "SELECT l.*,lot.item_id,lot.code AS lot_code,i.name AS item_name FROM stocktake_lines l JOIN lots lot ON lot.id=l.lot_id JOIN items i ON i.id=lot.item_id WHERE l.stocktake_warehouse_id=? ORDER BY l.id",
+      "SELECT l.*,lot.item_id,lot.code AS lot_code,i.name AS item_name,u.name AS unit_name,loc.code AS location_code,loc.name AS location_name FROM stocktake_lines l JOIN lots lot ON lot.id=l.lot_id JOIN items i ON i.id=lot.item_id JOIN units u ON u.id=i.unit_id JOIN warehouse_locations loc ON loc.id=l.location_id WHERE l.stocktake_warehouse_id=? ORDER BY l.id",
       [scope.id],
     );
     return { ...normalize(scope), lines: rows.map(normalize) };
@@ -219,7 +219,7 @@ class StocktakeService {
       const [created] = await c.execute(
         "INSERT INTO stocktakes(code,created_by,planned_date,start_at,end_at,item_kind,status,note,version,campaign_type) VALUES (?,?,?,?,?,?,'PLANNED',?,1,'COUNT')",
         [
-          await recordCode.next(c, 'stocktakes', 'KK', b.planned_date),
+          await require('../../shared/readable-codes').next(c,'stocktakes','DOT-KIEM-KE',b.planned_date),
           u.id,
           b.planned_date,
           start,
@@ -538,7 +538,7 @@ class StocktakeService {
       params,
     );
     const [r] = await this.pool.execute(
-      "SELECT l.*,w.stocktake_id,w.warehouse_id,lot.item_id" +
+      "SELECT l.*,w.stocktake_id,w.warehouse_id,lot.item_id,(SELECT name FROM warehouses WHERE id=w.warehouse_id) AS warehouse_name,(SELECT name FROM items WHERE id=lot.item_id) AS item_name" +
         base +
         " ORDER BY l.id LIMIT ? OFFSET ?",
       [...params, String(p.per_page), String(p.offset)],

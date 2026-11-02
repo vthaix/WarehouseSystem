@@ -1,0 +1,38 @@
+﻿{
+  "result": "PASS",
+  "lots": 6,
+  "checks": [
+    "expiry per supplier",
+    "FEFO",
+    "FIFO for equal expiry",
+    "inbound near/far placement",
+    "movement balances",
+    "idempotent seed"
+  ],
+  "export_order": [
+    {
+      "code": "DEMO-Q-BOT-SOM",
+      "expiry": "2026-11-17",
+      "quantity": "20.000",
+      "zone": "Khu B · bột"
+    },
+    {
+      "code": "DEMO-Q-BOT-CUNG-HAN-1",
+      "expiry": "2026-12-17",
+      "quantity": "15.000",
+      "zone": "Khu B · bột"
+    },
+    {
+      "code": "DEMO-Q-BOT-CUNG-HAN-2",
+      "expiry": "2026-12-17",
+      "quantity": "15.000",
+      "zone": "Khu B · bột"
+    },
+    {
+      "code": "DEMO-Q-BOT-HAN-XA",
+      "expiry": "2027-03-02",
+      "quantity": "30.000",
+      "zone": "Khu B · bột"
+    }
+  ]
+}

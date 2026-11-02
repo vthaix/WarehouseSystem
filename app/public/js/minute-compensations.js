@@ -1,5 +1,10 @@
 (()=>{
- const previousLoad=loadTable;
+ const previousLoad=loadTable,previousCreate=createForm;let panelVersion=0;
+ function entries(sources){
+  const kind=current==='business-plans'?'MATERIAL':'FINISHED_PRODUCT',result=[];
+  for(const source of sources){const groups=new Map();for(const l of source.lines.filter(l=>l.kind===kind&&Number(l.remaining_compensation_quantity)>0)){const key=kind==='MATERIAL'?'MATERIAL':l.customer_order_id+':'+l.workshop_id;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(l);}for(const lines of groups.values())result.push({source,lines,kind});}
+  return result;
+ }
  async function create(source,lines,kind){
   const production=kind==='FINISHED_PRODUCT';
   const order=production?(await api('customer-orders/'+lines[0].customer_order_id)).data:null;
@@ -9,13 +14,22 @@
  }
  async function panel(){
   if(!has(['PLANNER'])||!['business-plans','production-plans'].includes(current))return;
-  const page=current,sources=(await api('compensation-sources')).data;if(current!==page)return;
+  const page=current,version=++panelVersion,sources=(await api('compensation-sources')).data;if(current!==page||version!==panelVersion)return;
   document.querySelector('#minute-compensations')?.remove();if(!sources.length)return;
-  const section=document.createElement('section');section.id='minute-compensations';section.className='purchase-ready';section.innerHTML='<h2>Biên bản có phần thiếu cần lập kế hoạch bù</h2><p>Thiếu được tính từ lượng cần trừ lượng đạt sử dụng được, không cộng trùng số lỗi và chênh lệch.</p>';
+  const section=document.createElement('section');section.id='minute-compensations';section.className='purchase-ready';section.innerHTML='<h2>Biên bản chờ lập kế hoạch bù</h2>';
   const kind=page==='business-plans'?'MATERIAL':'FINISHED_PRODUCT';let count=0;
   for(const source of sources){const groups=new Map();for(const l of source.lines.filter(l=>l.kind===kind&&Number(l.remaining_compensation_quantity)>0)){const key=kind==='MATERIAL'?'MATERIAL':l.customer_order_id+':'+l.workshop_id;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(l);}for(const lines of groups.values()){count++;const card=document.createElement('article');card.className='form-section record-pending';card.innerHTML='<h3>'+esc(source.code)+'</h3>'+tableData(lines)+'<button type="button" class="button primary">'+(kind==='MATERIAL'?'Lập kế hoạch mua bù':'Lập kế hoạch sản xuất bù')+'</button>';card.querySelector('button').onclick=()=>create(source,lines,kind).catch(e=>toast(e.message));section.append(card);}}
   if(count)document.querySelector('#content').prepend(section);
  }
  loadTable=async function(){await previousLoad();await panel();};
+ createForm=async function(...args){
+  if(!isMysql||!has(['PLANNER'])||!['business-plans','production-plans'].includes(current))return previousCreate(...args);
+  const choices=entries((await api('compensation-sources')).data);if(!choices.length)return previousCreate(...args);
+  openModal('Chọn nguồn lập kế hoạch',formWrap(inputField('planning_source','select',true,[{id:'',name:'Chọn nguồn lập kế hoạch'},{id:'STANDARD',name:'Đơn hàng / báo cáo sản xuất'},...choices.map((e,i)=>({id:String(i),name:'Biên bản '+e.source.code+(e.lines[0].customer_order_code?' · '+e.lines[0].customer_order_code:'')}))])));
+  document.querySelector('label[for=f-planning_source]').textContent='Nguồn lập kế hoạch *';
+  const form=document.querySelector('#data-form');form.querySelector('[type=submit]').textContent='Tiếp tục';form.querySelector('#cancel').onclick=()=>modal.close();
+  form.onsubmit=async event=>{event.preventDefault();const value=form.querySelector('#f-planning_source').value;if(value==='')return;try{if(value==='STANDARD')await previousCreate(...args);else{const e=choices[Number(value)];await create(e.source,e.lines,e.kind);}}catch(error){toast(error.message);}};
+ };
  window.addEventListener('DOMContentLoaded',()=>{if(user)panel().catch(e=>toast(e.message));});
+ window.addEventListener('warehouse:pending-updated',()=>{if(user)panel().catch(()=>{});});
 })();

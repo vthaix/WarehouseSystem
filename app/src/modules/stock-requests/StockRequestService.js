@@ -205,7 +205,7 @@ class StockRequestService {
   async load(connection, user, id, locked = false) {
     C.fail(!isId(id), "NOT_FOUND", "Không tìm thấy yêu cầu kho.", 404);
     const [rows] = await connection.execute(
-      "SELECT * FROM stock_requests WHERE id=?" + (locked ? " FOR UPDATE" : ""),
+      "SELECT r.*,(SELECT name FROM warehouses WHERE id=r.warehouse_id) AS warehouse_name,(SELECT name FROM workshops WHERE id=r.workshop_id) AS workshop_name,(SELECT full_name FROM users WHERE id=r.manager_id) AS manager_name,(SELECT full_name FROM users WHERE id=r.created_by) AS created_by_name,(SELECT code FROM production_plans WHERE id=r.production_plan_id) AS production_plan_code,(SELECT code FROM purchase_orders WHERE id=r.purchase_order_id) AS purchase_order_code FROM stock_requests r WHERE r.id=?" + (locked ? " FOR UPDATE" : ""),
       [id],
     );
     C.fail(!rows.length, "NOT_FOUND", "Không tìm thấy yêu cầu kho.", 404);
@@ -539,7 +539,8 @@ class StockRequestService {
         null,
         source,
       );
-      const code = await recordCode.next(connection, 'stock_requests', 'YCK', `${body.purpose}-${source.source.code}`);
+      const prefix={PURCHASE_RECEIPT:'YC-NHAP-NVL',PRODUCTION_ISSUE:'YC-XUAT-NVL',PRODUCTION_RECEIPT:'YC-NHAP-TP',SALE_ISSUE:'YC-XUAT-TP',MATERIAL_PURCHASE:'YC-MUA-NVL'}[body.purpose]||'YC-KHO';
+      const code=await require('../../shared/readable-codes').next(connection,'stock_requests',prefix,await require('../../shared/readable-codes').workshop(connection,body.workshop_id));
       const ids = {
         purchase_order_id: null,
         business_plan_id: null,

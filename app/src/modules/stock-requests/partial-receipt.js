@@ -140,7 +140,7 @@ async function create(service, user, body, requestId) {
       const [request] = await c.execute(
         "INSERT INTO stock_requests(code,type,purpose,production_plan_id,workshop_id,warehouse_id,created_by,manager_id,requested_date,status,note,version,production_source_mode) VALUES (?,'IN','PRODUCTION_RECEIPT',?,?,?,?,?,?,'PENDING',?,1,'MANUAL')",
         [
-          await recordCode.next(c, 'stock_requests', 'YCTP', plan.code),
+          await require('../../shared/readable-codes').next(c,'stock_requests','YC-NHAP-TP',await require('../../shared/readable-codes').workshop(c,body.workshop_id)),
           plan.id,
           body.workshop_id,
           body.warehouse_id,
@@ -151,14 +151,7 @@ async function create(service, user, body, requestId) {
         ],
       );
       id = request.insertId;
-      await c.execute(
-        "INSERT INTO lot_headers(code,lot_kind,partial_production_plan_id) VALUES (?,'THANH_PHAM',?) ON DUPLICATE KEY UPDATE id=id",
-        ["TP-SX-" + plan.id, plan.id],
-      );
-      const [[header]] = await c.execute(
-        "SELECT id FROM lot_headers WHERE partial_production_plan_id=?",
-        [plan.id],
-      );
+      const header={id:await require('../../shared/readable-codes').finishedHeader(c,plan.id)};
       for (const line of body.lines) {
         await c.execute(
           "INSERT INTO stock_request_lines(stock_request_id,item_id,quantity,note) VALUES (?,?,?,?)",
@@ -172,7 +165,7 @@ async function create(service, user, body, requestId) {
         await c.execute(
           "INSERT INTO lots(code,lot_header_id,item_id,production_plan_id,production_receipt_request_id,manufactured_date,expiry_date,received_quantity,qc_status,version) VALUES (?,?,?,?,?,?,?,?,'PENDING',1)",
           [
-            "TP-DOT-" + id + "-" + line.item_id,
+            await require('../../shared/readable-codes').finishedLot(c,plan.id,line.item_id),
             header.id,
             line.item_id,
             plan.id,

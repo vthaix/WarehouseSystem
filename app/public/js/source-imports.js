@@ -355,7 +355,9 @@
               "workshop_id",
               "select",
               true,
-              user.workshop_ids.map((id) => ({ id, name: "Xưởng " + id })),
+              (await options("workshops")).filter((workshop) =>
+                (user.workshop_ids || []).map(String).includes(String(workshop.id)),
+              ),
             ) +
             field("warehouse_id", "select", true, warehouses) +
             field("manager_id", "select", true, managers) +
@@ -436,7 +438,7 @@
             if (!fresh()) return;
             document.querySelector("#f-workshop_id").value = plan.workshop_id;
             document.querySelector("#import-info").innerHTML =
-              '<div class="notice">Ghi lượng thực tế vừa sản xuất. Các đợt của kế hoạch dùng chung một lô; mỗi đợt có dòng lô riêng để QC. Chưa ghi tồn kho khi tạo yêu cầu. Quản lý chỉ phân công nhập phần đạt QC.</div>';
+              '';
             rowsAt(
               "import-lines",
               "Thành phẩm đợt này",

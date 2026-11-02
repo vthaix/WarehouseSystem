@@ -49,7 +49,7 @@
  },true);
  new MutationObserver(enhanceModal).observe(modalBody,{childList:true,subtree:true});
 
- let updates=[],pending={},loading=false;
+ let updates=[],pending={},loading=false,pendingLoaded=false;
  const resources=new Set(['production-plans','business-plans','purchase-orders','customer-orders','production-reports','finished-reports','stock-requests','tasks','qc-inspections','inspection-counts','stocktake-minutes','exception-proposals','warehouse-inbound','warehouse-outbound']);
  const notificationResource=resource=>['warehouse-inbound','warehouse-outbound'].includes(resource)?'stock-requests':resource;
  const unread=(resource,id)=>updates.some(n=>n.resource_type===notificationResource(resource)&&String(n.resource_id)===String(id));
@@ -75,15 +75,15 @@
    if(!marker){marker=document.createElement('span');marker.className='record-freshness';row.cells[0]?.append(marker);}
    if(marker.textContent!==text)marker.textContent=text;
   });
-  document.querySelectorAll('[data-ready-plan]').forEach(el=>{const work=(pending['business-plans']||[]).some(r=>r.id===el.dataset.readyPlan);el.classList.toggle('record-unread',work);el.classList.toggle('record-pending',work);});
+  document.querySelectorAll('[data-ready-plan]').forEach(el=>{const work=(pending['business-plans']||[]).some(r=>r.id===el.dataset.readyPlan);if(pendingLoaded&&!work&&has(['PURCHASER'])){const section=el.closest('.purchase-ready');el.remove();if(section&&!section.querySelector('[data-ready-plan]'))section.remove();return;}el.classList.toggle('record-unread',work);el.classList.toggle('record-pending',work);});
   document.querySelectorAll('[data-pending-resource][data-pending-id]').forEach(el=>{const work=(pending[el.dataset.pendingResource]||[]).find(r=>r.id===el.dataset.pendingId);el.classList.toggle('record-pending',!!work);if(work)el.title=work.reason;});
   let summary=document.querySelector('#pending-work-summary');
   const work=pending[current]||[],extra=pending['compensation-'+current]||[];
-  if(work.length+extra.length){if(!summary){summary=document.createElement('div');summary.id='pending-work-summary';summary.className='pending-work-summary';document.querySelector('#content .heading')?.after(summary);}const text=(work.length+extra.length)+' chứng từ / phần việc cần xử lý · Dấu nổi bật được giữ đến khi hoàn tất, kể cả đã mở xem.';if(summary.textContent!==text)summary.textContent=text;}else summary?.remove();
+  if(work.length+extra.length){if(!summary){summary=document.createElement('div');summary.id='pending-work-summary';summary.className='pending-work-summary';document.querySelector('#content .heading')?.after(summary);}const text=(work.length+extra.length)+' công việc chờ xử lý';if(summary.textContent!==text)summary.textContent=text;}else summary?.remove();
  }
  async function refresh(){
   if(!user||loading||document.hidden)return;loading=true;
-  try{const id=String(user.id),results=await Promise.all([api('workspace/updates'),api('workspace/pending')]);if(String(user?.id)!==id)return;updates=results[0].data;pending=results[1].data;decorate();}catch(e){/* Existing queues remain visible when updates cannot be loaded. */}finally{loading=false;}
+  try{const id=String(user.id),results=await Promise.all([api('workspace/updates'),api('workspace/pending')]);if(String(user?.id)!==id)return;updates=results[0].data;pending=results[1].data;pendingLoaded=true;decorate();window.dispatchEvent(new Event('warehouse:pending-updated'));}catch(e){/* Existing queues remain visible when updates cannot be loaded. */}finally{loading=false;}
  }
  const baseLoad=loadTable;
  loadTable=async function(){await baseLoad();await refresh();decorate();};
@@ -119,7 +119,7 @@
   if(path==='purchase-orders'&&method==='POST'&&body?.business_plan_id){
    document.querySelectorAll('[data-ready-plan]').forEach(row=>{if(row.dataset.readyPlan===String(body.business_plan_id))row.remove();});
    const count=document.querySelector('#purchase-ready-title .record-freshness');if(count)count.textContent=String(Math.max(0,Number(count.textContent)-1));
-   const list=document.querySelector('.purchase-ready-list');if(list&&!list.children.length){const message=document.createElement('p');message.textContent='Đã xử lý các kế hoạch đang hiển thị. Tải lại trang để xem danh sách mới nhất.';list.append(message);}
+   const list=document.querySelector('.purchase-ready-list');if(list&&!list.querySelector('[data-ready-plan]'))list.closest('.purchase-ready')?.remove();
   }
   return result;
  };

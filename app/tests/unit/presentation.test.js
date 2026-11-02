@@ -8,6 +8,7 @@ test('Vietnam timestamps use fixed local timezone and calendar dates retain thei
 });
 test('role labels, enums, booleans and reference names are readable without changing numeric input values',()=>{
   assert.equal(display.format(['WORKSHOP_OWNER'],'roles'),'Chủ xưởng');assert.equal(display.format('HIGH'),'Cao');
+  assert.equal(display.format('AVAILABLE','quality_bucket'),'Khả dụng');assert.equal(display.format('QUARANTINE','quality_bucket'),'Cách ly');
   assert.equal(display.format(1,'is_active'),'Có');assert.equal(display.format('0','is_active'),'Không');
   assert.equal(display.format('2','workshop_id',{workshop_name:'Xưởng bánh quy Sweet Bakery'}),'Xưởng bánh quy Sweet Bakery');
   assert.equal(display.format('100.000'),'100');assert.equal(display.fieldLabel('workshop_name'),'Xưởng phụ trách');

@@ -27,7 +27,7 @@ class LotService {
 
   async createLot(user, body, requestId, connectionOverride = null) {
     P.role(user, ["WAREHOUSE_MANAGER"]);
-    body={...body,code:connectionOverride?body.code:'LO-NVL-'+C.today().replace(/-/g,'')+'-'+require('node:crypto').randomBytes(6).toString('hex').toUpperCase()};
+    body={...body,code:connectionOverride?body.code:'AUTO'};
     if (body.lines !== undefined) {
       C.fields(body, ["code", "lines"]);
       C.text(body.code, "code", 50);
@@ -39,6 +39,9 @@ class LotService {
         "Lô cần từ 1 đến 100 dòng.",
       );
       const id = await this.transaction(async (connection) => {
+        const [[first]]=await connection.execute('SELECT COALESCE(l.supplier_id,p.supplier_id) AS supplier_id FROM purchase_order_lines l JOIN purchase_orders p ON p.id=l.purchase_order_id WHERE l.id=?',[body.lines[0].purchase_order_line_id]);
+        C.fail(!first,'NOT_FOUND','Không tìm thấy đơn mua.');
+        body.code=await require('../../shared/readable-codes').next(connection,'lot_headers','LO-NVL',await require('../../shared/readable-codes').supplier(connection,first.supplier_id));
         const [created] = await connection.execute(
           "INSERT INTO lot_headers (code,lot_kind) VALUES (?,'NGUYEN_VAT_LIEU')",
           [body.code.trim()],
@@ -167,6 +170,9 @@ class LotService {
         "SOURCE_LIMIT_EXCEEDED",
         line.item_name+': đơn mua '+C.decimal(C.qty(String(line.quantity)))+', đã ghi nhận '+C.decimal(C.qty(String(used.quantity),false)+C.qty(String(checked.quantity),false))+'. Không tạo thêm lô cho lượng đã ghi nhận. Tải lại lượng còn được nhận trước khi lưu.',
       );
+      const readable=require('../../shared/readable-codes'),supplierName=await readable.supplier(connection,line.receiving_supplier_id);
+      body.code=await readable.next(connection,'lots','NVL',supplierName+'-'+line.item_name);
+      if(!connectionOverride){const [h]=await connection.execute("INSERT INTO lot_headers(code,lot_kind) VALUES (?,'NGUYEN_VAT_LIEU')",[await readable.next(connection,'lot_headers','LO-NVL',supplierName)]);body.lot_header_id=h.insertId;}
       const [created] = await connection.execute(
         "INSERT INTO lots (code,item_id,purchase_order_line_id,production_plan_id,manufactured_date,expiry_date,received_quantity,qc_status,version,lot_header_id) VALUES (?,?,?,NULL,?,?,?,'PENDING',1,?)",
         [

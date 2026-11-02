@@ -1,6 +1,6 @@
 function calendarToday() { return new Date().toLocaleDateString('en-CA', {timeZone:'Asia/Ho_Chi_Minh'}); }
 function optionLabel(value) {
-  if (value && typeof value === 'object') return [value.display_code || value.code, value.name || value.title || value.full_name].filter(Boolean).join(' · ') || ('#' + value.id);
+  if (value && typeof value === 'object') return [value.display_code || value.code, value.name || value.title || value.full_name].filter(Boolean).join(' · ') || 'Chưa có tên';
   return labels[value] || value;
 }
 function numericInputValue(value) {
@@ -251,6 +251,11 @@ async function createForm() {
       builder = (d) =>
         Object.fromEntries(Object.entries(d).filter(([, v]) => v !== ""));
     } else if (current === "stock-requests") {
+      const allWorkshops = await options("workshops"),
+        assignedWorkshopIds = new Set((user.workshop_ids || []).map(String)),
+        availableWorkshops = assignedWorkshopIds.size
+          ? allWorkshops.filter((workshop) => assignedWorkshopIds.has(String(workshop.id)))
+          : allWorkshops;
       html =
         f("purpose", "select", true, [
           { id: "PURCHASE_RECEIPT", name: "Nhận hàng mua" },
@@ -264,7 +269,7 @@ async function createForm() {
           "workshop_id",
           "select",
           true,
-          user.workshop_ids.map((id) => ({ id, name: "Xưởng " + id })),
+          availableWorkshops,
         ) +
         f("requested_date", "date") +
         f("manager_id", "select", false, [
@@ -353,10 +358,7 @@ async function createForm() {
           true,
           await options("customer-orders"),
         ) +
-        f("workshop_id", "select", true, [
-          { id: "1", name: "Xưởng 1" },
-          { id: "2", name: "Xưởng 2" },
-        ]) +
+        f("workshop_id", "select", true, await options("workshops")) +
         f("start_date", "date") +
         f("end_date", "date") +
         out.html +
@@ -457,7 +459,7 @@ async function createForm() {
           true,
           rows.map((r) => ({
             id: r.id,
-            name: `Kho ${r.warehouse_id} · Hàng ${r.item_id} · ${r.system_quantity} → ${r.actual_quantity}`,
+            name: `${r.warehouse_name||"Kho kiểm kê"} · ${r.item_name||"Mặt hàng kiểm kê"} · ${format(r.system_quantity)} → ${format(r.actual_quantity)}`,
           })),
         ) +
         f("reason", "textarea") +
@@ -657,7 +659,7 @@ async function postForm(r) {
     if (p.frozen) throw new Error("Kho đang bị khóa để kiểm kê.");
     openModal(
       "Ghi phiếu " + (r.type === "IN" ? "nhập" : "xuất") + " · " + r.code,
-      `<div class="notice">Chọn lô và vị trí cho từng dòng. Có thể ghi một phần; số lượng 0 được bỏ qua. Phiếu đã ghi sổ chỉ được xem.</div><form id="data-form">${p.lines.map((l, i) => `<div class="form-section" data-allocation="${l.id}"><h3>${esc(l.item_name)} · Còn ${format(l.remaining_quantity)} ${esc(l.unit)}</h3><div class="form-grid"><div class="field"><label for="lot-${i}">Lô</label><select id="lot-${i}" data-key="lot_id">${l.lots.map((t) => `<option value="${t.id}">${esc(t.code)} · ${esc(labels[t.qc_status])}</option>`).join("")}</select></div><div class="field"><label for="loc-${i}">Vị trí</label><select id="loc-${i}" data-key="location_id">${l.locations.map((t) => `<option value="${t.id}">${esc(t.name)}</option>`).join("")}</select></div><div class="field"><label for="bucket-${i}">Chất lượng</label><select id="bucket-${i}" data-key="quality_bucket"><option value="AVAILABLE">Khả dụng</option>${r.type === "IN" ? '<option value="QUARANTINE">Cách ly</option>' : ""}</select></div><div class="field"><label for="qty-${i}">Số lượng</label><input id="qty-${i}" data-key="quantity" type="number" min="0" step="0.001" value="0" required></div></div><p class="hint">Tồn hiện tại: ${esc(l.balances.map((b) => `Lô ${b.lot_id} / vị trí ${b.location_id} / ${labels[b.quality_bucket]}: ${b.quantity}`).join("; ") || "Chưa có tồn")}</p></div>`).join("")}<div class="form-actions"><button class="button" id="cancel" type="button">Hủy</button><button class="button primary" type="submit">Xác nhận ghi sổ</button></div></form>`,
+      `<div class="notice">Chọn lô và vị trí cho từng dòng. Có thể ghi một phần; số lượng 0 được bỏ qua. Phiếu đã ghi sổ chỉ được xem.</div><form id="data-form">${p.lines.map((l, i) => `<div class="form-section" data-allocation="${l.id}"><h3>${esc(l.item_name)} · Còn ${format(l.remaining_quantity)} ${esc(l.unit)}</h3><div class="form-grid"><div class="field"><label for="lot-${i}">Lô</label><select id="lot-${i}" data-key="lot_id">${l.lots.map((t) => `<option value="${t.id}">${esc(t.code)} · ${esc(labels[t.qc_status])}</option>`).join("")}</select></div><div class="field"><label for="loc-${i}">Vị trí</label><select id="loc-${i}" data-key="location_id">${l.locations.map((t) => `<option value="${t.id}">${esc(t.name)}</option>`).join("")}</select></div><div class="field"><label for="bucket-${i}">Chất lượng</label><select id="bucket-${i}" data-key="quality_bucket"><option value="AVAILABLE">Khả dụng</option>${r.type === "IN" ? '<option value="QUARANTINE">Cách ly</option>' : ""}</select></div><div class="field"><label for="qty-${i}">Số lượng</label><input id="qty-${i}" data-key="quantity" type="number" min="0" step="0.001" value="0" required></div></div><p class="hint">Tồn hiện tại: ${esc(l.balances.map((b) => `${l.lots.find(t=>String(t.id)===String(b.lot_id))?.code||"Lô hàng"} / ${l.locations.find(t=>String(t.id)===String(b.location_id))?.code||"Vị trí lưu"} / ${labels[b.quality_bucket]}: ${format(b.quantity)}`).join("; ") || "Chưa có tồn")}</p></div>`).join("")}<div class="form-actions"><button class="button" id="cancel" type="button">Hủy</button><button class="button primary" type="submit">Xác nhận ghi sổ</button></div></form>`,
     );
     bindForm(
       () => ({
@@ -687,8 +689,8 @@ async function countForm(st, warehouse) {
     const w = (await api(`stocktakes/${st.id}/warehouses/${warehouse}/lines`))
       .data;
     openModal(
-      `Kiểm đếm · Kho ${warehouse}`,
-      `<div class="notice">Số 0 là đã đếm và không có hàng; trống là chưa đếm. Kho chỉ mở lại sau xử lý chênh lệch và đóng đợt.</div><form id="count-form"><div class="table-wrap"><table><thead><tr><th>Hàng / Lô / Vị trí</th><th>Snapshot</th><th>Thực tế</th></tr></thead><tbody>${w.lines.map((l, i) => `<tr><td>${esc(l.item_id)} / ${esc(l.lot_id)} / ${esc(l.location_id)} · ${badge(l.quality_bucket)}</td><td>${format(l.system_quantity)}</td><td><input type="number" min="0" step="0.001" aria-label="Số đếm dòng ${i + 1}" data-id="${l.id}" data-version="${l.version}" value="${esc(l.actual_quantity ?? "")}" ${w.status !== "COUNTING" ? "disabled" : ""}></td></tr>`).join("")}</tbody></table></div><div class="form-actions">${w.status === "COUNTING" ? '<button class="button" type="submit">Lưu số đếm</button><button class="button primary" type="button" id="complete-count">Hoàn tất đếm</button>' : '<span class="subtitle">Đã hoàn tất đếm. Có thể lập biên bản.</span>'}</div></form>`,
+      `Kiểm đếm · ${w.warehouse_name || "Kho"}`,
+      `<div class="notice">Số 0 là đã đếm và không có hàng; trống là chưa đếm. Kho chỉ mở lại sau xử lý chênh lệch và đóng đợt.</div><form id="count-form"><div class="table-wrap"><table><thead><tr><th>Mặt hàng / Lô / Vị trí</th><th>Số lượng hệ thống</th><th>Thực tế</th></tr></thead><tbody>${w.lines.map((l, i) => `<tr><td>${esc(l.item_name)} · ${esc(l.lot_code)} · ${esc(l.location_code || l.location_name)} · ${esc(l.unit_name)}<br>${badge(l.quality_bucket)}</td><td>${format(l.system_quantity)} ${esc(l.unit_name)}</td><td><input type="number" min="0" step="0.001" aria-label="Số đếm ${esc(l.item_name)} tại ${esc(l.location_code || l.location_name)}" data-id="${l.id}" data-version="${l.version}" value="${esc(l.actual_quantity ?? "")}" ${w.status !== "COUNTING" ? "disabled" : ""}></td></tr>`).join("")}</tbody></table></div><div class="form-actions">${w.status === "COUNTING" ? '<button class="button" type="submit">Lưu số đếm</button><button class="button primary" type="button" id="complete-count">Hoàn tất đếm</button>' : '<span class="subtitle">Đã hoàn tất đếm. Có thể lập biên bản.</span>'}</div></form>`,
     );
     const form = document.querySelector("#count-form");
     form.oninput = () => {
@@ -992,7 +994,7 @@ async function editForm(r) {
         r.lines
           .map(
             (l, i) =>
-              `<div class="form-section" data-qc="${l.lot_id}"><h3>Lô ${esc(l.lot_id)}</h3><div class="form-grid">${["inspected_quantity", "passed_quantity", "failed_quantity", "issue"].map((k) => `<div class="field"><label for="qc-${i}-${k}">${fieldLabel(k)}</label><input id="qc-${i}-${k}" data-key="${k}" type="${k === "issue" ? "text" : "number"}" ${k === "issue" ? "" : 'min="0" step="0.001" required'} value="${esc(l[k] || "")}"></div>`).join("")}</div></div>`,
+              `<div class="form-section" data-qc="${l.lot_id}"><h3>${esc(l.lot_code||l.item_name||"Lô hàng")}</h3><div class="form-grid">${["inspected_quantity", "passed_quantity", "failed_quantity", "issue"].map((k) => `<div class="field"><label for="qc-${i}-${k}">${fieldLabel(k)}</label><input id="qc-${i}-${k}" data-key="${k}" type="${k === "issue" ? "text" : "number"}" ${k === "issue" ? "" : 'min="0" step="0.001" required'} value="${esc(l[k] || "")}"></div>`).join("")}</div></div>`,
           )
           .join("") +
         "</div>";

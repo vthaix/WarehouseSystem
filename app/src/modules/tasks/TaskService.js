@@ -98,11 +98,11 @@ class TaskService {
   async get(user, id, c = this.pool) {
     P.role(user, P.read.tasks);
     C.fail(!isId(id), "NOT_FOUND", "Không có công việc.", 404);
-    const [rows] = await c.execute("SELECT * FROM tasks WHERE id=?", [id]);
+    const [rows] = await c.execute("SELECT t.*,(SELECT full_name FROM users WHERE id=t.created_by) AS created_by_name,(SELECT full_name FROM users WHERE id=t.manager_id) AS manager_name FROM tasks t WHERE t.id=?", [id]);
     C.fail(!rows.length, "NOT_FOUND", "Không có công việc.", 404);
     const row = rows[0];
     const [assigned] = await c.execute(
-      "SELECT user_id FROM task_assignments WHERE task_id=? ORDER BY user_id",
+      "SELECT a.user_id,u.full_name AS name FROM task_assignments a JOIN users u ON u.id=a.user_id WHERE a.task_id=? ORDER BY a.user_id",
       [id],
     );
     const ids = assigned.map((a) => String(a.user_id));
@@ -143,6 +143,14 @@ class TaskService {
     )
       actions.push("postTask");
     const inspection=row.task_type==='LOT_INSPECTION'?await new(require('../quality/QualityCampaignService'))(this.pool).get(user,row.stocktake_id,c):null;
+    let inspectionLines=inspection?.lots||[];
+    if(inspection?.KiemTheoKeHoach){
+      const rows=await require('../quality/purchase-plan-check').lines(c,inspection);
+      const [counters]=await c.execute('SELECT s.MaDongDonMua AS purchase_order_line_id,u.full_name AS counted_by_name,s.NgayDem AS counted_at FROM ThucKiemKeHoachMua s LEFT JOIN users u ON u.id=s.NguoiDem WHERE s.MaDot=?',[inspection.id]);
+      inspectionLines=rows.map(l=>({item_name:l.item_name,unit:l.unit,planned_quantity:l.planned_quantity,counted_quantity:l.counted_quantity,
+        counted_by_name:counters.find(r=>String(r.purchase_order_line_id)===String(l.purchase_order_line_id))?.counted_by_name||null,
+        counted_at:counters.find(r=>String(r.purchase_order_line_id)===String(l.purchase_order_line_id))?.counted_at||null}));
+    }
     if(inspection){
       if(user.roles.includes('DIRECTOR')&&row.status!=='CANCELLED'&&inspection.BienBanTrangThai==='DRAFT')actions.push('assignMinuteAuthor');
       if(user.roles.includes('DIRECTOR')&&inspection.status==='PLANNED'){
@@ -151,13 +159,14 @@ class TaskService {
       }
       if(user.roles.includes('QC_INSPECTOR')&&ids.includes(String(user.id))&&inspection.status==='IN_PROGRESS')actions.push('recordInspection');
       if(!inspection.KiemChatLuong){const i=actions.indexOf('recordInspection');if(i>=0)actions.splice(i,1);}
-      if(inspection.KiemSoLuong&&user.roles.includes('STOCKTAKER')&&ids.includes(String(user.id))&&inspection.status==='IN_PROGRESS'&&inspection.lots.some(l=>l.counted_quantity===null))actions.push('recordCount');
+      if(inspection.KiemSoLuong&&user.roles.includes('STOCKTAKER')&&ids.includes(String(user.id))&&inspection.status==='IN_PROGRESS'&&inspectionLines.some(l=>l.counted_quantity===null))actions.push('recordCount');
     }
     return {
       ...row,
-      ...(inspection?{inspection,inspection_type:inspection.quality_kind,inspection_lots:inspection.lots}:{}),
+      ...(inspection?{inspection,inspection_type:inspection.quality_kind,inspection_lots:inspectionLines}:{}),
       id: String(row.id),
       assignee_ids: ids,
+      assignee_names: assigned.map(a=>a.name).join(', '),
       minute_author_id:inspection?.NguoiLapBienBanDuocChon?String(inspection.NguoiLapBienBanDuocChon):null,
       start_at: row.start_at.toISOString(),
       end_at: row.end_at.toISOString(),
@@ -265,7 +274,7 @@ class TaskService {
       const [created] = await c.execute(
         "INSERT INTO tasks (code,title,description,priority,start_at,end_at,status,created_by,version) VALUES (?,?,?,?,?,?,'PLANNED',?,1)",
         [
-          await recordCode.next(c, 'tasks', 'CV', b.title),
+          await require('../../shared/readable-codes').next(c,'tasks','CV',b.title),
           b.title,
           b.description || null,
           b.priority,

@@ -17,7 +17,7 @@ async function createFinishedPartForm(record=null){
       const allowed=items.filter(i=>plan.outputs.some(o=>String(o.item_id)===String(i.id)));
       const progress=plan.finished_report_progress||{},remaining=new Map();
       for(const o of plan.outputs){const used=total(progress.reported_outputs,o.item_id)-total(record?.outputs,o.item_id);remaining.set(String(o.item_id),(qty(o.quantity)??0n)-used);}
-      const initial=plan.outputs.filter(o=>(remaining.get(String(o.item_id))||0n)>0n||record?.outputs.some(r=>String(r.item_id)===String(o.item_id))).map(o=>({item_id:String(o.item_id),quantity:decimal(total(record?.outputs,o.item_id)),lot_code:record?.outputs.find(r=>String(r.item_id)===String(o.item_id))?.lot_code||'TP-PHAN-'+crypto.randomUUID().slice(0,18),manufactured_date:record?.outputs.find(r=>String(r.item_id)===String(o.item_id))?.manufactured_date||calendarToday(),expiry_date:record?.outputs.find(r=>String(r.item_id)===String(o.item_id))?.expiry_date||''}));
+      const initial=plan.outputs.filter(o=>(remaining.get(String(o.item_id))||0n)>0n||record?.outputs.some(r=>String(r.item_id)===String(o.item_id))).map(o=>({item_id:String(o.item_id),quantity:decimal(record?total(record.outputs,o.item_id):(remaining.get(String(o.item_id))??0n)),lot_code:record?.outputs.find(r=>String(r.item_id)===String(o.item_id))?.lot_code||'',manufactured_date:record?.outputs.find(r=>String(r.item_id)===String(o.item_id))?.manufactured_date||calendarToday(),expiry_date:record?.outputs.find(r=>String(r.item_id)===String(o.item_id))?.expiry_date||''}));
       const editor=lineEditor('Thành phẩm của phần này',allowed,'outputs',['quantity','lot_code','manufactured_date','expiry_date'],initial);
       const materialRows=(progress.issued_materials||[]).map(m=>({item_id:String(m.item_id),used_quantity:decimal(total(record?.materials,m.item_id,'used_quantity'))}));
       for(const m of record?.materials||[])if(!materialRows.some(r=>r.item_id===String(m.item_id)))materialRows.push({item_id:String(m.item_id),used_quantity:m.used_quantity});
@@ -30,7 +30,7 @@ async function createFinishedPartForm(record=null){
       for(const row of rows){
         row.classList.add('finished-output-row');row.querySelector('button').remove();row.querySelector('[data-key="item_id"]').disabled=true;
         const input=row.querySelector('[data-key="quantity"]'),itemId=row.querySelector('[data-key="item_id"]').value,max=remaining.get(itemId)??0n;
-        input.min='0';input.max=decimal(max<0n?0n:max);
+        input.min='0';input.max=decimal(max<0n?0n:max);const code=row.querySelector('[data-key=lot_code]');code.required=false;code.readOnly=true;code.placeholder='Tự tạo khi lưu';
         input.parentElement.insertAdjacentHTML('afterend','<div><label>Còn lại</label><input type="text" data-remaining readonly aria-label="Còn lại"></div>');
         const info=document.createElement('small');info.className='quantity-context';info.textContent='Kế hoạch: '+format(plan.outputs.find(o=>String(o.item_id)===itemId)?.quantity)+' · Đã báo cáo: '+format(decimal(total(progress.reported_outputs,itemId)-total(record?.outputs,itemId)));input.parentElement.append(info);
       }

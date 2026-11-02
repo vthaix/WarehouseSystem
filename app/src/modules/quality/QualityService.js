@@ -213,13 +213,13 @@ class QualityService {
     );
     const filter = where.length ? " WHERE " + where.join(" AND ") : "";
     const [[count]] = await this.pool.execute(
-      "SELECT COUNT(*) AS total FROM qc_inspections q" + filter,
+      "SELECT COUNT(*) AS total FROM " + require('./plan-results').source + filter,
       params,
     );
     const [rows] = await this.pool.execute(
-      "SELECT q.* FROM qc_inspections q" +
+      "SELECT q.*,(SELECT full_name FROM users WHERE id=q.inspector_id) AS inspector_name FROM " + require('./plan-results').source +
         filter +
-        " ORDER BY q.id DESC LIMIT ? OFFSET ?",
+        " ORDER BY q.inspected_at DESC,q.id DESC LIMIT ? OFFSET ?",
       [...params, String(per_page), String(offset)],
     );
     return {
@@ -235,9 +235,10 @@ class QualityService {
 
   async get(user, id, connection = this.pool) {
     P.role(user, P.read["qc-inspections"]);
+    if(/^PLAN-[1-9]\d*$/.test(String(id)))return require('./plan-results').get(connection,user,String(id));
     C.fail(!isId(id), "NOT_FOUND", "Không tìm thấy kết quả QC.", 404);
     const [rows] = await connection.execute(
-      "SELECT * FROM qc_inspections WHERE id=?",
+      "SELECT q.*,u.full_name AS inspector_name FROM qc_inspections q JOIN users u ON u.id=q.inspector_id WHERE q.id=?",
       [id],
     );
     C.fail(
@@ -391,7 +392,7 @@ class QualityService {
       await connection.beginTransaction();
       const campaign = await this.campaign(connection, user, body.campaign_id);
       const lines = await this.validateLines(connection, campaign, body.lines);
-      const code = await recordCode.next(connection, 'qc_inspections', 'QC', campaign.code);
+      const code=await require('../../shared/readable-codes').next(connection,'qc_inspections',campaign.quality_kind==='MATERIAL'?'QC-NVL':'QC-TP',campaign.location||'KIEM-HANG');
       const [created] = await connection.execute(
         "INSERT INTO qc_inspections (code,inspector_id,inspected_at,note,status,version,campaign_id) VALUES (?,?,?,?,'RECORDED',1,?)",
         [
@@ -421,7 +422,7 @@ class QualityService {
         ) {
           const [returned] = await connection.execute(
             "INSERT INTO lot_headers(code,lot_kind,return_direction,note) VALUES (?,'TRA_VE','NCC',?)",
-            [await recordCode.next(connection, 'lot_headers', 'TRANCC', code), line.issue],
+            [await require('../../shared/readable-codes').supplierReturn(connection,line.lot_id), line.issue],
           );
           await connection.execute(
             "INSERT INTO returned_lot_lines(lot_header_id,original_lot_detail_id,quantity,qc_inspection_line_id) VALUES (?,?,?,?)",

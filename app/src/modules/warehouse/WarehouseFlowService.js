@@ -129,10 +129,10 @@ class WarehouseFlowService {
       const category=itemCategories.find(i=>String(i.id)===String(lot.item_id))?.category_id;
       const choices=locations.filter(l=>l.zone_category_id==null||String(l.zone_category_id)===String(category));
       const recommendation=require('../../shared/storage-queue').recommend(lot,choices,zoneStock.filter(r=>String(r.item_id)===String(lot.item_id)));
-      lot.suggested_location_id=recommendation.location_id;lot.storage_hint=recommendation.reason;
+      lot.suggested_location_id=recommendation.location_id;lot.suggested_location_ids=recommendation.location_ids;lot.storage_hint=recommendation.reason;
     }
     const [balances] = await this.pool.execute(
-      "SELECT b.lot_id,b.location_id,b.quality_bucket,b.quantity FROM inventory_balances b JOIN warehouse_locations loc ON loc.id=b.location_id WHERE loc.warehouse_id=?",
+      "SELECT b.lot_id,b.location_id,b.quality_bucket,b.quantity,COALESCE((SELECT SUM(a.quantity-a.posted_quantity) FROM stock_allocations a JOIN tasks t ON t.id=a.task_id WHERE a.lot_id=b.lot_id AND a.location_id=b.location_id AND a.quality_bucket=b.quality_bucket AND t.task_type='WAREHOUSE_OUT' AND t.status<>'CANCELLED'),0) AS reserved_quantity,GREATEST(b.quantity-COALESCE((SELECT SUM(a.quantity-a.posted_quantity) FROM stock_allocations a JOIN tasks t ON t.id=a.task_id WHERE a.lot_id=b.lot_id AND a.location_id=b.location_id AND a.quality_bucket=b.quality_bucket AND t.task_type='WAREHOUSE_OUT' AND t.status<>'CANCELLED'),0),0) AS available_quantity FROM inventory_balances b JOIN warehouse_locations loc ON loc.id=b.location_id WHERE loc.warehouse_id=?",
       [request.warehouse_id],
     );
     const [allocations] = await this.pool.execute(
@@ -229,13 +229,15 @@ class WarehouseFlowService {
 
   async dispatch(user, requestId, body, key, requestIdHeader) {
     P.role(user, ["WAREHOUSE_MANAGER"]);
-    C.fields(body, ["version", "start_at", "end_at", "allocations"]);
+    C.fields(body, ["version", "start_at", "end_at", "allocations", "allocation_mode"]);
+    C.fail(body.allocation_mode!==undefined&&body.allocation_mode!=='REPLACE_PENDING','VALIDATION_ERROR','Cách lưu phân công không hợp lệ.');
     C.fail(
       !Number.isInteger(body.version),
       "VALIDATION_ERROR",
       "Thiếu phiên bản yêu cầu.",
     );
-    const range=require('../../shared/time-rules').range(body.start_at,body.end_at);
+    const immediate=body.start_at===undefined&&body.end_at===undefined;
+    const range=immediate?{start:new Date(),end:new Date(Date.now()+3600000)}:require('../../shared/time-rules').range(body.start_at,body.end_at);
     const start=+range.start,end=+range.end;
     C.fail(
       !Number.isFinite(start) || !Number.isFinite(end) || end <= start,
@@ -369,10 +371,25 @@ class WarehouseFlowService {
         );
         saleSource = plan.finished_report_id;
       }
-      const [old] = await connection.execute(
-        "SELECT a.stock_request_line_id,a.quantity,a.posted_quantity,a.lot_id,a.location_id FROM stock_allocations a JOIN tasks t ON t.id=a.task_id WHERE a.stock_request_id=? AND t.status<>'CANCELLED'",
+      let [old] = await connection.execute(
+        "SELECT a.*,t.code AS task_code FROM stock_allocations a JOIN tasks t ON t.id=a.task_id WHERE a.stock_request_id=? AND t.status<>'CANCELLED'",
         [requestId],
       );
+      if(body.allocation_mode==='REPLACE_PENDING'){
+        if(old.length&&require('../../shared/warehouse-allocation-plan').unchanged(old,body.allocations)){
+          const tasks=[...new Map(old.filter(a=>C.qty(String(a.quantity),false)>C.qty(String(a.posted_quantity),false)).map(a=>[String(a.task_id),{id:String(a.task_id),assignee_id:String(a.user_id),code:a.task_code}])).values()];
+          if(immediate)for(const task of tasks)await connection.execute("UPDATE tasks SET start_at=?,end_at=?,status='IN_PROGRESS',version=version+1 WHERE id=? AND status IN ('PLANNED','IN_PROGRESS')",[new Date(start),new Date(end),task.id]);
+          const result={request_id:String(requestId),version:request.version,tasks};
+          await connection.execute("INSERT INTO audit_logs(actor_id,resource_type,resource_id,action,after_data,request_id) VALUES (?,'stock-requests',?,'CONFIRM_DISPATCH',?,?)",[user.id,requestId,JSON.stringify({tasks}),requestIdHeader]);
+          await connection.execute('UPDATE idempotency_records SET response_status=200,response_body=? WHERE id=?',[JSON.stringify(result),record.id]);return result;
+        }
+        const pendingIds=[...new Set(old.filter(a=>C.qty(String(a.quantity),false)>C.qty(String(a.posted_quantity),false)).map(a=>String(a.task_id)))];
+        for(const id of pendingIds)await connection.execute("UPDATE tasks SET status='CANCELLED',version=version+1 WHERE id=? AND stock_request_id=? AND status IN ('PLANNED','IN_PROGRESS')",[id,requestId]);
+        if(pendingIds.length)await connection.execute("INSERT INTO audit_logs(actor_id,resource_type,resource_id,action,after_data,request_id) VALUES (?,'stock-requests',?,'REPLACE_PENDING_DISPATCH',?,?)",[user.id,requestId,JSON.stringify({superseded_task_ids:pendingIds}),requestIdHeader]);
+        // Posted documents remain immutable. Cancellation releases only the
+        // outstanding reservation; the request's fulfilled amount stays intact.
+        old=old.filter(a=>!pendingIds.includes(String(a.task_id)));
+      }
       const remaining = new Map(
         detail.lines.map((line) => [
           line.id,
@@ -549,15 +566,16 @@ class WarehouseFlowService {
       }
       const tasks = [];
       for (const assigneeId of assignees) {
-        const code = await recordCode.next(connection, 'tasks', 'CVK', request.code);
+        const code=await require('../../shared/readable-codes').next(connection,'tasks',request.type==='IN'?'CV-NHAP':'CV-XUAT',await require('../../shared/readable-codes').workshop(connection,request.workshop_id));
         const [created] = await connection.execute(
-          "INSERT INTO tasks (code,title,description,start_at,end_at,priority,status,stocktake_id,purchase_order_id,stock_request_id,task_type,manager_id,created_by,version) VALUES (?,?,?,?,?,'NORMAL','PLANNED',NULL,NULL,?,?,?, ?,1)",
+          "INSERT INTO tasks (code,title,description,start_at,end_at,priority,status,stocktake_id,purchase_order_id,stock_request_id,task_type,manager_id,created_by,version) VALUES (?,?,?,?,?,'NORMAL',?,NULL,NULL,?,?,?, ?,1)",
           [
             code,
             `Xử lý yêu cầu kho ${request.code}`,
             null,
             new Date(start),
             new Date(end),
+            immediate?'IN_PROGRESS':'PLANNED',
             requestId,
             `WAREHOUSE_${request.type}`,
             user.id,
@@ -620,7 +638,7 @@ class WarehouseFlowService {
     P.role(user, P.read["stock-documents"]);
     C.fail(!isId(id), "NOT_FOUND", "Không tìm thấy phiếu kho.", 404);
     const [rows] = await connection.execute(
-      "SELECT d.*,r.workshop_id,r.purpose,r.code AS stock_request_code FROM stock_documents d LEFT JOIN stock_requests r ON r.id=d.stock_request_id WHERE d.id=?",
+      "SELECT d.*,r.workshop_id,r.purpose,r.code AS stock_request_code,k.name AS warehouse_name,w.name AS workshop_name,u.full_name AS posted_by_name FROM stock_documents d LEFT JOIN stock_requests r ON r.id=d.stock_request_id JOIN warehouses k ON k.id=d.warehouse_id LEFT JOIN workshops w ON w.id=r.workshop_id JOIN users u ON u.id=d.posted_by WHERE d.id=?",
       [id],
     );
     C.fail(!rows.length, "NOT_FOUND", "Không tìm thấy phiếu kho.", 404);
@@ -641,7 +659,7 @@ class WarehouseFlowService {
       404,
     );
     const [lines] = await connection.execute(
-      "SELECT l.* FROM stock_document_lines l WHERE l.stock_document_id=? ORDER BY l.id",
+      "SELECT l.*,lot.code AS lot_code,i.name AS item_name,u.name AS unit,pos.code AS location_code,pos.zone_name AS location_name FROM stock_document_lines l JOIN lots lot ON lot.id=l.lot_id JOIN items i ON i.id=lot.item_id JOIN units u ON u.id=i.unit_id JOIN warehouse_locations pos ON pos.id=l.location_id WHERE l.stock_document_id=? ORDER BY l.id",
       [id],
     );
     return { ...normalize(row), actions: [], lines: lines.map(normalize) };
@@ -944,7 +962,7 @@ class WarehouseFlowService {
           quantity: C.decimal(quantity),
         });
       }
-      const code = await recordCode.next(connection, 'stock_documents', request.type === 'IN' ? 'PN' : 'PX', request.code);
+      const code=await require('../../shared/readable-codes').next(connection,'stock_documents',request.type==='IN'?'PHIEU-NHAP':'PHIEU-XUAT',await require('../../shared/readable-codes').workshop(connection,request.workshop_id));
       const [created] = await connection.execute(
         "INSERT INTO stock_documents (code,type,stock_request_id,warehouse_id,posted_by,posted_at,status,note,idempotency_key,task_id) VALUES (?,?,?,?,?,UTC_TIMESTAMP(6),'POSTED',?,?,?)",
         [

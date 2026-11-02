@@ -35,12 +35,14 @@ async function distinguishNames(connection, table, proposed, ownerId, ownerTag =
   if (!/^[a-z_]+$/.test(table)) throw new Error('Invalid code table');
   const [rows] = await connection.execute(`SELECT id FROM ${table} WHERE code=? FOR UPDATE`, [proposed]);
   if (!rows.length) return proposed;
-  const suffix = `-${ownerTag}${ownerId}`;
+  const [used]=await connection.execute(`SELECT code FROM ${table} WHERE code LIKE ? FOR UPDATE`,[proposed+'-'+ownerTag+'-%']);
+  const ordinal=used.reduce((n,r)=>{const suffix=String(r.code).split('-').at(-1);return /^\d+$/.test(suffix)?Math.max(n,Number(suffix)):n;},0)+1;
+  const suffix = `-${ownerTag}-${String(ordinal).padStart(3,'0')}`;
   return proposed.slice(0, 40 - suffix.length) + suffix;
 }
 
 function displayCode(actual, computed) {
-  return /^[A-Z]+-[A-Z0-9]+-\d{2,}(?:-\d{2,})?(?:-(?:KH|NCC)\d+)?$/.test(String(actual)) ? actual : computed;
+  return /^[A-Z]+(?:-[A-Z0-9]+)+-\d{2,}(?:-(?:KH|NCC)\d+)?$/.test(String(actual)) ? actual : computed;
 }
 
 module.exports = { slug, code, next, distinguishNames, displayCode };
