@@ -10,6 +10,20 @@ const reportRoles = {
 class ReportService {
   constructor(pool) { this.pool = pool; }
   async warehouseLookup(user,query={}){return require('./warehouse-lookup')(this.pool,user,query);}
+  async warehouseOptions(user) {
+    C.fail(!user.roles.some((role) => Object.values(reportRoles).flat().includes(role)), "FORBIDDEN", "Bạn không có quyền xem báo cáo.", 403);
+    const params = [];
+    let where = "is_active=1";
+    if (!user.roles.some((role) => ["DIRECTOR", "WAREHOUSE_MANAGER"].includes(role))) {
+      if (!user.workshop_ids.length) where += " AND 1=0";
+      else {
+        where += " AND workshop_id IN (" + user.workshop_ids.map(() => "?").join(",") + ")";
+        params.push(...user.workshop_ids);
+      }
+    }
+    const [rows] = await this.pool.execute("SELECT id,code,name FROM warehouses WHERE " + where + " ORDER BY name,id", params);
+    return rows.map(normalize);
+  }
 
   validate(user, kind, query, exportMode) {
     C.fail(!reportRoles[kind] || !user.roles.some((role) => reportRoles[kind].includes(role)), "FORBIDDEN", "Bạn không có quyền xem báo cáo.", 403);

@@ -106,8 +106,10 @@ class FoundationPageController {
         serviceQuery,
       );
     const workspace=current==='dashboard'||current==='purchase-orders'?await require('./workspace-overview')(this.runtime,req.user,available):null;
+    const reportWarehouses=current.startsWith('reports/')?await this.runtime.reports.warehouseOptions(req.user):[];
     const context = {
       workspace,
+      reportWarehouses,
       user,
       available,
       current,
@@ -126,6 +128,7 @@ class FoundationPageController {
         status: req.query.status || "",
         from: req.query.from || "",
         to: req.query.to || "",
+        warehouse_id: req.query.warehouse_id || "",
       },
       title: module?.[1] || "Tổng quan",
       csrf: req.session.csrf,
