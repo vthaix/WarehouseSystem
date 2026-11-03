@@ -305,7 +305,7 @@ module.exports = function install(Service) {
         C.fail(
           !this.repo.get("users", id).roles.includes("QC_INSPECTOR"),
           "VALIDATION_ERROR",
-          "Cần phân công nhân viên QC/AC.",
+          "Cần phân công nhân viên QA/QC.",
         );
       for (const id of b.lot_ids) {
         const lot = this.repo.get("lots", id);
@@ -850,7 +850,7 @@ module.exports = function install(Service) {
         C.fail(
           !this.repo.get("users", id).roles.includes("QC_INSPECTOR"),
           "VALIDATION_ERROR",
-          "Lịch QC phải giao nhân viên QC/AC.",
+          "Lịch QC phải giao nhân viên QA/QC.",
         );
       this.checkTask(data, r.id);
       Object.assign(r, data, { version: r.version + 1 });

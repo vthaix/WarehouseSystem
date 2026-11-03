@@ -256,7 +256,7 @@ class StocktakeService {
           );
         for(const reviewer of w.conclusion_assignee_ids||[]){
           const [[valid]]=await c.execute("SELECT u.id FROM users u JOIN user_roles ur ON ur.user_id=u.id JOIN roles r ON r.id=ur.role_id WHERE u.id=? AND u.status='ACTIVE' AND r.code='QC_INSPECTOR'",[reviewer]);
-          C.fail(!valid,"VALIDATION_ERROR","Người lập kết luận bổ sung phải thuộc QC/AC.");
+          C.fail(!valid,"VALIDATION_ERROR","Người lập kết luận bổ sung phải thuộc QA/QC.");
           await c.execute("INSERT INTO PhanCongKetLuanKiemKe(MaPhieuKiemKe,MaNguoiDung) VALUES (?,?)",[sw.insertId,reviewer]);
         }
       }

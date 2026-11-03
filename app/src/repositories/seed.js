@@ -18,7 +18,7 @@ function seed(repo, password) {
     "Mua hàng",
     "Quản lý kho",
     "Nhân viên kho",
-    "Kiểm tra QC/AC",
+    "Kiểm tra QA/QC",
     "Ban kiểm kê",
     "Chủ xưởng",
     "Giám đốc",

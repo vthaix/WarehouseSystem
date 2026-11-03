@@ -31,7 +31,7 @@ createForm = async function () {
         document.querySelector('#minute-exception-fields').hidden=!isLot;document.querySelector('#f-exception_mode').disabled=!isLot;syncException();
         const s=candidates.find(s=>String(s.id)===id);
         warehouse.innerHTML=isLot?'':s.warehouses.filter(w=>w.status==="COMPLETED" && w.conclusion_status==="DRAFT" && w.remarks===null).map(w=>'<option value="'+esc(w.warehouse_id)+'">Kho '+esc(w.warehouse_name||w.warehouse_code||'Kho kiểm kê')+'</option>').join("");
-        document.querySelector('#minute-source-info').textContent=isLot?'Biên bản tự tổng hợp kết quả QC/AC và số đếm của các dòng lô thuộc đợt. Nhập kết luận, lưu nháp rồi gửi cho Ban giám đốc.':'';
+        document.querySelector('#minute-source-info').textContent=isLot?'Biên bản tự tổng hợp kết quả QA/QC và số đếm của các dòng lô thuộc đợt. Nhập kết luận, lưu nháp rồi gửi cho Ban giám đốc.':'';
       };
       document.querySelector("#f-stocktake_id").onchange=sync;sync();bindForm(d=>d.stocktake_id.startsWith('LOT-')?{inspection_campaign_id:d.stocktake_id.slice(4),remarks:d.remarks,exception_mode:d.exception_mode,...(d.exception_mode==='DESCRIBE'?{exception_description:d.exception_description}:{})}:{stocktake_id:d.stocktake_id,warehouse_id:d.warehouse_id,remarks:d.remarks},current);return;
     }
@@ -270,7 +270,7 @@ createForm = async function () {
       if (!campaigns.length)
         throw new Error("Chưa có lịch QC được giám đốc phân công.");
       openModal(
-        "Ghi kết quả kiểm tra QC/AC",
+        "Ghi kết quả kiểm tra QA/QC",
         formWrap(
           f(
             "campaign_id",

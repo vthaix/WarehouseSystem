@@ -54,7 +54,7 @@
     if(action==='recordCount'){countForm([r],r.id);return;}
     if(action==='assignMinuteAuthor'){
       const users=(await options('users')).filter(u=>r.assignee_ids.map(String).includes(String(u.id)));
-      openModal('Phân công người lập biên bản chung',formWrap(inputField('minute_author_id','select',true,users,r.minute_author_id||'')+'<p class="span2">Người được chọn lập một biên bản tổng hợp cả kết quả QC/AC và số đếm kiểm kê.</p>'));
+      openModal('Phân công người lập biên bản chung',formWrap(inputField('minute_author_id','select',true,users,r.minute_author_id||'')+'<p class="span2">Người được chọn lập một biên bản tổng hợp cả kết quả QA/QC và số đếm kiểm kê.</p>'));
       document.querySelector('label[for="f-minute_author_id"]').textContent='Nhân viên lập biên bản *';
       bindForm(d=>({...d,version:r.version}),'tasks/'+r.id+'/minute-author');return;
     }

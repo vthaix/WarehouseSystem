@@ -233,7 +233,7 @@ class TaskService {
     C.fail(
       users.length !== ids.length,
       "VALIDATION_ERROR",
-      "Chỉ được phân công nhân viên đang hoạt động thuộc Ban kiểm kê hoặc QC/AC.",
+      "Chỉ được phân công nhân viên đang hoạt động thuộc Ban kiểm kê hoặc QA/QC.",
     );
     const [overlap] = await c.execute(
       "SELECT t.id FROM tasks t JOIN task_assignments a ON a.task_id=t.id WHERE a.user_id IN (" +

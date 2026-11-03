@@ -30,7 +30,7 @@ const warehouseNavigation = {
     "PURCHASER": "Mua hàng",
     "WAREHOUSE_MANAGER": "Quản lý kho",
     "WAREHOUSE_STAFF": "Nhân viên kho",
-    "QC_INSPECTOR": "QC/AC",
+    "QC_INSPECTOR": "QA/QC",
     "STOCKTAKER": "Ban kiểm kê",
     "WORKSHOP_OWNER": "Chủ xưởng",
     "DIRECTOR": "Giám đốc",
@@ -277,7 +277,7 @@ const warehouseNavigation = {
     ],
     [
       "qc-inspections",
-      "Kiểm tra QC / AC",
+      "Kiểm tra QA / QC",
       "✓",
       [
         "QC_INSPECTOR"
@@ -344,7 +344,7 @@ const warehouseNavigation = {
         "DIRECTOR"
       ],
       "/stocktakes",
-      "Lập đợt, chọn phạm vi và phân công Ban kiểm kê / QC/AC."
+      "Lập đợt, chọn phạm vi và phân công Ban kiểm kê / QA/QC."
     ],
     [
       "stocktake-minutes",
@@ -514,7 +514,7 @@ const warehouseNavigation = {
     "return_header_id": "Lô trả",
     "return_line_id": "Dòng trả",
     "receiver_id": "Nhân viên nhận",
-    "conclusion_assignee_ids": "QC/AC lập kết luận (tùy chọn)",
+    "conclusion_assignee_ids": "QA/QC lập kết luận (tùy chọn)",
     "reinspections": "Lịch sử tái kiểm",
     "campaign_type": "Loại đợt",
     "quality_kind": "Loại hàng QC",

@@ -46,8 +46,8 @@
   const lots=counting?[]:await options('lots');
   const tasks=counting?(await api('inspection-counts?per_page=100')).data:[];
   const campaigns=(await api('quality-campaigns?per_page=100&status=IN_PROGRESS')).data.filter(c=>c.campaign_type==='QUALITY_CHECK'&&c.status==='IN_PROGRESS'&&(c.assignee_ids||[]).map(String).includes(String(user.id))&&c[flag]!==false&&c[flag]!==0&&(c.KiemTheoKeHoach?readyIds.has(String(c.id)):counting?tasks.some(t=>String(t.inspection?.id)===String(c.id)&&(t.actions||[]).includes('recordCount')):lots.some(l=>(c.lot_ids||[]).map(String).includes(String(l.id))&&l.qc_status==='PENDING')));
-  if(!campaigns.length){openModal(counting?'Ghi kết quả kiểm kê':'Ghi kết quả QC/AC','<div class="empty">Không có đợt chờ thực hiện.</div>');return;}
-  openModal(counting?'Chọn đối tượng kiểm kê':'Chọn đối tượng kiểm tra QC/AC',formWrap(inputField('campaign_id','select',true,[{id:'',name:'Chọn đợt kiểm tra'},...campaigns.map(c=>({id:c.id,name:c.code+(c.location?' · '+c.location:'')}))])+inputField('qc_source_id','select',true,[])));
+  if(!campaigns.length){openModal(counting?'Ghi kết quả kiểm kê':'Ghi kết quả QA/QC','<div class="empty">Không có đợt chờ thực hiện.</div>');return;}
+  openModal(counting?'Chọn đối tượng kiểm kê':'Chọn đối tượng kiểm tra QA/QC',formWrap(inputField('campaign_id','select',true,[{id:'',name:'Chọn đợt kiểm tra'},...campaigns.map(c=>({id:c.id,name:c.code+(c.location?' · '+c.location:'')}))])+inputField('qc_source_id','select',true,[])));
   const form=document.querySelector('#data-form');form.querySelector('[type=submit]').textContent='Tiếp tục';
   form.querySelector('#cancel').onclick=()=>modal.close();
   const source=form.querySelector('#f-qc_source_id'),next=form.querySelector('[type=submit]');
