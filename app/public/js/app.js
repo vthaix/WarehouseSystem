@@ -425,6 +425,14 @@ function detail(r) {
       )}${r.warehouses ? `<div class="form-section"><h3>Phạm vi kiểm kê</h3>${r.warehouses.map((w) => `<div class="notification"><span>${esc(w.warehouse_name||w.warehouse_code||"Kho kiểm kê")} · ${badge(w.status)} · ${w.lines.filter((l) => l.actual_quantity !== null).length}/${w.lines.length} dòng đã đếm</span>${has(["STOCKTAKER", "QC_INSPECTOR"]) && w.assignee_ids.includes(user.id) ? `<button class="button small" data-count="${w.warehouse_id}">Mở bảng đếm</button>` : ""}</div>`).join("")}</div>` : ""}<div class="form-actions">${(r.actions || []).map((a) => `<button class="button ${["review", "post"].includes(a) ? "primary" : ""}" data-action="${a}">${{ handleMinuteException: "Xử lý ngoại lệ", reviewMinuteException: "Phê duyệt phương án", recordCount: "Ghi số lượng kiểm đếm", startInspection: "Bắt đầu đợt kiểm kê", bindInspection: "Chọn lô nguyên vật liệu đã nhận", recordInspection: "Ghi kết quả kiểm tra", bindLots: "Chọn phần lô thực tế", receiveReturn: "Nhận vào khu cách ly", cancelReturn: "Hủy hàng trả chưa nhận", reinspect: "Tái kiểm chất lượng", correct: "Chứng từ bù QC", apply: "Thực hiện", cancelAllocation: "Giải phóng phân công", edit: "Sửa", delete: "Hủy / Xóa", receive: "Tiếp nhận", review: "Phê duyệt", submit: "Gửi", start: "Bắt đầu kiểm kê", close: "Đóng đợt", post: "Ghi phiếu", progress: "Cập nhật tiến độ", dispatch: "Phân công kho", cancel: "Hủy kế hoạch", postTask: "Ghi phần hàng được giao" }[a]}</button>`).join("")}${current === "notifications" && !r.read_at ? '<button class="button" id="mark-read">Đánh dấu đã đọc</button>' : ""}</div>`,
   );
   modalBody
+    .querySelectorAll(".form-actions")
+    .forEach((actions) => {
+      if (current !== "qc-inspections") return;
+      actions.classList.add("qc-detail-actions");
+      actions.querySelector('[data-action="edit"]')?.replaceChildren("Sửa");
+      actions.querySelector('[data-action="delete"]')?.replaceChildren("Xóa");
+    });
+  modalBody
     .querySelectorAll("[data-action]")
     .forEach((el) => (el.onclick = () => actionForm(r, el.dataset.action)));
   modalBody

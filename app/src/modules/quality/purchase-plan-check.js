@@ -12,14 +12,14 @@ async function lines(c,r){
  return rows.map(x=>{const terms=require('../../shared/supplier-terms'),offer=terms.parse(x.BangGiaNCC).find(o=>String(o.supplier_id)===String(x.supplier_id));const life=x.saved_life_days??x.supplier_life_days??offer?.shelf_life_days??null;const manufactured=x.manufactured_date instanceof Date?x.manufactured_date.toISOString().slice(0,10):x.manufactured_date||C.today();const expiry=x.expiry_date instanceof Date?x.expiry_date.toISOString().slice(0,10):x.expiry_date||(life?terms.expiry(manufactured,life):null);delete x.BangGiaNCC;return {...x,shelf_life_days:life,manufactured_date:manufactured,expiry_date:expiry,purchase_order_line_id:String(x.purchase_order_line_id),item_id:String(x.item_id)};});
 }
 async function get(runtime,u,key){const r=await campaign(runtime.pool,u,key);return {id:String(r.id),code:r.code,version:r.version,status:r.status,can_quality:u.roles.includes('QC_INSPECTOR')&&!!r.KiemChatLuong,can_count:u.roles.includes('STOCKTAKER')&&!!r.KiemSoLuong,lines:await lines(runtime.pool,r)};}
-async function save(runtime,u,key,b,request){
+async function save(runtime,u,key,b,request,editing=false){
  P.role(u,['QC_INSPECTOR','STOCKTAKER']);C.fields(b,['version','kind','lines']);C.fail(!['QUALITY','COUNT'].includes(b.kind),'VALIDATION_ERROR','Loại kết quả không hợp lệ.');
- await runtime.stocktakes.tx(async c=>{const r=await campaign(c,u,key,true);C.version(r,b.version);C.state(r,['IN_PROGRESS']);
- C.fail(b.kind==='QUALITY'?(!u.roles.includes('QC_INSPECTOR')||!r.KiemChatLuong):(!u.roles.includes('STOCKTAKER')||!r.KiemSoLuong),'FORBIDDEN','Sai phần việc được phân công.',403);
- const source=await lines(c,r);C.fail(!source.length||!Array.isArray(b.lines)||b.lines.length!==source.length||new Set(b.lines.map(x=>String(x.purchase_order_line_id))).size!==source.length,'VALIDATION_ERROR','Nhập đầy đủ mỗi dòng kế hoạch một lần.');
- for(const line of b.lines){C.fields(line,b.kind==='QUALITY'?['purchase_order_line_id','received_quantity','passed_quantity','failed_quantity','issue','manufactured_date']:['purchase_order_line_id','counted_quantity']);const src=source.find(s=>s.purchase_order_line_id===String(line.purchase_order_line_id));C.fail(!src||src.lot_id,'INVALID_STATE','Dòng không thuộc kế hoạch hoặc đã tạo lô.',409);
+ await runtime.stocktakes.tx(async c=>{const r=await campaign(c,u,key,true);C.version(r,b.version);if(editing)C.fail(r.BienBanKetLuan!==null,'INVALID_STATE','QC can only be edited before the minute is created.',409);else C.state(r,['IN_PROGRESS']);
+ C.fail(b.kind==='QUALITY'?(!u.roles.includes('QC_INSPECTOR')||(!r.KiemChatLuong&&!editing)):(!u.roles.includes('STOCKTAKER')||!r.KiemSoLuong),'FORBIDDEN','Sai phần việc được phân công.',403);
+ const source=await lines(c,r);C.fail(!source.length||!Array.isArray(b.lines)||!b.lines.length||(!editing&&b.lines.length!==source.length)||new Set(b.lines.map(x=>String(x.purchase_order_line_id))).size!==b.lines.length,'VALIDATION_ERROR','Dòng kết quả QC không hợp lệ.');
+ for(const line of b.lines){C.fields(line,b.kind==='QUALITY'?['purchase_order_line_id','received_quantity','passed_quantity','failed_quantity','issue','manufactured_date']:['purchase_order_line_id','counted_quantity']);const src=source.find(s=>s.purchase_order_line_id===String(line.purchase_order_line_id));C.fail(!src||(src.lot_id&&!editing),'INVALID_STATE','Dòng không thuộc kế hoạch hoặc đã tạo lô.',409);
  await c.execute('SELECT id FROM purchase_order_lines WHERE id=? FOR UPDATE',[src.purchase_order_line_id]);
- const old=b.kind==='QUALITY'?src.received_quantity:src.counted_quantity;C.fail(old!==null,'INVALID_STATE','Kết quả đã được xác nhận; không ghi đè.',409);
+ const old=b.kind==='QUALITY'?src.received_quantity:src.counted_quantity;C.fail(editing?old===null:old!==null,'INVALID_STATE','QC row state does not allow this operation.',409);
  if(b.kind==='QUALITY'){
  const terms=require('../../shared/supplier-terms'),manufactured=line.manufactured_date||src.manufactured_date;C.fail(!src.shelf_life_days,'SOURCE_REQUIRED','Chưa cấu hình hạn dùng của NVL theo nhà cung cấp.');C.date(manufactured,'manufactured_date');C.fail(manufactured>C.today(),'VALIDATION_ERROR','Ngày sản xuất thực tế không ở tương lai.');const expiry=terms.expiry(manufactured,src.shelf_life_days);
  const actual=number(line.received_quantity),good=number(line.passed_quantity),bad=number(line.failed_quantity);C.fail(good+bad!==actual,'VALIDATION_ERROR','Lượng đạt cộng lượng lỗi phải bằng lượng thực kiểm.');C.text(line.issue||'','issue',5000,bad>0n);C.fail(good>0n&&expiry<C.today(),'LOT_EXPIRED','Hàng đã hết hạn, không ghi lượng đạt để nhập kho.');
@@ -34,6 +34,18 @@ async function save(runtime,u,key,b,request){
  await runtime.stocktakes.audit(c,u,key,'PURCHASE_PLAN_CHECK_'+b.kind,request);
  });return get(runtime,u,key);
 }
+async function remove(runtime,u,key,b,request){
+ P.role(u,['QC_INSPECTOR']);C.fields(b,['version']);
+ await runtime.stocktakes.tx(async c=>{
+  const r=await campaign(c,u,key,true);C.version(r,b.version);
+  C.fail(r.BienBanKetLuan!==null,'INVALID_STATE','QC can only be deleted before the minute is created.',409);
+  await c.execute('UPDATE ThucKiemKeHoachMua SET ThucNhan=NULL,SoDat=NULL,SoLoi=NULL,MoTaLoi=NULL,NguoiQC=NULL,NgayQC=NULL,NgaySanXuat=NULL,HanSuDung=NULL,SoNgayHanDung=NULL WHERE MaDot=? AND ThucNhan IS NOT NULL',[key]);
+  await c.execute("UPDATE stocktakes SET status='IN_PROGRESS',version=version+1 WHERE id=?",[key]);
+  await c.execute("UPDATE tasks SET status='IN_PROGRESS',version=version+1 WHERE stocktake_id=? AND task_type='LOT_INSPECTION' AND status='COMPLETED'",[key]);
+  await runtime.stocktakes.audit(c,u,key,'DELETE_PURCHASE_PLAN_QC',request);
+ });
+ return get(runtime,u,key);
+}
 async function createLots(runtime,u,key,b,request){
  P.role(u,['WAREHOUSE_MANAGER']);C.fields(b,['version','expiry_date','manufactured_date']);if(b.expiry_date)C.date(b.expiry_date,'expiry_date',true);if(b.manufactured_date)C.date(b.manufactured_date,'manufactured_date',true);C.fail(b.expiry_date&&b.manufactured_date&&b.expiry_date<b.manufactured_date,'VALIDATION_ERROR','Hạn dùng phải sau ngày sản xuất.');
  await runtime.stocktakes.tx(async c=>{const r=await campaign(c,u,key,true);C.version(r,b.version);C.state(r,['COMPLETED','CLOSED']);C.fail(!r.KiemChatLuong,'INVALID_STATE','Cần có QC xác nhận chất lượng trước khi tạo lô.',409);
@@ -47,4 +59,4 @@ async function createLots(runtime,u,key,b,request){
  await c.execute('UPDATE stocktakes SET version=version+1 WHERE id=?',[key]);await runtime.stocktakes.audit(c,u,key,'CREATE_PASSED_MATERIAL_LOTS',request);
  });return get(runtime,u,key);
 }
-module.exports={get,save,createLots,lines};
+module.exports={get,save,remove,createLots,lines};

@@ -223,7 +223,10 @@ class QualityService {
       [...params, String(per_page), String(offset)],
     );
     return {
-      data: rows.map((row) => this.present(user, row)),
+      data: await Promise.all(rows.map(async row => ({
+        ...this.present(user, row),
+        actions: await this.editActions(user, row, this.pool),
+      }))),
       meta: {
         page,
         per_page,
@@ -235,7 +238,10 @@ class QualityService {
 
   async get(user, id, connection = this.pool) {
     P.role(user, P.read["qc-inspections"]);
-    if(/^PLAN-[1-9]\d*$/.test(String(id)))return require('./plan-results').get(connection,user,String(id));
+    if(/^PLAN-[1-9]\d*$/.test(String(id))){
+      const result=await require('./plan-results').get(connection,user,String(id));
+      return {...result,actions:await this.editActions(user,result,connection)};
+    }
     C.fail(!isId(id), "NOT_FOUND", "Không tìm thấy kết quả QC.", 404);
     const [rows] = await connection.execute(
       "SELECT q.*,u.full_name AS inspector_name FROM qc_inspections q JOIN users u ON u.id=q.inspector_id WHERE q.id=?",
@@ -269,18 +275,11 @@ class QualityService {
   }
 
   async editActions(user, report, connection) {
-    if (!user.roles.includes("QC_INSPECTOR") || String(report.inspector_id) !== String(user.id)) return [];
-    const [[campaign]] = await connection.execute("SELECT BienBanKetLuan FROM stocktakes WHERE id=?", [report.campaign_id]);
-    if (!campaign || campaign.BienBanKetLuan !== null) return [];
-    return (await this.unused(report.id, connection)) ? ["edit", "delete"] : ["edit"];
-  }
-
-  async unused(id, connection) {
-    const [used] = await connection.execute(
-      "SELECT l.id FROM qc_inspection_lines l WHERE l.qc_inspection_id=? AND (EXISTS(SELECT 1 FROM stock_document_lines d WHERE d.lot_id=l.lot_id) OR EXISTS(SELECT 1 FROM stock_allocations a JOIN tasks t ON t.id=a.task_id WHERE a.lot_id=l.lot_id AND t.status<>'CANCELLED') OR EXISTS(SELECT 1 FROM returned_lot_lines r WHERE r.original_lot_detail_id=l.lot_id) OR EXISTS(SELECT 1 FROM exception_proposals p WHERE p.qc_inspection_line_id=l.id AND p.status<>'REJECTED')) LIMIT 1",
-      [id],
-    );
-    return used.length === 0;
+    if (!user.roles.includes("QC_INSPECTOR")) return [];
+    const campaignId=String(report.id).startsWith("PLAN-")?String(report.id).slice(5):report.campaign_id;
+    const [[campaign]]=await connection.execute("SELECT BienBanKetLuan FROM stocktakes WHERE id=?",[campaignId]);
+    const [assigned]=await connection.execute("SELECT id FROM quality_campaign_assignments WHERE campaign_id=? AND user_id=?",[campaignId,user.id]);
+    return campaign&&campaign.BienBanKetLuan===null&&assigned.length?["edit","delete"]:[];
   }
 
   async campaign(connection, user, id) {
@@ -496,22 +495,18 @@ class QualityService {
     try {
       await c.beginTransaction();
       const [[report]] = await c.execute("SELECT * FROM qc_inspections WHERE id=? FOR UPDATE", [id]);
-      C.fail(!report || String(report.inspector_id) !== String(user.id), "NOT_FOUND", "Không tìm thấy kết quả QC thuộc bạn.", 404);
+      C.fail(!report, "NOT_FOUND", "Không tìm thấy kết quả QC.", 404);
       C.version(report, body.version);
       C.state(report, ["RECORDED"]);
       const [[campaign]] = await c.execute("SELECT * FROM stocktakes WHERE id=? FOR UPDATE", [report.campaign_id]);
       C.fail(!campaign || campaign.BienBanKetLuan !== null, "INVALID_STATE", "Biên bản kiểm kê đã được lập, không thể sửa kết quả QC.", 409);
       const [assigned] = await c.execute("SELECT id FROM quality_campaign_assignments WHERE campaign_id=? AND user_id=?", [report.campaign_id,user.id]);
-      C.fail(!assigned.length || !campaign.KiemChatLuong, "FORBIDDEN", "Bạn không được phân công lịch QC này.", 403);
+      C.fail(!assigned.length, "FORBIDDEN", "Bạn không được phân công lịch QC này.", 403);
       const oldLines = (await this.get(user, id, c)).lines;
       const lines = await this.validateLines(c, campaign, body.lines, id);
       C.fail(lines.length !== oldLines.length || lines.some(line => !oldLines.some(old => String(old.lot_id) === line.lot_id)), "VALIDATION_ERROR", "Không thể thêm hoặc bỏ lô khỏi kết quả QC.");
       for (const line of lines) {
         const old = oldLines.find(x => String(x.lot_id) === line.lot_id);
-        const [[lot]] = await c.execute("SELECT purchase_order_line_id FROM lots WHERE id=? FOR UPDATE", [line.lot_id]);
-        const [used] = await c.execute("SELECT id FROM stock_document_lines WHERE lot_id=? UNION SELECT a.id FROM stock_allocations a JOIN tasks t ON t.id=a.task_id WHERE a.lot_id=? AND t.status<>'CANCELLED' UNION SELECT id FROM returned_lot_lines WHERE original_lot_detail_id=? UNION SELECT p.id FROM exception_proposals p JOIN qc_inspection_lines l ON l.id=p.qc_inspection_line_id WHERE l.lot_id=? AND p.status<>'REJECTED'", [line.lot_id,line.lot_id,line.lot_id,line.lot_id]);
-        C.fail(used.length, "IN_USE", "Lô đã phát sinh phiếu kho, trả hàng hoặc xử lý ngoại lệ, không thể sửa kết quả QC.", 409);
-        C.fail(lot.purchase_order_line_id && C.qty(line.failed_quantity, false) > 0n, "INVALID_STATE", "Lô nguyên vật liệu lỗi cần xử lý bằng chứng từ trả hàng.", 409);
         await c.execute("UPDATE qc_inspection_lines SET inspected_quantity=?,passed_quantity=?,failed_quantity=?,issue=? WHERE id=?", [line.inspected_quantity,line.passed_quantity,line.failed_quantity,line.issue,old.id]);
         const status = C.qty(line.failed_quantity, false) === 0n ? "PASSED" : C.qty(line.passed_quantity, false) === 0n ? "FAILED" : "PARTIAL";
         await c.execute("UPDATE lots SET qc_status=?,version=version+1 WHERE id=?", [status,line.lot_id]);
@@ -537,16 +532,15 @@ class QualityService {
     try {
       await c.beginTransaction();
       const [[report]] = await c.execute("SELECT * FROM qc_inspections WHERE id=? FOR UPDATE", [id]);
-      C.fail(!report || String(report.inspector_id) !== String(user.id), "NOT_FOUND", "Không tìm thấy kết quả QC thuộc bạn.", 404);
+      C.fail(!report, "NOT_FOUND", "Không tìm thấy kết quả QC.", 404);
       C.version(report, body.version);
       C.state(report, ["RECORDED"]);
       const [[campaign]] = await c.execute("SELECT * FROM stocktakes WHERE id=? FOR UPDATE", [report.campaign_id]);
       C.fail(!campaign || campaign.BienBanKetLuan !== null, "INVALID_STATE", "Biên bản kiểm kê đã được lập, không thể xóa kết quả QC.", 409);
       const [assigned] = await c.execute("SELECT id FROM quality_campaign_assignments WHERE campaign_id=? AND user_id=?", [report.campaign_id, user.id]);
-      C.fail(!assigned.length || !campaign.KiemChatLuong, "FORBIDDEN", "Bạn không được phân công lịch QC này.", 403);
+      C.fail(!assigned.length, "FORBIDDEN", "Bạn không được phân công lịch QC này.", 403);
       const [lines] = await c.execute("SELECT id,lot_id FROM qc_inspection_lines WHERE qc_inspection_id=? FOR UPDATE", [id]);
       lotIds = lines.map(line => String(line.lot_id));
-      C.fail(!(await this.unused(id, c)), "IN_USE", "Kết quả QC đã được sử dụng, không thể xóa.", 409);
       for (const line of lines) await c.execute("UPDATE lots SET qc_status='PENDING',version=version+1 WHERE id=?", [line.lot_id]);
       await c.execute("DELETE FROM qc_inspection_lines WHERE qc_inspection_id=?", [id]);
       await c.execute("DELETE FROM qc_inspections WHERE id=?", [id]);

@@ -27,6 +27,7 @@ module.exports = (runtime) => {
   router.get('/purchase-plan-price-options',role(['PLANNER','DIRECTOR']),async(req,res)=>ok(req,res,await require('./supplier-terms').catalogue(runtime.pool)));
   router.get('/quality-campaigns/:id/purchase-check',async(req,res)=>ok(req,res,await purchaseChecks.get(runtime,req.user,req.params.id)));
   router.post('/quality-campaigns/:id/purchase-check',async(req,res)=>ok(req,res,await purchaseChecks.save(runtime,req.user,req.params.id,req.body,req.request_id)));
+  router.post('/quality-campaigns/:id/purchase-check/edit',async(req,res)=>ok(req,res,await purchaseChecks.save(runtime,req.user,req.params.id,req.body,req.request_id,true)));
   router.post('/quality-campaigns/:id/material-lots',async(req,res)=>ok(req,res,await purchaseChecks.createLots(runtime,req.user,req.params.id,req.body,req.request_id)));
   const sourceImports = new (require('./SourceImportService'))(runtime);
   for(const resource of ['warehouse-inbound','warehouse-outbound']){
@@ -1091,17 +1092,12 @@ module.exports = (runtime) => {
   router.delete(
     "/qc-inspections/:id",
     role(P.editable["qc-inspections"]),
-    async (req, res) =>
-      ok(
-        req,
-        res,
-        await runtime.quality.remove(
-          req.user,
-          req.params.id,
-          req.body,
-          req.request_id,
-        ),
-      ),
+    async (req, res) => {
+      const result=/^PLAN-[1-9]\d*$/.test(req.params.id)
+        ? await purchaseChecks.remove(runtime,req.user,req.params.id.slice(5),req.body,req.request_id)
+        : await runtime.quality.remove(req.user,req.params.id,req.body,req.request_id);
+      ok(req,res,result);
+    },
   );
   router.get(
     "/stock-requests",
