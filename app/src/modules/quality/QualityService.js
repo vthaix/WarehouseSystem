@@ -271,7 +271,16 @@ class QualityService {
   async editActions(user, report, connection) {
     if (!user.roles.includes("QC_INSPECTOR") || String(report.inspector_id) !== String(user.id)) return [];
     const [[campaign]] = await connection.execute("SELECT BienBanKetLuan FROM stocktakes WHERE id=?", [report.campaign_id]);
-    return campaign && campaign.BienBanKetLuan === null ? ["edit"] : [];
+    if (!campaign || campaign.BienBanKetLuan !== null) return [];
+    return (await this.unused(report.id, connection)) ? ["edit", "delete"] : ["edit"];
+  }
+
+  async unused(id, connection) {
+    const [used] = await connection.execute(
+      "SELECT l.id FROM qc_inspection_lines l WHERE l.qc_inspection_id=? AND (EXISTS(SELECT 1 FROM stock_document_lines d WHERE d.lot_id=l.lot_id) OR EXISTS(SELECT 1 FROM stock_allocations a JOIN tasks t ON t.id=a.task_id WHERE a.lot_id=l.lot_id AND t.status<>'CANCELLED') OR EXISTS(SELECT 1 FROM returned_lot_lines r WHERE r.original_lot_detail_id=l.lot_id) OR EXISTS(SELECT 1 FROM exception_proposals p WHERE p.qc_inspection_line_id=l.id AND p.status<>'REJECTED')) LIMIT 1",
+      [id],
+    );
+    return used.length === 0;
   }
 
   async campaign(connection, user, id) {
@@ -520,13 +529,38 @@ class QualityService {
     return this.get(user, id);
   }
 
-  async remove(user) {
+  async remove(user, id, body, requestId) {
     P.role(user, ["QC_INSPECTOR"]);
-    throw new C.DomainError(
-      409,
-      "COMPENSATION_REQUIRED",
-      "Không xóa kết quả QC đã ghi.",
-    );
+    C.fields(body, ["version"]);
+    const c = await this.pool.getConnection();
+    let lotIds = [];
+    try {
+      await c.beginTransaction();
+      const [[report]] = await c.execute("SELECT * FROM qc_inspections WHERE id=? FOR UPDATE", [id]);
+      C.fail(!report || String(report.inspector_id) !== String(user.id), "NOT_FOUND", "Không tìm thấy kết quả QC thuộc bạn.", 404);
+      C.version(report, body.version);
+      C.state(report, ["RECORDED"]);
+      const [[campaign]] = await c.execute("SELECT * FROM stocktakes WHERE id=? FOR UPDATE", [report.campaign_id]);
+      C.fail(!campaign || campaign.BienBanKetLuan !== null, "INVALID_STATE", "Biên bản kiểm kê đã được lập, không thể xóa kết quả QC.", 409);
+      const [assigned] = await c.execute("SELECT id FROM quality_campaign_assignments WHERE campaign_id=? AND user_id=?", [report.campaign_id, user.id]);
+      C.fail(!assigned.length || !campaign.KiemChatLuong, "FORBIDDEN", "Bạn không được phân công lịch QC này.", 403);
+      const [lines] = await c.execute("SELECT id,lot_id FROM qc_inspection_lines WHERE qc_inspection_id=? FOR UPDATE", [id]);
+      lotIds = lines.map(line => String(line.lot_id));
+      C.fail(!(await this.unused(id, c)), "IN_USE", "Kết quả QC đã được sử dụng, không thể xóa.", 409);
+      for (const line of lines) await c.execute("UPDATE lots SET qc_status='PENDING',version=version+1 WHERE id=?", [line.lot_id]);
+      await c.execute("DELETE FROM qc_inspection_lines WHERE qc_inspection_id=?", [id]);
+      await c.execute("DELETE FROM qc_inspections WHERE id=?", [id]);
+      await this.finishCampaign(c, report.campaign_id);
+      await require('../stock-requests/partial-progress').refresh(c, lotIds);
+      await c.execute("INSERT INTO audit_logs(actor_id,resource_type,resource_id,action,before_data,request_id) VALUES (?,'qc-inspections',?,'DELETE',?,?)", [user.id,id,JSON.stringify({code:report.code,campaign_id:report.campaign_id}),requestId]);
+      await c.commit();
+    } catch (error) {
+      await c.rollback();
+      throw error;
+    } finally {
+      c.release();
+    }
+    return {id:String(id),deleted:true};
   }
 }
 

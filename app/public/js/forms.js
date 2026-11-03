@@ -582,9 +582,10 @@ async function actionForm(r, action) {
       r.status === "PLANNED" ? ["IN_PROGRESS"] : ["COMPLETED"],
     );
   else if (action === "delete") {
-    html = `<div class="span2 notice">Xác nhận hủy / xóa ${esc(r.code)}? Chứng từ đã sử dụng được hệ thống bảo vệ.</div>`;
+    html = `<div class="span2 notice">${current === "qc-inspections" ? "Xóa kết quả QA/QC này? Chỉ xóa được trước khi lập biên bản kiểm kê và khi kết quả chưa được sử dụng." : `Xác nhận hủy / xóa ${esc(r.code)}? Chứng từ đã sử dụng được hệ thống bảo vệ.`}</div>`;
     method = "DELETE";
     path = current + "/" + r.id;
+    if (current === "qc-inspections") builder = () => ({ version: r.version });
   } else if (action === "edit") {
     method = "PATCH";
     path = current + "/" + r.id;
