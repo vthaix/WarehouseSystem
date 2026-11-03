@@ -258,6 +258,7 @@ class QualityService {
     return {
       ...this.present(user, rows[0]),
       compensations,
+      actions: await this.editActions(user, rows[0], connection),
       lines: lines.map((line) => ({
         ...line,
         id: String(line.id),
@@ -265,6 +266,12 @@ class QualityService {
         qc_inspection_id: String(line.qc_inspection_id),
       })),
     };
+  }
+
+  async editActions(user, report, connection) {
+    if (!user.roles.includes("QC_INSPECTOR") || String(report.inspector_id) !== String(user.id)) return [];
+    const [[campaign]] = await connection.execute("SELECT BienBanKetLuan FROM stocktakes WHERE id=?", [report.campaign_id]);
+    return campaign && campaign.BienBanKetLuan === null ? ["edit"] : [];
   }
 
   async campaign(connection, user, id) {
@@ -468,14 +475,51 @@ class QualityService {
     return this.get(user, id);
   }
 
-  async update(user) {
+  async update(user, id, body, requestId) {
     P.role(user, ["QC_INSPECTOR"]);
-    throw new C.DomainError(
-      409,
-      "COMPENSATION_REQUIRED",
-      "Kết quả đã ghi cần chứng từ bù QC, không sửa đè.",
-    );
+    C.fields(body, ["version", "inspected_at", "note", "lines"]);
+    C.fail(!Number.isInteger(Number(body.version)), "VALIDATION_ERROR", "Phiên bản kết quả QC không hợp lệ.");
+    const actualAt = require("../../shared/time-rules").timestamp(body.inspected_at, "inspected_at");
+    C.fail(+actualAt > Date.now() + 60000, "VALIDATION_ERROR", "Thời điểm kiểm tra thực tế không được ở tương lai.");
+    C.fail(typeof body.inspected_at !== "string" || !/(Z|[+-]\d\d:\d\d)$/.test(body.inspected_at), "VALIDATION_ERROR", "Thời điểm kiểm tra không hợp lệ.");
+    if (body.note !== undefined) C.text(body.note, "note", 5000, false);
+    const c = await this.pool.getConnection();
+    try {
+      await c.beginTransaction();
+      const [[report]] = await c.execute("SELECT * FROM qc_inspections WHERE id=? FOR UPDATE", [id]);
+      C.fail(!report || String(report.inspector_id) !== String(user.id), "NOT_FOUND", "Không tìm thấy kết quả QC thuộc bạn.", 404);
+      C.version(report, body.version);
+      C.state(report, ["RECORDED"]);
+      const [[campaign]] = await c.execute("SELECT * FROM stocktakes WHERE id=? FOR UPDATE", [report.campaign_id]);
+      C.fail(!campaign || campaign.BienBanKetLuan !== null, "INVALID_STATE", "Biên bản kiểm kê đã được lập, không thể sửa kết quả QC.", 409);
+      const [assigned] = await c.execute("SELECT id FROM quality_campaign_assignments WHERE campaign_id=? AND user_id=?", [report.campaign_id,user.id]);
+      C.fail(!assigned.length || !campaign.KiemChatLuong, "FORBIDDEN", "Bạn không được phân công lịch QC này.", 403);
+      const oldLines = (await this.get(user, id, c)).lines;
+      const lines = await this.validateLines(c, campaign, body.lines, id);
+      C.fail(lines.length !== oldLines.length || lines.some(line => !oldLines.some(old => String(old.lot_id) === line.lot_id)), "VALIDATION_ERROR", "Không thể thêm hoặc bỏ lô khỏi kết quả QC.");
+      for (const line of lines) {
+        const old = oldLines.find(x => String(x.lot_id) === line.lot_id);
+        const [[lot]] = await c.execute("SELECT purchase_order_line_id FROM lots WHERE id=? FOR UPDATE", [line.lot_id]);
+        const [used] = await c.execute("SELECT id FROM stock_document_lines WHERE lot_id=? UNION SELECT a.id FROM stock_allocations a JOIN tasks t ON t.id=a.task_id WHERE a.lot_id=? AND t.status<>'CANCELLED' UNION SELECT id FROM returned_lot_lines WHERE original_lot_detail_id=? UNION SELECT p.id FROM exception_proposals p JOIN qc_inspection_lines l ON l.id=p.qc_inspection_line_id WHERE l.lot_id=? AND p.status<>'REJECTED'", [line.lot_id,line.lot_id,line.lot_id,line.lot_id]);
+        C.fail(used.length, "IN_USE", "Lô đã phát sinh phiếu kho, trả hàng hoặc xử lý ngoại lệ, không thể sửa kết quả QC.", 409);
+        C.fail(lot.purchase_order_line_id && C.qty(line.failed_quantity, false) > 0n, "INVALID_STATE", "Lô nguyên vật liệu lỗi cần xử lý bằng chứng từ trả hàng.", 409);
+        await c.execute("UPDATE qc_inspection_lines SET inspected_quantity=?,passed_quantity=?,failed_quantity=?,issue=? WHERE id=?", [line.inspected_quantity,line.passed_quantity,line.failed_quantity,line.issue,old.id]);
+        const status = C.qty(line.failed_quantity, false) === 0n ? "PASSED" : C.qty(line.passed_quantity, false) === 0n ? "FAILED" : "PARTIAL";
+        await c.execute("UPDATE lots SET qc_status=?,version=version+1 WHERE id=?", [status,line.lot_id]);
+      }
+      await c.execute("UPDATE qc_inspections SET inspected_at=?,note=?,version=version+1 WHERE id=?", [new Date(body.inspected_at),body.note||null,id]);
+      await require("../stock-requests/partial-progress").refresh(c, lines.map(line => line.lot_id));
+      await c.execute("INSERT INTO audit_logs(actor_id,resource_type,resource_id,action,after_data,request_id) VALUES (?,'qc-inspections',?,'UPDATE',?,?)", [user.id,id,JSON.stringify({campaign_id:report.campaign_id}),requestId]);
+      await c.commit();
+    } catch (error) {
+      await c.rollback();
+      throw error;
+    } finally {
+      c.release();
+    }
+    return this.get(user, id);
   }
+
   async remove(user) {
     P.role(user, ["QC_INSPECTOR"]);
     throw new C.DomainError(
