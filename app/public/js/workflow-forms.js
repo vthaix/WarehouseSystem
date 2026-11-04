@@ -925,6 +925,34 @@ detail = function (r) {
     };
     modalBody.querySelector(".form-actions").append(btn);
   }
+  if (current === "customer-orders") {
+    const details = [
+      ["code", "Mã đơn hàng"],
+      ["customer_name", "Khách hàng"],
+      ["delivery_address", "Địa chỉ giao hàng"],
+      ["latest_delivery_date", "Hạn giao hàng"],
+      ["note", "Ghi chú"],
+      ["status", "Trạng thái"],
+      ["received_by_name", "Người tiếp nhận"],
+      ["received_at", "Thời điểm tiếp nhận"],
+      ["rejection_reason", "Lý do từ chối"],
+      ["quoted_total", "Tổng báo giá"],
+      ["created_at", "Ngày tạo"],
+      ["updated_at", "Cập nhật lúc"],
+    ].filter(([key]) => Object.prototype.hasOwnProperty.call(r, key));
+    const section = document.createElement("section");
+    section.className = "form-section customer-order-summary";
+    section.innerHTML =
+      "<h3>Thông tin đơn hàng</h3><div class=\"table-wrap\"><table><tbody>" +
+      details
+        .map(
+          ([key, label]) =>
+            `<tr><th scope="row">${label}</th><td>${detailValue(key, r[key], r)}</td></tr>`,
+        )
+        .join("") +
+        "</tbody></table></div>";
+    modalBody.querySelector(".detail-grid")?.replaceWith(section);
+  }
 };
 window.addEventListener('DOMContentLoaded', () => {
   if(current==='business-plans' && new URLSearchParams(location.hash.slice(1)).has('purchase_report') && has(['PLANNER'])) createForm();
@@ -958,7 +986,7 @@ async function dispatchForm(req) {
             l.id ===
             row.querySelector('[data-key="stock_request_line_id"]').value,
         );
-        const eligible=l.lots.filter(lot=>req.type==='IN'?qty(lot.passed_quantity)>qty(lot.posted_quantity):l.balances.some(b=>String(b.lot_id)===lot.id&&b.quality_bucket==='AVAILABLE'&&freeBalance(b)>0n));
+        const eligible=l.lots.filter(lot=>req.type==='IN'?qty(lot.passed_quantity)>qty(lot.posted_quantity):l.balances.some(b=>String(b.lot_id)===lot.id&&b.quality_bucket==='AVAILABLE'&&freeBalance(b)>0n)).sort((a,b)=>String(a.expiry_date||'9999-12-31').slice(0,10).localeCompare(String(b.expiry_date||'9999-12-31').slice(0,10))||(Date.parse(a.first_received_at||'9999-12-31')-Date.parse(b.first_received_at||'9999-12-31'))||Number(a.id)-Number(b.id));
         row.querySelector('[data-key="lot_id"]').innerHTML = eligible
           .map((t) => `<option value="${t.id}">${esc(t.code)}${t.expiry_date?' · HSD '+esc(format(t.expiry_date,'expiry_date')):' · Chưa có HSD'}</option>`)
           .join("");
@@ -985,11 +1013,12 @@ async function dispatchForm(req) {
           let heading=row.querySelector('.dispatch-item-title');if(!heading){heading=document.createElement('h3');heading.className='dispatch-item-title';row.prepend(heading);}heading.textContent=l.item_name;
           if(req.type==='OUT'){
             let queue=row.querySelector('.dispatch-line-queue');if(!queue){queue=document.createElement('section');queue.className='dispatch-line-queue';row.querySelector('.form-grid').after(queue);}
-            queue.innerHTML='<h4>Lô xuất đề xuất</h4><div class="table-wrap"><table><thead><tr><th>Ưu tiên</th><th>Lô</th><th>Hạn dùng</th><th>Có thể xuất</th><th></th></tr></thead><tbody>'+eligible.map((candidate,index)=>{const amount=l.balances.filter(b=>String(b.lot_id)===String(candidate.id)&&b.quality_bucket==='AVAILABLE').reduce((n,b)=>n+freeBalance(b),0n);return '<tr class="'+(candidate.id===lot?.id?'queue-selected':'')+'"><td>'+String(index+1)+'</td><td>'+esc(candidate.code)+'</td><td>'+esc(candidate.expiry_date?format(candidate.expiry_date,'expiry_date'):'Chưa ghi nhận')+'</td><td>'+esc(format(decimal(amount)))+' '+esc(l.unit||'')+'</td><td><button class="button small" type="button" data-queue-lot="'+esc(candidate.id)+'">'+(candidate.id===lot?.id?'Đang chọn':'Chọn lô')+'</button></td></tr>';}).join('')+'</tbody></table></div>';
+            queue.innerHTML='<h4>Lô xuất đề xuất</h4><p class="queue-hint">Thứ tự ưu tiên gợi ý theo hạn dùng gần nhất; quản lý vẫn có thể chọn lô khác còn khả dụng.</p><div class="table-wrap"><table><thead><tr><th>Ưu tiên</th><th>Lô</th><th>Hạn dùng</th><th>Có thể xuất</th><th></th></tr></thead><tbody>'+eligible.map((candidate,index)=>{const amount=l.balances.filter(b=>String(b.lot_id)===String(candidate.id)&&b.quality_bucket==='AVAILABLE').reduce((n,b)=>n+freeBalance(b),0n);return '<tr class="'+(candidate.id===lot?.id?'queue-selected':'')+'"><td>'+String(index+1)+'</td><td>'+esc(candidate.code)+'</td><td>'+esc(candidate.expiry_date?format(candidate.expiry_date,'expiry_date'):'Chưa ghi nhận')+'</td><td>'+esc(format(decimal(amount)))+' '+esc(l.unit||'')+'</td><td><button class="button small" type="button" data-queue-lot="'+esc(candidate.id)+'">'+(candidate.id===lot?.id?'Đang chọn':'Chọn lô')+'</button></td></tr>';}).join('')+'</tbody></table></div>';
             queue.querySelectorAll('[data-queue-lot]').forEach(button=>button.onclick=()=>{row.querySelector('[data-key=lot_id]').value=button.dataset.queueLot;row.querySelector('[data-key=lot_id]').dispatchEvent(new Event('change'));});
           }
         };
-        const suggestPosition=()=>{const lot=eligible.find(t=>t.id===row.querySelector('[data-key="lot_id"]').value);if(req.type==='IN'&&lot?.suggested_location_id)row.querySelector('[data-key="location_id"]').value=lot.suggested_location_id;updateQuantity();let hint=row.querySelector('.queue-hint');if(!hint){hint=document.createElement('p');hint.className='queue-hint';row.append(hint);}hint.textContent=req.type==='OUT'?'Ưu tiên hạn dùng gần nhất; cùng hạn dùng thì nhập kho trước xuất trước.':lot?.storage_hint||'Chọn ô nhập hàng.';};
+        const refreshLocations=()=>{const select=row.querySelector('[data-key="location_id"]'),current=select.value,lot=eligible.find(t=>t.id===row.querySelector('[data-key="lot_id"]').value);const choices=req.type==='OUT'&&lot?l.locations.filter(pos=>l.balances.some(b=>String(b.lot_id)===lot.id&&String(b.location_id)===String(pos.id)&&b.quality_bucket==='AVAILABLE'&&freeBalance(b)>0n)):l.locations;select.innerHTML=choices.map(pos=>`<option value="${pos.id}">${esc(pos.code+' · '+(pos.zone_name||'Khu chung').replace(/^Khu [A-Z] · /,'Khu '))}</option>`).join('');if(choices.some(pos=>String(pos.id)===current))select.value=current;else if(preferredLocationId&&choices.some(pos=>String(pos.id)===String(preferredLocationId)))select.value=String(preferredLocationId);else if(choices.length)select.value=String(choices[0].id);};
+        const suggestPosition=()=>{const lot=eligible.find(t=>t.id===row.querySelector('[data-key="lot_id"]').value);if(req.type==='IN'&&lot?.suggested_location_id)row.querySelector('[data-key="location_id"]').value=lot.suggested_location_id;if(req.type==='OUT')refreshLocations();updateQuantity();let hint=row.querySelector('.queue-hint');if(!hint){hint=document.createElement('p');hint.className='queue-hint';row.append(hint);}hint.textContent=req.type==='OUT'?'Lô được xếp theo hạn dùng gần nhất; đây là gợi ý. Bạn có thể chọn lô khác còn khả dụng và vị trí có hàng.':lot?.storage_hint||'Chọn ô nhập hàng.';};
         row.querySelector('[data-key="lot_id"]').onchange=suggestPosition;row.querySelector('[data-key="location_id"]').onchange=updateQuantity;
         row.querySelector('[data-key="location_id"]').innerHTML = l.locations
           .map((t) => `<option value="${t.id}">${esc(t.code+' · '+(t.zone_name||'Khu chung').replace(/^Khu [A-Z] · /,'Khu '))}</option>`)

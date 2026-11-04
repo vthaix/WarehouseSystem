@@ -9,6 +9,17 @@
     '<div class="notice">' +
     (r.warnings || []).map(esc).join("<br>") +
     "</div>";
+  const customerSummary = (r) =>
+    '<div class="table-wrap source-customer-summary"><table><tbody>' +
+    [
+      ["Khách hàng", r.customer_name],
+      ["Địa chỉ giao", r.delivery_address],
+      ["Ngày muốn nhận", r.latest_delivery_date],
+      ["Ghi chú khách hàng", r.customer_note],
+    ]
+      .map(([label, value]) => `<tr><th scope="row">${label}</th><td>${esc(value || "—")}</td></tr>`)
+      .join("") +
+    "</tbody></table></div>";
   function rowsAt(slot, title, items, section, fields, rows, manual = false) {
     const el = document.querySelector("#" + slot);
     if (!manual && !rows.length) {
@@ -138,15 +149,7 @@
             startInput.onchange = () => { endInput.min = startInput.value || calendarToday(); };
             document.querySelector("#import-info").innerHTML =
               notice(r) +
-              "<dl><dt>Khách hàng</dt><dd>" +
-              esc(r.customer_name || "") +
-              "</dd><dt>Địa chỉ giao</dt><dd>" +
-              esc(r.delivery_address || "") +
-              "</dd><dt>Ngày muốn nhận</dt><dd>" +
-              esc(r.latest_delivery_date || "") +
-              "</dd><dt>Ghi chú khách hàng</dt><dd>" +
-              esc(r.customer_note || "") +
-              "</dd></dl>";
+              customerSummary(r);
             rowsAt(
               "import-outputs",
               "Thành phẩm còn cần sản xuất",

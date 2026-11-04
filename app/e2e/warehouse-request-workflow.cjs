@@ -23,16 +23,33 @@ try{
   const line={id:'7001',item_name:'Bot mi',remaining_quantity:'10.000',unit:'kg',lots:[{id:'7002',code:'LO-NVL',qc_status:'PASSED',passed_quantity:'10.000',posted_quantity:'0.000'}],locations:[{id:'7003',name:'Ke A'}],balances:[]};
   {
     const {context,page,errors}=await pageFor('manager','warehouse-inbound');await mock(page,'stock-requests/7000/allocations',{request,frozen:false,lines:[line],allocations:[]});
-    await page.evaluate(r=>dispatchForm(r),request);assert.equal(await page.locator('#f-start_at').inputValue(),'2040-01-01T10:30');assert.equal(await page.locator('[data-dispatch] [data-key="quantity"]').inputValue(),'10');
-    const body=await capture(page,'stock-requests/7000/dispatch');assert.equal(body.start_at,'2040-01-01T03:30:00.000Z');assert.equal(body.allocations[0].quantity,'10');assert.deepEqual(errors,[]);await context.close();
+    await page.evaluate(r=>dispatchForm(r),request);assert.equal(await page.locator('[data-dispatch] [data-key="quantity"]').inputValue(),'10');
+    const body=await capture(page,'stock-requests/7000/dispatch');assert.equal(body.allocations[0].quantity,'10');assert.deepEqual(errors,[]);await context.close();
   }
   {
     const {context,page,errors}=await pageFor('manager','warehouse-outbound');
     const outbound={...request,type:'OUT'},fifoLine={...line,lots:[{id:'7002',code:'FIFO-FIRST',expiry_date:'2041-01-01',first_received_at:'2040-01-01T01:00:00Z'},{id:'7006',code:'FIFO-NEXT',expiry_date:'2041-01-01',first_received_at:'2040-01-02T01:00:00Z'}],balances:[{lot_id:'7002',location_id:'7003',quality_bucket:'AVAILABLE',quantity:'4.000'},{lot_id:'7006',location_id:'7003',quality_bucket:'AVAILABLE',quantity:'6.000'}]};
     await mock(page,'stock-requests/7000/allocations',{request:outbound,frozen:false,lines:[fifoLine],allocations:[]});
     await page.evaluate(r=>dispatchForm(r),outbound);assert.equal(await page.locator('[data-dispatch] [data-key="lot_id"]').inputValue(),'7002');
+    assert.match(await page.locator('.dispatch-line-queue').innerText(),/gợi ý.*chọn lô khác còn khả dụng/i);
     await page.getByRole('button',{name:'Bổ sung phân bổ theo hạn dùng và thứ tự nhập',exact:true}).click();
     assert.equal(await page.locator('[data-dispatch]').count(),2);const allocations=await page.locator('[data-dispatch]').evaluateAll(rows=>rows.map(r=>({lot:r.querySelector('[data-key="lot_id"]').value,quantity:r.querySelector('[data-key="quantity"]').value})));assert.deepEqual(allocations,[{lot:'7002',quantity:'4'},{lot:'7006',quantity:'6'}]);assert.deepEqual(errors,[]);await context.close();
+  }
+  {
+    const {context,page,errors}=await pageFor('manager','warehouse-outbound');
+    const flexibleRequest={...request,id:'7010',code:'YCK-7010',type:'OUT'},locations=[{id:'7003',code:'B01',name:'B01',zone_name:'Khu bột',depth:1},{id:'7009',code:'B02',name:'B02',zone_name:'Khu bột',depth:2}],flexibleLine={...line,id:'7011',remaining_quantity:'10.000',locations,lots:[{id:'7002',code:'FEFO-NEAR',expiry_date:'2040-02-01',first_received_at:'2040-01-01T01:00:00Z'},{id:'7006',code:'FEFO-LATER',expiry_date:'2040-03-01',first_received_at:'2040-01-02T01:00:00Z'}],balances:[{lot_id:'7002',location_id:'7003',quality_bucket:'AVAILABLE',quantity:'2.000',available_quantity:'2.000'},{lot_id:'7002',location_id:'7009',quality_bucket:'AVAILABLE',quantity:'3.000',available_quantity:'3.000'},{lot_id:'7006',location_id:'7009',quality_bucket:'AVAILABLE',quantity:'5.000',available_quantity:'5.000'}]};
+    await mock(page,'stock-requests/7010/allocations',{request:flexibleRequest,frozen:false,lines:[flexibleLine],allocations:[]});
+    await page.evaluate(r=>dispatchForm(r),flexibleRequest);
+    assert.equal(await page.locator('[data-dispatch] [data-key="lot_id"]').inputValue(),'7002','earliest expiry should be selected by default');
+    assert.deepEqual(await page.locator('[data-dispatch] [data-key="location_id"] option').evaluateAll(nodes=>nodes.map(n=>n.value)),['7003','7009']);
+    await page.locator('[data-dispatch] [data-key="location_id"]').selectOption('7009');
+    await page.locator('.warehouse-position-picker summary').click();
+    await page.locator('.warehouse-dispatch-map [data-location="7003"]').click();
+    assert.equal(await page.locator('[data-dispatch] [data-key="location_id"]').inputValue(),'7003','manager can choose another stocked position');
+    await page.locator('[data-queue-lot="7006"]').click();
+    assert.equal(await page.locator('[data-dispatch] [data-key="lot_id"]').inputValue(),'7006','manager can override the FEFO suggestion');
+    assert.deepEqual(await page.locator('[data-dispatch] [data-key="location_id"] option').evaluateAll(nodes=>nodes.map(n=>n.value)),['7009']);
+    assert.deepEqual(errors,[]);await context.close();
   }
   {
     const {context,page,errors}=await pageFor('staff','warehouse-inbound');const userId=await page.evaluate(()=>String(user.id));

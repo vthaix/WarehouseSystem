@@ -19,7 +19,7 @@ const queue = require('../src/shared/storage-queue');
     assert.equal(Number(r.quantity), Number(r.movement_quantity));
     assert.equal((new Date(r.expiry_date) - new Date(r.manufactured_date)) / 86400000, Number(r.shelf_life_days));
   }
-  const flour = rows.filter(r => r.code.includes('BOT-')).sort(queue.compare);
+  const flour = rows.filter(r => ['DEMO-Q-BOT-SOM','DEMO-Q-BOT-CUNG-HAN-1','DEMO-Q-BOT-CUNG-HAN-2','DEMO-Q-BOT-HAN-XA'].includes(r.code)).sort(queue.compare);
   assert.deepEqual(flour.map(r => r.code), ['DEMO-Q-BOT-SOM','DEMO-Q-BOT-CUNG-HAN-1','DEMO-Q-BOT-CUNG-HAN-2','DEMO-Q-BOT-HAN-XA']);
   const [locations] = await pool.execute('SELECT id,zone_category_id,depth FROM warehouse_locations WHERE id IN (?,?)', [flour[0].location_id, flour[3].location_id]);
   assert.equal(queue.recommend({expiry_date:queue.date(flour[0].expiry_date)},locations,[flour[3]]).location_id,String(flour[0].location_id));

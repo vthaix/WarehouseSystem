@@ -2,7 +2,7 @@ const { chromium } = require("@playwright/test"),
   assert = require("node:assert/strict"),
   fs = require("node:fs");
 const base = process.env.APP_URL || "http://127.0.0.1:3000";
-const executablePath = [
+const executablePath = process.env.BROWSER_PATH || [
   "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
   "C:/Program Files/Google/Chrome/Application/chrome.exe",
 ].find((p) => fs.existsSync(p));
@@ -208,6 +208,8 @@ const executablePath = [
       await planner.locator("#import-info").innerText(),
       /Địa chỉ đơn nguồn/,
     );
+    assert.equal(await planner.locator("#import-info .source-customer-summary tbody tr").count(), 4);
+    assert.equal(await planner.locator("#import-info dl").count(), 0);
     assert.equal(
       await planner.locator("#f-material_source").inputValue(),
       "RECIPE",
@@ -225,6 +227,31 @@ const executablePath = [
     await planner.waitForFunction(() => !document.querySelector("#modal").open);
     assert.equal(planBody.material_source, "RECIPE");
     assert.equal(planBody.materials, undefined);
+    await planner.evaluate(() => {
+      current = "customer-orders";
+      detail({
+        id: "99002",
+        code: "DH-UI-RECIPE",
+        customer_name: "Khách hàng demo",
+        delivery_address: "Địa chỉ giao",
+        latest_delivery_date: "2026-12-01",
+        note: "Ghi chú đơn",
+        status: "RECEIVED",
+        quoted_total: "2500000.0000",
+        created_at: "2026-10-01T00:00:00.000Z",
+        updated_at: "2026-10-02T00:00:00.000Z",
+        lines: [],
+      });
+    });
+    assert.equal(await planner.locator(".customer-order-summary tbody tr").count(), 9);
+    assert.ok((await planner.locator(".customer-order-summary").innerText()).includes("Khách hàng demo"));
+    const freshnessStyle = await planner.evaluate(() => {
+      const cell = document.createElement("td");
+      cell.innerHTML = '<strong>KHSX-KHACHHANG-01</strong><span class="record-freshness">Chờ phê duyệt</span>';
+      document.body.append(cell);
+      return getComputedStyle(cell.querySelector(".record-freshness")).display;
+    });
+    assert.equal(freshnessStyle, "flex");
     const director = await rolePage("director");
     let reviewBody;
     await director.route("**/api/v1/customer-orders/99003", (r) =>
