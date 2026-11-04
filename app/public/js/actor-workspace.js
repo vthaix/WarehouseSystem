@@ -28,15 +28,6 @@
  }
  loadTable=async function(){await baseLoad();itemCards();supplierLabels();lotGroups();await history();};
  detail=function(r){baseDetail(r);if(current==='suppliers'){const box=document.createElement('section');box.className='form-section';box.innerHTML='<h3>Mặt hàng cung cấp</h3><div class="supplier-chips">'+(r.supplied_items||[]).map(i=>'<span>'+esc(i.name)+'</span>').join('')+'</div>';modalBody.querySelector('.detail-grid')?.after(box);}
-  if(warehouseModules.includes(current)&&has(['WAREHOUSE_MANAGER'])&&r.status!=='POSTED'){
-   const button=document.createElement('button');button.className='button';button.textContent='Xem phân công và phần chưa thực hiện';button.onclick=async()=>{try{
-    const preview=(await api('stock-requests/'+r.id+'/allocations')).data;
-    const ids=[...new Set(preview.allocations.map(a=>String(a.task_id)))];
-    openModal('Phân công kho · '+r.code,'<div id="allocated-task-list"></div>');const list=document.querySelector('#allocated-task-list');
-    if(!ids.length){list.textContent='Chưa có phân công.';return;}
-    for(const id of ids){const task=(await api('tasks/'+id)).data;const card=document.createElement('section');card.className='form-section';card.innerHTML='<h3>'+esc(task.title||task.code)+'</h3><p>'+esc(labels[task.status]||task.status)+'</p>';if(['PLANNED','IN_PROGRESS'].includes(task.status)){const cancel=document.createElement('button');cancel.className='button small';cancel.textContent='Giải phóng phần chưa thực hiện';cancel.onclick=()=>actionForm(task,'cancelAllocation');card.append(cancel);}list.append(card);}
-   }catch(e){toast(e.message);}};modalBody.append(button);
-  }
  };
  async function locationFields(record={}){
   if(current!=='warehouse-locations'||!document.querySelector('#data-form'))return;

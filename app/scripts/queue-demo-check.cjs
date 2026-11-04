@@ -11,7 +11,7 @@ const queue = require('../src/shared/storage-queue');
     FROM lots l JOIN inventory_balances b ON b.lot_id=l.id JOIN warehouse_locations loc ON loc.id=b.location_id
     JOIN purchase_order_lines pol ON pol.id=l.purchase_order_line_id WHERE l.code LIKE 'DEMO-Q-%' ORDER BY l.code`;
   const [before] = await pool.execute(sql);
-  assert.equal(before.length, 6);
+  assert.equal(before.length, require('../database/seeders/queue-demo').definitions.length);
   await require('../database/seeders/queue-demo').seed(pool);
   const [rows] = await pool.execute(sql);
   assert.deepEqual(rows, before, 'Repeat seed must preserve balances and dates');

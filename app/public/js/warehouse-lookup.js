@@ -2,7 +2,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   if(current!=='warehouse-lookup')return;
   const root=document.querySelector('#warehouse-map');if(!root)return;
   let data=JSON.parse(document.querySelector('#app').dataset.boot||'{}').warehouseMap,category='',kind='',zone='',search='',selected=null,selectedZone=null,sequence=0;
-  const matches=line=>(!category||line.category_id===category)&&(!kind||line.kind===kind)&&(!search||(line.item_name+' '+line.item_code+' '+line.lot_code).toLocaleLowerCase('vi').includes(search));
+  const matches=line=>(!category||String(line.category_id)===String(category))&&(!kind||line.kind===kind)&&(!search||(line.item_name+' '+line.item_code+' '+line.lot_code).toLocaleLowerCase('vi').includes(search));
   function stockCard(l){return '<article class="warehouse-stock-card"><div class="warehouse-stock-title">'+((l.image_path||l.category_image)?'<img src="'+esc((l.image_path||l.category_image))+'" alt="Ảnh loại hàng">':'<span class="warehouse-stock-icon" aria-hidden="true">▣</span>')+'<div><h3>'+esc(l.item_name)+'</h3><p>'+esc(l.item_code)+' · '+esc(labels[l.kind]||'')+'</p></div></div><p class="warehouse-stock-lot">Lô: <strong>'+esc(l.lot_code)+'</strong> '+badge(l.quality_bucket)+'</p><dl class="warehouse-stock-quantities">'+[['quantity','Đang có'],['reserved_quantity','Đang giữ chỗ'],['available_quantity','Khả dụng']].map(([k,label])=>'<div><dt>'+label+'</dt><dd>'+esc(format(l[k]))+' <small>'+esc(l.unit)+'</small></dd></div>').join('')+'</dl><div class="warehouse-stock-expiry">'+(l.expiry_date?'Hạn dùng: '+esc(format(l.expiry_date)):'Chưa ghi hạn dùng')+(l.expired?' <strong class="warehouse-expired">Đã hết hạn</strong>':'')+'</div></article>';}
   function render(){
     if(!data)return;

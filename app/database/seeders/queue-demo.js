@@ -1,5 +1,5 @@
 // Small, traceable opening-stock fixture. Never replenish it on restart.
-const marker = 'demo_material_queue_v1';
+const marker = 'demo_material_queue_v2';
 const definitions = [
   ['BOT-SOM', 'NVL-001', 'NCC-01', 90, 15, 12, 20],
   ['BOT-CUNG-HAN-1', 'NVL-001', 'NCC-03', 180, 45, 10, 15],
@@ -7,6 +7,27 @@ const definitions = [
   ['BOT-HAN-XA', 'NVL-001', 'NCC-03', 180, 120, 2, 30],
   ['BO-SOM', 'NVL-003', 'NCC-02', 60, 10, 8, 10],
   ['BO-HAN-XA', 'NVL-003', 'NCC-02', 60, 40, 1, 15],
+  ['BOT-BAP', 'NL-BOT-02', 'NCC-01', 180, 150, 2, 4],
+  ['BOT-CACAO', 'NL-BOT-03', 'NCC-03', 180, 140, 2, 3],
+  ['DUONG-CAT', 'NVL-002', 'NCC-01', 365, 300, 2, 5],
+  ['DUONG-BOT', 'NL-DUONG-02', 'NCC-01', 365, 300, 2, 3],
+  ['MUOI', 'NL-MUOI', 'NCC-01', 365, 300, 2, 3],
+  ['SUA-TUOI', 'NL-SUA-01', 'NCC-02', 30, 25, 1, 4],
+  ['SUA-DAC', 'NL-SUA-02', 'NCC-02', 30, 24, 1, 3],
+  ['TRUNG', 'PK-001', 'NCC-02', 30, 25, 1, 12],
+  ['MEN-NO', 'NL-MEN', 'NCC-01', 180, 150, 2, 500],
+  ['BOT-NO', 'NL-BOT-NO', 'NCC-01', 180, 150, 2, 300],
+  ['NHAN-DAU-DO', 'NL-NHAN-01', 'NCC-03', 90, 75, 2, 3],
+  ['NHAN-DAU-XANH', 'NL-NHAN-02', 'NCC-03', 90, 75, 2, 3],
+  ['NHAN-CHOCOLATE', 'NL-NHAN-03', 'NCC-03', 90, 74, 2, 2],
+  ['NHAN-MUT-DAU', 'NL-NHAN-04', 'NCC-03', 90, 74, 2, 2],
+  ['KEM-WHIPPING', 'NL-KEM', 'NCC-02', 30, 24, 1, 3],
+  ['HANH-NHAN', 'NL-HANH-NHAN', 'NCC-02', 30, 24, 1, 2],
+  ['COM-MAU', 'NL-COM-MAU', 'NCC-02', 30, 24, 1, 2],
+  ['HOP-BANH', 'BB-002', 'NCC-04', 730, 600, 2, 12],
+  ['TUI-BANH', 'BB-TUI', 'NCC-04', 730, 600, 2, 20],
+  ['DE-BANH', 'BB-DE', 'NCC-04', 730, 600, 2, 10],
+  ['TEM-NHAN', 'BB-TEM', 'NCC-04', 730, 600, 2, 20],
 ];
 const day = (origin, offset) => new Date(Date.parse(origin + 'T00:00:00Z') + offset * 86400000).toISOString().slice(0, 10);
 async function seed(pool) {
@@ -48,7 +69,10 @@ async function seed(pool) {
       await c.execute('UPDATE NguyenVatLieu SET BangGiaNCC=? WHERE MaMatHang=?', [JSON.stringify(offers), item]);
     }
     for (const [suffix, code, supplierCode, shelf, remaining, age, quantity] of definitions) {
-      const key = 'DEMO-Q-' + suffix, item = await id('items', 'code', code), supplier = await id('suppliers', 'code', supplierCode);
+      const key = 'DEMO-Q-' + suffix;
+      const [[existing]] = await c.execute('SELECT id FROM lots WHERE code=?', [key]);
+      if (existing) continue;
+      const item = await id('items', 'code', code), supplier = await id('suppliers', 'code', supplierCode);
       const [[material]] = await c.execute('SELECT category_id,reference_price FROM items WHERE id=?', [item]);
       const [[loc]] = await c.execute('SELECT id FROM warehouse_locations WHERE warehouse_id=? AND zone_category_id=? AND is_active=1 ORDER BY ABS(depth-?),id LIMIT 1', [warehouse, material.category_id, remaining<90?1:remaining<=180?6:10]);
       if (!loc) throw Error('Missing compatible demo storage zone');
