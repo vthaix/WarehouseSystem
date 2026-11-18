@@ -1,16 +1,43 @@
 (()=>{
   const previousCreate=createForm,previousEdit=editForm,previousAction=actionForm,previousDetail=detail;
   let minuteRefresh=0;
+  // UC-28 Lập biên bản kiểm kê: nút "Tạo mới" chỉ mở khi người dùng có việc
+  // lập biên bản đã sẵn sàng. Có hai nguồn:
+  //   1. Đợt kiểm tra lô (QC + đếm) được chỉ định làm người lập biên bản chung.
+  //   2. Kho trong đợt kiểm kê kho đã hoàn tất đếm, chưa có kết luận, và người
+  //      dùng là người đếm hoặc người được giao lập kết luận (API chỉ trả về
+  //      các đợt người dùng được phân công).
+  async function lotInspectionMinutes(){
+    const campaigns=(await api('quality-campaigns?per_page=100')).data;
+    return campaigns
+      .filter(c=>c.assigned_minute_author&&c.BienBanKetLuan==null)
+      .map(c=>({code:c.code,ready:Boolean(c.can_create_minute),note:c.can_create_minute?'Đã đủ kết quả, có thể lập biên bản':'Đang chờ hoàn tất kiểm đếm / QC'}));
+  }
+  async function warehouseCountMinutes(){
+    const campaigns=(await api('stocktakes?campaign_type=COUNT&per_page=100')).data;
+    const result=[];
+    for(const campaign of campaigns){
+      const detail=(await api('stocktakes/'+campaign.id)).data;
+      for(const w of detail.warehouses){
+        if(w.conclusion_status!=='DRAFT'||w.remarks!==null)continue;
+        const ready=w.status==='COMPLETED';
+        const note=ready?'Đã đếm xong, có thể lập kết luận':w.status==='COUNTING'?'Đang kiểm đếm':'Chưa bắt đầu kiểm đếm';
+        result.push({code:detail.code+' · '+(w.warehouse_name||w.warehouse_code),ready,note});
+      }
+    }
+    return result;
+  }
   async function refreshMinuteAssignments(){
     if(!isMysql||current!=='stocktake-minutes'||!has(['QC_INSPECTOR','STOCKTAKER']))return;
     const token=++minuteRefresh,button=document.querySelector('#create');if(button)button.disabled=true;
     let panel=document.querySelector('#minute-assignment-info');if(!panel){panel=document.createElement('div');panel.id='minute-assignment-info';panel.className='notice';document.querySelector('#content')?.prepend(panel);}
     try{
-      const campaigns=(await api('quality-campaigns?per_page=100')).data;if(token!==minuteRefresh||current!=='stocktake-minutes')return;
-      const assigned=campaigns.filter(c=>c.assigned_minute_author&&c.BienBanKetLuan==null),ready=assigned.filter(c=>c.can_create_minute);
-      if(!assigned.length){panel.remove();if(button)button.disabled=true;return;}
-      panel.innerHTML=assigned.length?'<strong>Bạn được phân công lập biên bản chung</strong><div>'+assigned.map(c=>esc(c.code)+' · '+(c.BienBanKetLuan!=null?'Đã có biên bản':c.can_create_minute?'Đã đủ kết quả, có thể lập biên bản':'Đang chờ hoàn tất kiểm đếm / QC')).join('<br>')+'</div>':'Bạn chưa được chỉ định lập biên bản. Bạn vẫn có thể xem các biên bản thuộc phạm vi được phân công.';
-      if(button){button.disabled=!ready.length;button.title=ready.length?'Lập biên bản cho đợt được chỉ định':'Chỉ nhân viên được chỉ định mới có thể tạo khi đợt đã đủ kết quả.';}
+      const work=[...await lotInspectionMinutes(),...await warehouseCountMinutes()];
+      if(token!==minuteRefresh||current!=='stocktake-minutes')return;
+      if(!work.length){panel.remove();return;}
+      const ready=work.some(w=>w.ready);
+      panel.innerHTML='<strong>Biên bản bạn được phân công lập</strong><div>'+work.map(w=>esc(w.code)+' · '+esc(w.note)).join('<br>')+'</div>';
+      if(button){button.disabled=!ready;button.title=ready?'Lập biên bản cho đợt được phân công':'Chỉ lập được khi đợt đã đủ kết quả.';}
     }catch(e){panel.textContent='Chưa tải được thông tin phân công lập biên bản. Vui lòng tải lại trang.';}
   }
   window.addEventListener('DOMContentLoaded',refreshMinuteAssignments);window.addEventListener('focus',refreshMinuteAssignments);

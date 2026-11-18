@@ -646,7 +646,7 @@ const warehouseNavigation = {
       "production-reports": "Báo cáo sản xuất nhận được",
       "finished-reports": "Báo cáo thành phẩm nhận được",
       "stock-documents": "Hồ sơ nhập / xuất kho",
-      "exception-proposals": "Phê duyệt xử lý hàng cách ly"
+      "exception-proposals": "Đề xuất xử lý ngoại lệ"
     },
     "WAREHOUSE_STAFF": {
       "warehouse-inbound": "Nhập kho",

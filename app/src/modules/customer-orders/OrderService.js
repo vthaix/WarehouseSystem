@@ -12,6 +12,26 @@ const statuses = [
   "COMPLETED",
 ];
 const isId = (value) => /^[1-9]\d*$/.test(String(value));
+const vnAddress = require("../../shared/vn-address");
+// Các trường địa chỉ giao hàng theo đơn vị hành chính (form mới gửi lên).
+const ADDRESS_PARTS = ["delivery_province_code", "delivery_ward_code", "delivery_street"];
+
+/**
+ * Địa chỉ giao hàng gửi lên khi đặt / sửa đơn.
+ * - Form gửi tỉnh/thành + phường/xã + số nhà, tên đường: kiểm tra phường thuộc tỉnh rồi ghép địa chỉ đầy đủ.
+ * - Gửi một chuỗi delivery_address (script / API cũ): chỉ kiểm tra độ dài, không có phần tách riêng.
+ * - Không gửi gì (khi sửa): trả về null để giữ địa chỉ cũ.
+ */
+function readDeliveryAddress(body) {
+  if (ADDRESS_PARTS.some((key) => Object.hasOwn(body, key))) {
+    C.fail(Object.hasOwn(body, "delivery_address"), "VALIDATION_ERROR", "Chỉ gửi địa chỉ theo tỉnh/phường hoặc một chuỗi địa chỉ.");
+    const parts = vnAddress.compose(body.delivery_province_code, body.delivery_ward_code, body.delivery_street);
+    return { address: parts.address, province: parts.province_code, ward: parts.ward_code, street: parts.street };
+  }
+  if (Object.hasOwn(body, "delivery_address"))
+    return { address: C.text(body.delivery_address, "delivery_address", 500).trim(), province: null, ward: null, street: null };
+  return null;
+}
 const asDate = (value) =>
   value instanceof Date ? value.toISOString().slice(0, 10) : value;
 
@@ -49,6 +69,13 @@ class OrderService {
     for (const name of ["id", "customer_id", "received_by", "reviewed_by"])
       if (result[name] != null) result[name] = String(result[name]);
     result.latest_delivery_date = asDate(result.latest_delivery_date);
+    // Phần tách riêng của địa chỉ (để form sửa chọn lại đúng tỉnh / phường).
+    result.delivery_province_code = row.MaTinhThanhGiao ?? null;
+    result.delivery_ward_code = row.MaPhuongXaGiao ?? null;
+    result.delivery_street = row.SoNhaTenDuongGiao ?? null;
+    delete result.MaTinhThanhGiao;
+    delete result.MaPhuongXaGiao;
+    delete result.SoNhaTenDuongGiao;
     result.actions = [];
     if (
       user.roles.includes("CUSTOMER") &&
@@ -138,11 +165,17 @@ class OrderService {
     );
     const result = this.present(user, row);
     delete result.customer_user_id;
+    // UC-29 bước 4: chi tiết hàng theo thứ tự mã, tên, đơn vị, số lượng, đơn giá, thành tiền.
     result.lines = lines.map((line) => ({
-      ...line,
       id: String(line.id),
       customer_order_id: String(line.customer_order_id),
       item_id: String(line.item_id),
+      item_code: line.item_code,
+      item_name: line.item_name,
+      unit: line.unit_name,
+      quantity: line.quantity,
+      unit_price: line.unit_price,
+      total_amount: C.money(C.price(String(line.unit_price)) * C.qty(String(line.quantity), false) / 1000n),
     }));
     if (!this.customerOnly(user)) {
       const [plans] = await connection.execute(
@@ -227,8 +260,9 @@ class OrderService {
 
   async create(user, body, requestId) {
     P.role(user, ["CUSTOMER"]);
-    C.fields(body, ["delivery_address", "latest_delivery_date", "note", "lines"]);
-    C.text(body.delivery_address, "delivery_address", 500);
+    C.fields(body, ["delivery_address", ...ADDRESS_PARTS, "latest_delivery_date", "note", "lines"]);
+    const delivery = readDeliveryAddress(body);
+    C.fail(!delivery, "VALIDATION_ERROR", "Vui lòng nhập địa chỉ giao hàng.");
     C.date(body.latest_delivery_date, "latest_delivery_date", true);
     if (body.note !== undefined) C.text(body.note, "note", 5000, false);
     const id = await this.transaction(async (connection) => {
@@ -238,8 +272,8 @@ class OrderService {
       const [[sequence]] = await connection.execute("SELECT COUNT(*) AS total FROM customer_orders WHERE customer_id=?", [customers[0].id]);
       const code = await recordCode.distinguishNames(connection, 'customer_orders', recordCode.code("DH", customers[0].name, Number(sequence.total) + 1), customers[0].id);
       const [created] = await connection.execute(
-        "INSERT INTO customer_orders (code,customer_id,delivery_address,latest_delivery_date,note,status,quoted_total,version) VALUES (?,?,?,?,?,'SUBMITTED',?,1)",
-        [code, customers[0].id, body.delivery_address.trim(), body.latest_delivery_date, body.note || null, data.quoted_total],
+        "INSERT INTO customer_orders (code,customer_id,delivery_address,MaTinhThanhGiao,MaPhuongXaGiao,SoNhaTenDuongGiao,latest_delivery_date,note,status,quoted_total,version) VALUES (?,?,?,?,?,?,?,?,'SUBMITTED',?,1)",
+        [code, customers[0].id, delivery.address, delivery.province, delivery.ward, delivery.street, body.latest_delivery_date, body.note || null, data.quoted_total],
       );
       for (const line of data.lines)
         await connection.execute(
@@ -255,19 +289,20 @@ class OrderService {
 
   async update(user, id, body, requestId) {
     P.role(user, ["CUSTOMER"]);
-    C.fields(body, ["version", "delivery_address", "latest_delivery_date", "note", "lines", "quantity_change_acknowledged"]);
+    C.fields(body, ["version", "delivery_address", ...ADDRESS_PARTS, "latest_delivery_date", "note", "lines", "quantity_change_acknowledged"]);
     C.fail(!Number.isInteger(body.version), "VALIDATION_ERROR", "Thiếu phiên bản đơn hàng.");
     C.fail(
-      !["delivery_address", "latest_delivery_date", "note", "lines"].some((key) => Object.hasOwn(body, key)),
+      !["delivery_address", ...ADDRESS_PARTS, "latest_delivery_date", "note", "lines"].some((key) => Object.hasOwn(body, key)),
       "VALIDATION_ERROR",
       "Không có nội dung cần sửa.",
     );
+    const delivery = readDeliveryAddress(body); // null = giữ địa chỉ cũ
     await this.transaction(async (connection) => {
       const order = await this.load(connection, user, id, true);
       C.fail(String(order.customer_user_id) !== String(user.id), "NOT_FOUND", "Không tìm thấy đơn hàng.", 404);
       C.version(order, body.version);
       C.state(order, ["SUBMITTED", "RECEIVED"]);
-      const address = body.delivery_address === undefined ? order.delivery_address : C.text(body.delivery_address, "delivery_address", 500).trim();
+      const address = delivery || { address: order.delivery_address, province: order.MaTinhThanhGiao, ward: order.MaPhuongXaGiao, street: order.SoNhaTenDuongGiao };
       const date = body.latest_delivery_date === undefined ? asDate(order.latest_delivery_date) : C.date(body.latest_delivery_date, "latest_delivery_date", true);
       const note = body.note === undefined ? order.note : C.text(body.note, "note", 5000, false) || null;
       const [[scheduled]] = await connection.execute("SELECT MAX(end_date) last_end FROM production_plans WHERE customer_order_id=? AND status<>'CANCELLED'", [id]);
@@ -299,22 +334,35 @@ class OrderService {
         total = next.quoted_total;
       }
       await connection.execute(
-        "UPDATE customer_orders SET delivery_address=?,latest_delivery_date=?,note=?,quoted_total=?,version=version+1 WHERE id=?",
-        [address, date, note, total, id],
+        "UPDATE customer_orders SET delivery_address=?,MaTinhThanhGiao=?,MaPhuongXaGiao=?,SoNhaTenDuongGiao=?,latest_delivery_date=?,note=?,quoted_total=?,version=version+1 WHERE id=?",
+        [address.address, address.province, address.ward, address.street, date, note, total, id],
       );
       await this.audit(connection, user, id, "UPDATE", { version: order.version }, { version: order.version + 1 }, requestId);
+      // Bộ phận kế hoạch cần biết đơn đã đổi: đơn đã tiếp nhận thì báo người
+      // tiếp nhận (có thể đã lập KHSX), đơn chưa tiếp nhận thì báo cả bộ phận.
+      const subject = `Khách hàng đã sửa đơn ${order.code}`;
+      const key = `order-${id}-updated-v${order.version + 1}`;
+      if (order.status === "RECEIVED" && order.received_by) await this.notifyUser(connection, order.received_by, id, subject, key);
+      else await this.notifyRole(connection, "PLANNER", id, subject, key);
     });
     return this.get(user, id);
   }
 
+  // ---------------------------------------------------------------------------
+  // UC-29 TIẾP NHẬN ĐƠN HÀNG (Bộ phận lập kế hoạch)
+  // Đơn "Chờ tiếp nhận" (SUBMITTED) → "Đã tiếp nhận" (RECEIVED), ghi người và thời điểm tiếp nhận.
+  // Ban giám đốc không duyệt đơn ở đây; đơn được duyệt theo kế hoạch sản xuất (UC-31).
+  // ---------------------------------------------------------------------------
   async receive(user, id, body, requestId) {
-    P.role(user, ["PLANNER"]);
+    P.role(user, ["PLANNER"]); // ngoại lệ 5.2: chỉ Bộ phận lập kế hoạch
     C.fields(body, ["version"]);
     C.fail(!Number.isInteger(body.version), "VALIDATION_ERROR", "Thiếu phiên bản đơn hàng.");
     await this.transaction(async (connection) => {
-      const order = await this.load(connection, user, id, true);
-      C.version(order, body.version);
-      C.state(order, ["SUBMITTED"]);
+      const order = await this.load(connection, user, id, true); // khóa đơn để hai người không cùng tiếp nhận
+      // Ngoại lệ 5.1: đơn đã tiếp nhận / không còn chờ tiếp nhận.
+      C.fail(order.status !== "SUBMITTED", "INVALID_STATE",
+        "Đơn hàng đã được tiếp nhận hoặc không còn được phép tiếp nhận. Vui lòng tải lại danh sách và chọn đơn khác.", 409);
+      C.version(order, body.version); // ngoại lệ 5.3: đơn vừa bị khách sửa
       await connection.execute(
         "UPDATE customer_orders SET status='RECEIVED',received_by=?,received_at=UTC_TIMESTAMP(6),version=version+1 WHERE id=?",
         [user.id, id],

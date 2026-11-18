@@ -17,8 +17,10 @@
   if(!warehouseModules.includes(current))return;
   let section=document.querySelector('#warehouse-posted-history');if(!section){section=document.createElement('section');section.id='warehouse-posted-history';section.className='work-panel';document.querySelector('#content').append(section);}
   section.innerHTML='<h2>Phiếu đã ghi sổ</h2><p class="subtitle">Đối chiếu kết quả thực hiện với các lần tiếp nhận và phân công phía trên.</p>';
-  try{const direction=current==='warehouse-inbound'?'IN':'OUT',result=await api('stock-documents?type='+direction+'&per_page=10');
-   if(!result.data.length){section.insertAdjacentHTML('beforeend','<p class="hint">Chưa có phiếu đã ghi sổ.</p>');return;}
+  // UC-08/UC-09 luồng 3.1: ô Tìm kiếm của trang cũng lọc phiếu đã ghi sổ theo mã phiếu.
+  const search=(document.querySelector('#q')?.value||'').trim();
+  try{const direction=current==='warehouse-inbound'?'IN':'OUT',result=await api('stock-documents?type='+direction+'&per_page=10'+(search?'&q='+encodeURIComponent(search):''));
+   if(!result.data.length){section.insertAdjacentHTML('beforeend','<p class="hint">'+(search?'Không tìm thấy phiếu phù hợp với "'+esc(search)+'".':'Chưa có phiếu đã ghi sổ.')+'</p>');return;}
    const list=document.createElement('div');list.className='posted-document-list';
    for(const r of result.data){const b=document.createElement('button');b.type='button';b.className='posted-document';b.innerHTML='<span><strong>'+esc(r.code)+'</strong><small>'+esc(format(r.posted_at,'posted_at'))+'</small></span><span>Xem phiếu →</span>';b.onclick=async()=>{try{detail((await api('stock-documents/'+r.id)).data);}catch(e){toast(e.message);}};list.append(b);}section.append(list);
   }catch(e){section.insertAdjacentHTML('beforeend',errorHTML(e));}

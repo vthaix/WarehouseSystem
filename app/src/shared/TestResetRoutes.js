@@ -32,7 +32,14 @@ module.exports = (execute = require('./reset-monolith').reset) => {
       while (pending > 0 && Date.now() < deadline) await new Promise(resolve => setTimeout(resolve, 100));
       C.fail(pending > 0, "TEST_RESET_BUSY", "Còn thao tác đang chạy; chưa xóa dữ liệu. Vui lòng thử lại sau.", 409);
       uncertain = true;
-      const result = await execute({key,actor:{id:req.user.id,session_version:req.user.session_version}});
+      let result;
+      try {
+        result = await execute({key,actor:{id:req.user.id,session_version:req.user.session_version}});
+      } catch (error) {
+        // A failed reset must not leave the in-memory gate closed forever.
+        uncertain = false;
+        throw error;
+      }
       uncertain = false;
       await new Promise((resolve, reject) => req.session.destroy(e => e ? reject(e) : resolve()));
       ok(req, res, result);

@@ -1,34 +1,37 @@
 <!doctype html>
 <html lang="vi">
 <head>
+  <% const assetVersion = '20261104-restore-2'; %>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title><%= title %> · Sweet Bakery</title>
-  <link rel="stylesheet" href="/css/main.css">
-  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="/css/main.css?v=<%= assetVersion %>">
+  <link rel="stylesheet" href="/css/admin.css?v=<%= assetVersion %>">
   <script src="/js/admin-ui.js" defer></script>
   <script src="/js/navigation-data.js" defer></script><script src="/js/presentation.js" defer></script><script src="/js/app.js" defer></script><script src="/js/forms.js" defer></script><script src="/js/workflow-forms.js" defer></script><script src="/js/source-imports.js" defer></script><script src="/js/production-report-forms.js" defer></script>
   <script src="/js/warehouse-lookup.js" defer></script>
   <script src="/js/warehouse-seats.js" defer></script>
-  <link rel="stylesheet" href="/css/warehouse-seats.css">
-  <link rel="stylesheet" href="/css/warehouse-lookup.css">
-  <script src="/js/category-images.js" defer></script>
+  <link rel="stylesheet" href="/css/warehouse-seats.css?v=<%= assetVersion %>">
+  <link rel="stylesheet" href="/css/warehouse-lookup.css?v=<%= assetVersion %>">
+  <script src="/js/catalog-forms.js" defer></script>
   <script src="/js/task-inspection-forms.js" defer></script>
   <script src="/js/minute-exception-forms.js" defer></script>
   <script src="/js/stock-request-workflow.js" defer></script>
   <script src="/js/inspection-workflow.js" defer></script>
+  <script src="/js/warehouse-count-assignments.js" defer></script>
   <script src="/js/quality-problems.js" defer></script>
   <script src="/js/function-badges.js" defer></script>
   <script src="/js/preproduction.js" defer></script>
+  <script src="/js/address-picker.js" defer></script>
   <script src="/js/customer-order.js" defer></script>
+  <script src="/js/order-receiving.js" defer></script>
   <script src="/js/reset-tools.js" defer></script>
   <script src="/js/accounts.js" defer></script>
-  <script src="/js/catalog-browser.js" defer></script>
   <script src="/js/material-prices.js" defer></script>
   <script src="/js/decimal-inputs.js" defer></script>
-  <link rel="stylesheet" href="/css/catalog-accounts.css">
-  <link rel="stylesheet" href="/css/workspace.css">
+  <link rel="stylesheet" href="/css/catalog-accounts.css?v=<%= assetVersion %>">
+  <link rel="stylesheet" href="/css/workspace.css?v=<%= assetVersion %>">
   <script src="/js/workspace.js" defer></script>
-  <link rel="stylesheet" href="/css/catalog-refinement.css">
+  <link rel="stylesheet" href="/css/catalog-refinement.css?v=<%= assetVersion %>">
   <script src="/js/actor-workspace.js" defer></script>
   <script src="/js/purchase-plan-check.js" defer></script>
   <script src="/js/purchase-budget.js" defer></script>

@@ -100,6 +100,11 @@ class QualityCampaignService {
       C.fail(assignees.length !== body.assignee_ids.length, "VALIDATION_ERROR", "Người được giao không có vai trò QC.");
       const planned=mode!=='ACTUAL'?await Sources.source(connection,mode,body.source_plan_id,true):null;
       C.fail(planned&&planned.quality_kind!==body.quality_kind,'VALIDATION_ERROR','Loại hàng không khớp kế hoạch nguồn.');
+      // UC-13 ngoại lệ 4.5: mỗi kế hoạch nguồn chỉ có một đợt kiểm tra "dự kiến" (chưa gắn phần lô) còn hiệu lực.
+      if(planned&&!body.lot_ids.length){
+        const [[open]]=await connection.execute("SELECT s.code FROM stocktakes s WHERE s.MaKeHoachMuaQC<=>? AND s.MaKeHoachSanXuatQC<=>? AND s.status IN ('PLANNED','IN_PROGRESS') AND NOT EXISTS(SELECT 1 FROM quality_campaign_lots q WHERE q.campaign_id=s.id) LIMIT 1",[mode==='PURCHASE_PLAN'?planned.id:null,mode==='PRODUCTION_PLAN'?planned.id:null]);
+        C.fail(open,'DUPLICATE',`Nguồn này đã có đợt kiểm tra dự kiến ${open?.code} còn hiệu lực. Mở đợt đó để gắn phần lô khi hàng về.`,409);
+      }
       const lots=body.lot_ids.length?await Sources.actualLots(connection,body.lot_ids):[];
       C.fail(lots.length !== body.lot_ids.length || lots.some((lot) => lot.qc_status !== "PENDING" || lot.kind !== body.quality_kind), "VALIDATION_ERROR", "Lô không chờ QC hoặc sai loại.");
       C.fail(planned&&lots.some(lot=>!Sources.matches(lot,mode,planned.id)),'VALIDATION_ERROR','Phần lô thực tế không thuộc kế hoạch nguồn.');

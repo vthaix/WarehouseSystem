@@ -12,12 +12,12 @@ const executablePath=process.env.BROWSER_PATH||['C:/Program Files (x86)/Microsof
  await page.route('**/api/v1/categories/999999',r=>{if(r.request().method()==='PATCH'){writes.push(r.request().postDataJSON());return r.fulfill({json:{data:{id:'999999'}}});}return r.fulfill({json:{data:{id:'999999',code:'IMG',name:'Image category',image_path,is_active:1}}});});
  await page.route('**/images/categories/*.png',r=>r.fulfill({contentType:'image/png',body:buffer}));
  await page.goto(base+'/catalog/categories?module=categories');await page.locator('#create').click();
- await page.locator('#f-code').fill('IMG');await page.locator('#f-name').fill('Danh mục có ảnh');
- await page.locator('#category-image-file').setInputFiles({name:'category.png',mimeType:'image/png',buffer});
- await page.locator('#category-image-preview:not([hidden])').waitFor();
+ await page.locator('#f-name').fill('Danh mục có ảnh');
+ await page.locator('#image-file').setInputFiles({name:'category.png',mimeType:'image/png',buffer});
+ await page.locator('#image-preview img').waitFor();
  await page.locator('#data-form [type=submit]').click();await page.waitForFunction(()=>!document.querySelector('#modal').open);
  assert.equal(writes[0].image_path,image_path);
- await page.evaluate(()=>editForm({id:'999999'}));await page.locator('#category-image-remove').click();await page.locator('#data-form [type=submit]').click();await page.waitForFunction(()=>!document.querySelector('#modal').open);
+ await page.evaluate(()=>editForm({id:'999999'}));await page.locator('#image-remove').click();await page.locator('#data-form [type=submit]').click();await page.waitForFunction(()=>!document.querySelector('#modal').open);
  assert.equal(writes[1].image_path,null);assert.deepEqual(errors,[]);
  console.log('CATEGORY IMAGE BROWSER PASS: select/preview/upload payload, edit existing image and remove; writes mocked');
 }finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

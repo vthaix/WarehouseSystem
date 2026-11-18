@@ -32,7 +32,8 @@ const definitions = [
 const day = (origin, offset) => new Date(Date.parse(origin + 'T00:00:00Z') + offset * 86400000).toISOString().slice(0, 10);
 async function seed(pool) {
   if (process.env.NODE_ENV === 'production') throw Error('Queue demo seed is disabled in production.');
-  const c = await pool.getConnection();
+  const ownsConnection = typeof pool.getConnection === 'function';
+  const c = ownsConnection ? await pool.getConnection() : pool;
   try {
     await c.beginTransaction();
     // Serialize concurrent seed commands without changing existing workflow data.
@@ -97,6 +98,6 @@ async function seed(pool) {
     }
     await c.execute('INSERT INTO LichSuCSDL(Ten,MaBam) VALUES (?,?)', [marker, '0'.repeat(64)]);
     await c.commit();
-  } catch (e) { await c.rollback(); throw e; } finally { c.release(); }
+  } catch (e) { await c.rollback(); throw e; } finally { if (ownsConnection) c.release(); }
 }
 module.exports = {seed, definitions, day};

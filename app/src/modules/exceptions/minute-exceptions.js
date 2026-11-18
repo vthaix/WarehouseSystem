@@ -59,7 +59,9 @@ async function list(service,u,q){
   const workshopOnly=!u.roles.some(r=>['DIRECTOR','WAREHOUSE_MANAGER'].includes(r));
   const ids=(u.workshop_ids||[]).map(String);
   let scope='';if(workshopOnly){scope=ids.length?' AND s.NgoaiLeMaXuong IN ('+ids.map(()=>'?').join(',')+')':' AND 1=0';params.push(...ids);}
-  let base=" FROM (SELECT CONCAT('LOT-',s.id) AS id,s.id AS sort_id,CONCAT('NL-',s.code) AS code,s.NgoaiLeTrangThai AS status FROM stocktakes s WHERE s.BienBanTrangThai='SUBMITTED' AND s.NgoaiLeMoTa IS NOT NULL"+scope+" UNION ALL SELECT CAST(p.id AS CHAR) AS id,p.id AS sort_id,p.code,p.status FROM exception_proposals p"+(workshopOnly?' WHERE 1=0':'')+') exceptions WHERE 1=1';
+  // Chủ xưởng chỉ thấy đề xuất thuộc xưởng mình (UC-17).
+  let proposalScope='';if(workshopOnly){proposalScope=ids.length?' WHERE p.workshop_id IN ('+ids.map(()=>'?').join(',')+')':' WHERE 1=0';params.push(...ids);}
+  let base=" FROM (SELECT CONCAT('LOT-',s.id) AS id,s.id AS sort_id,CONCAT('NL-',s.code) AS code,s.NgoaiLeTrangThai AS status FROM stocktakes s WHERE s.BienBanTrangThai='SUBMITTED' AND s.NgoaiLeMoTa IS NOT NULL"+scope+" UNION ALL SELECT CAST(p.id AS CHAR) AS id,p.id AS sort_id,p.code,p.status FROM exception_proposals p"+proposalScope+') exceptions WHERE 1=1';
   if(q.q){C.text(q.q,'q',150);base+=' AND code LIKE ?';params.push('%'+q.q+'%');}if(q.status){base+=' AND status=?';params.push(q.status);}
   const [[n]]=await service.pool.execute('SELECT COUNT(*) AS total'+base,params);
   const [rows]=await service.pool.execute('SELECT id'+base+' ORDER BY sort_id DESC,id DESC LIMIT ? OFFSET ?',[...params,String(p.per_page),String(p.offset)]);

@@ -43,9 +43,12 @@ async function create(service, u, b, request) {
       C.fail(!balance || C.qty(allocation.quantity)+C.qty(String(held.quantity),false)+reserved>C.qty(String(balance.quantity),false),
         'SOURCE_LIMIT_EXCEEDED','Vượt lượng cách ly còn có thể đề xuất tại vị trí.',409);
     }
-    const [r] = await c.execute("INSERT INTO exception_proposals(code,type,qc_inspection_line_id,created_by,action,quantity,reason,resolution_note,status,version) VALUES (?,'QUARANTINE_DISPOSITION',?,?,?,?,?,?,'PENDING_APPROVAL',1)",
-      [await require('../../shared/readable-codes').next(c,'exception_proposals','XU-LY-HANG','KHO'),b.qc_inspection_line_id,u.id,b.action,C.decimal(C.qty(b.quantity)),b.reason,b.resolution_note]);
+    // UC-17: xác định chủ xưởng phê duyệt từ lô hàng.
+    const workshopId = await require('./proposal-workshop').requireApprover(c, { qc_inspection_line_id: b.qc_inspection_line_id }, u.id);
+    const [r] = await c.execute("INSERT INTO exception_proposals(code,type,qc_inspection_line_id,workshop_id,created_by,action,quantity,reason,resolution_note,status,version) VALUES (?,'QUARANTINE_DISPOSITION',?,?,?,?,?,?,?,'PENDING_APPROVAL',1)",
+      [await require('../../shared/readable-codes').next(c,'exception_proposals','XU-LY-HANG','KHO'),b.qc_inspection_line_id,workshopId,u.id,b.action,C.decimal(C.qty(b.quantity)),b.reason,b.resolution_note]);
     target = r.insertId;
+    await service.notifyApprovers(c, target, workshopId, u.id);
     for (const a of b.allocations) await c.execute('INSERT INTO exception_allocations(exception_proposal_id,location_id,quantity) VALUES (?,?,?)',[target,a.location_id,C.decimal(C.qty(a.quantity))]);
     await service.audit(c,u,target,'CREATE_QUARANTINE',request);
   });

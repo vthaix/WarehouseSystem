@@ -293,7 +293,10 @@ async function main() {
     }
     async function production(name, stage = "APPROVED") {
       let order = await op(name + ":order", "customer", "customer-orders", {
-        delivery_address: note(name) + " Cửa hàng bánh thử nghiệm",
+        // Địa chỉ theo đơn vị hành chính: TP Hồ Chí Minh (79) · Phường Sài Gòn (26740).
+        delivery_province_code: "79",
+        delivery_ward_code: "26740",
+        delivery_street: note(name) + " Cửa hàng bánh thử nghiệm",
         latest_delivery_date: date,
         note: note(name),
         lines: [{ item_id: cake, quantity: "10.000" }],
@@ -656,7 +659,7 @@ async function main() {
     });
     await scenario(
       "NGOAI-LE",
-      "UC-17: đề xuất xử lý thành phẩm lỗi chờ BGĐ duyệt",
+      "UC-17: đề xuất xử lý thành phẩm lỗi chờ chủ xưởng duyệt",
       async () => {
         const f = await finishedReport("NGOAI-LE");
         const q = await inspect(
@@ -889,7 +892,7 @@ async function main() {
         if (stage === "APPROVED")
           proposal = await op(
             name + ":approve",
-            "director",
+            "workshop",
             `exception-proposals/${proposal.id}/review`,
             { version: proposal.version, decision: "APPROVE" },
           );

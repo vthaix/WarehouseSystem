@@ -40,7 +40,7 @@ const executablePath=['C:/Program Files (x86)/Microsoft/Edge/Application/msedge.
     await page.evaluate(()=>{openModal('Long form',formWrap(inputField('name','text',true,[],'Kept draft')+Array.from({length:45},(_,i)=>inputField('note'+i,'textarea',false)).join('')));modal.scrollTop=modal.scrollHeight;});
     const bounds=await page.locator('#close-modal').boundingBox();assert.ok(bounds.y>=0&&bounds.y<720,'Close stays visible while scrolling');
     await page.locator('[data-modal-back]').click();await page.locator('#close-modal').click();
-    await page.locator('#create').click();await page.locator('#item-photo').waitFor();await page.locator('#f-name').fill('Draft preserved');
+    await page.locator('#create').click();await page.locator('#image-file').waitFor();await page.locator('#f-name').fill('Draft preserved');
     await page.evaluate(()=>openModal('Another step',formWrap(inputField('note','textarea',false))));await page.locator('[data-modal-back]').click();assert.equal(await page.locator('#f-name').inputValue(),'Draft preserved');
     await page.setViewportSize({width:390,height:844});await page.screenshot({path:path.join(out,'mobile-form.png'),fullPage:true});await page.locator('#close-modal').click();
    }

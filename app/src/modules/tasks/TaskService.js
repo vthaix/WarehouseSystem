@@ -82,7 +82,7 @@ class TaskService {
       params,
     );
     const [rows] = await this.pool.execute(
-      "SELECT t.*" + base + " ORDER BY t.id DESC LIMIT ? OFFSET ?",
+      "SELECT t.*" + base + " ORDER BY CASE WHEN t.status IN ('PLANNED','IN_PROGRESS') THEN 0 ELSE 1 END, t.id DESC LIMIT ? OFFSET ?",
       [...params, String(per_page), String(offset)],
     );
     return {
@@ -122,13 +122,15 @@ class TaskService {
       ["PLANNED", "IN_PROGRESS"].includes(row.status)
     )
       actions.push("cancelAllocation");
-    if (
+    const directorManaged =
       user.roles.includes("DIRECTOR") &&
       !row.stock_request_id &&
       (!row.stocktake_id||(row.task_type==='LOT_INSPECTION'&&row.status==='PLANNED')) &&
-      !["COMPLETED", "CANCELLED"].includes(row.status)
-    )
-      actions.push("edit", "delete");
+      !["COMPLETED", "CANCELLED"].includes(row.status);
+    // UC-25.1: sửa được khi chưa hoàn tất/hủy.
+    if (directorManaged) actions.push("edit");
+    // UC-25.2 ngoại lệ 4.1: công việc đang diễn ra thì không được xóa.
+    if (directorManaged && !isUnderway(row)) actions.push("delete");
     if (
       !row.stock_request_id &&
       !row.stocktake_id &&
@@ -173,7 +175,12 @@ class TaskService {
       actions,
     };
   }
-  async validate(c, b, exclude = null) {
+  /**
+   * @param exclude  id công việc đang sửa (bỏ qua khi kiểm tra trùng lịch)
+   * @param keptStart true khi sửa mà giữ nguyên giờ bắt đầu: công việc đã bắt
+   *                  đầu từ hôm trước vẫn sửa được tiêu đề, người, giờ kết thúc.
+   */
+  async validate(c, b, exclude = null, keptStart = false) {
     C.text(b.title, "title", 200);
     C.text(b.description || "", "description", 5000, false);
     C.fail(
@@ -188,7 +195,8 @@ class TaskService {
       "Khoảng thời gian không hợp lệ.",
     );
     const localDay = value => new Intl.DateTimeFormat('en-CA', {timeZone:'Asia/Ho_Chi_Minh', year:'numeric',month:'2-digit',day:'2-digit'}).format(value);
-    C.fail(localDay(start) < C.today(), 'VALIDATION_ERROR', 'Ngày phân công không được trong quá khứ.');
+    if (!keptStart) C.fail(localDay(start) < C.today(), 'VALIDATION_ERROR', 'Ngày phân công không được trong quá khứ.');
+    C.fail(keptStart && end <= new Date(), 'VALIDATION_ERROR', 'Giờ kết thúc mới phải sau thời điểm hiện tại.');
     C.fail(
       !Array.isArray(b.assignee_ids) ||
         !b.assignee_ids.length ||
@@ -322,7 +330,8 @@ class TaskService {
         409,
       );
       const next = { ...row, ...b };
-      const value = await this.validate(c, next, id);
+      const keptStart = b.start_at === undefined || new Date(b.start_at).getTime() === new Date(row.start_at).getTime();
+      const value = await this.validate(c, next, id, keptStart);
       if(row.task_type==='LOT_INSPECTION'){
         const [[campaign]]=await c.execute('SELECT * FROM stocktakes WHERE id=? FOR UPDATE',[row.stocktake_id]);C.state(campaign,['PLANNED']);
         require('../../shared/qc-schedule-dates').validateStart(next.start_at,row.inspection.expected_date?[{received_date:row.inspection.expected_date}]:[]);
@@ -353,6 +362,17 @@ class TaskService {
           [id, who],
         );
       await this.audit(c, user, id, "UPDATE", b, requestId);
+      // Báo cho người được thêm, người bị bỏ và người vẫn giữ công việc.
+      const before = new Set(row.assignee_ids.map(String));
+      const after = new Set(value.ids.map(String));
+      for (const who of after)
+        await notifyAssignee(c, who, id, locked[0].version,
+          before.has(who) ? "Công việc được cập nhật: " + next.title : "Công việc mới: " + next.title,
+          before.has(who) ? "Ban giám đốc đã sửa thông tin hoặc thời gian công việc." : next.description || "Bạn được phân công thực hiện công việc.");
+      for (const who of before)
+        if (!after.has(who))
+          await notifyAssignee(c, who, id, locked[0].version, "Bạn không còn được phân công: " + next.title,
+            "Ban giám đốc đã đổi người thực hiện công việc.");
     });
     return this.get(user, id);
   }
@@ -367,6 +387,12 @@ class TaskService {
       );
       C.version(locked[0], b.version);
       C.fail(
+        isUnderway(row),
+        "INVALID_STATE",
+        "Công việc đang được tiến hành, không thể xóa.",
+        409,
+      );
+      C.fail(
         !row.actions.includes("delete"),
         "INVALID_STATE",
         "Công việc không được hủy ở trạng thái này.",
@@ -378,6 +404,8 @@ class TaskService {
       );
       await this.audit(c, user, id, "CANCEL", b, requestId);
       if(row.task_type==='LOT_INSPECTION')await c.execute("UPDATE stocktakes SET status='CANCELLED',version=version+1 WHERE id=? AND status='PLANNED'",[row.stocktake_id]);
+      for (const who of row.assignee_ids)
+        await notifyAssignee(c, who, id, locked[0].version, "Công việc đã hủy: " + row.title, "Ban giám đốc đã hủy công việc này.");
     });
     return this.get(user, id);
   }
@@ -413,4 +441,16 @@ class TaskService {
     return this.get(user, id);
   }
 }
+/** Công việc đã bắt đầu: đang thực hiện, hoặc đã tới giờ bắt đầu theo lịch. */
+function isUnderway(task) {
+  return task.status === "IN_PROGRESS" || new Date(task.start_at).getTime() <= Date.now();
+}
+
+async function notifyAssignee(c, userId, taskId, version, subject, body) {
+  await c.execute(
+    "INSERT INTO notifications(user_id,subject,body,resource_type,resource_id,business_key) VALUES (?,?,?,'tasks',?,?) ON DUPLICATE KEY UPDATE id=notifications.id",
+    [userId, subject, body, taskId, "task-" + taskId + "-v" + version + "-" + userId],
+  );
+}
+
 module.exports = TaskService;

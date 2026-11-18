@@ -23,6 +23,14 @@ module.exports=async function pendingWork(pool,user){
  }
  if(has('WAREHOUSE_STAFF'))for(const [resource,type]of [['warehouse-inbound','IN'],['warehouse-outbound','OUT']])await add(resource,'Chờ ghi phiếu kho',"SELECT DISTINCT r.id FROM stock_requests r JOIN stock_allocations a ON a.stock_request_id=r.id JOIN tasks t ON t.id=a.task_id WHERE r.type=? AND a.user_id=? AND t.status IN ('PLANNED','IN_PROGRESS') AND a.quantity>a.posted_quantity",[type,user.id]);
  if(user.roles.some(r=>['DIRECTOR','WAREHOUSE_MANAGER','WAREHOUSE_STAFF','QC_INSPECTOR','STOCKTAKER','WORKSHOP_OWNER','PLANNER','PURCHASER'].includes(r)))await add('tasks','Công việc chưa hoàn tất',"SELECT t.id FROM tasks t WHERE t.status IN ('PLANNED','IN_PROGRESS') AND (t.manager_id=? OR EXISTS(SELECT 1 FROM task_assignments a WHERE a.task_id=t.id AND a.user_id=?))",[user.id,user.id]);
+ if(has('STOCKTAKER')){
+  // UC-15: kho trong đợt kiểm kê đã bắt đầu, được giao cho người này và chưa hoàn tất đếm.
+  await add('inspection-counts','Chờ kiểm đếm kho được phân công',
+   "SELECT DISTINCT s.id FROM stocktakes s"+
+   " JOIN stocktake_warehouses w ON w.stocktake_id=s.id"+
+   " JOIN stocktake_assignments a ON a.stocktake_warehouse_id=w.id"+
+   " WHERE a.user_id=? AND s.campaign_type='COUNT' AND w.status='COUNTING'",[user.id]);
+ }
  if(has('QC_INSPECTOR')||has('STOCKTAKER')){
   await add('stocktake-minutes','Được phân công lập / gửi biên bản',"SELECT CONCAT('LOT-',id) AS id FROM stocktakes WHERE NguoiLapBienBanDuocChon=? AND campaign_type='QUALITY_CHECK' AND status IN ('COMPLETED','CLOSED') AND BienBanTrangThai='DRAFT'",[user.id]);
   for(const [role,key,flag,column]of [['QC_INSPECTOR','qc-inspections','KiemChatLuong','ThucNhan'],['STOCKTAKER','inspection-counts','KiemSoLuong','SoDem']])if(has(role)){
@@ -34,6 +42,7 @@ module.exports=async function pendingWork(pool,user){
  if(has('WORKSHOP_OWNER')&&ids.length){const marks=ids.map(()=>'?').join(',');
   await add('production-plans','Chờ thực hiện sản xuất',"SELECT id FROM production_plans WHERE status IN ('APPROVED','IN_PROGRESS') AND workshop_id IN ("+marks+')',ids);
   await add('exception-proposals','Chờ quyết định của chủ xưởng',"SELECT CONCAT('LOT-',id) AS id FROM stocktakes WHERE NgoaiLeTrangThai='PENDING_APPROVAL' AND NgoaiLeMaXuong IN ("+marks+')',ids);
+  await add('exception-proposals','Chờ phê duyệt đề xuất xử lý ngoại lệ',"SELECT id FROM exception_proposals WHERE status='PENDING_APPROVAL' AND workshop_id IN ("+marks+')',ids);
   await add('stock-requests','Yêu cầu chưa hoàn tất',"SELECT id FROM stock_requests WHERE workshop_id IN ("+marks+") AND status IN ('PENDING','PARTIALLY_FULFILLED')",ids);
  }
  return result;

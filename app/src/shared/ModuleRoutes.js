@@ -1143,7 +1143,9 @@ module.exports = (runtime) => {
   );
   router.delete(
     "/stock-requests/:id",
-    role(P.editable["stock-requests"]),
+    // Chủ xưởng hủy yêu cầu của mình; quản lý kho phụ trách hủy yêu cầu chưa ghi
+    // phiếu. Điều kiện chi tiết nằm ở StockRequestService.remove().
+    role(["WORKSHOP_OWNER", "WAREHOUSE_MANAGER"]),
     async (req, res) =>
       ok(
         req,

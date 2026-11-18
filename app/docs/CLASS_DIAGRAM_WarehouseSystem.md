@@ -29,7 +29,7 @@
 |---|---|
 | Nguồn kế hoạch BAN | Sequence UC-04 và UC-05.1 trong Tuan6 còn dùng báo cáo `THANH_PHAM`; quy tắc BR-11 trong BaoCaoGK nói BAN lấy từ kế hoạch sản xuất. Bản này giữ quan hệ đến báo cáo theo sequence được chọn; chưa thay sang kế hoạch sản xuất. Cần sửa sequence nếu áp dụng BR-11. |
 | Nguồn xuất NVL | UC-23 trong Tuan6 import từ KeHoachSanXuat, nhưng UC-11.01 còn đối chiếu BanBaoCaoSanXuat. Giữ cả hai tham chiếu để phản ánh hiện trạng tài liệu; chưa kết luận chúng cùng bắt buộc cho một yêu cầu. |
-| Người duyệt ngoại lệ | UC-17 trong BaoCaoGK vẫn ghi Ban giám đốc trên sequence/đặc tả; yêu cầu sửa trước đây của anh là Chủ xưởng. Không gán cứng actor vào lớp entity/control; quyền thực thi UC-17 cần đồng bộ lại trên sequence và đặc tả. |
+| Người duyệt ngoại lệ | Đã chốt 18/11/2026: UC-17 theo đặc tả, Chủ xưởng phụ trách nguồn hàng duyệt mọi đề xuất (hàng QC lỗi, xử lý hàng cách ly, chênh lệch kiểm kê, ngoại lệ biên bản). Đề xuất lưu `MaXuong` (migration monolith 014); Ban giám đốc chỉ xem. Sequence trong BaoCaoGK còn ghi Ban giám đốc cần sửa theo. |
 | Tên method UC-18 | Sequence UC-18 dùng tên `getHoSoXuatKho` trong luồng xem tồn kho. Giữ tên để truy vết, nhưng nên đổi thành `getChiTietTonKho` khi sửa sequence, tránh nhầm với UC-19. |
 | Trách nhiệm entity trong sequence của Dũng | UC-02/03.1 có thông điệp kiểm tra dữ liệu đến entity. Bản này giữ các method `kiemTraThongTin`, `kiemTraDonHang`, `kiemTraChiTiet` để khớp hình; nếu tách nghiệp vụ hoàn toàn sang controller thì phải sửa cả sequence. |
 | Thuộc tính liên kết | Các mã tham chiếu suy ra từ association được ghi rõ ở bảng bên dưới. Đây là bổ sung để thiết kế lớp, chưa xác nhận migration hoặc ràng buộc CSDL. |

@@ -2,6 +2,10 @@ window.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("#customer-order-form");
   if (!form) return;
   let key = crypto.randomUUID();
+  // Địa chỉ giao hàng: chọn Tỉnh/Thành → Phường/Xã, rồi nhập số nhà, tên đường.
+  const address = addressPicker.create();
+  document.querySelector("#delivery-address-picker").outerHTML = address.html;
+  address.mount();
   const quantities = [...form.querySelectorAll("[data-order-item]")];
   const date = new Date();
   date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
@@ -24,7 +28,9 @@ window.addEventListener("DOMContentLoaded", () => {
     button.disabled = true;
     try {
       const result = await api("customer-orders", "POST", { ...Object.fromEntries(new FormData(form)), lines }, key);
-      location.assign("/records/customer-orders/" + encodeURIComponent(result.data.id));
+      // Keep the customer on the order list after submission. The detail view
+      // remains available through the explicit “Chi tiết đơn hàng” action.
+      location.assign("/customer/orders?module=customer-orders");
     } catch (e) { error.textContent = e.message; button.disabled = false; }
   });
 });

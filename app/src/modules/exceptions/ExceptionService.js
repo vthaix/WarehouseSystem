@@ -24,11 +24,19 @@ class ExceptionService {
       [u.id, r, action, JSON.stringify({ action }), request],
     );
   }
+  /** Chủ xưởng của xưởng phụ trách đề xuất (UC-17). */
+  isApprover(u, r) {
+    return (
+      u.roles.includes("WORKSHOP_OWNER") &&
+      r.workshop_id != null &&
+      (u.workshop_ids || []).map(String).includes(String(r.workshop_id))
+    );
+  }
   dto(u, r) {
     return {
       ...norm(r),
       actions:
-        r.status === "PENDING_APPROVAL" && u.roles.includes("DIRECTOR")
+        r.status === "PENDING_APPROVAL" && this.isApprover(u, r)
           ? ["review"]
           : r.status === "APPROVED" && (r.action === 'QUARANTINE' || r.action === "RELEASE") && u.roles.includes("QC_INSPECTOR")
             ? ["reinspect"]
@@ -37,12 +45,28 @@ class ExceptionService {
             : [],
     };
   }
+  async notify(c, userIds, proposal, subject, body, key) {
+    for (const userId of userIds)
+      await c.execute(
+        "INSERT INTO notifications(user_id,subject,body,resource_type,resource_id,business_key) VALUES (?,?,?,'exception-proposals',?,?) ON DUPLICATE KEY UPDATE id=notifications.id",
+        [userId, subject, body, proposal.id, key + "-" + userId],
+      );
+  }
+  /** Báo chủ xưởng phụ trách có đề xuất mới cần phê duyệt. */
+  async notifyApprovers(c, proposalId, workshopId, creatorId) {
+    const [[proposal]] = await c.execute("SELECT id,code,reason FROM exception_proposals WHERE id=?", [proposalId]);
+    const owners = await require("./proposal-workshop").ownersOf(c, workshopId, creatorId);
+    await this.notify(c, owners, proposal, "Đề xuất xử lý ngoại lệ " + proposal.code + " chờ phê duyệt", proposal.reason,
+      "exception-" + proposal.id + "-submitted");
+  }
   async list(u,q={}) { return require('./minute-exceptions').list(this,u,q); }
   async get(u, r) {
     if(/^LOT-[1-9]\d*$/.test(String(r)))return require('./minute-exceptions').get(this,u,String(r).slice(4));
-    C.fail(!u.roles.some(x=>['DIRECTOR','WAREHOUSE_MANAGER','QC_INSPECTOR'].includes(x)),'NOT_FOUND','Không tìm thấy đề xuất thuộc xưởng của bạn.',404);
     P.role(u, P.read["exception-proposals"]);
-    return this.legacyGet(u,r);
+    const proposal = await this.legacyGet(u, r);
+    const staff = u.roles.some((x) => ["DIRECTOR", "WAREHOUSE_MANAGER", "QC_INSPECTOR"].includes(x));
+    C.fail(!staff && !this.isApprover(u, proposal), "NOT_FOUND", "Không tìm thấy đề xuất thuộc xưởng của bạn.", 404);
+    return proposal;
   }
   async legacyGet(u,r) {
     C.fail(!id(r), "NOT_FOUND", "Không tìm thấy đề xuất.", 404);
@@ -169,13 +193,16 @@ class ExceptionService {
         "Dòng đã có đề xuất đang hiệu lực.",
         409,
       );
+      // UC-17: đề xuất phải gửi được cho chủ xưởng phụ trách nguồn hàng.
+      const workshopId = await require("./proposal-workshop").requireApprover(c, { [sourceField]: sourceId }, u.id);
       const [r] = await c.execute(
-        "INSERT INTO exception_proposals(code,type,qc_inspection_line_id,stocktake_line_id,created_by,action,quantity,reason,resolution_note,status,version) VALUES (?,?,?,?,?,?,?,?,?,'PENDING_APPROVAL',1)",
+        "INSERT INTO exception_proposals(code,type,qc_inspection_line_id,stocktake_line_id,workshop_id,created_by,action,quantity,reason,resolution_note,status,version) VALUES (?,?,?,?,?,?,?,?,?,?,'PENDING_APPROVAL',1)",
         [
           await require('../../shared/readable-codes').next(c,'exception_proposals',type==='QC_FAILURE'?'DX-HANG-LOI':'DX-CHENH-LECH',b.reason),
           type,
           b.qc_inspection_line_id || null,
           b.stocktake_line_id || null,
+          workshopId,
           u.id,
           action,
           quantity,
@@ -184,6 +211,7 @@ class ExceptionService {
         ],
       );
       target = r.insertId;
+      await this.notifyApprovers(c, target, workshopId, u.id);
       if (type === "STOCKTAKE_DIFFERENCE")
         await c.execute(
           "UPDATE stocktake_lines SET resolution_status='PENDING_APPROVAL',version=version+1 WHERE id=?",
@@ -195,7 +223,7 @@ class ExceptionService {
   }
   async review(u, r, b, request) {
     if(/^LOT-[1-9]\d*$/.test(String(r)))return require('./minute-exceptions').act(this,u,String(r).slice(4),b,'review',request);
-    P.role(u, ["DIRECTOR"]);
+    P.role(u, ["WORKSHOP_OWNER"]);
     C.fields(b, ["version", "decision", "reason"]);
     b = {
       ...b,
@@ -215,6 +243,7 @@ class ExceptionService {
         [r],
       );
       C.fail(!row, "NOT_FOUND", "Không tìm thấy đề xuất.", 404);
+      C.fail(!this.isApprover(u, row), "FORBIDDEN", "Đề xuất không thuộc xưởng bạn phụ trách.", 403);
       C.version(row, b.version);
       C.state(row, ["PENDING_APPROVAL"]);
       C.fail(
@@ -237,6 +266,15 @@ class ExceptionService {
           [row.stocktake_line_id],
         );
       await this.audit(c, u, r, "REVIEW_" + b.decision, request);
+      // UC-17 5.1: báo kết quả cho người lập đề xuất.
+      await this.notify(
+        c,
+        [row.created_by],
+        row,
+        (b.decision === "APPROVED" ? "Đã duyệt đề xuất " : "Đã từ chối đề xuất ") + row.code,
+        b.decision === "APPROVED" ? "Có thể thực hiện phương án đã đề xuất." : "Lý do: " + b.reason,
+        "exception-" + row.id + "-review-" + row.version,
+      );
     });
     return this.get(u, r);
   }

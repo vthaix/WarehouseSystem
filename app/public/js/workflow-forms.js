@@ -174,7 +174,7 @@ createForm = async function () {
                 { id: "FINISHED_PRODUCT", name: "Thành phẩm" },
               ]) +
               f("warehouse_id", "select", true, warehouses) +
-              employeePicker(users) + f("conclusion_assignee_ids","select",false,[{id:"",name:"Nhân viên được phân công lập kết luận"},...users.filter(u=>u.roles.includes("QC_INSPECTOR"))])) +
+              employeePicker(users, [], ['STOCKTAKER']) + f("conclusion_assignee_ids","select",false,[{id:"",name:"Nhân viên được phân công lập kết luận"},...users.filter(u=>u.roles.includes("QC_INSPECTOR"))])) +
           f("note", "textarea", false) +
           "</div>";
         if (qc) {
@@ -958,6 +958,16 @@ window.addEventListener('DOMContentLoaded', () => {
   if(current==='business-plans' && new URLSearchParams(location.hash.slice(1)).has('purchase_report') && has(['PLANNER'])) createForm();
   if(current==='stocktakes'&&location.hash==='#quality-create'&&has(['DIRECTOR']))createForm();
 });
+// UC-08 3.2(1) / UC-09 3.2: gợi ý ngày giờ thực hiện từ ngày giờ đề nghị của yêu cầu;
+// nếu thời điểm đó đã qua thì gợi ý nửa giờ tới. Mặc định làm trong 2 giờ.
+function dispatchTimeFields(req) {
+  const halfHour = 30 * 60000, now = Math.ceil(Date.now() / halfHour) * halfHour;
+  const requested = Date.parse(req.requested_at || '');
+  const start = Number.isFinite(requested) && requested > now ? requested : now;
+  const toInput = (ms) => new Date(ms + 7 * 3600000).toISOString().slice(0, 16);
+  return inputField('start_at', 'datetime-local', true, [], toInput(start)) +
+    inputField('end_at', 'datetime-local', true, [], toInput(start + 2 * 3600000));
+}
 async function dispatchForm(req) {
   try {
     const qty=value=>{const [a,b='']=String(value||'0').split('.');return BigInt(a)*1000n+BigInt(b.padEnd(3,'0'));};
@@ -970,8 +980,9 @@ async function dispatchForm(req) {
     const freeBalance=b=>qty(b.available_quantity??b.quantity)+(req.type==='OUT'?(preview.allocations||[]).filter(a=>String(a.lot_id)===String(b.lot_id)&&String(a.location_id)===String(b.location_id)&&a.quality_bucket==='AVAILABLE').reduce((n,a)=>n+qty(a.quantity)-qty(a.posted_quantity),0n):0n);
     openModal(
       "Phân công kho · " + req.code,
-      `<div class="notice">Chọn nhân viên kho và kiểm tra lô, vị trí, số lượng được giao.</div>${req.source_lots?.length?tableData(req.source_lots):''}${formWrap('<div class="span2" id="dispatch-lines"></div><button class="button" type="button" id="add-dispatch">＋ Thêm phân bổ</button>')}`,
+      `<div class="notice">Chọn nhân viên kho và kiểm tra lô, vị trí, số lượng được giao.</div>${req.source_lots?.length?tableData(req.source_lots):''}${formWrap(dispatchTimeFields(req)+'<div class="span2" id="dispatch-lines"></div><button class="button" type="button" id="add-dispatch">＋ Thêm phân bổ</button>')}`,
     );
+    document.querySelector('#f-start_at').onchange=()=>{document.querySelector('#f-end_at').min=document.querySelector('#f-start_at').value;};
     const add = (lineId=null,preferredLotId=null,preferredLocationId=null) => {
       const row = document.createElement("div");
       row.className = "form-section";
@@ -1008,7 +1019,7 @@ async function dispatchForm(req) {
           let holder=row.querySelector('.warehouse-dispatch-map');if(!holder){holder=document.createElement('div');holder.className='warehouse-dispatch-map';row.querySelector('.form-grid').append(holder);}
           const lot=eligible.find(t=>t.id===row.querySelector('[data-key="lot_id"]').value),position=row.querySelector('[data-key="location_id"]').value;
           const expanded=holder.querySelector('details')?.open||false,fold=document.createElement('details');fold.className='warehouse-position-picker';fold.open=expanded;const toggle=document.createElement('summary');toggle.className='button small';toggle.textContent='Xem vị trí trong kho';fold.append(toggle);
-          fold.append(createWarehouseSeatMap({locations:l.locations.map(pos=>({...pos,stock:l.balances.filter(b=>String(b.location_id)===String(pos.id)&&freeBalance(b)>0n),selectable:req.type==='IN'||l.balances.some(b=>String(b.location_id)===String(pos.id)&&String(b.lot_id)===lot?.id&&b.quality_bucket==='AVAILABLE'&&freeBalance(b)>0n)})),selectedId:position,suggestedId:req.type==='IN'?lot?.suggested_location_id:null,suggestedIds:req.type==='IN'?(lot?.suggested_location_ids||[]):l.balances.filter(b=>String(b.lot_id)===lot?.id&&b.quality_bucket==='AVAILABLE'&&freeBalance(b)>0n).map(b=>String(b.location_id)),onSelect:pos=>{row.querySelector('[data-key="location_id"]').value=String(pos.id);updateQuantity();retryKey=crypto.randomUUID();},onZone:name=>{holder.querySelector('.warehouse-dispatch-selection').textContent=name.replace(/^Khu [A-Z] · /,'Khu ');}}));holder.replaceChildren(fold);
+          fold.append(createWarehouseSeatMap({locations:l.locations.map(pos=>({...pos,stock:l.balances.filter(b=>String(b.location_id)===String(pos.id)&&freeBalance(b)>0n),selectable:req.type==='IN'||l.balances.some(b=>String(b.location_id)===String(pos.id)&&String(b.lot_id)===lot?.id&&b.quality_bucket==='AVAILABLE'&&freeBalance(b)>0n)})),selectedId:position,suggestedId:req.type==='IN'?lot?.suggested_location_id:null,suggestedIds:req.type==='IN'?(lot?.suggested_location_ids||[]):l.balances.filter(b=>String(b.lot_id)===String(lot?.id)&&b.quality_bucket==='AVAILABLE'&&freeBalance(b)>0n).map(b=>String(b.location_id)),onSelect:pos=>{row.querySelector('[data-key="location_id"]').value=String(pos.id);updateQuantity();retryKey=crypto.randomUUID();},onZone:name=>{holder.querySelector('.warehouse-dispatch-selection').textContent=name.replace(/^Khu [A-Z] · /,'Khu ');}}));holder.replaceChildren(fold);
           const caption=document.createElement('p');caption.className='warehouse-dispatch-selection';const pos=l.locations.find(p=>String(p.id)===position);caption.textContent=(req.type==='IN'?'Nhập vào: ':'Lấy hàng tại: ')+(pos?pos.code+' · '+(pos.zone_name||'Khu chung').replace(/^Khu [A-Z] · /,'Khu '):'Chưa chọn ô');holder.append(caption);
           let heading=row.querySelector('.dispatch-item-title');if(!heading){heading=document.createElement('h3');heading.className='dispatch-item-title';row.prepend(heading);}heading.textContent=l.item_name;
           if(req.type==='OUT'){
@@ -1048,6 +1059,9 @@ async function dispatchForm(req) {
       (d) => ({
         version: preview.request.version,
         allocation_mode: 'REPLACE_PENDING',
+        // Ngày giờ thực hiện (giờ Việt Nam) để server kiểm tra thời gian và lịch trùng.
+        start_at: new Date(d.start_at + '+07:00').toISOString(),
+        end_at: new Date(d.end_at + '+07:00').toISOString(),
         allocations: [...document.querySelectorAll("[data-dispatch]")].map(
           (row) =>
             Object.fromEntries(

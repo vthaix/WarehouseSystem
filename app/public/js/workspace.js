@@ -126,28 +126,7 @@
  let decorationQueued=false;
  if(document.querySelector('#content'))new MutationObserver(()=>{if(decorationQueued)return;decorationQueued=true;requestAnimationFrame(()=>{decorationQueued=false;decorate();});}).observe(document.querySelector('#content'),{childList:true,subtree:true});
 
- // Images reuse the validated upload endpoint; IDs, versions and other form
- // builders remain owned by their existing modules.
- const baseCreate=createForm,baseEdit=editForm;
- function itemPhoto(record={}){
-  const form=document.querySelector('#data-form');if(current!=='items'||!form)return;
-  const section=document.createElement('div');section.className='field span2 item-photo-editor';
-  section.innerHTML='<label for="item-photo">Ảnh mặt hàng</label><input id="item-photo" type="file" accept="image/png,image/jpeg,image/webp"><input type="hidden" name="image_path" value="'+esc(record.image_path||'')+'"><div class="item-photo-preview">'+(record.image_path?'<img src="'+esc(record.image_path)+'" alt="Ảnh mặt hàng">':'')+'</div><button type="button" class="button small" data-remove-photo>Bỏ ảnh</button><span class="hint">PNG, JPEG hoặc WebP · Tối đa 5 MB</span>';
-  form.querySelector('.form-grid').append(section);
-  const input=section.querySelector('input[type=file]'),hidden=section.querySelector('input[type=hidden]'),preview=section.querySelector('.item-photo-preview');
-  let upload=null,invalid=false;
-  input.onchange=()=>{
-   const file=input.files[0];invalid=false;if(!file)return;
-   if(file.size>5*1024*1024||!['image/png','image/jpeg','image/webp'].includes(file.type)){invalid=true;input.value='';toast('Chọn PNG, JPEG hoặc WebP tối đa 5 MB.');return;}
-   upload=new Promise((resolve,reject)=>{const reader=new FileReader();reader.onerror=()=>reject(Error('Không đọc được ảnh.'));reader.onload=async()=>{try{const img=document.createElement('img');img.src=reader.result;img.alt='Ảnh mặt hàng đang chọn';preview.replaceChildren(img);const r=await api('category-images','POST',{data_url:reader.result});hidden.value=r.data.image_path;resolve();}catch(e){invalid=true;toast(e.message);reject(e);}};reader.readAsDataURL(file);});
-   upload.catch(()=>{});
-  };
-  section.querySelector('[data-remove-photo]').onclick=()=>{if(upload){toast('Vui lòng chờ tải ảnh hoàn tất rồi bỏ ảnh.');return;}invalid=false;hidden.value='';input.value='';preview.replaceChildren();};
-  const original=form.onsubmit;
-  form.onsubmit=async event=>{event.preventDefault();try{if(upload){await upload;upload=null;}if(invalid)throw Error('Vui lòng chọn lại ảnh hợp lệ hoặc bỏ ảnh.');await original.call(form,event);}catch(e){toast(e.message);}};
- }
- createForm=async function(...args){await baseCreate(...args);itemPhoto();};
- editForm=async function(record){await baseEdit(record);itemPhoto(record);};
+ // Ảnh mặt hàng / danh mục được chọn ngay trong form ở catalog-forms.js (UC-06, UC-07).
  const originalDetail=detail;
  detail=function(record){
   originalDetail(record);

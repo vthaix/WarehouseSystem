@@ -375,10 +375,23 @@ class WarehouseFlowService {
         "SELECT a.*,t.code AS task_code FROM stock_allocations a JOIN tasks t ON t.id=a.task_id WHERE a.stock_request_id=? AND t.status<>'CANCELLED'",
         [requestId],
       );
+      // First dispatch is the initial save. The execution-time cutoff applies
+      // when replacing an already saved assignment.
+      C.fail(
+        old.length > 0 && request.ThoiDiemThucHien && new Date(request.ThoiDiemThucHien).getTime() <= Date.now(),
+        "INVALID_STATE",
+        "Chỉ được sửa phân công trước ngày giờ thực hiện.",
+        409,
+      );
       if(body.allocation_mode==='REPLACE_PENDING'){
         if(old.length&&require('../../shared/warehouse-allocation-plan').unchanged(old,body.allocations)){
           const tasks=[...new Map(old.filter(a=>C.qty(String(a.quantity),false)>C.qty(String(a.posted_quantity),false)).map(a=>[String(a.task_id),{id:String(a.task_id),assignee_id:String(a.user_id),code:a.task_code}])).values()];
           if(immediate)for(const task of tasks)await connection.execute("UPDATE tasks SET start_at=?,end_at=?,status='IN_PROGRESS',version=version+1 WHERE id=? AND status IN ('PLANNED','IN_PROGRESS')",[new Date(start),new Date(end),task.id]);
+          else {
+            // Giữ nguyên phân bổ, chỉ đổi ngày giờ thực hiện: vẫn kiểm tra lịch trùng.
+            await this.assertNoScheduleConflict(connection,[...new Set(tasks.map(t=>t.assignee_id))],start,end,requestId);
+            for(const task of tasks)await connection.execute("UPDATE tasks SET start_at=?,end_at=?,version=version+1 WHERE id=? AND status IN ('PLANNED','IN_PROGRESS')",[new Date(start),new Date(end),task.id]);
+          }
           const result={request_id:String(requestId),version:request.version,tasks};
           await connection.execute("INSERT INTO audit_logs(actor_id,resource_type,resource_id,action,after_data,request_id) VALUES (?,'stock-requests',?,'CONFIRM_DISPATCH',?,?)",[user.id,requestId,JSON.stringify({tasks}),requestIdHeader]);
           await connection.execute('UPDATE idempotency_records SET response_status=200,response_body=? WHERE id=?',[JSON.stringify(result),record.id]);return result;
@@ -417,6 +430,9 @@ class WarehouseFlowService {
         "VALIDATION_ERROR",
         "Người được giao không phải nhân viên kho.",
       );
+      // UC-08 ngoại lệ 3.5 / UC-09 ngoại lệ 3.6: lịch trùng. Nhân viên đã có công việc khác
+      // (của yêu cầu khác) còn hiệu lực chồng lên khung giờ được giao thì không lưu phân công.
+      if (!immediate) await this.assertNoScheduleConflict(connection, assignees, start, end, requestId);
       const lotIds = [
         ...new Set(body.allocations.map((line) => String(line.lot_id))),
       ].sort((a, b) => Number(a) - Number(b));
@@ -632,6 +648,20 @@ class WarehouseFlowService {
       );
       return result;
     });
+  }
+
+  /** Báo lỗi nếu một nhân viên đã có công việc khác chồng giờ [start, end). */
+  async assertNoScheduleConflict(connection, assigneeIds, start, end, requestId) {
+    if (!assigneeIds.length) return;
+    const [busy] = await connection.execute(
+      "SELECT t.code,u.full_name FROM tasks t JOIN task_assignments a ON a.task_id=t.id JOIN users u ON u.id=a.user_id" +
+        " WHERE a.user_id IN (" + assigneeIds.map(() => "?").join(",") + ")" +
+        " AND t.status IN ('PLANNED','IN_PROGRESS') AND t.start_at<? AND t.end_at>?" +
+        " AND (t.stock_request_id IS NULL OR t.stock_request_id<>?) LIMIT 1",
+      [...assigneeIds, new Date(end), new Date(start), requestId],
+    );
+    C.fail(busy.length, "SCHEDULE_CONFLICT",
+      `Lịch trùng: ${busy[0]?.full_name} đã có công việc ${busy[0]?.code} trong khung giờ này. Chọn giờ hoặc nhân viên khác.`, 409);
   }
 
   async document(user, id, connection = this.pool) {

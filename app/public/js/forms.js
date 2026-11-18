@@ -135,9 +135,10 @@ async function createForm() {
       const items = (await api("sample-items?per_page=100")).data;
       if (!items.length) throw new Error("Chưa có thành phẩm mẫu để đặt hàng.");
       const e = lineEditor("Hàng mẫu cần đặt", items);
-      editors.push(e);
+      const address = addressPicker.create();
+      editors.push(e, address);
       html =
-        f("delivery_address") +
+        address.html +
         f("latest_delivery_date", "date") +
         f("note", "textarea", false) +
         e.html;
@@ -584,8 +585,11 @@ async function actionForm(r, action) {
   else if (action === "delete") {
     html = `<div class="span2 notice">${current === "qc-inspections" ? "Xóa kết quả QA/QC này? Chỉ xóa được trước khi lập biên bản kiểm kê." : `Xác nhận hủy / xóa ${esc(r.code)}? Chứng từ đã sử dụng được hệ thống bảo vệ.`}</div>`;
     method = "DELETE";
-    path = current + "/" + r.id;
-    if (current === "qc-inspections") builder = () => ({ version: r.version });
+    // Trang Quản lý nhập/xuất kho hiển thị yêu cầu nhập/xuất (stock-requests).
+    const resource = ["warehouse-inbound", "warehouse-outbound"].includes(current) ? "stock-requests" : current;
+    path = resource + "/" + r.id;
+    if (["qc-inspections", "warehouse-inbound", "warehouse-outbound"].includes(current))
+      builder = () => ({ version: r.version });
   } else if (action === "edit") {
     method = "PATCH";
     path = current + "/" + r.id;
@@ -836,9 +840,10 @@ async function editForm(r) {
         ["quantity"],
         r.lines,
       );
-      editors.push(e);
+      const address = addressPicker.create(r); // chọn lại tỉnh / phường / số nhà
+      editors.push(e, address);
       html =
-        f("delivery_address", "text", true, [], r.delivery_address) +
+        address.html +
         f("latest_delivery_date", "date", true, [], r.latest_delivery_date) +
         f("note", "textarea", false, [], r.note || "") +
         e.html +

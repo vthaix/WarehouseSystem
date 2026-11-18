@@ -234,8 +234,10 @@ class StocktakeService {
           [w.warehouse_id],
         );
         C.fail(!warehouses.length, "VALIDATION_ERROR", "Kho không hoạt động.");
+        // UC-13/UC-15: đợt kiểm kê kho được giao cho Ban kiểm kê. QA/QC chỉ
+        // được chọn ở ô "lập kết luận", không làm người đếm.
         const [assigned] = await c.execute(
-          "SELECT DISTINCT u.id FROM users u JOIN user_roles ur ON ur.user_id=u.id JOIN roles r ON r.id=ur.role_id WHERE u.status='ACTIVE' AND r.code IN ('STOCKTAKER','QC_INSPECTOR') AND u.id IN (" +
+          "SELECT DISTINCT u.id FROM users u JOIN user_roles ur ON ur.user_id=u.id JOIN roles r ON r.id=ur.role_id WHERE u.status='ACTIVE' AND r.code='STOCKTAKER' AND u.id IN (" +
             w.assignee_ids.map(() => "?").join(",") +
             ")",
           w.assignee_ids,
@@ -243,7 +245,7 @@ class StocktakeService {
         C.fail(
           assigned.length !== w.assignee_ids.length,
           "VALIDATION_ERROR",
-          "Người đếm không đúng vai trò.",
+          "Người đếm phải là nhân viên Ban kiểm kê đang hoạt động.",
         );
         const [sw] = await c.execute(
           "INSERT INTO stocktake_warehouses(stocktake_id,warehouse_id,status,version) VALUES (?,?,'PLANNED',1)",
@@ -314,6 +316,7 @@ class StocktakeService {
             "UPDATE stocktake_warehouses SET status='COUNTING',snapshot_at=UTC_TIMESTAMP(6),version=version+1 WHERE id=?",
             [w.id],
           );
+          await this.notifyCounters(c, r, w);
         } else {
           C.fail(
             w.status !== "COMPLETED" || w.conclusion_status !== "SUBMITTED",
@@ -344,6 +347,33 @@ class StocktakeService {
       await this.audit(c, u, s, action.toUpperCase(), request);
     });
     return this.get(u, s);
+  }
+  /**
+   * Báo cho từng người đếm rằng kho được giao đã mở để kiểm đếm.
+   * Thông báo gắn với chức năng "Thực hiện kiểm kê" (inspection-counts),
+   * vì Ban kiểm kê thao tác ở đó chứ không mở trang lập đợt.
+   */
+  async notifyCounters(c, stocktake, stocktakeWarehouse) {
+    const [[warehouse]] = await c.execute(
+      "SELECT name FROM warehouses WHERE id=?",
+      [stocktakeWarehouse.warehouse_id],
+    );
+    const [counters] = await c.execute(
+      "SELECT user_id FROM stocktake_assignments WHERE stocktake_warehouse_id=?",
+      [stocktakeWarehouse.id],
+    );
+    for (const counter of counters) {
+      await c.execute(
+        "INSERT INTO notifications(user_id,subject,body,resource_type,resource_id,business_key) VALUES (?,?,?,'inspection-counts',?,?) ON DUPLICATE KEY UPDATE id=notifications.id",
+        [
+          counter.user_id,
+          "Bắt đầu kiểm đếm: " + (warehouse?.name || "kho được giao"),
+          "Đợt " + stocktake.code + " đã bắt đầu. Mở Thực hiện kiểm kê để nhập số đếm.",
+          stocktake.id,
+          "stocktake-" + stocktake.id + "-warehouse-" + stocktakeWarehouse.id + "-counter-" + counter.user_id,
+        ],
+      );
+    }
   }
   async counts(u, s, w, b) {
     P.role(u, ["STOCKTAKER", "QC_INSPECTOR"]);

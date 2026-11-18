@@ -1,4 +1,13 @@
+// =============================================================================
+// CẬP NHẬT TRẠNG THÁI ĐỢT NHẬP THÀNH PHẨM THỦ CÔNG
+// Gọi sau khi QC ghi kết quả hoặc kho ghi phiếu nhập cho các lô của đợt:
+//   FULFILLED           mọi lô đã có QC và đã nhập đủ lượng QC đạt
+//   PARTIALLY_FULFILLED đã nhập được một phần
+//   PENDING             chưa nhập gì
+// =============================================================================
 const C = require("../../services/domain/core");
+
+/** @param lotIds các lô vừa thay đổi; chỉ đợt nhập chứa các lô này được tính lại. */
 async function refresh(c, lotIds) {
   if (!lotIds.length) return;
   const [requests] = await c.execute(

@@ -40,7 +40,7 @@ Công cụ không đổi đơn vị của các mặt hàng đã có. Ba mặt h�
 | NHAP-TP-TAY | UC-23 nhập TP từng phần thủ công | workshop; đã cấp NVL; KHSX riêng để nhập tay phần mới hoàn thành |
 | TP-NHAP | Xem/sửa/gửi báo cáo thành phẩm | workshop; báo cáo THANH_PHAM còn DRAFT |
 | QC-TP | UC-12.1 kiểm thành phẩm | qc; lô 10 bánh, lịch kiểm đã bắt đầu, chưa có QC |
-| NGOAI-LE | UC-17 duyệt lỗi QC | director; QC TP 8 đạt/2 lỗi, đề xuất tiêu hủy 1 đơn vị lỗi đang chờ duyệt |
+| NGOAI-LE | UC-17 duyệt lỗi QC | workshop (chủ xưởng phụ trách lô); QC TP 8 đạt/2 lỗi, đề xuất tiêu hủy 1 đơn vị lỗi đang chờ duyệt |
 | LAP-BAN | UC-04 lập kế hoạch BAN | planner; 10 bánh đạt QC, đã nhập kho, báo cáo cuối đã gửi, chưa có BAN |
 | DUYET-BAN | UC-05/32 kế hoạch bán | planner/director; kế hoạch BAN chưa duyệt |
 | YC-XUAT-TP | UC-23 yêu cầu xuất TP | workshop; BAN duyệt, SX hoàn tất, đủ tồn và hạn giao là ngày dựng fixture |
@@ -52,7 +52,7 @@ Công cụ không đổi đơn vị của các mặt hàng đã có. Ba mặt h�
 | KK-BIEN-BAN | UC-28 lập biên bản | qc theo phân công; đã đếm 19 kg so với snapshot 20, chưa có biên bản |
 | KK-BAO-CAO | UC-21 xem báo cáo | director; biên bản đã gửi, chênh lệch -1 kg |
 | KK-CHENH-LECH | UC-16 lập đề xuất điều chỉnh | manager; biên bản đã gửi, chưa có đề xuất |
-| KK-DUYET | UC-17 phê duyệt chênh lệch | director; đề xuất thiếu 1 kg chờ quyết định |
+| KK-DUYET | UC-17 phê duyệt chênh lệch | workshop (chủ xưởng phụ trách nguồn hàng); đề xuất thiếu 1 kg chờ quyết định |
 | KK-AP-DUNG | UC-16 thực hiện phương án đã duyệt | manager; đề xuất APPROVED, tồn chưa điều chỉnh |
 
 UC-02 đặt hàng và các nhánh Thêm dùng dữ liệu danh mục sẵn có, không cần chứng từ đích tồn tại trước. Các chức năng xóa/sửa/duyệt là thao tác tiêu thụ hoặc thay đổi fixture: dùng đúng bộ riêng, không kỳ vọng một bản vừa xóa vẫn có thể dùng cho ca sau. Bảng này tạo tiền điều kiện để thử UC, không khẳng định mọi ca ngoại lệ đều đã được chạy đạt.
