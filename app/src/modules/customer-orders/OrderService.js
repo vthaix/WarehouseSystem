@@ -258,14 +258,15 @@ class OrderService {
     );
   }
 
-  async create(user, body, requestId) {
+  /** UC-02 Đặt đơn hàng. idempotencyKey: gửi lại sau khi mất mạng không tạo đơn thứ hai. */
+  async create(user, body, requestId, idempotencyKey) {
     P.role(user, ["CUSTOMER"]);
     C.fields(body, ["delivery_address", ...ADDRESS_PARTS, "latest_delivery_date", "note", "lines"]);
     const delivery = readDeliveryAddress(body);
     C.fail(!delivery, "VALIDATION_ERROR", "Vui lòng nhập địa chỉ giao hàng.");
     C.date(body.latest_delivery_date, "latest_delivery_date", true);
     if (body.note !== undefined) C.text(body.note, "note", 5000, false);
-    const id = await this.transaction(async (connection) => {
+    const id = await this.transaction((connection) => require("../../shared/idempotency").once(connection, user.id, "customer-order-create", idempotencyKey, body, async () => {
       const [customers] = await connection.execute("SELECT id,name FROM customers WHERE user_id=? FOR UPDATE", [user.id]);
       C.fail(!customers.length, "FORBIDDEN", "Tài khoản chưa có hồ sơ khách hàng.", 403);
       const data = await this.validateLines(connection, body.lines);
@@ -283,7 +284,7 @@ class OrderService {
       await this.audit(connection, user, created.insertId, "CREATE", {}, { code, status: "SUBMITTED" }, requestId);
       await this.notifyRole(connection, "PLANNER", created.insertId, `Đơn hàng mới ${code}`, `order-${created.insertId}-created`);
       return created.insertId;
-    });
+    }));
     return this.get(user, id);
   }
 

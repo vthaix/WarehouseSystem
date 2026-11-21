@@ -10,8 +10,12 @@ class AuthService {
     C.fields(body, ["username", "password"]);
     C.text(body.username, "username", 80);
     C.text(body.password, "password", 128);
-    const keys = ["ip:" + ip, "user:" + body.username.toLowerCase()]
-        .map((k) => crypto.createHash("sha256").update(k).digest("hex"))
+    // Giới hạn sai: 5 lần / 15 phút cho mỗi tài khoản; 50 lần / 15 phút cho mỗi IP.
+    // IP dùng ngưỡng cao hơn để nhiều người chung một mạng (NAT của xưởng) không bị khóa cả loạt
+    // chỉ vì vài người gõ sai, nhưng vẫn chặn dò mật khẩu hàng loạt từ một máy.
+    const limits = new Map();
+    const keys = [["ip:" + ip, 50], ["user:" + body.username.toLowerCase(), 5]]
+        .map(([k, limit]) => { const hash = crypto.createHash("sha256").update(k).digest("hex"); limits.set(hash, limit); return hash; })
         .sort(),
       now = Date.now(),
       connection = await this.pool.getConnection();
@@ -37,7 +41,7 @@ class AuthService {
         }
         counters.push(counter);
       }
-      if (counters.some((c) => c.attempts >= 5))
+      if (counters.some((c) => c.attempts >= limits.get(c.attempt_key)))
         result = {
           error: new C.DomainError(
             429,

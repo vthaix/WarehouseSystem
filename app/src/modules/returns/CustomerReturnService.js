@@ -52,7 +52,11 @@ class CustomerReturnService {
       const [[order]]=await c.execute('SELECT code FROM customer_orders WHERE id=?',[sources[0].customer_order_id]);
       const [h]=await c.execute("INSERT INTO lot_headers(code,lot_kind,return_direction,note,return_status,return_version,return_receiver_id,return_warehouse_id,return_creator_id) VALUES (?,'TRA_VE','KHACH_HANG',?,'PENDING',1,?,?,?)",[await require('../../shared/readable-codes').next(c,'lot_headers','LO-TRA-KH','KHACH-HANG'),b.reason,b.receiver_id,b.warehouse_id,u.id]);
       for(const line of b.lines){const source=sources.find(s=>String(s.id)===String(line.original_stock_document_line_id));await c.execute('INSERT INTO returned_lot_lines(lot_header_id,original_lot_detail_id,quantity,original_stock_document_line_id,return_location_id) VALUES (?,?,?,?,?)',[h.insertId,source.lot_id,C.decimal(C.qty(line.quantity)),source.id,line.location_id]);}
-      await this.audit(c,u,h.insertId,'CREATE',request);return h.insertId;
+      await this.audit(c,u,h.insertId,'CREATE',request);
+      // Báo nhân viên kho được giao nhận hàng trả (UC-BS-02 bước 4); tồn chỉ tăng khi nhân viên ghi nhận nhận hàng.
+      const [[header]]=await c.execute('SELECT code FROM lot_headers WHERE id=?',[h.insertId]);
+      await c.execute("INSERT INTO notifications(user_id,subject,body,resource_type,resource_id,business_key) VALUES (?,?,?,'customer-returns',?,?) ON DUPLICATE KEY UPDATE id=notifications.id",[b.receiver_id,'Nhận hàng khách trả '+header.code,'Đơn '+order.code+': nhận hàng trả vào khu cách ly. Lý do: '+b.reason,h.insertId,'customer-return-'+h.insertId+'-assigned']);
+      return h.insertId;
     });return this.get(u,id);
   }
   async action(u,id,b,action,request){

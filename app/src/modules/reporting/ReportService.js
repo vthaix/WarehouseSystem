@@ -30,7 +30,7 @@ class ReportService {
     const common = ["warehouse_id", "page", "per_page", "sort"];
     const extra = kind === "inventory" ? ["item_id", "kind", "lot_id", "quality_bucket", "as_of"]
       : kind === "stock-documents" ? ["from", "to", "type"]
-      : ["stocktake_id"];
+      : ["stocktake_id", "from", "to"];
     C.fields(query, [...common, ...extra, ...(exportMode ? ["format"] : [])]);
     for (const name of ["warehouse_id", "item_id", "lot_id", "stocktake_id"])
       if (query[name] !== undefined) C.fail(!isId(query[name]), "VALIDATION_ERROR", `${name} không hợp lệ.`);
@@ -50,6 +50,11 @@ class ReportService {
   async inventory(user, query = {}, exportMode = false) {
     this.validate(user, "inventory", query, exportMode);
     const filters = ["m.posted_at<=?"], params = [query.as_of ? new Date(query.as_of) : new Date()];
+    // Chủ xưởng chỉ xem tồn của kho thuộc xưởng mình (giống danh sách kho ở bộ lọc).
+    if (!user.roles.some((role) => ["DIRECTOR", "WAREHOUSE_MANAGER"].includes(role))) {
+      if (!user.workshop_ids.length) filters.push("1=0");
+      else { filters.push("w.workshop_id IN (" + user.workshop_ids.map(() => "?").join(",") + ")"); params.push(...user.workshop_ids); }
+    }
     if (query.warehouse_id) { filters.push("w.id=?"); params.push(query.warehouse_id); }
     if (query.item_id) { filters.push("i.id=?"); params.push(query.item_id); }
     if (query.lot_id) { filters.push("l.id=?"); params.push(query.lot_id); }
@@ -88,6 +93,9 @@ class ReportService {
     const where = [], params = [];
     if (query.warehouse_id) { where.push("sw.warehouse_id=?"); params.push(query.warehouse_id); }
     if (query.stocktake_id) { where.push("s.id=?"); params.push(query.stocktake_id); }
+    // Lọc theo ngày kiểm đếm (dòng chưa đếm lấy ngày kế hoạch của đợt).
+    if (query.from) { where.push("DATE(COALESCE(l.counted_at,s.planned_date))>=?"); params.push(query.from); }
+    if (query.to) { where.push("DATE(COALESCE(l.counted_at,s.planned_date))<=?"); params.push(query.to); }
     const base = " FROM stocktake_lines l JOIN stocktake_warehouses sw ON sw.id=l.stocktake_warehouse_id JOIN stocktakes s ON s.id=sw.stocktake_id JOIN warehouses w ON w.id=sw.warehouse_id JOIN lots lot ON lot.id=l.lot_id JOIN items i ON i.id=lot.item_id" + (where.length ? " WHERE " + where.join(" AND ") : "");
     const [[count]] = await this.pool.execute("SELECT COUNT(*) AS total" + base, params);
     const { page, per_page, offset } = paginate(query);

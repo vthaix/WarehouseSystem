@@ -41,6 +41,8 @@ const warehouseNavigation = {
     "IN_PROGRESS": "Đang thực hiện",
     "COMPLETED": "Hoàn thành",
     "PENDING_APPROVAL": "Chờ duyệt",
+    "RECORDED": "Đã ghi nhận",
+    "ADJUST_TO_ACTUAL": "Điều chỉnh tồn theo số thực đếm",
     "PENDING": "Chờ xử lý",
     "PARTIALLY_FULFILLED": "Xử lý một phần",
     "FULFILLED": "Đã xử lý đủ",

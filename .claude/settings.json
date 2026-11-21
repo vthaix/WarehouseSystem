@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c \"import sys,zipfile; z=zipfile.ZipFile\\('template.docx'\\); z.extractall\\('unpacked'\\); print\\('\\\\n'.join\\(f'{i.file_size:>10} {i.filename}' for i in z.infolist\\(\\) if i.file_size>100000 or not i.filename.startswith\\('word/media'\\)\\)\\)\")",
+      "Bash(python3 -c \"import docx; print\\(docx.__version__ if hasattr\\(docx,'__version__'\\) else 'ok'\\)\")",
+      "Bash(python3 -c \"import lxml; print\\('lxml ok'\\)\")",
+      "Read(//Users/vthai/.claude/skills/synced/2c9b53b3-a1dd-4879-be4e-5bd4142a1279_9a0f5f59-2d91-4b6f-8f82-c28c7007d460/docx/scripts/**)",
+      "Bash(ls /private/tmp/claude-501/-Users-vthai-Documents-PTUD-app-WarehouseSystem/96a7cd40-8fc4-4b36-bf0b-f2d31743b791/scratchpad/ 2>&1 | head; ls /private/tmp/claude-501/ 2>&1 | head)",
+      "Read(//private/tmp/claude-501/**)",
+      "Bash(npm test *)",
+      "Bash(node -e \"require\\('./generic.cjs'\\)\")",
+      "Bash(python3 show.py UC-04,UC-05,UC-05.1,UC-05.2,UC-32,UC-31 260)",
+      "Bash(ONLY='UC-03.1-TC002|UC-03.1-TC007|UC-03.1-TC017|UC-03.1-TC018' UC=UC-03.1 node g-orders.cjs)",
+      "Bash(ONLY='UC-03.1-TC017' UC=UC-03.1 node g-orders.cjs)",
+      "Bash(grep -E \"^\\\\| *\\\\`?[A-Z0-9-]+\" docs/DEMO_FIXTURES.md)",
+      "Bash(node -e 'const j=require\\(\"./database/adminer/identifiers.json\"\\);for\\(const k of [\"business_plans\",\"production_plans\"]\\)console.log\\(k,j.tables[k]\\);for\\(const k of [\"planned_date\",\"end_date\"]\\)console.log\\(k,j.columns[k]\\)')",
+      "Bash(python3 show.py UC-14,UC-27,UC-34,UC-35 240)",
+      "Bash(node explore.cjs purchaser '/purchases?module=purchase-orders')",
+      "Bash(node explore.cjs workshop '/production/reports?module=production-reports')",
+      "Bash(/private/tmp/claude-501/-Users-vthai-Documents-PTUD-app-WarehouseSystem/96a7cd40-8fc4-4b36-bf0b-f2d31743b791/scratchpad/tc/bin/sql.sh \"SHOW CREATE TABLE YeuCauChongLap\\\\G\")",
+      "Bash(ONLY='UC-04-TC007' UC=UC-04 node g-plans.cjs)",
+      "Bash(node /private/tmp/claude-501/-Users-vthai-Documents-PTUD-app-WarehouseSystem/96a7cd40-8fc4-4b36-bf0b-f2d31743b791/scratchpad/tc/dbg-reopen.cjs)",
+      "Bash(node -e \"require\\('./src/modules/business-plans/BusinessPlanService.js'\\)\")",
+      "Bash(node explore.cjs workshop '/production/finished-reports?module=finished-reports')"
+    ]
+  }
+}

@@ -36,8 +36,11 @@
    if(input.value.trim())block.open=true;
   });
  }
+ // Màn hình tạm "Đang chuẩn bị biểu mẫu…" không phải một bước để quay lại: nếu ghi nhớ nó,
+ // nút Hủy / Quay lại sẽ đưa người dùng về màn hình tải mãi không xong.
+ const isLoadingView=()=>modalBody.querySelector(':scope > .loading')&&!modalBody.querySelector('form,table,dl,[data-action]');
  openModal=function(title,html){
-  if(modal.open)remember();else history.length=0;
+  if(modal.open){if(!isLoadingView())remember();}else history.length=0;
   baseOpen(title,html);modal.scrollTop=0;enhanceModal();
   requestAnimationFrame(()=>modalBody.querySelector('h2')?.focus({preventScroll:true}));
  };

@@ -64,15 +64,20 @@ function date(v, field = "date", future = false) {
   );
   return v;
 }
+// Tên tiếng Việt của các trường chữ, dùng trong thông báo lỗi cho người dùng.
+const TEXT_LABELS = {
+  note: "Ghi chú", reason: "Lý do", q: "Từ khóa tìm kiếm", issue: "Nội dung sự cố", remarks: "Nhận xét",
+  delivery_address: "Địa chỉ giao hàng", code: "Mã", username: "Tên đăng nhập", password: "Mật khẩu",
+  title: "Tiêu đề", name: "Tên", full_name: "Họ và tên", resolution_note: "Ghi chú xử lý", lot_code: "Mã lô",
+  location: "Địa điểm", cause: "Nguyên nhân", exception_description: "Mô tả ngoại lệ", delivery_terms: "Điều khoản giao",
+  difference_reason: "Lý do chênh lệch", description: "Mô tả",
+};
+/** Kiểm tra trường chữ: bắt buộc thì không được trống; không vượt quá max ký tự. */
 function text(v, field, max = 5000, required = true) {
-  fail(
-    (required && (typeof v !== "string" || !v.trim())) ||
-      (v !== undefined && (typeof v !== "string" || v.length > max)),
-    "VALIDATION_ERROR",
-    `Kiểm tra trường ${field}.`,
-    422,
-    { [field]: ["Giá trị không hợp lệ"] },
-  );
+  const label = TEXT_LABELS[field] || field;
+  fail(required && (typeof v !== "string" || !v.trim()), "VALIDATION_ERROR", `Vui lòng nhập ${label.toLowerCase()}.`, 422, { [field]: ["Bắt buộc nhập"] });
+  fail(v !== undefined && v !== null && typeof v !== "string", "VALIDATION_ERROR", `${label} không hợp lệ.`, 422, { [field]: ["Giá trị không hợp lệ"] });
+  fail(typeof v === "string" && v.length > max, "VALIDATION_ERROR", `${label} quá dài (tối đa ${max} ký tự).`, 422, { [field]: ["Quá dài"] });
   return v;
 }
 function fields(b, allowed) {

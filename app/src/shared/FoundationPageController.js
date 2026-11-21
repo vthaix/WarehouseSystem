@@ -106,10 +106,14 @@ class FoundationPageController {
         serviceQuery,
       );
     const workspace=current==='dashboard'||current==='purchase-orders'?await require('./workspace-overview')(this.runtime,req.user,available):null;
-    const reportWarehouses=current.startsWith('reports/')?await this.runtime.reports.warehouseOptions(req.user):[];
+    // Màn báo cáo và "Hồ sơ nhập / xuất kho" (UC-19/20) có bộ lọc kho; hồ sơ còn lọc theo mặt hàng.
+    const documentFilters=current==='stock-documents';
+    const reportWarehouses=current.startsWith('reports/')||documentFilters?await this.runtime.reports.warehouseOptions(req.user).catch(()=>[]):[];
+    const reportItems=documentFilters?(await this.runtime.pool.execute('SELECT id,code,name FROM items WHERE is_active=1 ORDER BY kind,name'))[0].map(i=>({...i,id:String(i.id)})):[];
     const context = {
       workspace,
       reportWarehouses,
+      reportItems,
       user,
       available,
       current,

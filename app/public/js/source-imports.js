@@ -216,7 +216,7 @@
         const materialOffers=(await api('material-prices?per_page=100')).data;
         const plans = (await api('source-imports/purchase-report-options')).data;
         openModal('Mua nguyên vật liệu', formWrap(
-          field('source_mode','select',true,[{id:'PLAN',name:'Theo kế hoạch mua nguyên vật liệu đã duyệt'}]) +
+          field('source_mode','select',true,[{id:'PLAN',name:'Theo kế hoạch mua nguyên vật liệu đã duyệt'},{id:'MANUAL',name:'Lập trực tiếp'}]) +
           pick('business_plan_id',plans,'Chọn kế hoạch mua nguyên vật liệu') + field('expected_delivery_date','date') +
           field('delivery_terms','textarea') + '<div class="span2" id="import-info"></div><div class="span2" id="import-lines"></div>'
         ));
@@ -224,14 +224,23 @@
           document.querySelector('#import-lines').innerHTML = '<h3>nguyên vật liệu cần mua — chọn nhà cung cấp cho từng loại</h3><div id="purchase-lines"></div>' + (planMode ? '' : '<button type="button" class="button small" id="add-purchase-line">＋ Thêm nguyên vật liệu</button>');
           function add(l = {}) {
             const row = document.createElement('div'); row.className='form-section'; row.dataset.section='lines';
-            const allowedIds=new Set((materialOffers.find(m=>String(m.id)===String(l.item_id))?.supplier_prices||[]).map(p=>String(p.supplier_id)));
+            // Nhà cung cấp và giá gợi ý theo bảng giá của nguyên vật liệu đang chọn (lập trực tiếp mặc định chọn mặt hàng đầu tiên).
+            const offersOf=itemId=>materialOffers.find(m=>String(m.id)===String(itemId))?.supplier_prices||[];
+            const supplierOptions=itemId=>{const allowed=new Set(offersOf(itemId).map(p=>String(p.supplier_id)));const list=suppliers.filter(s=>allowed.has(String(s.id)));return '<option value="">'+(list.length?'Chọn nhà cung cấp phù hợp':'Chưa có nhà cung cấp cho nguyên vật liệu này')+'</option>'+list.map(s=>'<option value="'+esc(s.id)+'">'+esc(s.name)+'</option>').join('');};
+            if(!planMode&&!l.item_id&&items[0])l={...l,item_id:items[0].id};
+            const allowedIds=new Set(offersOf(l.item_id).map(p=>String(p.supplier_id)));
             const eligibleSuppliers=suppliers.filter(s=>allowedIds.has(String(s.id)));
             row.innerHTML = '<div class="form-grid"><div class="field"><label>Nguyên vật liệu / đơn vị *</label><select data-key="item_id" aria-label="Nguyên vật liệu" '+(planMode?'disabled':'')+'>'+items.map(i=>'<option value="'+esc(i.id)+'" '+(String(i.id)===String(l.item_id)?'selected':'')+'>'+esc(i.name+' · '+(i.unit || i.unit_name || ''))+'</option>').join('')+'</select></div>' +
               '<div class="field"><label>Số lượng *</label><input aria-label="Số lượng" data-key="quantity" type="number" min="0.001" step="0.001" required '+(planMode?'readonly':'')+' value="'+esc(numericInputValue(l.quantity || '1'))+'"></div>' +
               '<div class="field"><label>Nhà cung cấp *</label><select aria-label="Nhà cung cấp" data-key="supplier_id" required><option value="">'+(eligibleSuppliers.length?'Chọn nhà cung cấp phù hợp':'Chưa có nhà cung cấp cho nguyên vật liệu này')+'</option>'+eligibleSuppliers.map(s=>'<option value="'+esc(s.id)+'">'+esc(s.name)+'</option>').join('')+'</select><small class="supplier-coverage">'+eligibleSuppliers.map(s=>esc(s.name)+': '+esc((s.supplied_items||[]).map(i=>i.name).join(', '))).join('<br>')+'</small></div>' +
               '<div class="field"><label>Đơn giá mua *</label><input aria-label="Đơn giá mua" data-key="unit_price" type="number" min="0" step="0.0001" required value="'+esc(numericInputValue(l.unit_price || '0'))+'"></div></div>' +
               (planMode ? '<input type="hidden" data-key="business_plan_line_id" value="'+esc(l.id)+'">' : '<button class="button small danger" type="button">Xóa dòng</button>');
-            if (!planMode) row.querySelector('button').onclick=()=>{row.remove();retryKey=crypto.randomUUID();};
+            if (!planMode) {
+              row.querySelector('button').onclick=()=>{row.remove();retryKey=crypto.randomUUID();};
+              const itemSelect=row.querySelector('[data-key="item_id"]'),supplierSelect=row.querySelector('[data-key="supplier_id"]'),price=row.querySelector('[data-key="unit_price"]');
+              itemSelect.onchange=()=>{supplierSelect.innerHTML=supplierOptions(itemSelect.value);price.value='0';};
+              supplierSelect.onchange=()=>{const offer=offersOf(itemSelect.value).find(o=>String(o.supplier_id)===supplierSelect.value);if(offer?.unit_price!=null)price.value=numericInputValue(offer.unit_price);};
+            }
             document.querySelector('#purchase-lines').append(row);
           }
           lines.forEach(add);
@@ -240,8 +249,8 @@
         const sync = importer(async fresh => {
           const planMode=value('source_mode')==='PLAN', select=document.querySelector('#f-business_plan_id'), date=document.querySelector('#f-expected_delivery_date');
           select.disabled=!planMode;select.required=planMode;select.parentElement.hidden=!planMode;
-          date.readOnly=planMode;
-          if (!planMode) { mountPurchaseLines([],false); return; }
+          date.readOnly=planMode;date.min=planMode?'':calendarToday();
+          if (!planMode) { document.querySelector('#import-info').innerHTML='<div class="notice">Lập trực tiếp: chọn từng nguyên vật liệu, số lượng, nhà cung cấp, đơn giá và ngày nhận mong muốn; không cần kế hoạch mua hoặc báo cáo nhu cầu.</div>'; mountPurchaseLines([],false); return; }
           if (!select.value) {date.value='';return;}
           const p=(await api('business-plans/'+select.value)).data;
           if(!fresh())return;

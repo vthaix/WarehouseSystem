@@ -695,9 +695,11 @@ class WarehouseFlowService {
     return { ...normalize(row), actions: [], lines: lines.map(normalize) };
   }
 
-  async documents(user, query = {}) {
+  /** UC-19/20 Hồ sơ xuất / nhập kho: lọc theo loại phiếu, trạng thái, kho, mặt hàng, khoảng ngày ghi sổ; exportMode trả toàn bộ để xuất CSV. */
+  async documents(user, query = {}, exportMode = false) {
     P.role(user, P.read["stock-documents"]);
-    C.fields(query, ["page", "per_page", "q", "type", "sort"]);
+    C.fields(query, ["page", "per_page", "q", "type", "sort", "status", "warehouse_id", "item_id", "from", "to", ...(exportMode ? ["format"] : [])]);
+    if (exportMode) C.fail(query.format !== "csv", "VALIDATION_ERROR", "Chỉ hỗ trợ CSV.");
     const { page, per_page, offset } = paginate(query);
     const where = [],
       params = [];
@@ -737,20 +739,57 @@ class WarehouseFlowService {
       where.push("d.type=?");
       params.push(query.type);
     }
+    if (query.status) {
+      C.fail(!["POSTED", "CANCELLED", "DRAFT"].includes(query.status), "VALIDATION_ERROR", "Trạng thái phiếu không hợp lệ.");
+      where.push("d.status=?");
+      params.push(query.status);
+    }
+    for (const name of ["warehouse_id", "item_id"])
+      if (query[name] !== undefined) C.fail(!isId(query[name]), "VALIDATION_ERROR", (name === "warehouse_id" ? "Kho" : "Mặt hàng") + " không hợp lệ.");
+    if (query.warehouse_id) {
+      where.push("d.warehouse_id=?");
+      params.push(query.warehouse_id);
+    }
+    if (query.item_id) {
+      where.push("EXISTS(SELECT 1 FROM stock_document_lines dl JOIN lots lot ON lot.id=dl.lot_id WHERE dl.stock_document_id=d.id AND lot.item_id=?)");
+      params.push(query.item_id);
+    }
+    if (query.from) C.date(query.from, "from");
+    if (query.to) C.date(query.to, "to");
+    C.fail(query.from && query.to && query.from > query.to, "VALIDATION_ERROR", "Khoảng ngày không hợp lệ: Từ ngày phải trước hoặc bằng Đến ngày.");
+    // Ngày ghi sổ tính theo giờ Việt Nam (UTC+7).
+    if (query.from) {
+      where.push("DATE(DATE_ADD(d.posted_at,INTERVAL 7 HOUR))>=?");
+      params.push(query.from);
+    }
+    if (query.to) {
+      where.push("DATE(DATE_ADD(d.posted_at,INTERVAL 7 HOUR))<=?");
+      params.push(query.to);
+    }
     C.fail(
       query.sort && query.sort !== "newest",
       "VALIDATION_ERROR",
       "Cách sắp xếp không hợp lệ.",
     );
     const base =
-      " FROM stock_documents d LEFT JOIN stock_requests r ON r.id=d.stock_request_id" +
+      " FROM stock_documents d LEFT JOIN stock_requests r ON r.id=d.stock_request_id LEFT JOIN warehouses w ON w.id=d.warehouse_id" +
       (where.length ? " WHERE " + where.join(" AND ") : "");
     const [[count]] = await this.pool.execute(
       "SELECT COUNT(*) AS total" + base,
       params,
     );
+    if (exportMode) {
+      C.fail(Number(count.total) > 50000, "EXPORT_TOO_LARGE", "Hồ sơ vượt 50.000 phiếu; thu hẹp điều kiện lọc.", 422);
+      const [lines] = await this.pool.execute(
+        "SELECT d.code,d.type,d.status,d.posted_at,w.name AS warehouse_name,r.code AS request_code,r.purpose,i.code AS item_code,i.name AS item_name,lot.code AS lot_code,loc.code AS location_code,dl.quantity" +
+          base.replace(" FROM stock_documents d", " FROM stock_documents d JOIN stock_document_lines dl ON dl.stock_document_id=d.id JOIN lots lot ON lot.id=dl.lot_id JOIN items i ON i.id=lot.item_id LEFT JOIN warehouse_locations loc ON loc.id=dl.location_id") +
+          " ORDER BY d.posted_at DESC,d.id DESC,dl.id",
+        params,
+      );
+      return { data: lines };
+    }
     const [rows] = await this.pool.execute(
-      "SELECT d.*,r.workshop_id,r.purpose" +
+      "SELECT d.*,r.workshop_id,r.purpose,w.name AS warehouse_name" +
         base +
         " ORDER BY d.id DESC LIMIT ? OFFSET ?",
       [...params, String(per_page), String(offset)],
@@ -1135,9 +1174,20 @@ class WarehouseFlowService {
           "UPDATE customer_orders SET status=?,version=version+1 WHERE id=?",
           [completed ? "COMPLETED" : "IN_PROGRESS", order.id],
         );
+        // Kế hoạch bán chỉ hoàn thành khi mọi dòng kế hoạch đã giao đủ (cộng mọi phiếu xuất bán của kế hoạch),
+        // không phải khi riêng yêu cầu này xong — kế hoạch có thể giao làm nhiều yêu cầu.
+        const [planLines] = await connection.execute(
+          "SELECT l.item_id,SUM(l.quantity) AS quantity,COALESCE((SELECT SUM(dl.quantity) FROM stock_document_lines dl JOIN stock_documents d ON d.id=dl.stock_document_id JOIN stock_requests r ON r.id=d.stock_request_id JOIN lots lot ON lot.id=dl.lot_id WHERE r.business_plan_id=l.business_plan_id AND r.purpose='SALE_ISSUE' AND d.type='OUT' AND lot.item_id=l.item_id),0) AS delivered FROM business_plan_lines l WHERE l.business_plan_id=? GROUP BY l.business_plan_id,l.item_id",
+          [plan.id],
+        );
+        const planDone =
+          planLines.length &&
+          planLines.every(
+            (l) => C.qty(String(l.delivered), false) >= C.qty(String(l.quantity)),
+          );
         await connection.execute(
           "UPDATE business_plans SET status=?,version=version+1 WHERE id=?",
-          [allDone ? "COMPLETED" : "IN_PROGRESS", plan.id],
+          [planDone ? "COMPLETED" : "IN_PROGRESS", plan.id],
         );
       }
       await connection.execute(

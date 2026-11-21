@@ -107,8 +107,9 @@ class PurchaseOrderService {
     P.role(user, ['PURCHASER']);
     C.fields(body, ['source_mode','supplier_id','business_plan_id','production_report_id','expected_delivery_date','delivery_terms','lines']);
     const mode = body.source_mode || (body.business_plan_id ? 'PLAN' : 'MANUAL');
-    C.fail(mode !== 'PLAN', 'PURCHASE_APPROVAL_REQUIRED', 'Chỉ được mua nguyên vật liệu theo kế hoạch mua đã được phê duyệt.', 409);
-    C.fail(mode === 'MANUAL' && (body.business_plan_id != null || body.production_report_id != null), 'VALIDATION_ERROR', 'Đơn tự nhập không gắn nguồn báo cáo/kế hoạch.');
+    // UC-27: hai hình thức — Theo kế hoạch mua đã duyệt (PLAN) hoặc Lập trực tiếp (MANUAL, luồng phụ 3.1).
+    C.fail(!['PLAN', 'MANUAL'].includes(mode), 'VALIDATION_ERROR', 'Hình thức mua không hợp lệ.');
+    C.fail(mode === 'MANUAL' && (body.business_plan_id != null || body.production_report_id != null), 'VALIDATION_ERROR', 'Đơn lập trực tiếp không gắn kế hoạch hoặc báo cáo nguồn.');
     if (mode === 'PLAN') C.fail(!isId(body.business_plan_id), 'VALIDATION_ERROR', 'Chọn kế hoạch mua đã duyệt.');
     C.text(body.delivery_terms, 'delivery_terms', 5000);
     const c = await this.pool.getConnection();
@@ -134,7 +135,7 @@ class PurchaseOrderService {
         // any explicit overage confirmation. Never grant a new source bypass.
         await businessPlans.validatePurchaseSource(c, source, sourceLines, plan.id, false, true);
       }
-      C.date(date, 'expected_delivery_date', true);
+      C.date(date, 'expected_delivery_date', true); // không nhận ngày quá khứ (đơn lập trực tiếp tự chọn ngày)
       const input = body.lines || (sourceLines?.map(l => ({ business_plan_line_id: String(l.id), unit_price: String(l.unit_price), supplier_id: body.supplier_id })));
       C.fail(!Array.isArray(input) || !input.length || input.length > 100, 'VALIDATION_ERROR', 'Đơn mua cần 1–100 dòng nguyên vật liệu.');
       const seen = new Set();

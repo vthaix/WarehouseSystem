@@ -766,6 +766,12 @@ class BusinessPlanService {
           id,
         ],
       );
+      // UC-32 bước 6 / 5.1: báo kết quả duyệt (kèm lý do khi từ chối) cho người lập kế hoạch.
+      await connection.execute(
+        "INSERT INTO notifications (user_id,subject,body,resource_type,resource_id,business_key) VALUES (?,?,?,'business-plans',?,?) ON DUPLICATE KEY UPDATE id=notifications.id",
+        [plan.created_by, `Kế hoạch ${plan.code}: ${status === "APPROVED" ? "đã duyệt" : "bị từ chối"}`,
+          status === "REJECTED" ? "Lý do: " + body.reason.trim() : "Kế hoạch đã được Ban giám đốc phê duyệt.", id, `business-plan-${id}-review-${plan.version}`],
+      );
       await connection.execute(
         "INSERT INTO audit_logs (actor_id,resource_type,resource_id,action,before_data,after_data,request_id) VALUES (?,'business-plans',?,'REVIEW',?,?,?)",
         [

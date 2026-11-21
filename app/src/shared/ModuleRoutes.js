@@ -458,6 +458,7 @@ module.exports = (runtime) => {
         req.user,
         req.body,
         req.request_id,
+        req.get("Idempotency-Key"),
       );
       res.set("Location", `/api/v1/customer-orders/${result.id}`);
       ok(req, res, result, 201);
@@ -1190,6 +1191,22 @@ module.exports = (runtime) => {
     async (req, res) => {
       const result = await runtime.warehouseFlow.documents(req.user, req.query);
       ok(req, res, result.data, 200, result.meta);
+    },
+  );
+  // UC-19/20 luồng 2.1: xuất hồ sơ nhập / xuất kho theo đúng điều kiện đang lọc (mỗi dòng phiếu một hàng).
+  router.get(
+    "/stock-documents/export",
+    role(P.read["stock-documents"]),
+    async (req, res) => {
+      const { data } = await runtime.warehouseFlow.documents(req.user, req.query, true);
+      const { labels } = require("../../public/js/presentation"); // nhãn tiếng Việt giống giao diện
+      const cell = (v) => { let s = v == null ? "" : String(v); if (/^[=+\-@]/.test(s)) s = "'" + s; return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+      const time = (v) => (v ? new Date(new Date(v).getTime() + 7 * 3600e3).toISOString().slice(0, 16).replace("T", " ") : "");
+      const head = ["Mã phiếu", "Loại phiếu", "Trạng thái", "Thời điểm ghi sổ", "Kho", "Yêu cầu nguồn", "Mục đích", "Mã mặt hàng", "Mặt hàng", "Lô", "Vị trí", "Số lượng"];
+      const rows = data.map((r) => [r.code, r.type === "IN" ? "Nhập kho" : "Xuất kho", labels[r.status] || r.status, time(r.posted_at), r.warehouse_name, r.request_code, labels[r.purpose] || r.purpose, r.item_code, r.item_name, r.lot_code, r.location_code, r.quantity]);
+      res.set("Content-Type", "text/csv; charset=utf-8");
+      res.set("Content-Disposition", `attachment; filename="ho-so-${req.query.type === "IN" ? "nhap" : req.query.type === "OUT" ? "xuat" : "nhap-xuat"}-kho.csv"`);
+      res.send("﻿" + [head, ...rows].map((r) => r.map(cell).join(",")).join("\n"));
     },
   );
   router.get(

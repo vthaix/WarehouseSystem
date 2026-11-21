@@ -1,8 +1,10 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const Purchase=require('../../src/modules/purchasing/PurchaseOrderService');
-test('purchaser cannot omit approved plan or select manual/report purchase mode before accessing database',async()=>{
+// UC-27: hai hình thức PLAN (theo kế hoạch mua đã duyệt) và MANUAL (lập trực tiếp, luồng 3.1); hình thức khác bị từ chối.
+test('purchaser chooses PLAN or MANUAL; invalid modes and missing plan are rejected before accessing database',async()=>{
  const service=new Purchase({getConnection(){throw Error('Database must not be reached')}}),user={id:'1',roles:['PURCHASER']};
- for(const source_mode of ['MANUAL','REPORT'])await assert.rejects(service.create(user,{source_mode,delivery_terms:'Test',lines:[]},'test'),e=>e.code==='PURCHASE_APPROVAL_REQUIRED'&&e.status===409);
+ await assert.rejects(service.create(user,{source_mode:'REPORT',delivery_terms:'Test',lines:[]},'test'),e=>e.code==='VALIDATION_ERROR');
+ await assert.rejects(service.create(user,{source_mode:'MANUAL',business_plan_id:'1',delivery_terms:'Test',lines:[]},'test'),e=>e.code==='VALIDATION_ERROR');
  await assert.rejects(service.create(user,{source_mode:'PLAN',delivery_terms:'Test',lines:[]},'test'),e=>e.code==='VALIDATION_ERROR');
 });
 test('customer and planner cannot execute purchase UC even with a plan identifier',async()=>{

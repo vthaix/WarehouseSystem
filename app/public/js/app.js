@@ -51,6 +51,8 @@ function confirmPlanQuantity(message) {
   });
 }
 async function api(path, method = "GET", body, key) {
+  // Mất kết nối: yêu cầu có thể đã hoặc chưa tới máy chủ, nên không khẳng định thành công
+  // (ngoại lệ "không kết nối được khi xác nhận" trong đặc tả).
   const res = await fetch("/api/v1/" + path, {
     method,
     credentials: "same-origin",
@@ -60,6 +62,12 @@ async function api(path, method = "GET", body, key) {
       ...(key ? { "Idempotency-Key": key } : {}),
     },
     ...(body ? { body: JSON.stringify(body) } : {}),
+  }).catch(() => {
+    const offline = new Error(method === "GET"
+      ? "Không kết nối được máy chủ. Vui lòng kiểm tra mạng rồi tải lại."
+      : "Không kết nối được máy chủ nên chưa xác định thao tác đã được ghi nhận hay chưa. Khi có mạng, hãy kiểm tra lại danh sách hoặc chi tiết trước khi thử lại.");
+    offline.code = "NETWORK_ERROR";
+    throw offline;
   });
   if (res.status === 204) return {};
   const r = await res.json();
@@ -224,16 +232,41 @@ async function render() {
     loadTable();
   };
   document.querySelector("#reset").onclick = () => {
-    document.querySelector("#filters").reset();
+    // Nút id="reset" nằm trong form che mất form.reset() → gọi hàm gốc của trình duyệt.
+    HTMLFormElement.prototype.reset.call(document.querySelector("#filters"));
     page = 1;
     reportAsOf = null;
     loadTable();
   };
   if (report)
-    document.querySelector("#export").onclick = () => {
-      location.href = "/api/v1/" + current + "/export?format=csv&" + filterParams();
-    };
+    document.querySelector("#export").onclick = () => downloadCsv();
   await loadTable();
+}
+// Tải CSV bằng fetch thay vì chuyển trang: khi mất mạng hoặc máy chủ báo lỗi, người dùng vẫn ở lại
+// màn hình báo cáo và nhận thông báo, không bị đưa sang trang lỗi của trình duyệt.
+async function downloadCsv() {
+  let res;
+  try {
+    res = await fetch("/api/v1/" + current + "/export?format=csv&" + filterParams(), { credentials: "same-origin" });
+  } catch {
+    toast("Không kết nối được máy chủ nên chưa tải được file. Vui lòng kiểm tra mạng rồi thử lại.");
+    return;
+  }
+  if (!res.ok) {
+    let message = "Không xuất được file báo cáo.";
+    try { message = (await res.json()).error?.message || message; } catch {}
+    toast(message);
+    return;
+  }
+  const blob = await res.blob();
+  const header = res.headers.get("content-disposition") || "";
+  const name = decodeURIComponent((header.match(/filename\*=UTF-8''([^;]+)/i) || header.match(/filename="?([^";]+)"?/i) || [])[1] || current.replace(/\W+/g, "-") + ".csv");
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = name;
+  document.body.append(link);
+  link.click();
+  setTimeout(() => { URL.revokeObjectURL(link.href); link.remove(); }, 1000);
 }
 function filterParams() {
   const f = document.querySelector("#filters"),
@@ -538,14 +571,14 @@ window.addEventListener("DOMContentLoaded", () => {
       loadTable();
     };
   document.querySelector("#reset")?.addEventListener("click", () => {
-    filters.reset();
+    HTMLFormElement.prototype.reset.call(filters);
     page = 1;
     reportAsOf = null;
     loadTable();
   });
   document.querySelector("#export")?.addEventListener("click", (e) => {
     e.preventDefault();
-    location.href = "/api/v1/" + current + "/export?format=csv&" + filterParams();
+    downloadCsv();
   });
   const prev = document.querySelector("#prev"),
     next = document.querySelector("#next");

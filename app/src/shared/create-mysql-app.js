@@ -100,7 +100,7 @@ module.exports = function createMysqlApp(runtime) {
   app.use(require('./CategoryImageRoutes')());
   app.use(require('./ProductionReportImageRoutes')(runtime));
   app.use("/api/v1/auth", require("../routes/auth.routes")(runtime.auth));
-  app.use("/api/v1", csrf, requireApiAuth, require("./ModuleRoutes")(runtime));
+  app.use("/api/v1", csrf, requireApiAuth, require("../middlewares/idempotency.middleware").idempotency(runtime.pool), require("./ModuleRoutes")(runtime));
   app.use("/api", (_req, res, next) =>
     next(new C.DomainError(404, "NOT_FOUND", "API không tồn tại.")),
   );
