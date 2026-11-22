@@ -544,6 +544,9 @@ class QualityService {
       for (const line of lines) await c.execute("UPDATE lots SET qc_status='PENDING',version=version+1 WHERE id=?", [line.lot_id]);
       await c.execute("DELETE FROM qc_inspection_lines WHERE qc_inspection_id=?", [id]);
       await c.execute("DELETE FROM qc_inspections WHERE id=?", [id]);
+      // UC-12.3: phần lô trở lại chờ kiểm → đợt (và công việc kiểm) mở lại để nhân viên QC ghi lại kết quả đúng.
+      await c.execute("UPDATE stocktakes SET status='IN_PROGRESS',version=version+1 WHERE id=? AND status='COMPLETED'", [report.campaign_id]);
+      await c.execute("UPDATE tasks SET status='IN_PROGRESS',version=version+1 WHERE stocktake_id=? AND task_type='LOT_INSPECTION' AND status='COMPLETED'", [report.campaign_id]);
       await this.finishCampaign(c, report.campaign_id);
       await require('../stock-requests/partial-progress').refresh(c, lotIds);
       await c.execute("INSERT INTO audit_logs(actor_id,resource_type,resource_id,action,before_data,request_id) VALUES (?,'qc-inspections',?,'DELETE',?,?)", [user.id,id,JSON.stringify({code:report.code,campaign_id:report.campaign_id}),requestId]);

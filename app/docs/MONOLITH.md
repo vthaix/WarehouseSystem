@@ -47,7 +47,7 @@ archive/microservices-20261029/project/ # bản microservice giữ riêng
 
 ## Mua nguyên vật liệu bắt buộc duyệt
 
-Bộ phận lập kế hoạch lập kế hoạch mua, có thể lập trực tiếp hoặc từ báo cáo nhu cầu. Ban giám đốc phê duyệt. Bộ phận mua hàng chỉ tạo đơn từ kế hoạch mua đã duyệt, chọn nhà cung cấp và giá từng dòng; lượng và ngày nhận lấy đúng kế hoạch. Không còn mua trực tiếp hoặc mua thẳng từ báo cáo để bỏ qua phê duyệt. Giao diện, API và trigger MySQL đều kiểm điều kiện này. Kế hoạch mua trực tiếp đã duyệt không bị buộc phải có báo cáo sản xuất.
+Bộ phận lập kế hoạch lập kế hoạch mua, có thể lập trực tiếp hoặc từ báo cáo nhu cầu. Ban giám đốc phê duyệt. Bộ phận mua hàng lập đơn theo một trong hai hình thức: theo kế hoạch mua đã duyệt (chọn nhà cung cấp và giá từng dòng; lượng và ngày nhận lấy đúng kế hoạch) hoặc lập trực tiếp (tự chọn nguyên vật liệu, số lượng, nhà cung cấp, giá và ngày nhận không trước ngày hiện tại). Không mua thẳng từ báo cáo. Giao diện, API và trigger MySQL đều kiểm các điều kiện này. Kế hoạch mua trực tiếp đã duyệt không bị buộc phải có báo cáo sản xuất.
 
 ## Dữ liệu và bản cũ
 

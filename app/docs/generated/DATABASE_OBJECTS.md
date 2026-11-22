@@ -75,3 +75,4 @@ Tài khoản runtime: `warehouse`.
 | NguyenVatLieu | TABLE | `MaMatHang`, `TieuChuanNhap`, `BangGiaNCC` |
 | ThanhPham | TABLE | `MaMatHang`, `HanSuDungMacDinhNgay` |
 | ThucKiemKeHoachMua | TABLE | `MaDot`, `MaDongDonMua`, `SoDem`, `ThucNhan`, `SoDat`, `SoLoi`, `MoTaLoi`, `NguoiDem`, `NguoiQC`, `NgayDem`, `NgayQC`, `MaLo`, `NgaySanXuat`, `HanSuDung`, `SoNgayHanDung` |
+| IF | MISSING |  |

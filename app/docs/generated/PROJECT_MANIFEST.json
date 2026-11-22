@@ -12,7 +12,8 @@
     "007_workshop_warehouses.sql",
     "008_purchase_plan_checks.sql",
     "009_supplier_shelf_life_estimates.sql",
-    "010_minute_compensation_sources.sql"
+    "010_minute_compensation_sources.sql",
+    "011_readable_codes.sql"
   ],
   "services": [
     {
@@ -2783,6 +2784,11 @@
               "definition": "INT NULL"
             }
           ]
+        },
+        {
+          "name": "IF",
+          "kind": "MISSING",
+          "columns": []
         }
       ]
     }
@@ -2839,6 +2845,12 @@
     {
       "method": "POST",
       "path": "/quality-campaigns/:id/purchase-check",
+      "owner": "warehouse-app",
+      "pending": false
+    },
+    {
+      "method": "POST",
+      "path": "/quality-campaigns/:id/purchase-check/edit",
       "owner": "warehouse-app",
       "pending": false
     },
@@ -3600,6 +3612,12 @@
     },
     {
       "method": "GET",
+      "path": "/stock-documents/export",
+      "owner": "warehouse-app",
+      "pending": false
+    },
+    {
+      "method": "GET",
       "path": "/stock-documents/:id",
       "owner": "warehouse-app",
       "pending": false
@@ -4336,7 +4354,7 @@
     ],
     [
       "qc-inspections",
-      "Kiểm tra QC / AC",
+      "Kiểm tra QA / QC",
       "✓",
       [
         "QC_INSPECTOR"
@@ -4403,7 +4421,7 @@
         "DIRECTOR"
       ],
       "/stocktakes",
-      "Lập đợt, chọn phạm vi và phân công Ban kiểm kê / QC/AC."
+      "Lập đợt, chọn phạm vi và phân công Ban kiểm kê / QA/QC."
     ],
     [
       "stocktake-minutes",

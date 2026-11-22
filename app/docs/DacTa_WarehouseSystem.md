@@ -1253,7 +1253,7 @@ Quy tắc nghiệp vụ
 
 ## UC-27 Mua hàng
 
-**Tiền điều kiện:** Bộ phận mua hàng đăng nhập thành công vào hệ thống và kế hoạch mua hàng đã được duyệt
+**Tiền điều kiện:** Bộ phận mua hàng đăng nhập thành công vào hệ thống; có thể lập đơn trực tiếp hoặc theo kế hoạch mua nguyên vật liệu đã được duyệt (mỗi kế hoạch tối đa một đơn mua)
 
 **Hậu điều kiện:** Đơn hàng mua (nguyên vật liệu) mới được tạo và đang trong trạng thái "Chờ xử lý"
 
@@ -1265,7 +1265,7 @@ Quy tắc nghiệp vụ
 
 | Bộ phận mua hàng | Hệ thống |
 | --- | --- |
-| 1. Chọn chức năng Mua hàng | 2. Hiển thị kế hoạch loại MUA đã được duyệt, còn nhu cầu cần xử lý. (KeHoachMuaBan) |
+| 1. Chọn chức năng Mua hàng | 2. Hiển thị hai hình thức: Theo kế hoạch mua nguyên vật liệu đã duyệt và Lập trực tiếp; danh sách kế hoạch loại MUA đã được duyệt, còn nhu cầu cần xử lý. (KeHoachMuaBan) |
 | 3. Chọn một kế hoạch mua để xem chi tiết (KeHoachMuaBan) | 4. Hiển thị chi tiết kế hoạch và báo cáo sản xuất nguồn. (KeHoachMuaBan, ChiTietKeHoachMuaBan, BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, MatHang) |
 | 5. Nhập thông tin nhà cung cấp, giá, điều kiện giao hàng (DonMuaHang, ChiTietDonMuaHang, NhaCungCap) | 6. Kiểm tra thông tin đơn mua, lượng đã mua và báo cáo nguồn phải là SAN_XUAT, trùng nguồn của kế hoạch MUA đã duyệt. (DonMuaHang, ChiTietDonMuaHang, KeHoachMuaBan, BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat) |
 | 7. Xác nhận mua hàng | 8. Tạo đơn mua và chi tiết, tham chiếu kế hoạch MUA và MaBaoCao nguồn; cập nhật trạng thái thực hiện kế hoạch. (DonMuaHang, ChiTietDonMuaHang, KeHoachMuaBan) |
@@ -1279,6 +1279,14 @@ Quy tắc nghiệp vụ
 2\. Hệ thống hủy thông tin đã nhập
 
 3\. Kết thúc use case
+
+#### 3.1 Lập đơn mua trực tiếp
+
+1\. Bộ phận mua hàng chọn Lập trực tiếp.
+
+2\. Chọn từng nguyên vật liệu, số lượng, nhà cung cấp (chỉ nhà cung cấp có báo giá mặt hàng), đơn giá (hệ thống gợi ý theo bảng giá), ngày nhận mong muốn (không trước ngày hiện tại), điều kiện giao hàng và ghi chú. (MatHang, NguyenVatLieu, NhaCungCap)
+
+3\. Hệ thống kiểm tra dữ liệu; tiếp tục bước 7. Đơn lập trực tiếp không gắn kế hoạch hoặc báo cáo nguồn; lô hàng thực nhận của đơn vẫn qua QC và nhập kho như đơn theo kế hoạch. (DonMuaHang, ChiTietDonMuaHang)
 
 ### Luồng ngoại lệ
 
@@ -1811,9 +1819,9 @@ Xử lý trong UC-11.01 và UC-11.02
 
 ## UC-12.2 Sửa kết quả kiểm tra QC/AC
 
-**Tiền điều kiện:** Bộ phận QC/AC đã đăng nhập hệ thống; kết quả kiểm tra đang được chọn từ danh sách
+**Tiền điều kiện:** Nhân viên QC/AC được phân công trong đợt đã ghi kết quả kiểm tra; đợt chưa lập biên bản kiểm kê và lô chưa được ghi phiếu kho
 
-**Hậu điều kiện:** Kết quả kiểm tra chất lượng được cập nhật chính xác
+**Hậu điều kiện:** Kết quả kiểm tra chất lượng được cập nhật chính xác và ghi lịch sử; tồn kho không thay đổi
 
 **Actor chính:** Bộ phận QC/AC
 
@@ -1850,14 +1858,20 @@ Xử lý trong UC-11.01 và UC-11.02
 
 2\. Quay lại bước 3
 
+#### 4.1 Đợt đã lập biên bản hoặc lô đã ghi phiếu kho
+
+1\. Hệ thống thông báo không thể sửa kết quả; sau khi lập biên bản, chi tiết kết quả không còn nút Sửa. (KetQuaKiemTraQCAC)
+
+2\. Kết thúc thao tác, giữ dữ liệu gốc.
+
 
 <a id="uc-12-3"></a>
 
 ## UC-12.3 Xóa kết quả kiểm tra QC/AC
 
-**Tiền điều kiện:** Bộ phận QC/AC đã đăng nhập hệ thống; kết quả kiểm tra đang được chọn từ danh sách
+**Tiền điều kiện:** Nhân viên QC/AC được phân công trong đợt đã ghi kết quả kiểm tra; đợt chưa lập biên bản kiểm kê và lô chưa được ghi phiếu kho
 
-**Hậu điều kiện:** Kết quả kiểm tra bị xóa khỏi danh sách
+**Hậu điều kiện:** Kết quả kiểm tra bị xóa khỏi danh sách; phần lô trở lại chờ kiểm và đợt kiểm mở lại để ghi lại kết quả; tồn kho không thay đổi
 
 **Actor chính:** Bộ phận QC/AC
 
@@ -1883,9 +1897,9 @@ Xử lý trong UC-11.01 và UC-11.02
 
 ### Luồng ngoại lệ
 
-#### 2.1 Kết quả đã được dùng làm căn cứ xử lý hàng lỗi
+#### 2.1 Đợt đã lập biên bản, lô đã ghi phiếu kho hoặc kết quả đã được dùng làm căn cứ xử lý hàng lỗi
 
-1\. Hệ thống thông báo không thể xóa (KetQuaKiemTraQCAC)
+1\. Hệ thống không cho xóa: chi tiết kết quả không còn nút Xóa hoặc thông báo không thể xóa (KetQuaKiemTraQCAC)
 
 2\. Kết thúc use case
 

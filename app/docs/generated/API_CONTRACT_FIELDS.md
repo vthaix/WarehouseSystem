@@ -46,8 +46,6 @@ Danh sách trích từ C.fields trong service/helper. Đây là các field đư�
 | src/modules/purchasing/MaterialCatalogService.js | update | row | supplier_id, unit_price, shelf_life_days |
 | src/modules/purchasing/PurchaseOrderService.js | list | query | page, per_page, q, status, sort |
 | src/modules/purchasing/PurchaseOrderService.js | create | body | source_mode, supplier_id, business_plan_id, production_report_id, expected_delivery_date, delivery_terms, lines |
-| src/modules/quality/purchase-plan-check.js | save | b | version, kind, lines |
-| src/modules/quality/purchase-plan-check.js | createLots | b | version, expiry_date, manufactured_date |
 | src/modules/quality/QualityCampaignService.js | list | query | page, per_page, q, status, sort |
 | src/modules/quality/QualityCampaignService.js | create | body | campaign_type, quality_kind, planned_date, start_at, end_at, location, assignee_ids, lot_ids, note, source_mode, source_plan_id |
 | src/modules/quality/QualityCampaignService.js | bindLots | body | version, lot_ids |
@@ -56,22 +54,26 @@ Danh sách trích từ C.fields trong service/helper. Đây là các field đư�
 | src/modules/quality/QualityService.js | list | query | page, per_page, q, status, sort |
 | src/modules/quality/QualityService.js | validateLines | line | lot_id, inspected_quantity, passed_quantity, failed_quantity, issue |
 | src/modules/quality/QualityService.js | create | body | campaign_id, inspected_at, note, lines |
-| src/modules/reporting/ReportService.js | warehouseLookup | query | format |
+| src/modules/quality/QualityService.js | update | body | version, inspected_at, note, lines |
+| src/modules/quality/QualityService.js | remove | body | version |
+| src/modules/quality/purchase-plan-check.js | save | b | version, kind, lines |
+| src/modules/quality/purchase-plan-check.js | remove | b | version |
+| src/modules/quality/purchase-plan-check.js | createLots | b | version, expiry_date, manufactured_date |
+| src/modules/reporting/ReportService.js | warehouseOptions | query | format |
 | src/modules/reporting/warehouse-lookup.js | lookup | query | warehouse_id, workshop_id |
 | src/modules/returns/CustomerReturnService.js | list | q | page, per_page, q, status, sort |
 | src/modules/returns/CustomerReturnService.js | deliveries | q | q |
 | src/modules/returns/CustomerReturnService.js | create | b | warehouse_id, receiver_id, reason, lines |
 | src/modules/returns/CustomerReturnService.js | create | line | original_stock_document_line_id, quantity, location_id |
 | src/modules/returns/CustomerReturnService.js | action | b | version |
-| src/modules/stock-requests/partial-receipt.js | create | body | purpose, production_source_mode, production_plan_id, workshop_id, warehouse_id, manager_id, requested_date, note, lines, receipt_key |
-| src/modules/stock-requests/partial-receipt.js | create | line | item_id, quantity, manufactured_date, expiry_date, note |
 | src/modules/stock-requests/StockRequestService.js | list | query | page, per_page, q, status, purpose, sort, type |
-| src/modules/stock-requests/StockRequestService.js | validateLines | line | item_id, quantity, note |
 | src/modules/stock-requests/StockRequestService.js | create | body | purpose, workflow_source_id, sale_plan_id, workshop_id, warehouse_id, manager_id, requested_date, requested_at, note, lines |
-| src/modules/stock-requests/StockRequestService.js | create | body | purpose, warehouse_id, workshop_id, manager_id, requested_date, requested_at, purchase_order_id, business_plan_id, production_plan_id, production_report_id, production_source_mode, note, lines |
+| src/modules/stock-requests/StockRequestService.js | create | body | purpose, warehouse_id, workshop_id, manager_id, requested_date, requested_at, production_source_mode, note, lines |
 | src/modules/stock-requests/StockRequestService.js | update | body | version, requested_date, requested_at, warehouse_id, manager_id, note, lines |
 | src/modules/stock-requests/StockRequestService.js | remove | body | version |
-| src/modules/stocktakes/inspection-minutes.js | list | q | page, per_page, q, sort, status |
+| src/modules/stock-requests/partial-receipt.js | create | body | purpose, production_source_mode, production_plan_id, workshop_id, warehouse_id, manager_id, requested_date, note, lines, receipt_key |
+| src/modules/stock-requests/partial-receipt.js | create | line | item_id, quantity, manufactured_date, expiry_date, note |
+| src/modules/stock-requests/request-lines.js | validate | line | item_id, quantity, note |
 | src/modules/stocktakes/StocktakeService.js | list | q | page, per_page, q, status, sort, campaign_type |
 | src/modules/stocktakes/StocktakeService.js | create | b | campaign_type, planned_date, start_at, end_at, item_kind, note, warehouses |
 | src/modules/stocktakes/StocktakeService.js | create | w | warehouse_id, assignee_ids, conclusion_assignee_ids |
@@ -80,22 +82,23 @@ Danh sách trích từ C.fields trong service/helper. Đây là các field đư�
 | src/modules/stocktakes/StocktakeService.js | counts | l | id, version, actual_quantity, cause |
 | src/modules/stocktakes/StocktakeService.js | complete | b | version |
 | src/modules/stocktakes/StocktakeService.js | differences | q | page, per_page, stocktake_id, warehouse_id |
-| src/modules/tasks/inspection-scope.js | record | line | lot_id, counted_quantity |
+| src/modules/stocktakes/inspection-minutes.js | list | q | page, per_page, q, sort, status |
 | src/modules/tasks/TaskService.js | setMinuteAuthor | b | version, minute_author_id |
 | src/modules/tasks/TaskService.js | list | query | page, per_page, q, status, sort |
 | src/modules/tasks/TaskService.js | create | b | title, description, priority, start_at, end_at, assignee_ids, inspection_type, lot_header_id, finished_report_ids, material_source, material_lot_ids, location, minute_author_id |
 | src/modules/tasks/TaskService.js | update | b | version, title, description, priority, start_at, end_at, assignee_ids, minute_author_id |
 | src/modules/tasks/TaskService.js | remove | b | version |
 | src/modules/tasks/TaskService.js | progress | b | version, status, count_lines |
+| src/modules/tasks/inspection-scope.js | record | line | lot_id, counted_quantity |
 | src/modules/warehouse/LotService.js | createLot | body | code, lines |
 | src/modules/warehouse/LotService.js | createLot | line | purchase_order_line_id, received_quantity, manufactured_date, expiry_date |
 | src/modules/warehouse/LotService.js | createLot | body | code, item_id, purchase_order_id, purchase_order_line_id, received_quantity, manufactured_date, expiry_date, lot_header_id |
 | src/modules/warehouse/LotService.js | updateLot | body | version, manufactured_date, expiry_date |
 | src/modules/warehouse/WarehouseFlowService.js | cancelAllocation | body | version |
 | src/modules/warehouse/WarehouseFlowService.js | preview | query | task_id |
-| src/modules/warehouse/WarehouseFlowService.js | dispatch | body | version, start_at, end_at, allocations |
+| src/modules/warehouse/WarehouseFlowService.js | dispatch | body | version, start_at, end_at, allocations, allocation_mode |
 | src/modules/warehouse/WarehouseFlowService.js | dispatch | line | assignee_id, stock_request_line_id, lot_id, location_id, quality_bucket, quantity |
-| src/modules/warehouse/WarehouseFlowService.js | documents | query | page, per_page, q, type, sort |
+| src/modules/warehouse/WarehouseFlowService.js | documents | query | page, per_page, q, type, sort, status, warehouse_id, item_id, from, to, format |
 | src/modules/warehouse/WarehouseFlowService.js | post | body | stock_request_id, request_version, task_id, note, allocations |
 | src/modules/warehouse/WarehouseFlowService.js | post | line | allocation_id, stock_request_line_id, lot_id, location_id, quality_bucket, quantity, difference_reason |
 | src/modules/warehouse/WarehouseRecordService.js | list | query | page, per_page, q, sort |
@@ -149,6 +152,6 @@ Danh sách trích từ C.fields trong service/helper. Đây là các field đư�
 | src/shared/ModuleRoutes.js | helper | req.query | page, per_page |
 | src/shared/ModuleRoutes.js | helper | query | page, per_page, q, kind, sort |
 | src/shared/ModuleRoutes.js | helper | req.body | outputs |
-| src/shared/production-recipes.js | helper | output | item_id, quantity |
 | src/shared/SourceImportService.js | preview | body | source_id, purpose, production_source_mode, workshop_id, warehouse_id, workflow_source, sale_plan_id |
 | src/shared/TestResetRoutes.js | helper | req.body | confirmation |
+| src/shared/production-recipes.js | helper | output | item_id, quantity |

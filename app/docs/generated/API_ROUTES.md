@@ -13,6 +13,7 @@ Sinh bằng `node scripts/sync-project-docs.cjs`. Tiền tố `/api/v1`; router 
 | GET | `/purchase-plan-price-options` | warehouse-app | Có handler |
 | GET | `/quality-campaigns/:id/purchase-check` | warehouse-app | Có handler |
 | POST | `/quality-campaigns/:id/purchase-check` | warehouse-app | Có handler |
+| POST | `/quality-campaigns/:id/purchase-check/edit` | warehouse-app | Có handler |
 | POST | `/quality-campaigns/:id/material-lots` | warehouse-app | Có handler |
 | GET | `/warehouse-inbound` | warehouse-app | Có handler |
 | GET | `/warehouse-inbound/:id` | warehouse-app | Có handler |
@@ -139,6 +140,7 @@ Sinh bằng `node scripts/sync-project-docs.cjs`. Tiền tố `/api/v1`; router 
 | GET | `/stock-requests/:id/allocations` | warehouse-app | Có handler |
 | POST | `/stock-requests/:id/dispatch` | warehouse-app | Có handler |
 | GET | `/stock-documents` | warehouse-app | Có handler |
+| GET | `/stock-documents/export` | warehouse-app | Có handler |
 | GET | `/stock-documents/:id` | warehouse-app | Có handler |
 | POST | `/stock-documents` | warehouse-app | Có handler |
 | GET | `/warehouse-records` | warehouse-app | Có handler |
