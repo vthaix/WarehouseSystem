@@ -21,7 +21,14 @@
       "Bash(ONLY='UC-04-TC007' UC=UC-04 node g-plans.cjs)",
       "Bash(node /private/tmp/claude-501/-Users-vthai-Documents-PTUD-app-WarehouseSystem/96a7cd40-8fc4-4b36-bf0b-f2d31743b791/scratchpad/tc/dbg-reopen.cjs)",
       "Bash(node -e \"require\\('./src/modules/business-plans/BusinessPlanService.js'\\)\")",
-      "Bash(node explore.cjs workshop '/production/finished-reports?module=finished-reports')"
+      "Bash(node explore.cjs workshop '/production/finished-reports?module=finished-reports')",
+      "Bash(node ex2.cjs)",
+      "Bash(node --check public/js/workflow-forms.js)",
+      "Bash(node --check rr2.cjs)",
+      "Bash(ONLY='UC-29-TC009|UC-25.1-TC003|UC-BS-01-TC002|UC-BS-03-TC003' node rr2.cjs)",
+      "Bash(node --check rr.cjs)",
+      "Bash(ONLY='UC-12.3-TC001|UC-12.2-TC002|UC-12.3-TC002' node rr.cjs)",
+      "Bash(python3 assemble.py)"
     ]
   }
 }
