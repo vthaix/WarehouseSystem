@@ -62,7 +62,7 @@
     `/api/v1/production-reports/${encodeURIComponent(id)}/images/${encodeURIComponent(name)}`;
   function comparisonTable(data) {
     return (
-      `<p>${esc(data.notice)}</p><p>Thời điểm đối chiếu: ${esc(format(data.checked_at))}</p><div class="table-scroll"><table id="material-comparison-table"><thead><tr><th>nguyên vật liệu</th><th>ĐVT</th><th>Nhu cầu KHSX</th><th>Tồn khả dụng</th><th>Còn thiếu</th></tr></thead><tbody>${data.lines.map((l) => `<tr><td>${esc(l.item_name)}</td><td>${esc(l.unit)}</td><td>${esc(l.required_quantity)}</td><td>${esc(l.available_quantity)}</td><td>${esc(l.shortage_quantity)}</td></tr>`).join("")}</tbody></table></div>` +
+      `<p>${esc(data.notice)}</p><p>Thời điểm đối chiếu: ${esc(format(data.checked_at))}</p><div class="table-scroll"><table id="material-comparison-table"><thead><tr><th>nguyên vật liệu</th><th>ĐVT</th><th>Nhu cầu KHSX</th><th>Tồn khả dụng</th><th>Còn thiếu</th></tr></thead><tbody>${data.lines.map((l) => `<tr><td>${esc(l.item_name)}</td><td>${esc(l.unit)}</td><td>${esc(format(l.required_quantity))}</td><td>${esc(format(l.available_quantity))}</td><td>${esc(format(l.shortage_quantity))}</td></tr>`).join("")}</tbody></table></div>` +
       (data.recipe
         ? "<details><summary>Công thức minh họa hiện tại</summary><p>" +
           esc(data.recipe.description) +
@@ -71,7 +71,7 @@
             data.recipe.formulas
               .map(
                 (l) =>
-                  `${l.product_name}: ${l.output_quantity} × ${l.per_unit_quantity} ${l.unit} ${l.item_name}`,
+                  `${l.product_name}: ${format(l.output_quantity)} × ${format(l.per_unit_quantity)} ${l.unit} ${l.item_name}`,
               )
               .join("\n"),
           ) +
@@ -99,9 +99,9 @@
       [
         l.item_name.slice(0, 43),
         l.unit,
-        l.required_quantity,
-        l.available_quantity,
-        l.shortage_quantity,
+        format(l.required_quantity),
+        format(l.available_quantity),
+        format(l.shortage_quantity),
       ].forEach((s, j) => ctx.fillText(String(s || ""), xs[j], 145 + i * 40)),
     );
     return c.toDataURL("image/png");

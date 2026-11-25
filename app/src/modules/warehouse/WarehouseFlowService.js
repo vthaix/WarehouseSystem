@@ -136,7 +136,7 @@ class WarehouseFlowService {
       [request.warehouse_id],
     );
     const [allocations] = await this.pool.execute(
-      "SELECT a.* FROM stock_allocations a JOIN tasks t ON t.id=a.task_id WHERE a.stock_request_id=? AND t.status<>'CANCELLED'" +
+      "SELECT a.*,loc.code AS location_code,loc.name AS location_name,loc.zone_name,w.name AS warehouse_name FROM stock_allocations a JOIN tasks t ON t.id=a.task_id JOIN warehouse_locations loc ON loc.id=a.location_id JOIN warehouses w ON w.id=loc.warehouse_id WHERE a.stock_request_id=? AND t.status<>'CANCELLED'" +
         (query.task_id ? " AND a.task_id=?" : ""),
       query.task_id ? [requestId, query.task_id] : [requestId],
     );
@@ -607,7 +607,6 @@ class WarehouseFlowService {
           assignee_id: assigneeId,
           code,
         });
-        await connection.execute("INSERT INTO notifications(user_id,subject,body,resource_type,resource_id,business_key) VALUES (?,?,?,'tasks',?,?) ON DUPLICATE KEY UPDATE id=notifications.id",[assigneeId,'Phân công '+(request.type==='IN'?'nhập':'xuất')+' kho '+request.code,'Đối chiếu giấy tờ và ghi lượng thực tế trong công việc được giao.',created.insertId,'warehouse-task-'+created.insertId+'-assigned']);
         for (const line of body.allocations.filter(
           (entry) => String(entry.assignee_id) === assigneeId,
         ))
@@ -623,6 +622,10 @@ class WarehouseFlowService {
               C.decimal(C.qty(line.quantity)),
             ],
           );
+        // Thông báo ghi rõ ô nhập / lấy hàng để nhân viên biết vị trí ngay.
+        const positions = require('../../shared/assigned-positions');
+        const where = positions.describe(await positions.load(connection, { taskId: created.insertId }));
+        await connection.execute("INSERT INTO notifications(user_id,subject,body,resource_type,resource_id,business_key) VALUES (?,?,?,'tasks',?,?) ON DUPLICATE KEY UPDATE id=notifications.id",[assigneeId,'Phân công '+(request.type==='IN'?'nhập':'xuất')+' kho '+request.code,('Vị trí '+(request.type==='IN'?'nhập hàng':'lấy hàng')+': '+where+'. Đối chiếu giấy tờ và ghi lượng thực tế trong công việc được giao.').slice(0,5000),created.insertId,'warehouse-task-'+created.insertId+'-assigned']);
       }
       await connection.execute(
         "UPDATE stock_requests SET version=version+1 WHERE id=?",

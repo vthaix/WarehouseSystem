@@ -42,7 +42,7 @@ try{
     await page.locator('[data-count-match="212"]').uncheck();assert.equal(await page.locator('[data-count-lot="212"]').inputValue(),'');
     await page.locator('[data-count-lot="211"]').fill('0');assert.equal(await page.locator('#data-form').evaluate(f=>f.checkValidity()),false);
     assert.equal(await page.locator('[data-count-match="211"]').isChecked(),false);
-    await page.locator('[data-count-lot="212"]').fill('12.5');const body=await capture(page,'tasks/201/progress');assert.deepEqual(body,{version:3,count_lines:[{lot_id:'211',counted_quantity:'0'},{lot_id:'212',counted_quantity:'12.5'}]});
+    await page.locator('[data-count-lot="212"]').fill('12,5');const body=await capture(page,'tasks/201/progress');assert.deepEqual(body,{version:3,count_lines:[{lot_id:'211',counted_quantity:'0'},{lot_id:'212',counted_quantity:'12.5'}]});
     await page.route('**/api/v1/function-badges',r=>r.fulfill({json:{data:{'inspection-counts':2,notifications:3}}}));await page.evaluate(()=>window.dispatchEvent(new Event('focus')));
     await page.locator('.nav-link[data-nav="inspection-counts"] > .function-badge').waitFor();assert.equal(await page.locator('.nav-link[data-nav="inspection-counts"] > .function-badge').textContent(),'2');
     const color=await page.locator('.function-badge').first().evaluate(el=>getComputedStyle(el).color);assert.equal(color,'rgb(255, 255, 255)');assert.deepEqual(errors,[]);await context.close();

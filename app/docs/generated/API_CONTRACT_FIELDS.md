@@ -14,7 +14,7 @@ Danh sách trích từ C.fields trong service/helper. Đây là các field đư�
 | src/modules/business-plans/BusinessPlanService.js | review | body | confirm_plan_overage, version, decision, reason |
 | src/modules/customer-orders/OrderService.js | list | query | page, per_page, q, status, from, to, sort |
 | src/modules/customer-orders/OrderService.js | validateLines | line | item_id, quantity, note |
-| src/modules/customer-orders/OrderService.js | create | body | delivery_address, latest_delivery_date, note, lines |
+| src/modules/customer-orders/OrderService.js | create | body | delivery_address, update_profile, latest_delivery_date, note, lines |
 | src/modules/customer-orders/OrderService.js | update | body | version, delivery_address, latest_delivery_date, note, lines, quantity_change_acknowledged |
 | src/modules/customer-orders/OrderService.js | receive | body | version |
 | src/modules/exceptions/ExceptionService.js | create | b | stocktake_id, warehouse_id, stocktake_line_id, qc_inspection_line_id, action, quantity, reason, resolution_note, quarantine, allocations |

@@ -380,6 +380,7 @@ function columnsFor(n) {
   ];
 }
 const fieldNames = {
+  assigned_positions:'Vị trí trong kho được phân công',
   zone_name:'Khu lưu kho',zone_category_id:'Nhóm hàng của khu',depth:'Độ sâu vị trí (1 là ngoài cùng)',supplied_items:'Mặt hàng cung cấp',
   minute_author_id:'Nhân viên lập biên bản chung',minute_conclusion:'Kết luận biên bản',minute_lines:'Kết quả kiểm tra trong biên bản',
   requested_at:'Ngày giờ đề nghị thực hiện',workflow_source_id:'Nguồn yêu cầu',request_direction:'Thao tác',sale_plan_id:'Kế hoạch bán cần giao',source_lots:'Thông tin lô hàng nguồn',documents:'Các phiếu nhập / xuất',document_lines:'Chi tiết hàng thực nhập / xuất',document_code:'Mã phiếu',
@@ -445,6 +446,8 @@ const fieldNames = {
   unit_price: "Đơn giá",
   fulfilled_quantity: "Đã xử lý",
   remaining_quantity: "Còn lại",
+  recipient_name: "Người nhận",
+  recipient_phone: "Số điện thoại người nhận",
   delivery_address: "Địa chỉ giao hàng",
   latest_delivery_date: "Hạn giao hàng",
   planned_date: "Ngày kế hoạch",

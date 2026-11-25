@@ -163,8 +163,10 @@ class TaskService {
       if(!inspection.KiemChatLuong){const i=actions.indexOf('recordInspection');if(i>=0)actions.splice(i,1);}
       if(inspection.KiemSoLuong&&user.roles.includes('STOCKTAKER')&&ids.includes(String(user.id))&&inspection.status==='IN_PROGRESS'&&inspectionLines.some(l=>l.counted_quantity===null))actions.push('recordCount');
     }
+    const positions=row.stock_request_id?await require('../../shared/assigned-positions').load(c,{taskId:id}):[];
     return {
       ...row,
+      ...(positions.length?{assigned_positions:positions}:{}),
       ...(inspection?{inspection,inspection_type:inspection.quality_kind,inspection_lots:inspectionLines}:{}),
       id: String(row.id),
       assignee_ids: ids,

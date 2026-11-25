@@ -47,7 +47,7 @@ async function write(service,u,id,b,action,request){
     }else {
       const shortages=snapshot.filter(l=>l.shortage_quantity&&C.qty(l.shortage_quantity,false)>0n);
       if(shortages.length){
-        if(!row.NgoaiLeMoTa){row.NgoaiLeMoTa=shortages.map(l=>l.item_name+': thiếu '+l.shortage_quantity+' '+(l.unit||'')).join('; ');await c.execute('UPDATE stocktakes SET NgoaiLeMoTa=? WHERE id=?',[row.NgoaiLeMoTa,target]);}
+        if(!row.NgoaiLeMoTa){row.NgoaiLeMoTa=shortages.map(l=>l.item_name+': thiếu '+require('../../../public/js/number-format').display(l.shortage_quantity)+' '+(l.unit||'')).join('; ');await c.execute('UPDATE stocktakes SET NgoaiLeMoTa=? WHERE id=?',[row.NgoaiLeMoTa,target]);}
         await c.execute("INSERT INTO notifications(user_id,subject,body,resource_type,resource_id,business_key) SELECT DISTINCT u.id,?,?,'compensation-sources',?,? FROM users u JOIN user_roles ur ON ur.user_id=u.id JOIN roles r ON r.id=ur.role_id WHERE u.status='ACTIVE' AND r.code='PLANNER' ON DUPLICATE KEY UPDATE id=notifications.id",['Biên bản '+row.code+' cần lập kế hoạch bù',row.NgoaiLeMoTa+'; mở Kế hoạch mua/bán hoặc Kế hoạch sản xuất để lập bù từ biên bản.',target,'minute-compensation-'+target]);
       }
       await c.execute("INSERT INTO notifications(user_id,subject,body,resource_type,resource_id,business_key) SELECT DISTINCT u.id,?,?,'stocktake-minutes',?,? FROM users u JOIN user_roles ur ON ur.user_id=u.id JOIN roles r ON r.id=ur.role_id WHERE u.status='ACTIVE' AND r.code='DIRECTOR' ON DUPLICATE KEY UPDATE id=notifications.id",['Biên bản kiểm kê mới: '+row.code,row.BienBanKetLuan,target,'minute-'+target+'-submitted']);

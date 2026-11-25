@@ -832,7 +832,7 @@ actionForm = async function (r, action) {
   }
   if (isMysql && action === "reinspect") {
     openModal("Tái kiểm hàng lỗi", formWrap(
-      '<div class="span2 notice">Kiểm tra toàn bộ lượng được duyệt: '+esc(r.quantity)+'. Kết quả kiểm không tự thay đổi tồn kho.</div>'+
+      '<div class="span2 notice">Kiểm tra toàn bộ lượng được duyệt: '+esc(format(r.quantity))+'. Kết quả kiểm không tự thay đổi tồn kho.</div>'+
       inputField("result","select",true,[{id:"PASSED",name:"Đạt chất lượng"},{id:"FAILED",name:"Không đạt"}])+
       inputField("note","textarea")));
     bindForm(d=>({...d,version:r.version}),"exception-proposals/"+r.id+"/reinspect","POST");
@@ -929,6 +929,8 @@ detail = function (r) {
     const details = [
       ["code", "Mã đơn hàng"],
       ["customer_name", "Khách hàng"],
+      ["recipient_name", "Người nhận"],
+      ["recipient_phone", "Số điện thoại người nhận"],
       ["delivery_address", "Địa chỉ giao hàng"],
       ["latest_delivery_date", "Hạn giao hàng"],
       ["note", "Ghi chú"],

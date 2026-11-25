@@ -468,6 +468,7 @@ const warehouseNavigation = {
     ]
   ],
   "fieldNames": {
+    "assigned_positions": "Vị trí trong kho được phân công",
     "zone_name": "Khu lưu kho",
     "zone_category_id": "Nhóm hàng của khu",
     "depth": "Độ sâu vị trí (1 là ngoài cùng)",
@@ -569,6 +570,8 @@ const warehouseNavigation = {
     "unit_price": "Đơn giá",
     "fulfilled_quantity": "Đã xử lý",
     "remaining_quantity": "Còn lại",
+    "recipient_name": "Người nhận",
+    "recipient_phone": "Số điện thoại người nhận",
     "delivery_address": "Địa chỉ giao hàng",
     "latest_delivery_date": "Hạn giao hàng",
     "planned_date": "Ngày kế hoạch",

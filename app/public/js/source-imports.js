@@ -13,8 +13,10 @@
     '<div class="table-wrap source-customer-summary"><table><tbody>' +
     [
       ["Khách hàng", r.customer_name],
+      ["Người nhận", r.recipient_name],
+      ["Số điện thoại người nhận", r.recipient_phone],
       ["Địa chỉ giao", r.delivery_address],
-      ["Ngày muốn nhận", r.latest_delivery_date],
+      ["Ngày muốn nhận", format(r.latest_delivery_date)],
       ["Ghi chú khách hàng", r.customer_note],
     ]
       .map(([label, value]) => `<tr><th scope="row">${label}</th><td>${esc(value || "—")}</td></tr>`)
@@ -88,7 +90,7 @@
           formWrap(
             pick("customer_order_id", orders, "Chọn đơn hàng đã tiếp nhận") +
               field("workshop_id", "select", true, workshops) +
-              field("start_date", "date") +
+              field("start_date", "date", true, [], today()) + // mặc định là ngày lập
               field("end_date", "date") +
               field("material_source", "select", true, [
                 { id: "RECIPE", name: "Tự tính nguyên vật liệu theo công thức bánh" },
@@ -127,7 +129,7 @@
                 r.formulas
                   .map(
                     (l) =>
-                      `${l.product_name}: ${l.output_quantity} × ${l.per_unit_quantity} ${l.unit} ${l.item_name}`,
+                      `${l.product_name}: ${format(l.output_quantity)} × ${format(l.per_unit_quantity)} ${l.unit} ${l.item_name}`,
                   )
                   .join("\n"),
               ) +
@@ -491,7 +493,7 @@
                   " · QC " +
                   esc(labels[e.qc_status] || e.qc_status) +
                   " · khả dụng " +
-                  esc(e.available_quantity) +
+                  esc(format(e.available_quantity)) +
                   " · kiểm kê " +
                   esc(
                     e.stocktake
@@ -499,7 +501,7 @@
                           " / " +
                           (labels[e.stocktake.status] || e.stocktake.status) +
                           " · số đếm " +
-                          (e.stocktake.actual_quantity ?? "chưa đếm") +
+                          (e.stocktake.actual_quantity == null ? "chưa đếm" : format(e.stocktake.actual_quantity)) +
                           " · kết luận " +
                           (labels[e.stocktake.conclusion_status] ||
                             e.stocktake.conclusion_status ||

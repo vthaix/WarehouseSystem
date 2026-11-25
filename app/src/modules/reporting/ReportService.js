@@ -1,5 +1,6 @@
 const C = require("../../services/domain/core");
 const paginate = require("../../utils/pagination");
+const numbers = require("../../../public/js/number-format");
 
 const isId = (value) => /^[1-9]\d*$/.test(String(value));
 const reportRoles = {
@@ -119,7 +120,7 @@ class ReportService {
       if (/^[=+\-@]/.test(string)) string = "'" + string;
       return '"' + string.replaceAll('"', '""') + '"';
     };
-    return "\uFEFF" + keys.map(escape).join(",") + "\r\n" + result.data.map((row) => keys.map((key) => escape(row[key])).join(",")).join("\r\n") + "\r\n";
+    return "\uFEFF" + keys.map(escape).join(",") + "\r\n" + result.data.map((row) => keys.map((key) => escape(numbers.isNumericKey(key) && row[key] != null ? numbers.display(row[key]) : row[key])).join(",")).join("\r\n") + "\r\n";
   }
 }
 

@@ -1,5 +1,6 @@
 const C = require("../../services/domain/core");
 const P = require("../../services/domain/policy");
+const numbers = require("../../../public/js/number-format");
 const isId = (v) => /^[1-9]\d*$/.test(String(v));
 class LotService {
   constructor(pool, repository) {
@@ -168,7 +169,7 @@ class LotService {
         C.qty(String(used.quantity), false) + C.qty(String(checked.quantity),false) + C.qty(body.received_quantity) >
           C.qty(String(line.quantity)),
         "SOURCE_LIMIT_EXCEEDED",
-        line.item_name+': đơn mua '+C.decimal(C.qty(String(line.quantity)))+', đã ghi nhận '+C.decimal(C.qty(String(used.quantity),false)+C.qty(String(checked.quantity),false))+'. Không tạo thêm lô cho lượng đã ghi nhận. Tải lại lượng còn được nhận trước khi lưu.',
+        line.item_name+': đơn mua '+numbers.display(C.decimal(C.qty(String(line.quantity))))+', đã ghi nhận '+numbers.display(C.decimal(C.qty(String(used.quantity),false)+C.qty(String(checked.quantity),false)))+'. Không tạo thêm lô cho lượng đã ghi nhận. Tải lại lượng còn được nhận trước khi lưu.',
       );
       const readable=require('../../shared/readable-codes'),supplierName=await readable.supplier(connection,line.receiving_supplier_id);
       body.code=await readable.next(connection,'lots','NVL',supplierName+'-'+line.item_name);

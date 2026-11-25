@@ -161,6 +161,13 @@ class StockRequestService {
     };
     if (row.production_source_mode === "MANUAL") result.lots = await this.manualReceiptLots(connection, id);
 
+    // Vị trí cụ thể quản lý kho đã phân công: nhân viên thấy phần của mình, quản lý thấy tất cả.
+    if (has(user, "WAREHOUSE_STAFF") || has(user, "WAREHOUSE_MANAGER")) {
+      const scope = has(user, "WAREHOUSE_MANAGER") ? { requestId: id } : { requestId: id, userId: user.id };
+      const positions = await require("../../shared/assigned-positions").load(connection, scope);
+      if (positions.length) result.assigned_positions = positions;
+    }
+
     // Nhân viên kho đang có công việc với yêu cầu này thì được ghi phiếu.
     if (has(user, "WAREHOUSE_STAFF")) {
       const [tasks] = await connection.execute(

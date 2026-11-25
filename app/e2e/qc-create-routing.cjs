@@ -27,7 +27,7 @@ const executablePath=['C:/Program Files (x86)/Microsoft/Edge/Application/msedge.
   await page.locator('[data-plan-line]').waitFor();
   assert.equal(await page.locator('#f-lot_id').count(),0);
   assert.equal(Number((await page.locator('[data-check-key=received_quantity]').inputValue()).replace(',','.')),17.6);
-  await page.locator('[data-check-key=failed_quantity]').fill('1.6');
+  await page.locator('[data-check-key=failed_quantity]').fill('1,6');
   assert.equal(Number((await page.locator('[data-check-key=passed_quantity]').inputValue()).replace(',','.')),16);
   await page.locator('#data-form [type=submit]').click();await page.waitForFunction(()=>!document.querySelector('#modal').open);
   assert.equal(saved.kind,'QUALITY');assert.equal(Number(saved.lines[0].failed_quantity),1.6);

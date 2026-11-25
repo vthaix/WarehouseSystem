@@ -67,6 +67,8 @@ class SourceImportService {
         source_code: order.code,
         customer_order_id: String(id),
         customer_name:order.customer_name,
+        recipient_name:order.recipient_name,
+        recipient_phone:order.recipient_phone,
         delivery_address:order.delivery_address,
         latest_delivery_date:order.latest_delivery_date,
         customer_note:order.note,

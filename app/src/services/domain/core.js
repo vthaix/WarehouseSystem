@@ -67,7 +67,7 @@ function date(v, field = "date", future = false) {
 // Tên tiếng Việt của các trường chữ, dùng trong thông báo lỗi cho người dùng.
 const TEXT_LABELS = {
   note: "Ghi chú", reason: "Lý do", q: "Từ khóa tìm kiếm", issue: "Nội dung sự cố", remarks: "Nhận xét",
-  delivery_address: "Địa chỉ giao hàng", code: "Mã", username: "Tên đăng nhập", password: "Mật khẩu",
+  recipient_name: "Tên người nhận", delivery_address: "Địa chỉ giao hàng", code: "Mã", username: "Tên đăng nhập", password: "Mật khẩu",
   title: "Tiêu đề", name: "Tên", full_name: "Họ và tên", resolution_note: "Ghi chú xử lý", lot_code: "Mã lô",
   location: "Địa điểm", cause: "Nguyên nhân", exception_description: "Mô tả ngoại lệ", delivery_terms: "Điều khoản giao",
   difference_reason: "Lý do chênh lệch", description: "Mô tả",

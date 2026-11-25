@@ -116,7 +116,7 @@ class ProductionPlanService {
     P.role(user, P.read["production-plans"]);
     C.fail(!isId(id), "NOT_FOUND", "Không tìm thấy kế hoạch.", 404);
     const [rows] = await connection.execute(
-      "SELECT p.*,o.code AS customer_order_code,o.quoted_total AS order_total,o.delivery_address,o.latest_delivery_date,o.note AS customer_note,o.status AS customer_order_status,c.name AS customer_name,(SELECT COUNT(*) FROM customer_orders prior WHERE prior.customer_id=o.customer_id AND prior.id<=o.id) AS order_sequence,(SELECT COUNT(*) FROM production_plans prior WHERE prior.customer_order_id=p.customer_order_id AND prior.id<=p.id) AS plan_sequence,w.name AS workshop_name,u.full_name AS created_by_name FROM production_plans p JOIN customer_orders o ON o.id=p.customer_order_id JOIN customers c ON c.id=o.customer_id JOIN workshops w ON w.id=p.workshop_id JOIN users u ON u.id=p.created_by WHERE p.id=?",
+      "SELECT p.*,o.code AS customer_order_code,o.quoted_total AS order_total,o.TenNguoiNhan AS recipient_name,o.SoDienThoaiNguoiNhan AS recipient_phone,o.delivery_address,o.latest_delivery_date,o.note AS customer_note,o.status AS customer_order_status,c.name AS customer_name,(SELECT COUNT(*) FROM customer_orders prior WHERE prior.customer_id=o.customer_id AND prior.id<=o.id) AS order_sequence,(SELECT COUNT(*) FROM production_plans prior WHERE prior.customer_order_id=p.customer_order_id AND prior.id<=p.id) AS plan_sequence,w.name AS workshop_name,u.full_name AS created_by_name FROM production_plans p JOIN customer_orders o ON o.id=p.customer_order_id JOIN customers c ON c.id=o.customer_id JOIN workshops w ON w.id=p.workshop_id JOIN users u ON u.id=p.created_by WHERE p.id=?",
       [id],
     );
     C.fail(

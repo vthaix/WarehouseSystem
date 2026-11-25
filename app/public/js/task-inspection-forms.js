@@ -81,7 +81,7 @@ async function createFinishedPartForm(record=null){
         const start=document.querySelector('#f-start_at'),end=document.querySelector('#f-end_at');start.min=value+'T00:00';start.value=value+'T08:00';end.min=start.value;end.value=value+'T09:00';
       };
       const showParts=()=>{
-        const g=group();document.querySelector('#inspection-parts').innerHTML=kind()==='FINISHED_PRODUCT'?'<div class="form-section"><h3>Các phần của lô theo báo cáo thành phẩm</h3>'+((g?.parts||[]).map(p=>'<label class="employee-profile"><input type="checkbox" data-finished-part value="'+esc(p.id)+'"><span><strong>'+esc(p.code)+'</strong><small>'+esc(p.lines.map(l=>l.item_name+': '+l.quantity).join(' · '))+' · '+esc(format(p.expected_date))+'</small></span></label>').join('')||'<p>Chưa có báo cáo thành phẩm đã gửi còn phần chờ kiểm tra trong lô này.</p>')+'</div>':'<div class="notice">'+(g?.id?.startsWith('PO:')?'Lô nguyên vật liệu của đơn mua lập trực tiếp. ':'Lô nguyên vật liệu được đối chiếu từ kế hoạch mua đã duyệt. ')+esc(g?.expected_date?format(g.expected_date):'')+'</div>';
+        const g=group();document.querySelector('#inspection-parts').innerHTML=kind()==='FINISHED_PRODUCT'?'<div class="form-section"><h3>Các phần của lô theo báo cáo thành phẩm</h3>'+((g?.parts||[]).map(p=>'<label class="employee-profile"><input type="checkbox" data-finished-part value="'+esc(p.id)+'"><span><strong>'+esc(p.code)+'</strong><small>'+esc(p.lines.map(l=>l.item_name+': '+format(l.quantity)).join(' · '))+' · '+esc(format(p.expected_date))+'</small></span></label>').join('')||'<p>Chưa có báo cáo thành phẩm đã gửi còn phần chờ kiểm tra trong lô này.</p>')+'</div>':'<div class="notice">'+(g?.id?.startsWith('PO:')?'Lô nguyên vật liệu của đơn mua lập trực tiếp. ':'Lô nguyên vật liệu được đối chiếu từ kế hoạch mua đã duyệt. ')+esc(g?.expected_date?format(g.expected_date):'')+'</div>';
         document.querySelectorAll('[data-finished-part]').forEach(i=>{
           const part=g?.parts.find(p=>p.id===i.value);i.disabled=part?.available===false;
           if(i.disabled)i.closest('label').querySelector('small').insertAdjacentText('beforeend',' · Đã giao kiểm tra / đã có kết quả');
@@ -102,7 +102,7 @@ async function createFinishedPartForm(record=null){
   actionForm=async function(r,action){
     if(action==='recordCount'){
       const lots=r.inspection.lots.filter(l=>l.counted_quantity===null);
-      openModal('Ghi số lượng kiểm đếm',formWrap(inputField('lot_id','select',true,lots.map(l=>({id:l.id,name:l.code+' / '+l.item_name+' / Số lượng ghi nhận: '+l.received_quantity})))+inputField('counted_quantity','number',true)));
+      openModal('Ghi số lượng kiểm đếm',formWrap(inputField('lot_id','select',true,lots.map(l=>({id:l.id,name:l.code+' / '+l.item_name+' / Số lượng ghi nhận: '+format(l.received_quantity)})))+inputField('counted_quantity','number',true)));
       bindForm(d=>({version:r.version,count_lines:[{lot_id:d.lot_id,counted_quantity:d.counted_quantity}]}),'tasks/'+r.id+'/progress');return;
     }
     if(current==='finished-reports'&&action==='edit'&&r.report_mode==='PART')return createFinishedPartForm(r);
@@ -115,7 +115,7 @@ async function createFinishedPartForm(record=null){
     }
     if(action==='recordInspection'){
       const lots=r.inspection.lots.filter(l=>l.qc_status==='PENDING');
-      openModal('Ghi kết quả theo phần được giao',formWrap(inputField('lot_id','select',true,lots.map(l=>({id:l.id,name:(l.lot_header_code||'')+' / '+l.code+' / '+l.item_name+' / '+l.received_quantity})))+inputField('inspected_at','datetime-local',true,[],localInput(new Date().toISOString()))+inputField('inspected_quantity','number')+inputField('passed_quantity','number')+inputField('failed_quantity','number',true,[],'0')+inputField('issue','textarea',false)));
+      openModal('Ghi kết quả theo phần được giao',formWrap(inputField('lot_id','select',true,lots.map(l=>({id:l.id,name:(l.lot_header_code||'')+' / '+l.code+' / '+l.item_name+' / '+format(l.received_quantity)})))+inputField('inspected_at','datetime-local',true,[],localInput(new Date().toISOString()))+inputField('inspected_quantity','number')+inputField('passed_quantity','number')+inputField('failed_quantity','number',true,[],'0')+inputField('issue','textarea',false)));
       const fill=()=>{const l=lots.find(l=>l.id===document.querySelector('#f-lot_id').value);document.querySelector('#f-inspected_quantity').value=numericInputValue(l?.received_quantity||'');document.querySelector('#f-passed_quantity').value=numericInputValue(l?.received_quantity||'');};
       document.querySelector('#f-lot_id').onchange=fill;fill();
       bindForm(d=>({campaign_id:String(r.stocktake_id),inspected_at:new Date(d.inspected_at+'+07:00').toISOString(),lines:[{lot_id:d.lot_id,inspected_quantity:d.inspected_quantity,passed_quantity:d.passed_quantity,failed_quantity:d.failed_quantity,issue:d.issue}]}),'qc-inspections');return;

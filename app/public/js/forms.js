@@ -1,6 +1,11 @@
 function calendarToday() { return new Date().toLocaleDateString('en-CA', {timeZone:'Asia/Ho_Chi_Minh'}); }
 function optionLabel(value) {
-  if (value && typeof value === 'object') return [value.display_code || value.code, value.name || value.title || value.full_name].filter(Boolean).join(' · ') || 'Chưa có tên';
+  if (value && typeof value === 'object') {
+    const code = value.display_code || value.code, name = value.name || value.title || value.full_name;
+    // Tên đã gồm mã (hoặc chính là mã) thì không ghép mã lần nữa.
+    if (code && name && [code, value.code].some(c => name === c || name.startsWith(c + ' '))) return name;
+    return [code, name].filter(Boolean).join(' · ') || 'Chưa có tên';
+  }
   return labels[value] || value;
 }
 function numericInputValue(value) {
@@ -132,6 +137,7 @@ async function createForm() {
       builder = (d) => d;
     const f = inputField;
     if (current === "customer-orders") {
+      if (isMysql) return location.assign("/customer/orders/create"); // trang đặt hàng có người nhận, địa chỉ
       const items = (await api("sample-items?per_page=100")).data;
       if (!items.length) throw new Error("Chưa có thành phẩm mẫu để đặt hàng.");
       const e = lineEditor("Hàng mẫu cần đặt", items);
@@ -242,7 +248,7 @@ async function createForm() {
           purchase.flatMap((p) =>
             (p.lines || []).map((l) => ({
               id: l.id,
-              name: `${p.code} · ${l.item_name} (${l.quantity})`,
+              name: `${p.code} · ${l.item_name} (${format(l.quantity)})`,
             })),
           ),
         ) +
@@ -360,7 +366,7 @@ async function createForm() {
           await options("customer-orders"),
         ) +
         f("workshop_id", "select", true, await options("workshops")) +
-        f("start_date", "date") +
+        f("start_date", "date", true, [], calendarToday()) +
         f("end_date", "date") +
         out.html +
         mat.html;
@@ -843,6 +849,8 @@ async function editForm(r) {
       const address = addressPicker.create(r); // chọn lại tỉnh / phường / số nhà
       editors.push(e, address);
       html =
+        f("recipient_name", "text", true, [], r.recipient_name || "") +
+        f("recipient_phone", "tel", true, [], r.recipient_phone || "") +
         address.html +
         f("latest_delivery_date", "date", true, [], r.latest_delivery_date) +
         f("note", "textarea", false, [], r.note || "") +

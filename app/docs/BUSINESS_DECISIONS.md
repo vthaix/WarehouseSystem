@@ -21,6 +21,10 @@ Hợp nhất 14/10/2026. Những lựa chọn dưới đã được chủ dự �
 
 ## Những lựa chọn cụ thể
 
+- Người nhận (25/11/2026): mỗi đơn lưu tên và số điện thoại người nhận. Đơn đầu tiên tự lưu vào hồ sơ (`KhachHang.TenNguoiNhan`, `SoDienTho`), các đơn sau điền sẵn; sửa khác hồ sơ thì hỏi khách trước khi cập nhật. Tên khách hàng dùng đặt mã chứng từ không đổi. Cần migration `018_order_recipient.cjs`.
+- Chuẩn số (25/11/2026): dấu `.` phân cách hàng nghìn, dấu `,` thập phân, bỏ phần thập phân bằng 0 (56.000 trong CSDL hiện là 56). Áp dụng cả khi nhập, hiển thị và xuất CSV; quy tắc nằm ở `public/js/number-format.js`. API vẫn nhận/trả số máy (1500.500).
+- KHSX (25/11/2026): ngày bắt đầu mặc định là ngày lập; danh sách chọn đơn chỉ hiện mã đơn một lần.
+- Phân công kho (25/11/2026): nhân viên kho thấy kho › khu › ô được phân công ở chi tiết nhập/xuất kho, biểu mẫu ghi phiếu (kèm sơ đồ) và thông báo; chỉ thấy phần của mình.
 - Nhập thành phẩm từng phần theo KHSX, cùng một đầu lô; tổng kết chỉ khi xong toàn bộ.
 - Giữ tên API/JSON tiếng Anh; bảng/cột SQL tiếng Việt không dấu qua adapter. Không đoán nguồn hoặc hoàn tất cho dữ liệu lịch sử.
 - QC một kết quả toàn bộ mỗi dòng lô, sai sót qua chứng từ bù; hàng đã nhập cần phê duyệt/xác nhận QC trước chuyển bucket.

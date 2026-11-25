@@ -23,7 +23,8 @@ module.exports = (runtime) => {
     require("../middlewares/role.middleware")(["CUSTOMER"]), async (req, res) => {
       const context = await pages.context(req, "customer-orders");
       const result = await runtime.catalog.sampleItems(req.user, { per_page: 100 });
-      res.render("layouts/main", { ...context, title: "Đặt hàng", activePage: "customer-order-create", view: "customer/order",
+      const recipient = await runtime.orders.recipientProfile(req.user); // người nhận đã lưu trong hồ sơ
+      res.render("layouts/main", { ...context, title: "Đặt hàng", activePage: "customer-order-create", view: "customer/order", recipient,
         products: result.data, boot: JSON.stringify({ storage: "mysql", user: context.user,
           csrf: context.csrf, current: "customer-orders", form: true }) });
     });

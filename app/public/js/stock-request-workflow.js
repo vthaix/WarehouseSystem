@@ -321,6 +321,7 @@
             inputField("note", "textarea", false),
         ),
       );
+      mountPositionMaps(data, pending, verb);
       $('label[for="f-note"]').textContent = "Số phiếu giấy / ghi chú chung";
       $("#data-form [type=submit]").textContent = "Xác nhận ghi sổ";
 
@@ -347,17 +348,40 @@
     }
   };
 
+  /** Vị trí được phân công: Kho › Khu › Ô. */
+  function positionText(allocation) {
+    const zone = (allocation.zone_name || "Khu chung").replace(/^Khu [A-Z] · /, "Khu ");
+    const cell = [allocation.location_code, allocation.location_name].filter((v, i, all) => v && all.indexOf(v) === i).join(" · ");
+    return [allocation.warehouse_name, zone, cell].filter(Boolean).join(" › ");
+  }
+
+  /** Sơ đồ kho đánh dấu ô được phân công của từng dòng (chỉ để xem). */
+  function mountPositionMaps(data, pending, verb) {
+    for (const section of document.querySelectorAll("[data-post-index]")) {
+      const allocation = pending[Number(section.dataset.postIndex)];
+      const fold = document.createElement("details");
+      fold.className = "warehouse-position-picker";
+      fold.innerHTML = '<summary class="button small">Xem vị trí ' + verb + " trên sơ đồ kho</summary>";
+      const locations = data.locations.map((l) => ({
+        ...l,
+        stock: data.balances.filter((b) => String(b.location_id) === l.id && Number(b.quantity) > 0),
+      }));
+      fold.append(createWarehouseSeatMap({ locations, selectedId: String(allocation.location_id) }));
+      section.querySelector("[data-position-map]").append(fold);
+    }
+  }
+
   /** Một phần được phân công: mặt hàng, lô, vị trí, ô nhập số lượng thực tế. */
   function postLineHTML(data, allocation, index, verb) {
     const line = data.lines.find((l) => l.id === String(allocation.stock_request_line_id));
     const lot = line?.lots.find((l) => l.id === String(allocation.lot_id));
-    const location = line?.locations.find((l) => l.id === String(allocation.location_id));
     const remaining = fromMilli(remainingOf(allocation));
     return (
       '<section class="span2 form-section" data-post-index="' + index + '">' +
       "<h3>" + esc(line?.item_name || "Mặt hàng") + "</h3>" +
-      "<p>" + esc(lot?.code || allocation.lot_id) + " · " + esc(location?.name || allocation.location_id) +
-      " · Còn được giao: " + esc(format(remaining)) + "</p>" +
+      '<p class="assigned-position"><strong>' + (verb === "nhập" ? "Nhập vào: " : "Lấy hàng tại: ") + esc(positionText(allocation)) + "</strong></p>" +
+      "<p>Lô: " + esc(lot?.code || "—") + " · Còn được giao: " + esc(format(remaining)) + " " + esc(line?.unit || "") + "</p>" +
+      "<div data-position-map></div>" +
       "<label>Số lượng thực " + verb + "</label>" +
       '<input data-actual-quantity type="number" min="0" max="' + remaining + '" step="0.001" required value="' + remaining + '">' +
       "<label>Ghi chú theo giấy tờ / chênh lệch</label><textarea data-difference-reason></textarea>" +

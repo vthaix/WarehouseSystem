@@ -447,7 +447,7 @@ function detail(r) {
         ([k, v]) =>
           `<div><dt>${esc(k === 'code' ? `Mã ${moduleInfo()?.[1]?.toLowerCase() || 'chứng từ'}` : fieldLabel(k))}</dt><dd>${detailValue(k,v,r)}</dd></div>`,
       )
-      .join("")}</dl>${["lines", "outputs", "materials", "allocations", "decision_history", "reinspections", "inspection_lots", "source_lots", "documents", "document_lines"]
+      .join("")}</dl>${["assigned_positions", "lines", "outputs", "materials", "allocations", "decision_history", "reinspections", "inspection_lots", "source_lots", "documents", "document_lines"]
       .filter((k) => r[k])
       .map(
         (k) =>

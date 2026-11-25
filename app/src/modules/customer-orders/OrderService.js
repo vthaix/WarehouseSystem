@@ -13,6 +13,7 @@ const statuses = [
 ];
 const isId = (value) => /^[1-9]\d*$/.test(String(value));
 const vnAddress = require("../../shared/vn-address");
+const recipients = require("./recipient");
 // Các trường địa chỉ giao hàng theo đơn vị hành chính (form mới gửi lên).
 const ADDRESS_PARTS = ["delivery_province_code", "delivery_ward_code", "delivery_street"];
 
@@ -73,6 +74,10 @@ class OrderService {
     result.delivery_province_code = row.MaTinhThanhGiao ?? null;
     result.delivery_ward_code = row.MaPhuongXaGiao ?? null;
     result.delivery_street = row.SoNhaTenDuongGiao ?? null;
+    result.recipient_name = row.TenNguoiNhan ?? null;
+    result.recipient_phone = row.SoDienThoaiNguoiNhan ?? null;
+    delete result.TenNguoiNhan;
+    delete result.SoDienThoaiNguoiNhan;
     delete result.MaTinhThanhGiao;
     delete result.MaPhuongXaGiao;
     delete result.SoNhaTenDuongGiao;
@@ -261,49 +266,67 @@ class OrderService {
   /** UC-02 Đặt đơn hàng. idempotencyKey: gửi lại sau khi mất mạng không tạo đơn thứ hai. */
   async create(user, body, requestId, idempotencyKey) {
     P.role(user, ["CUSTOMER"]);
-    C.fields(body, ["delivery_address", ...ADDRESS_PARTS, "latest_delivery_date", "note", "lines"]);
+    C.fields(body, ["delivery_address", ...ADDRESS_PARTS, ...recipients.FIELDS, "update_profile", "latest_delivery_date", "note", "lines"]);
     const delivery = readDeliveryAddress(body);
     C.fail(!delivery, "VALIDATION_ERROR", "Vui lòng nhập địa chỉ giao hàng.");
+    const entered = recipients.read(body);
+    // Form đặt hàng bắt buộc có người nhận; script / API cũ (gửi một chuỗi địa chỉ) lấy theo hồ sơ.
+    C.fail(!entered && delivery.province !== null, "VALIDATION_ERROR", "Vui lòng nhập tên và số điện thoại người nhận.");
+    C.fail(body.update_profile !== undefined && typeof body.update_profile !== "boolean", "VALIDATION_ERROR", "Lựa chọn cập nhật hồ sơ không hợp lệ.");
     C.date(body.latest_delivery_date, "latest_delivery_date", true);
     if (body.note !== undefined) C.text(body.note, "note", 5000, false);
     const id = await this.transaction((connection) => require("../../shared/idempotency").once(connection, user.id, "customer-order-create", idempotencyKey, body, async () => {
-      const [customers] = await connection.execute("SELECT id,name FROM customers WHERE user_id=? FOR UPDATE", [user.id]);
+      const [customers] = await connection.execute("SELECT id,name,TenNguoiNhan,phone FROM customers WHERE user_id=? FOR UPDATE", [user.id]);
       C.fail(!customers.length, "FORBIDDEN", "Tài khoản chưa có hồ sơ khách hàng.", 403);
       const data = await this.validateLines(connection, body.lines);
+      const saved = recipients.fromProfile(customers[0]);
+      const recipient = entered || saved;
       const [[sequence]] = await connection.execute("SELECT COUNT(*) AS total FROM customer_orders WHERE customer_id=?", [customers[0].id]);
       const code = await recordCode.distinguishNames(connection, 'customer_orders', recordCode.code("DH", customers[0].name, Number(sequence.total) + 1), customers[0].id);
       const [created] = await connection.execute(
-        "INSERT INTO customer_orders (code,customer_id,delivery_address,MaTinhThanhGiao,MaPhuongXaGiao,SoNhaTenDuongGiao,latest_delivery_date,note,status,quoted_total,version) VALUES (?,?,?,?,?,?,?,?,'SUBMITTED',?,1)",
-        [code, customers[0].id, delivery.address, delivery.province, delivery.ward, delivery.street, body.latest_delivery_date, body.note || null, data.quoted_total],
+        "INSERT INTO customer_orders (code,customer_id,TenNguoiNhan,SoDienThoaiNguoiNhan,delivery_address,MaTinhThanhGiao,MaPhuongXaGiao,SoNhaTenDuongGiao,latest_delivery_date,note,status,quoted_total,version) VALUES (?,?,?,?,?,?,?,?,?,?,'SUBMITTED',?,1)",
+        [code, customers[0].id, recipient?.name ?? null, recipient?.phone ?? null, delivery.address, delivery.province, delivery.ward, delivery.street, body.latest_delivery_date, body.note || null, data.quoted_total],
       );
       for (const line of data.lines)
         await connection.execute(
           "INSERT INTO customer_order_lines (customer_order_id,item_id,quantity,unit_price,note) VALUES (?,?,?,?,?)",
           [created.insertId, line.item_id, line.quantity, line.unit_price, line.note],
         );
-      await this.audit(connection, user, created.insertId, "CREATE", {}, { code, status: "SUBMITTED" }, requestId);
+      const profileSaved = recipients.shouldSaveProfile(saved, entered, body.update_profile);
+      if (profileSaved)
+        await connection.execute("UPDATE customers SET TenNguoiNhan=?,phone=? WHERE id=?", [entered.name, entered.phone, customers[0].id]);
+      await this.audit(connection, user, created.insertId, "CREATE", {}, { code, status: "SUBMITTED", profile_saved: profileSaved }, requestId);
       await this.notifyRole(connection, "PLANNER", created.insertId, `Đơn hàng mới ${code}`, `order-${created.insertId}-created`);
       return created.insertId;
     }));
     return this.get(user, id);
   }
 
+  /** Người nhận mặc định trong hồ sơ để điền sẵn form đặt hàng; null nếu khách chưa đặt lần nào. */
+  async recipientProfile(user) {
+    P.role(user, ["CUSTOMER"]);
+    const [[customer]] = await this.pool.execute("SELECT TenNguoiNhan,phone FROM customers WHERE user_id=?", [user.id]);
+    return recipients.fromProfile(customer);
+  }
+
   async update(user, id, body, requestId) {
     P.role(user, ["CUSTOMER"]);
-    C.fields(body, ["version", "delivery_address", ...ADDRESS_PARTS, "latest_delivery_date", "note", "lines", "quantity_change_acknowledged"]);
+    C.fields(body, ["version", "delivery_address", ...ADDRESS_PARTS, ...recipients.FIELDS, "latest_delivery_date", "note", "lines", "quantity_change_acknowledged"]);
     C.fail(!Number.isInteger(body.version), "VALIDATION_ERROR", "Thiếu phiên bản đơn hàng.");
     C.fail(
-      !["delivery_address", ...ADDRESS_PARTS, "latest_delivery_date", "note", "lines"].some((key) => Object.hasOwn(body, key)),
+      !["delivery_address", ...ADDRESS_PARTS, ...recipients.FIELDS, "latest_delivery_date", "note", "lines"].some((key) => Object.hasOwn(body, key)),
       "VALIDATION_ERROR",
       "Không có nội dung cần sửa.",
     );
     const delivery = readDeliveryAddress(body); // null = giữ địa chỉ cũ
+    const entered = recipients.read(body); // null = giữ người nhận cũ
     await this.transaction(async (connection) => {
       const order = await this.load(connection, user, id, true);
       C.fail(String(order.customer_user_id) !== String(user.id), "NOT_FOUND", "Không tìm thấy đơn hàng.", 404);
       C.version(order, body.version);
       C.state(order, ["SUBMITTED", "RECEIVED"]);
       const address = delivery || { address: order.delivery_address, province: order.MaTinhThanhGiao, ward: order.MaPhuongXaGiao, street: order.SoNhaTenDuongGiao };
+      const recipient = entered || { name: order.TenNguoiNhan, phone: order.SoDienThoaiNguoiNhan };
       const date = body.latest_delivery_date === undefined ? asDate(order.latest_delivery_date) : C.date(body.latest_delivery_date, "latest_delivery_date", true);
       const note = body.note === undefined ? order.note : C.text(body.note, "note", 5000, false) || null;
       const [[scheduled]] = await connection.execute("SELECT MAX(end_date) last_end FROM production_plans WHERE customer_order_id=? AND status<>'CANCELLED'", [id]);
@@ -335,8 +358,8 @@ class OrderService {
         total = next.quoted_total;
       }
       await connection.execute(
-        "UPDATE customer_orders SET delivery_address=?,MaTinhThanhGiao=?,MaPhuongXaGiao=?,SoNhaTenDuongGiao=?,latest_delivery_date=?,note=?,quoted_total=?,version=version+1 WHERE id=?",
-        [address.address, address.province, address.ward, address.street, date, note, total, id],
+        "UPDATE customer_orders SET TenNguoiNhan=?,SoDienThoaiNguoiNhan=?,delivery_address=?,MaTinhThanhGiao=?,MaPhuongXaGiao=?,SoNhaTenDuongGiao=?,latest_delivery_date=?,note=?,quoted_total=?,version=version+1 WHERE id=?",
+        [recipient.name, recipient.phone, address.address, address.province, address.ward, address.street, date, note, total, id],
       );
       await this.audit(connection, user, id, "UPDATE", { version: order.version }, { version: order.version + 1 }, requestId);
       // Bộ phận kế hoạch cần biết đơn đã đổi: đơn đã tiếp nhận thì báo người

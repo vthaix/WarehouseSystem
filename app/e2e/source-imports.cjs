@@ -270,7 +270,7 @@ const executablePath =
         "false",
       );
       await page.locator("#f-note").fill("Packaging machine stopped");
-      await page.locator("#f-progress_percentage").fill("35.50");
+      await page.locator("#f-progress_percentage").fill("35,50");
       const submit = await capture(page, "production-reports");
       const body = await submit();
       assert.equal(body.report_purpose, "SU_CO");
@@ -450,7 +450,7 @@ const executablePath =
       await page.locator('#part-final').check();
       assert.equal(await page.locator('#outputs-rows [data-key="quantity"]').nth(1).inputValue(),'2');
       assert.equal(await page.locator('#outputs-rows [data-remaining]').nth(1).inputValue(),'0');
-      await page.locator('#outputs-rows [data-key="quantity"]').nth(1).fill('1.999');
+      await page.locator('#outputs-rows [data-key="quantity"]').nth(1).fill('1,999');
       assert.equal(await page.locator('#part-final').isChecked(),false);
       assert.equal(await page.locator('#outputs-rows [data-remaining]').nth(1).inputValue(),'0,001');
       assert.deepEqual(errors, []);

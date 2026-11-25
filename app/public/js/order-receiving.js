@@ -51,6 +51,8 @@
     const code = order.display_code || order.code;
     const summary = [
       ["Khách hàng", order.customer_name],
+      ["Người nhận", order.recipient_name],
+      ["Số điện thoại người nhận", order.recipient_phone],
       ["Hạn giao hàng", format(order.latest_delivery_date, "latest_delivery_date", order)],
       ["Tổng báo giá", format(order.quoted_total, "quoted_total", order)],
     ];

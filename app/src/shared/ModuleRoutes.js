@@ -4,6 +4,7 @@ const P = require("../services/domain/policy");
 const role = require("../middlewares/role.middleware");
 const { ok } = require("../utils/response");
 const registry = require("../modules");
+const numbers = require("../../public/js/number-format"); // chuẩn số: 1.500,5
 const reportRoles = {
   "reports/inventory": ["DIRECTOR", "WAREHOUSE_MANAGER", "WORKSHOP_OWNER"],
   "reports/stock-documents": ["DIRECTOR", "WORKSHOP_OWNER"],
@@ -195,8 +196,8 @@ module.exports = (runtime) => {
     if(['quarantine-lines','stock-qc-lines'].includes(req.params.resource)) {
       P.role(req.user,['WAREHOUSE_MANAGER','DIRECTOR']);
       const bucket=req.params.resource==='stock-qc-lines'?'AVAILABLE':'QUARANTINE';
-      const [rows]=await runtime.pool.execute("SELECT q.id,q.lot_id,q.passed_quantity,q.failed_quantity,b.location_id,b.quantity,CONCAT(l.code,' · ',i.name,' · vị trí ',b.location_id,' · tồn ',b.quantity) AS name FROM qc_inspection_lines q JOIN qc_inspections qc ON qc.id=q.qc_inspection_id JOIN lots l ON l.id=q.lot_id JOIN lot_headers h ON h.id=l.lot_header_id JOIN items i ON i.id=l.item_id JOIN inventory_balances b ON b.lot_id=l.id WHERE qc.status='RECORDED' AND (h.return_direction IS NULL OR h.return_direction<>'KHACH_HANG' OR h.return_status='POSTED') AND b.quality_bucket=? AND b.quantity>0"+(bucket==='AVAILABLE'?" AND (h.return_direction IS NULL OR h.return_direction<>'KHACH_HANG')":"")+" ORDER BY q.id DESC,b.location_id LIMIT 500",[bucket]);
-      return ok(req,res,rows.map(r=>({...r,id:String(r.id)+'-'+String(r.location_id),qc_inspection_line_id:String(r.id),lot_id:String(r.lot_id),location_id:String(r.location_id)})));
+      const [rows]=await runtime.pool.execute("SELECT q.id,q.lot_id,q.passed_quantity,q.failed_quantity,b.location_id,b.quantity,CONCAT(l.code,' · ',i.name,' · vị trí ',(SELECT loc.code FROM warehouse_locations loc WHERE loc.id=b.location_id)) AS name FROM qc_inspection_lines q JOIN qc_inspections qc ON qc.id=q.qc_inspection_id JOIN lots l ON l.id=q.lot_id JOIN lot_headers h ON h.id=l.lot_header_id JOIN items i ON i.id=l.item_id JOIN inventory_balances b ON b.lot_id=l.id WHERE qc.status='RECORDED' AND (h.return_direction IS NULL OR h.return_direction<>'KHACH_HANG' OR h.return_status='POSTED') AND b.quality_bucket=? AND b.quantity>0"+(bucket==='AVAILABLE'?" AND (h.return_direction IS NULL OR h.return_direction<>'KHACH_HANG')":"")+" ORDER BY q.id DESC,b.location_id LIMIT 500",[bucket]);
+      return ok(req,res,rows.map(r=>({...r,name:r.name+' · tồn '+numbers.display(r.quantity),id:String(r.id)+'-'+String(r.location_id),qc_inspection_line_id:String(r.id),lot_id:String(r.lot_id),location_id:String(r.location_id)})));
     }
     if(req.params.resource === 'workshops') {
       P.role(req.user,['PLANNER','WORKSHOP_OWNER']);
@@ -228,7 +229,6 @@ module.exports = (runtime) => {
             id: order.id,
             code: order.code,
             status: order.status,
-            name: `${order.code} · ${order.customer_name}`,
           })),
       );
     }
@@ -265,13 +265,14 @@ module.exports = (runtime) => {
         "DIRECTOR",
       ]);
       const [rows] = await runtime.pool.execute(
-        "SELECT l.*,DATE_FORMAT(DATE_ADD(l.created_at,INTERVAL 7 HOUR),'%Y-%m-%d') AS received_date,i.kind,i.name AS item_name,CONCAT(COALESCE(h.code,l.code),' / ',l.code,' / ',i.name,' / ',l.received_quantity) AS name FROM lots l JOIN items i ON i.id=l.item_id LEFT JOIN lot_headers h ON h.id=l.lot_header_id ORDER BY l.id DESC LIMIT 100",
+        "SELECT l.*,DATE_FORMAT(DATE_ADD(l.created_at,INTERVAL 7 HOUR),'%Y-%m-%d') AS received_date,i.kind,i.name AS item_name,CONCAT(COALESCE(h.code,l.code),' / ',l.code,' / ',i.name) AS name FROM lots l JOIN items i ON i.id=l.item_id LEFT JOIN lot_headers h ON h.id=l.lot_header_id ORDER BY l.id DESC LIMIT 100",
       );
       return ok(
         req,
         res,
         rows.map((row) => ({
           ...row,
+          name: `${row.name} / ${numbers.display(row.received_quantity)}`,
           id: String(row.id),
           item_id: String(row.item_id),
         })),
@@ -1203,7 +1204,7 @@ module.exports = (runtime) => {
       const cell = (v) => { let s = v == null ? "" : String(v); if (/^[=+\-@]/.test(s)) s = "'" + s; return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
       const time = (v) => (v ? new Date(new Date(v).getTime() + 7 * 3600e3).toISOString().slice(0, 16).replace("T", " ") : "");
       const head = ["Mã phiếu", "Loại phiếu", "Trạng thái", "Thời điểm ghi sổ", "Kho", "Yêu cầu nguồn", "Mục đích", "Mã mặt hàng", "Mặt hàng", "Lô", "Vị trí", "Số lượng"];
-      const rows = data.map((r) => [r.code, r.type === "IN" ? "Nhập kho" : "Xuất kho", labels[r.status] || r.status, time(r.posted_at), r.warehouse_name, r.request_code, labels[r.purpose] || r.purpose, r.item_code, r.item_name, r.lot_code, r.location_code, r.quantity]);
+      const rows = data.map((r) => [r.code, r.type === "IN" ? "Nhập kho" : "Xuất kho", labels[r.status] || r.status, time(r.posted_at), r.warehouse_name, r.request_code, labels[r.purpose] || r.purpose, r.item_code, r.item_name, r.lot_code, r.location_code, numbers.display(r.quantity)]);
       res.set("Content-Type", "text/csv; charset=utf-8");
       res.set("Content-Disposition", `attachment; filename="ho-so-${req.query.type === "IN" ? "nhap" : req.query.type === "OUT" ? "xuat" : "nhap-xuat"}-kho.csv"`);
       res.send("﻿" + [head, ...rows].map((r) => r.map(cell).join(",")).join("\n"));

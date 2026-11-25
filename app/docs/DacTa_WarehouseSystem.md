@@ -1499,7 +1499,7 @@ Quy tắc nghiệp vụ
 
 | Nhân viên kho | Hệ thống |
 | --- | --- |
-| 1. Chọn chức năng Nhập kho | 2. Hiển thị các dòng lô NVL/thành phẩm đạt QC còn chờ nhập. (LoHang, LoNguyenVatLieu, LoThanhPham, ChiTietLo, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC) |
+| 1. Chọn chức năng Nhập kho | 2. Hiển thị các dòng lô NVL/thành phẩm đạt QC còn chờ nhập, kèm kho, khu và ô được quản lý kho phân công. (PhanCongKho, ViTriKho, LoHang, LoNguyenVatLieu, LoThanhPham, ChiTietLo, KetQuaKiemTraQCAC, ChiTietKetQuaKiemTraQCAC) |
 | 3. Chọn dòng lô, nhập vị trí kho/ngày nhập; lượng mặc định là phần đạt QC chưa nhập. Nhập thành phẩm đối chiếu báo cáo và yêu cầu nhập liên quan. (ChiTietLo, Kho, ChiTietPhieuKho, ChiTietKetQuaKiemTraQCAC, PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, BanBaoCaoSanXuat) | 4. Kiểm tra kho, dòng lô và lượng thực nhập không vượt phần đạt còn chưa nhập. (ChiTietPhieuKho, Kho, ChiTietLo, ChiTietKetQuaKiemTraQCAC) |
 | 5. Xác nhận nhập kho | 6. Cập nhật tồn kho và tạo phiếu nhập kho (TonKho, PhieuKho, ChiTietPhieuKho) |
 
@@ -1572,7 +1572,7 @@ Xử lý trong UC-11.01 và UC-11.02
 | Nhân viên kho | Hệ thống |
 | --- | --- |
 | 1. Chọn Xuất nguyên vật liệu | 2. Hiển thị yêu cầu xuất NVL Chờ xử lý, chưa xuất hết và đủ điều kiện thực hiện. (PhieuYeuCauNhapXuat) |
-| 3. Chọn phiếu yêu cầu | 4. Lấy yêu cầu và báo cáo SAN_XUAT nguồn; đối chiếu lượng cần cấp, tự phân bổ lô khả dụng theo mặt hàng và lượng yêu cầu, hiển thị phiếu xuất dự thảo. (PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, LoNguyenVatLieu, ChiTietLo, TonKho, Kho) |
+| 3. Chọn phiếu yêu cầu | 4. Lấy yêu cầu và báo cáo SAN_XUAT nguồn; đối chiếu lượng cần cấp, tự phân bổ lô khả dụng theo mặt hàng và lượng yêu cầu, hiển thị phiếu xuất dự thảo kèm kho, khu và ô lấy hàng được phân công. (PhanCongKho, ViTriKho, PhieuYeuCauNhapXuat, ChiTietPhieuYeuCauNhapXuat, BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, LoNguyenVatLieu, ChiTietLo, TonKho, Kho) |
 | 5. Xác nhận xuất kho | 6. Kiểm tra lại tồn kho khả dụng và trạng thái lô (TonKho, LoNguyenVatLieu) |
 |  | 7. Lập phiếu xuất kho và trừ tồn kho (PhieuKho, ChiTietPhieuKho, TonKho) |
 |  | 8. Cập nhật trạng thái lô và phiếu yêu cầu (LoNguyenVatLieu, PhieuYeuCauNhapXuat) |
@@ -1612,7 +1612,7 @@ Xử lý trong UC-11.01 và UC-11.02
 | Nhân viên kho | Hệ thống |
 | --- | --- |
 | 1. Chọn Xuất thành phẩm | 2. Hiển thị đơn hàng và kế hoạch BAN đã duyệt còn lượng chờ giao. (DonHang, KeHoachMuaBan) |
-| 3. Chọn đơn hàng và kế hoạch BAN để xuất giao. | 4. Lấy chi tiết đơn, kế hoạch BAN và báo cáo thành phẩm nguồn; phân bổ lô đạt chất lượng còn khả dụng, hiển thị phiếu xuất dự thảo. (DonHang, ChiTietDonHang, KeHoachMuaBan, ChiTietKeHoachMuaBan, BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, LoThanhPham, ChiTietLo, TonKho, Kho) |
+| 3. Chọn đơn hàng và kế hoạch BAN để xuất giao. | 4. Lấy chi tiết đơn, kế hoạch BAN và báo cáo thành phẩm nguồn; phân bổ lô đạt chất lượng còn khả dụng, hiển thị phiếu xuất dự thảo kèm kho, khu và ô lấy hàng được phân công. (PhanCongKho, ViTriKho, DonHang, ChiTietDonHang, KeHoachMuaBan, ChiTietKeHoachMuaBan, BanBaoCaoSanXuat, ChiTietBaoCaoSanXuat, LoThanhPham, ChiTietLo, TonKho, Kho) |
 | 5. Xác nhận xuất kho | 6. Kiểm tra lại tồn kho khả dụng và trạng thái lô (TonKho, LoThanhPham) |
 |  | 7. Lập phiếu xuất kho và trừ tồn kho (PhieuKho, ChiTietPhieuKho, TonKho) |
 |  | 8. Cập nhật trạng thái lô, lượng đã giao của đơn và lượng đã thực hiện của kế hoạch BAN. (LoThanhPham, DonHang, KeHoachMuaBan) |
@@ -2120,15 +2120,25 @@ Xử lý trong UC-11.01 và UC-11.02
 | Khách hàng | Hệ thống |
 | --- | --- |
 | 1. Chọn chức năng Đặt đơn hàng | 2. Hiển thị danh sách hàng mẫu để lựa chọn (MatHang, LoaiHang) |
-| 3. Chọn sản phẩm, nhập số lượng, thông tin giao hàng gồm: địa chỉ, ngày nhận hàng trễ nhất, ghi chú (MatHang, ChiTietDonHang, DonHang, KhachHang) |  |
+| 3. Chọn sản phẩm, nhập số lượng, thông tin giao hàng gồm: tên người nhận, số điện thoại người nhận, địa chỉ, ngày nhận hàng trễ nhất, ghi chú. Tên và số điện thoại được điền sẵn từ hồ sơ nếu khách đã đặt hàng trước đó, khách có thể sửa (MatHang, ChiTietDonHang, DonHang, KhachHang) |  |
 | 4. Xác nhận đặt hàng | 5. Kiểm tra thông tin đơn hàng (DonHang, ChiTietDonHang) |
-|  | 6. Lưu đơn hàng và thông báo đặt hàng thành công (DonHang, ChiTietDonHang, KhachHang) |
+|  | 6. Lưu đơn hàng và thông báo đặt hàng thành công. Lần đặt đầu tiên: tự động lưu tên và số điện thoại người nhận vào hồ sơ khách hàng (DonHang, ChiTietDonHang, KhachHang) |
 
 ### Luồng thay thế
 
 #### 4.1 Khách hàng chọn Quay lại
 
 1\. Quay lại bước 2
+
+#### 4.2 Tên hoặc số điện thoại người nhận khác với hồ sơ đã lưu
+
+1\. Hệ thống hiện thông báo hỏi khách có muốn cập nhật lại hồ sơ không (KhachHang)
+
+2\. Khách chọn Cập nhật hồ sơ: hệ thống lưu đơn và cập nhật tên, số điện thoại trong hồ sơ (DonHang, KhachHang)
+
+3\. Khách chọn Chỉ dùng cho đơn này: hệ thống lưu đơn, giữ nguyên hồ sơ (DonHang)
+
+4\. Khách đóng thông báo: quay lại bước 3, chưa đặt hàng
 
 ### Luồng ngoại lệ
 
@@ -2140,7 +2150,7 @@ Xử lý trong UC-11.01 và UC-11.02
 
 #### 5.1 Thông tin đơn hàng không hợp lệ
 
-1\. Hệ thống thông báo lỗi (thiếu thông tin/số lượng không hợp lệ) và yêu cầu nhập lại (DonHang, ChiTietDonHang)
+1\. Hệ thống thông báo lỗi (thiếu thông tin/số lượng không hợp lệ/số điện thoại người nhận không đúng 10–11 số) và yêu cầu nhập lại (DonHang, ChiTietDonHang)
 
 2\. Quay lại bước 3
 
@@ -2210,7 +2220,7 @@ Xử lý trong UC-11.01 và UC-11.02
 | Khách hàng | Hệ thống |
 | --- | --- |
 | 1. Chọn Sửa đơn hàng (DonHang) | 2. Hiển thị form với thông tin hiện tại của đơn hàng (DonHang, ChiTietDonHang) |
-| 3. Nhập thông tin muốn chỉnh sửa (số lượng, mô tả) (DonHang, ChiTietDonHang) |  |
+| 3. Nhập thông tin muốn chỉnh sửa (người nhận, số điện thoại, địa chỉ, số lượng, mô tả) (DonHang, ChiTietDonHang) |  |
 | 4. Chọn xác nhận | 5. Kiểm tra thông tin mới (DonHang, ChiTietDonHang) |
 |  | 6. Cập nhật đơn hàng lên hệ thống với trạng thái chờ phê duyệt (DonHang, ChiTietDonHang) |
 |  | 7. Thông báo đơn hàng đã được cập nhật và cần chờ phê duyệt (DonHang, ChiTietDonHang) |
