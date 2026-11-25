@@ -42,7 +42,7 @@ MySQL (database/monolith/*.sql|cjs = cấu trúc bảng và các migration)
 | `audit_logs` | Nhật ký ai đã làm gì. |
 | Tên bảng tiếng Anh trong SQL (`items`, `stock_requests`) | Được dịch sang tên thật (`MatHang`, `PhieuYeuCauNhapXuat`). Bảng dịch nằm ở `database/adminer/identifiers.json`. |
 
-**Đầu mỗi file đã viết lại có khối chú thích** liệt kê UC nào nằm ở hàm nào (ví dụ `CatalogWriteService.js`, `StockRequestService.js`). Đọc khối đó trước.
+**Đầu mỗi file đã viết lại có khối chú thích** liệt kê UC nào nằm ở hàm nào (ví dụ `StockRequestService.js`). Đọc khối đó trước. Riêng các UC của Thái giải thích ở `DOC_CODE_UC_THAI.md`.
 
 ---
 
@@ -52,13 +52,15 @@ Cột "Giao diện" là file JavaScript vẽ form/màn hình. Cột "Nên đọc
 
 ### Trần Văn Thái — UC-29, UC-06.x, UC-07.x, UC-08, UC-09, UC-13
 
+Thứ tự đọc từng file và từng hàm: [DOC_CODE_UC_THAI.md](DOC_CODE_UC_THAI.md).
+
 | UC | Server | Giao diện | Nên đọc |
 |---|---|---|---|
-| UC-29 Tiếp nhận đơn hàng | `modules/customer-orders/OrderService.js` → `receive()`, `list()`, `detail()` | `public/js/order-receiving.js` | Chỉ Bộ phận lập kế hoạch; chỉ đơn `SUBMITTED` → `RECEIVED`; đơn đã tiếp nhận báo lỗi; danh sách lọc sẵn đơn chờ. |
-| UC-06, 06.1–06.3 Danh mục kho | `modules/catalog/CatalogWriteService.js` → `create/update/remove("categories")` | `public/js/catalog-forms.js` → `categoryForm()`, `showCategoryCards()` | Bắt buộc tên và nhóm (NVL / thành phẩm); tên không trùng; mã tự sinh `DM-001`; đổi nhóm khi còn mặt hàng nhóm khác bị chặn; xóa khi còn mặt hàng / khu kho bị chặn; có `version` chống ghi đè. |
-| UC-07, 07.1–07.3 Mặt hàng | Cùng file trên, `resource = "items"`; danh sách và tìm kiếm ở `modules/catalog/CatalogRepository.js` | `public/js/catalog-forms.js` → `itemForm()` | Mã tự sinh `NVL-…`/`TP-…`; danh mục phải cùng nhóm; giá phải là số ≥ 0; mặt hàng đã phát sinh chứng từ thì không đổi danh mục / ĐVT và không xóa được (`ITEM_USAGE`, `itemUsage()`). |
-| UC-08 Quản lý nhập kho, UC-09 Quản lý xuất kho | `modules/warehouse/WarehouseFlowService.js` → `preview()` (dữ liệu form phân công), `dispatch()` (lưu phân công), `cancelAllocation()` (giải phóng), `assertNoScheduleConflict()` | `public/js/workflow-forms.js` → `dispatchForm()`, `dispatchTimeFields()`; phần "Phiếu đã ghi sổ" ở `public/js/actor-workspace.js` → `history()` | Chỉ quản lý phụ trách yêu cầu; kho đang kiểm kê thì không phân công; không vượt lượng còn lại / lượng QC đạt / tồn khả dụng; vị trí phải đúng kho và đúng khu nhóm hàng; lịch trùng nhân viên bị chặn. Thứ tự lô xuất (hạn dùng → ngày nhập đầu tiên → mã lô): `src/shared/storage-queue.js` → `compare()`. Gợi ý ô nhập theo hạn dùng: cùng file → `recommend()`. |
-| UC-13 Lập đợt kiểm kê | `modules/tasks/TaskService.js` → `create()`, `validate()`; `modules/tasks/inspection-task.js` → `create()`; `modules/quality/QualityCampaignService.js` → `create()` | `public/js/task-inspection-forms.js` (form "Lập đợt kiểm kê") | Chỉ Ban giám đốc; nhân viên thuộc QC/AC hoặc Ban kiểm kê; người lập biên bản phải thuộc danh sách được giao; thời gian không ở quá khứ, kết thúc sau bắt đầu, không trước ngày nhận hàng; phần lô đã có đợt còn hiệu lực bị chặn; lịch trùng bị chặn. |
+| UC-29 Tiếp nhận đơn hàng | `modules/customer-orders/uc29-tiep-nhan-don.js` → `receiveOrder()`; xem đơn: `OrderService.js` → `list()`, `detail()` | `public/js/order-receiving.js` | Chỉ Bộ phận lập kế hoạch; chỉ đơn `SUBMITTED` → `RECEIVED`; đơn đã tiếp nhận báo lỗi; danh sách lọc sẵn đơn chờ. |
+| UC-06, 06.1–06.3 Danh mục kho | `modules/catalog/uc06-danh-muc.js` → `addCategory()`, `editCategory()`, `deleteCategory()`; kiểm tra dữ liệu nhập: `catalog-input.js`; ghi CSDL: `catalog-store.js` | `public/js/catalog-forms.js` → `categoryForm()`, `showCategoryCards()` | Bắt buộc tên và nhóm (NVL / thành phẩm); tên không trùng; mã tự sinh `DM-001`; đổi nhóm khi còn mặt hàng nhóm khác bị chặn; xóa khi còn mặt hàng / khu kho bị chặn; có `version` chống ghi đè. |
+| UC-07, 07.1–07.3 Mặt hàng | `modules/catalog/uc07-mat-hang.js` → `addItem()`, `editItem()`, `deleteItem()`; danh sách và tìm kiếm ở `modules/catalog/CatalogRepository.js` | `public/js/catalog-forms.js` → `itemForm()` | Mã tự sinh `NVL-…`/`TP-…`; danh mục phải cùng nhóm; giá phải là số ≥ 0; mặt hàng đã phát sinh chứng từ thì không đổi danh mục / ĐVT và không xóa được (`ITEM_USAGE`, `findUsage()`). |
+| UC-08 Quản lý nhập kho, UC-09 Quản lý xuất kho | `modules/warehouse/uc08-09-xem-truoc.js` (dữ liệu form phân công), `uc08-09-phan-cong-kho.js` → `dispatchRequest()` (lưu), `cancelAllocation()` (giải phóng), `uc08-09-kiem-tra.js` (các kiểm tra) | `public/js/uc08-09-phan-cong-kho.js` → `dispatchForm()`; phần "Phiếu đã ghi sổ" ở `public/js/actor-workspace.js` → `history()` | Chỉ quản lý phụ trách yêu cầu; kho đang kiểm kê thì không phân công; không vượt lượng còn lại / lượng QC đạt / tồn khả dụng; vị trí phải đúng kho và đúng khu nhóm hàng; lịch trùng nhân viên bị chặn. Thứ tự lô xuất (hạn dùng → ngày nhập đầu tiên → mã lô): `src/shared/storage-queue.js` → `compare()`. Gợi ý ô nhập theo hạn dùng: cùng file → `recommend()`. |
+| UC-13 Lập đợt kiểm kê | `modules/tasks/TaskService.js` → `create()`, `validate()`; `modules/tasks/uc13-lap-dot-kiem-ke.js` → `loadSources()`, `createCampaign()`; `modules/quality/QualityCampaignService.js` → `create()` | `public/js/uc13-lap-dot-kiem-ke.js` | Chỉ Ban giám đốc; nhân viên thuộc QC/AC hoặc Ban kiểm kê; người lập biên bản phải thuộc danh sách được giao; thời gian không ở quá khứ, kết thúc sau bắt đầu, không trước ngày nhận hàng; phần lô đã có đợt còn hiệu lực bị chặn; lịch trùng bị chặn. |
 
 ### Nguyễn Tiến Dũng — UC-02, UC-03, UC-03.1, UC-32, UC-16, UC-22
 

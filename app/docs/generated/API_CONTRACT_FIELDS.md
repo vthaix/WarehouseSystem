@@ -16,7 +16,7 @@ Danh sách trích từ C.fields trong service/helper. Đây là các field đư�
 | src/modules/customer-orders/OrderService.js | validateLines | line | item_id, quantity, note |
 | src/modules/customer-orders/OrderService.js | create | body | delivery_address, update_profile, latest_delivery_date, note, lines |
 | src/modules/customer-orders/OrderService.js | update | body | version, delivery_address, latest_delivery_date, note, lines, quantity_change_acknowledged |
-| src/modules/customer-orders/OrderService.js | receive | body | version |
+| src/modules/customer-orders/uc29-tiep-nhan-don.js | receiveOrder | body | version |
 | src/modules/exceptions/ExceptionService.js | create | b | stocktake_id, warehouse_id, stocktake_line_id, qc_inspection_line_id, action, quantity, reason, resolution_note, quarantine, allocations |
 | src/modules/exceptions/ExceptionService.js | review | b | version, decision, reason |
 | src/modules/exceptions/ExceptionService.js | apply | b | version |
@@ -94,15 +94,15 @@ Danh sách trích từ C.fields trong service/helper. Đây là các field đư�
 | src/modules/warehouse/LotService.js | createLot | line | purchase_order_line_id, received_quantity, manufactured_date, expiry_date |
 | src/modules/warehouse/LotService.js | createLot | body | code, item_id, purchase_order_id, purchase_order_line_id, received_quantity, manufactured_date, expiry_date, lot_header_id |
 | src/modules/warehouse/LotService.js | updateLot | body | version, manufactured_date, expiry_date |
-| src/modules/warehouse/WarehouseFlowService.js | cancelAllocation | body | version |
-| src/modules/warehouse/WarehouseFlowService.js | preview | query | task_id |
-| src/modules/warehouse/WarehouseFlowService.js | dispatch | body | version, start_at, end_at, allocations, allocation_mode |
-| src/modules/warehouse/WarehouseFlowService.js | dispatch | line | assignee_id, stock_request_line_id, lot_id, location_id, quality_bucket, quantity |
 | src/modules/warehouse/WarehouseFlowService.js | documents | query | page, per_page, q, type, sort, status, warehouse_id, item_id, from, to, format |
 | src/modules/warehouse/WarehouseFlowService.js | post | body | stock_request_id, request_version, task_id, note, allocations |
 | src/modules/warehouse/WarehouseFlowService.js | post | line | allocation_id, stock_request_line_id, lot_id, location_id, quality_bucket, quantity, difference_reason |
 | src/modules/warehouse/WarehouseRecordService.js | list | query | page, per_page, q, sort |
 | src/modules/warehouse/WarehouseRecordService.js | create | body | stock_request_id, note |
+| src/modules/warehouse/uc08-09-kiem-tra.js | helper | line | assignee_id, stock_request_line_id, lot_id, location_id, quality_bucket, quantity |
+| src/modules/warehouse/uc08-09-phan-cong-kho.js | dispatchRequest | body | version, start_at, end_at, allocations, allocation_mode |
+| src/modules/warehouse/uc08-09-phan-cong-kho.js | cancelAllocation | body | version |
+| src/modules/warehouse/uc08-09-xem-truoc.js | previewRequest | query | task_id |
 | src/services/AuthService.js | helper | body | username, password |
 | src/services/domain/business-flow.js | helper | b | purpose, production_report_id, workshop_id, requested_date, note, lines |
 | src/services/domain/business-flow.js | helper | b | campaign_type, quality_kind, planned_date, start_at, end_at, location, assignee_ids, lot_ids, purchase_order_id, finished_report_id, note |

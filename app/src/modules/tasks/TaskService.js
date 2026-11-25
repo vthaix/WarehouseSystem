@@ -3,12 +3,16 @@ const C = require("../../services/domain/core");
 const P = require("../../services/domain/policy");
 const paginate = require("../../utils/pagination");
 const recordCode = require("../../shared/record-code");
+const inspections = require("./uc13-lap-dot-kiem-ke");
 const isId = (v) => /^[1-9]\d*$/.test(String(v));
 class TaskService {
   constructor(pool) {
     this.pool = pool;
   }
-  async inspectionSources(user){P.role(user,['DIRECTOR']);return require('./inspection-task').sources(this.pool);}
+  async inspectionSources(user) {
+    P.role(user, ["DIRECTOR"]);
+    return inspections.loadSources(this.pool);
+  }
   async transaction(work) {
     const c = await this.pool.getConnection();
     c.taskScheduleLocks = [];
@@ -269,42 +273,30 @@ class TaskService {
   }
   async create(user, b, requestId) {
     P.role(user, ["DIRECTOR"]);
-    C.fields(b, [
-      "title",
-      "description",
-      "priority",
-      "start_at",
-      "end_at",
-      "assignee_ids",
-      "inspection_type","lot_header_id","finished_report_ids","material_source","material_lot_ids","location","minute_author_id",
-    ]);
-    const id = await this.transaction(async (c) => {
+    C.fields(b, ["title", "description", "priority", "start_at", "end_at", "assignee_ids",
+      "inspection_type", "lot_header_id", "finished_report_ids", "material_source", "material_lot_ids", "location", "minute_author_id"]);
+
+    const taskId = await this.transaction(async (c) => {
       const value = await this.validate(c, b);
-      const inspection=b.inspection_type?await require('./inspection-task').create(this.pool,c,user,b,value,requestId):null;
-      const [created] = await c.execute(
-        "INSERT INTO tasks (code,title,description,priority,start_at,end_at,status,created_by,version) VALUES (?,?,?,?,?,?,'PLANNED',?,1)",
-        [
-          await require('../../shared/readable-codes').next(c,'tasks','CV',b.title),
-          b.title,
-          b.description || null,
-          b.priority,
-          value.start,
-          value.end,
-          user.id,
-        ],
-      );
-      if(inspection)await c.execute("UPDATE tasks SET stocktake_id=?,task_type='LOT_INSPECTION' WHERE id=?",[inspection.id,created.insertId]);
-      for (const id of value.ids)
-        await c.execute(
-          "INSERT INTO task_assignments (task_id,user_id) VALUES (?,?)",
-          [created.insertId, id],
-        );
-      await this.audit(c, user, created.insertId, "CREATE", b, requestId);
-      for(const who of value.ids)await c.execute("INSERT INTO notifications(user_id,subject,body,resource_type,resource_id,business_key) VALUES (?,?,?,'tasks',?,?) ON DUPLICATE KEY UPDATE id=notifications.id",[who,'Công việc mới: '+b.title,b.description||'Bạn được phân công thực hiện công việc.',created.insertId,'task-'+created.insertId+'-assigned']);
-      if(inspection)await c.execute("INSERT INTO notifications(user_id,subject,body,resource_type,resource_id,business_key) VALUES (?,?,?,'tasks',?,?) ON DUPLICATE KEY UPDATE id=notifications.id",[inspection.NguoiLapBienBanDuocChon,'Bạn được phân công lập biên bản chung',b.title,created.insertId,'task-'+created.insertId+'-minute-author-created']);
-      return created.insertId;
+      const campaign = b.inspection_type
+        ? await inspections.createCampaign(this.pool, c, user, b, value.ids, requestId)
+        : null;
+
+      const id = await insertTask(c, user, b, value);
+      if (campaign) await c.execute("UPDATE tasks SET stocktake_id=?,task_type='LOT_INSPECTION' WHERE id=?", [campaign.id, id]);
+      for (const userId of value.ids)
+        await c.execute("INSERT INTO task_assignments (task_id,user_id) VALUES (?,?)", [id, userId]);
+      await this.audit(c, user, id, "CREATE", b, requestId);
+
+      for (const userId of value.ids)
+        await notifyNewTask(c, userId, id, "Công việc mới: " + b.title,
+          b.description || "Bạn được phân công thực hiện công việc.", "task-" + id + "-assigned");
+      if (campaign)
+        await notifyNewTask(c, campaign.NguoiLapBienBanDuocChon, id, "Bạn được phân công lập biên bản chung",
+          b.title, "task-" + id + "-minute-author-created");
+      return id;
     });
-    return this.get(user, String(id));
+    return this.get(user, String(taskId));
   }
   async update(user, id, b, requestId) {
     P.role(user, ["DIRECTOR"]);
@@ -446,6 +438,22 @@ class TaskService {
 /** Công việc đã bắt đầu: đang thực hiện, hoặc đã tới giờ bắt đầu theo lịch. */
 function isUnderway(task) {
   return task.status === "IN_PROGRESS" || new Date(task.start_at).getTime() <= Date.now();
+}
+
+async function insertTask(c, user, b, value) {
+  const code = await require("../../shared/readable-codes").next(c, "tasks", "CV", b.title);
+  const [created] = await c.execute(
+    "INSERT INTO tasks (code,title,description,priority,start_at,end_at,status,created_by,version) VALUES (?,?,?,?,?,?,'PLANNED',?,1)",
+    [code, b.title, b.description || null, b.priority, value.start, value.end, user.id],
+  );
+  return created.insertId;
+}
+
+async function notifyNewTask(c, userId, taskId, subject, body, businessKey) {
+  await c.execute(
+    "INSERT INTO notifications(user_id,subject,body,resource_type,resource_id,business_key) VALUES (?,?,?,'tasks',?,?) ON DUPLICATE KEY UPDATE id=notifications.id",
+    [userId, subject, body, taskId, businessKey],
+  );
 }
 
 async function notifyAssignee(c, userId, taskId, version, subject, body) {

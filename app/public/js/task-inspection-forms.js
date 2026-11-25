@@ -66,38 +66,7 @@ async function createFinishedPartForm(record=null){
   const previousCreate=createForm,previousAction=actionForm;
   createForm=async function(){
     if(current==='tasks')return;
-    if(!isMysql||current!=='stocktakes')return previousCreate();
-    try{
-      const sources=(await api('task-inspection-sources')).data,users=await options('users');
-      openModal('Lập đợt kiểm kê',formWrap(inputField('inspection_type','select',true,[{id:'FINISHED_PRODUCT',name:'Thành phẩm'},{id:'MATERIAL',name:'Nguyên vật liệu'}])+'<div class="field"><label for="inspection-lot">Lô hàng *</label><select id="inspection-lot" required></select></div><div class="span2" id="inspection-parts"></div>'+inputField('title')+inputField('priority','select',true,['NORMAL','HIGH','LOW'])+inputField('start_at','datetime-local')+inputField('end_at','datetime-local')+inputField('location','text',true,[],'Khu kiểm tra lô hàng')+employeePicker(users)+'<div class="span2 notice">Ban kiểm kê kiểm số lượng; QA/QC kiểm chất lượng. Chọn cả hai bộ phận để thực hiện cả hai nội dung trong cùng đợt.</div>'+inputField('description','textarea',false)));
-      document.querySelector('label[for="f-inspection_type"]').textContent='Nhóm hàng *';
-      document.querySelector('label[for="f-title"]').textContent='Tên đợt kiểm kê *';
-      const kind=()=>document.querySelector('#f-inspection_type').value;
-      const selectedParts=()=>[...document.querySelectorAll('[data-finished-part]:checked')].map(i=>i.value);
-      const group=()=> (kind()==='FINISHED_PRODUCT'?sources.finished_lots:sources.material_lots).find(g=>g.id===document.querySelector('#inspection-lot').value);
-      const dates=()=>{
-        const g=group();const day=kind()==='MATERIAL'?g?.expected_date:g?.parts.filter(p=>selectedParts().includes(p.id)).map(p=>p.expected_date).sort().at(-1);
-        const value=[day||calendarToday(),calendarToday()].sort().at(-1);
-        const start=document.querySelector('#f-start_at'),end=document.querySelector('#f-end_at');start.min=value+'T00:00';start.value=value+'T08:00';end.min=start.value;end.value=value+'T09:00';
-      };
-      const showParts=()=>{
-        const g=group();document.querySelector('#inspection-parts').innerHTML=kind()==='FINISHED_PRODUCT'?'<div class="form-section"><h3>Các phần của lô theo báo cáo thành phẩm</h3>'+((g?.parts||[]).map(p=>'<label class="employee-profile"><input type="checkbox" data-finished-part value="'+esc(p.id)+'"><span><strong>'+esc(p.code)+'</strong><small>'+esc(p.lines.map(l=>l.item_name+': '+format(l.quantity)).join(' · '))+' · '+esc(format(p.expected_date))+'</small></span></label>').join('')||'<p>Chưa có báo cáo thành phẩm đã gửi còn phần chờ kiểm tra trong lô này.</p>')+'</div>':'<div class="notice">'+(g?.id?.startsWith('PO:')?'Lô nguyên vật liệu của đơn mua lập trực tiếp. ':'Lô nguyên vật liệu được đối chiếu từ kế hoạch mua đã duyệt. ')+esc(g?.expected_date?format(g.expected_date):'')+'</div>';
-        document.querySelectorAll('[data-finished-part]').forEach(i=>{
-          const part=g?.parts.find(p=>p.id===i.value);i.disabled=part?.available===false;
-          if(i.disabled)i.closest('label').querySelector('small').insertAdjacentText('beforeend',' · Đã giao kiểm tra / đã có kết quả');
-          i.onchange=dates;
-        });
-        if(kind()==='MATERIAL'){
-          const eligible=g?.eligible_lots||[];
-          document.querySelector('#inspection-parts').insertAdjacentHTML('beforeend','<div class="form-section"><h3>Chọn phần lô nguyên vật liệu đã nhận</h3><p class="material-reconciliation-note">Chỉ chọn các đợt đã ghi nhận thuộc đúng nguồn; không gộp số lượng cả lô tổng.</p>'+(eligible.length?'<div class="field"><label for="inspection-material-lots">Phần lô đang chờ QC *</label><select id="inspection-material-lots" multiple size="6" required>'+eligible.map(l=>'<option value="'+esc(l.id)+'">'+esc(l.name)+'</option>').join('')+'</select><small>Giữ Ctrl (hoặc Command) để chọn nhiều phần lô.</small></div>':'<div class="notice">Chưa có phần lô nguyên vật liệu thực tế chờ kiểm tra. Bạn vẫn có thể lập đợt dự kiến; khi hàng được ghi nhận, chọn bổ sung phần lô trong chi tiết công việc.</div>')+'</div>');
-        }
-        document.querySelector('#f-title').value=(kind()==='MATERIAL'?'Kiểm tra nguyên vật liệu ':'Kiểm tra thành phẩm ')+(g?.code||'');dates();
-      };
-      const sync=()=>{document.querySelector('#inspection-lot').innerHTML=(kind()==='FINISHED_PRODUCT'?sources.finished_lots:sources.material_lots).map(g=>'<option value="'+esc(g.id)+'">'+esc(g.code)+'</option>').join('');showParts();};
-      document.querySelector('#f-inspection_type').onchange=sync;document.querySelector('#inspection-lot').onchange=showParts;
-      document.querySelector('#f-start_at').onchange=()=>document.querySelector('#f-end_at').min=document.querySelector('#f-start_at').value;
-      bindForm(d=>{const g=group();if(!g)throw Error('Chưa có lô phù hợp để kiểm tra.');const ids=selectedParts();if(kind()==='FINISHED_PRODUCT'&&!ids.length)throw Error('Chọn ít nhất một phần theo báo cáo thành phẩm.');const materialIds=[...document.querySelector('#inspection-material-lots')?.selectedOptions||[]].map(o=>o.value);if(kind()==='MATERIAL'&&g.eligible_lots?.length&&!materialIds.length)throw Error('Chọn ít nhất một phần lô nguyên vật liệu đã nhận.');return {...d,start_at:new Date(d.start_at+'+07:00').toISOString(),end_at:new Date(d.end_at+'+07:00').toISOString(),assignee_ids:selectedEmployees(),...(kind()==='FINISHED_PRODUCT'?{lot_header_id:g.id,finished_report_ids:ids}:{material_source:g.id,material_lot_ids:materialIds})};},'tasks');sync();
-    }catch(e){openModal('Không thể lập đợt kiểm kê',errorHTML(e));}
+    return previousCreate();
   };
   actionForm=async function(r,action){
     if(action==='recordCount'){

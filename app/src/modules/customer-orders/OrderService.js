@@ -2,6 +2,8 @@ const C = require("../../services/domain/core");
 const P = require("../../services/domain/policy");
 const paginate = require("../../utils/pagination");
 const recordCode = require("../../shared/record-code");
+const transaction = require("../../shared/transaction");
+const receiveOrder = require("./uc29-tiep-nhan-don");
 
 const statuses = [
   "SUBMITTED",
@@ -41,19 +43,8 @@ class OrderService {
     this.pool = pool;
   }
 
-  async transaction(work) {
-    const connection = await this.pool.getConnection();
-    try {
-      await connection.beginTransaction();
-      const result = await work(connection);
-      await connection.commit();
-      return result;
-    } catch (error) {
-      await connection.rollback();
-      throw error;
-    } finally {
-      connection.release();
-    }
+  transaction(work) {
+    return transaction(this.pool, work);
   }
 
   customerOnly(user) {
@@ -372,28 +363,8 @@ class OrderService {
     return this.get(user, id);
   }
 
-  // ---------------------------------------------------------------------------
-  // UC-29 TIẾP NHẬN ĐƠN HÀNG (Bộ phận lập kế hoạch)
-  // Đơn "Chờ tiếp nhận" (SUBMITTED) → "Đã tiếp nhận" (RECEIVED), ghi người và thời điểm tiếp nhận.
-  // Ban giám đốc không duyệt đơn ở đây; đơn được duyệt theo kế hoạch sản xuất (UC-31).
-  // ---------------------------------------------------------------------------
-  async receive(user, id, body, requestId) {
-    P.role(user, ["PLANNER"]); // ngoại lệ 5.2: chỉ Bộ phận lập kế hoạch
-    C.fields(body, ["version"]);
-    C.fail(!Number.isInteger(body.version), "VALIDATION_ERROR", "Thiếu phiên bản đơn hàng.");
-    await this.transaction(async (connection) => {
-      const order = await this.load(connection, user, id, true); // khóa đơn để hai người không cùng tiếp nhận
-      // Ngoại lệ 5.1: đơn đã tiếp nhận / không còn chờ tiếp nhận.
-      C.fail(order.status !== "SUBMITTED", "INVALID_STATE",
-        "Đơn hàng đã được tiếp nhận hoặc không còn được phép tiếp nhận. Vui lòng tải lại danh sách và chọn đơn khác.", 409);
-      C.version(order, body.version); // ngoại lệ 5.3: đơn vừa bị khách sửa
-      await connection.execute(
-        "UPDATE customer_orders SET status='RECEIVED',received_by=?,received_at=UTC_TIMESTAMP(6),version=version+1 WHERE id=?",
-        [user.id, id],
-      );
-      await this.audit(connection, user, id, "RECEIVE", { status: "SUBMITTED" }, { status: "RECEIVED" }, requestId);
-    });
-    return this.get(user, id);
+  receive(user, id, body, requestId) {
+    return receiveOrder(this, user, id, body, requestId);
   }
 
   async review(user, id, body, key, requestId) {

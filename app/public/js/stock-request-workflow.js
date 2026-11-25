@@ -357,6 +357,7 @@
 
   /** Sơ đồ kho đánh dấu ô được phân công của từng dòng (chỉ để xem). */
   function mountPositionMaps(data, pending, verb) {
+    if (!data.locations?.length) return;
     for (const section of document.querySelectorAll("[data-post-index]")) {
       const allocation = pending[Number(section.dataset.postIndex)];
       const fold = document.createElement("details");
@@ -364,7 +365,7 @@
       fold.innerHTML = '<summary class="button small">Xem vị trí ' + verb + " trên sơ đồ kho</summary>";
       const locations = data.locations.map((l) => ({
         ...l,
-        stock: data.balances.filter((b) => String(b.location_id) === l.id && Number(b.quantity) > 0),
+        stock: (data.balances || []).filter((b) => String(b.location_id) === l.id && Number(b.quantity) > 0),
       }));
       fold.append(createWarehouseSeatMap({ locations, selectedId: String(allocation.location_id) }));
       section.querySelector("[data-position-map]").append(fold);

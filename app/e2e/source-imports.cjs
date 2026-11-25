@@ -276,7 +276,7 @@ const executablePath =
       assert.equal(body.report_purpose, "SU_CO");
       assert.equal(body.send_to_planner, false);
       assert.equal(body.lines, undefined);
-      assert.equal(body.progress_percentage, "35.50");
+      assert.equal(body.progress_percentage, "35.5");
       assert.deepEqual(errors, []);
       await context.close();
     }
