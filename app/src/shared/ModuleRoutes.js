@@ -232,6 +232,16 @@ module.exports = (runtime) => {
           })),
       );
     }
+    // Vị trí của đúng một kho (hàng khách trả): không bị giới hạn 100 vị trí mới nhất của mọi kho.
+    if (req.params.resource === "warehouse-locations" && req.query.warehouse_id !== undefined) {
+      P.role(req.user, ["WAREHOUSE_MANAGER", "WAREHOUSE_STAFF"]);
+      C.fail(!/^[1-9]\d*$/.test(String(req.query.warehouse_id)), "VALIDATION_ERROR", "Kho không hợp lệ.");
+      const [rows] = await runtime.pool.execute(
+        "SELECT id,warehouse_id,code,name FROM warehouse_locations WHERE warehouse_id=? AND is_active=1 ORDER BY zone_name,depth,id",
+        [req.query.warehouse_id],
+      );
+      return ok(req, res, rows.map((r) => ({ ...r, id: String(r.id), warehouse_id: String(r.warehouse_id) })));
+    }
     const lookupRoles = {
       items: ["PLANNER", "PURCHASER", "WAREHOUSE_MANAGER", "WORKSHOP_OWNER"],
       suppliers: ["PLANNER", "PURCHASER", "WAREHOUSE_MANAGER"],

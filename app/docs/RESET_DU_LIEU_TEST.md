@@ -1,8 +1,21 @@
-# Bắt đầu kiểm thử từ dữ liệu trống
+# Nút xóa dữ liệu test
 
-## Nút xóa dữ liệu test
+## Nút hiện hành (từ 25/11/2026): khôi phục bộ dữ liệu test mặc định
 
-Trong môi trường development, mọi tài khoản đăng nhập đều có **Xóa dữ liệu test** cạnh **Đăng xuất**. Bấm nút, đọc phạm vi và nhập chính xác `XOA DU LIEU TEST`, rồi xác nhận. Nút xóa dữ liệu nghiệp vụ của toàn hệ thống, không chỉ tài khoản đang dùng. Giữ tài khoản/quyền, khách hàng, mặt hàng, loại hàng, đơn vị, nhà cung cấp, xưởng, kho và vị trí; tồn kho trở về 0. Các ảnh danh mục được giữ nguyên.
+Trong môi trường development, mọi tài khoản đăng nhập đều có **Xóa dữ liệu test** cạnh **Đăng xuất**. Bấm nút, đọc phạm vi, nhập chính xác `XOA DU LIEU TEST` rồi xác nhận. Toàn bộ CSDL trở về đúng bộ dữ liệu mặc định: chứng từ, tồn kho, danh mục, mặt hàng, kho, nhà cung cấp và tài khoản. Dữ liệu tự thêm hoặc tự sửa sẽ mất; hệ thống sao lưu trước vào `/var/backups/warehouse`. Mọi người đăng nhập lại.
+
+Bộ dữ liệu có gì, test UC nào thì dùng bản ghi nào: xem [DU_LIEU_TEST_MAC_DINH.md](DU_LIEU_TEST_MAC_DINH.md).
+
+- Dữ liệu nằm ở `database/seeders/default-data.json`, do `src/shared/default-data.js` nạp lại. Ngày sinh dữ liệu được dời thành hôm trước của ngày bấm nút, các ngày khác dời theo.
+- Xóa và nạp trong một giao dịch: lỗi giữa chừng thì dữ liệu cũ còn nguyên. CSDL thiếu migration so với bộ dữ liệu thì báo lỗi và không xóa gì.
+- Sinh lại bộ dữ liệu (khi thêm migration hoặc đổi quy tắc): trên bản review riêng có `ACCEPTANCE_MONOLITH=true`, CSDL vừa migrate + seed, chạy `node scripts/build-default-data.cjs <thư mục>` rồi chép `default-data.json` vào `database/seeders`, `DU_LIEU_TEST_MAC_DINH.md` vào `docs`. Nội dung từng UC ở `scripts/default-data/scenarios.cjs`.
+- Các bài kiểm thử tự động cần CSDL trống (`monolith-acceptance`, `rebuild-monolith-fixtures-test`, `queue-demo-check`): đặt `RESET_DEFAULT_DATA=false`, khi đó nút chỉ xóa chứng từ và giữ tài khoản, danh mục như trước.
+
+Chức năng bắt buộc đồng thời `NODE_ENV=development` và `ENABLE_TEST_RESET=true`; production luôn tắt.
+
+## Ghi chép cũ (bản nhiều service, tháng 10/2026)
+
+Phần dưới giữ để tra cứu, không còn đúng với nút hiện hành.
 
 Gateway tạm chặn yêu cầu mới và đợi yêu cầu đang chạy xong. Tiện ích nội bộ `test-reset` sao lưu đủ sáu schema vào volume `database_backups`, xóa trong transaction rồi đối chiếu dữ liệu. Thành công hiển thị đường dẫn backup và nút **Đăng nhập lại**; mọi phiên cũ đã bị xóa. Gửi lại cùng mã yêu cầu trả kết quả cũ, không xóa dữ liệu vừa tạo sau lần xóa trước. Không tự chạy chức năng này khi khởi động.
 

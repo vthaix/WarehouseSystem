@@ -1,6 +1,6 @@
 window.addEventListener("DOMContentLoaded", () => {
   document.querySelector("#reset-test-data")?.addEventListener("click", () => {
-    openModal("Xóa dữ liệu test của toàn hệ thống", `<p>Thao tác này xóa đơn hàng, kế hoạch, báo cáo, lô hàng, phiếu nhập/xuất, tồn kho, QC, kiểm kê, công việc và thông báo của <strong>tất cả tài khoản</strong>.</p><p>Giữ tài khoản, khách hàng, mặt hàng, loại hàng, đơn vị, nhà cung cấp, xưởng, kho và vị trí. Hệ thống sao lưu trước khi xóa; mọi người cần đăng nhập lại.</p><form id="test-reset-form"><div class="field"><label for="reset-confirmation">Nhập XOA DU LIEU TEST để xác nhận</label><input id="reset-confirmation" required autocomplete="off" spellcheck="false" pattern="XOA DU LIEU TEST"></div><div id="reset-error" role="alert"></div><p id="reset-progress" role="status"></p><div class="form-actions"><button class="button" type="button" id="cancel-reset">Hủy</button><button class="button danger" type="submit">Xác nhận xóa dữ liệu</button></div></form>`);
+    openModal("Xóa dữ liệu test của toàn hệ thống", `<p>Toàn bộ dữ liệu của <strong>tất cả tài khoản</strong> sẽ trở về <strong>bộ dữ liệu test mặc định</strong>: đơn hàng, kế hoạch, báo cáo, lô hàng, phiếu kho, tồn kho, QC, kiểm kê, công việc.</p><p>Tài khoản, danh mục, mặt hàng, kho và nhà cung cấp tự thêm hoặc tự sửa cũng <strong>mất</strong>. Hệ thống sao lưu trước khi khôi phục; mọi người cần đăng nhập lại.</p><form id="test-reset-form"><div class="field"><label for="reset-confirmation">Nhập XOA DU LIEU TEST để xác nhận</label><input id="reset-confirmation" required autocomplete="off" spellcheck="false" pattern="XOA DU LIEU TEST"></div><div id="reset-error" role="alert"></div><p id="reset-progress" role="status"></p><div class="form-actions"><button class="button" type="button" id="cancel-reset">Hủy</button><button class="button danger" type="submit">Xác nhận xóa dữ liệu</button></div></form>`);
     const form = document.querySelector("#test-reset-form");
     const key = crypto.randomUUID();
     document.querySelector("#cancel-reset").onclick = () => modal.close();
@@ -13,10 +13,11 @@ window.addEventListener("DOMContentLoaded", () => {
       document.querySelector("#close-modal").disabled = true;
       const preventClose = e => e.preventDefault();
       modal.addEventListener("cancel", preventClose);
-      document.querySelector("#reset-progress").textContent = "Đang đợi thao tác đang chạy, sao lưu và xóa dữ liệu. Vui lòng chờ…";
+      document.querySelector("#reset-progress").textContent = "Đang đợi thao tác đang chạy, sao lưu và khôi phục dữ liệu mặc định. Vui lòng chờ…";
       document.querySelector("#reset-error").textContent = "";
       try {
         const response = await api("test-data/reset", "POST", { confirmation }, key);
+        user = null; // phiên đã hết: giữ hộp thoại để đọc kết quả, không tự nhảy về trang đăng nhập
         sessionStorage.removeItem("production-comparison-draft");
         document.querySelector("#reset-progress").textContent = response.data.message;
         form.innerHTML = `<p>${esc(response.data.message)}</p><p>Bản sao lưu: <code>${esc(response.data.backup)}</code></p><a class="button primary" href="/login">Đăng nhập lại</a>`;

@@ -21,6 +21,7 @@ x-env: &env
   AUTO_MIGRATE: "false"
   SEED_DEMO: "false"
   ENABLE_TEST_RESET: ${ENABLE_TEST_RESET:-true}
+  RESET_DEFAULT_DATA: ${RESET_DEFAULT_DATA:-true}
 services:
   setup:
     <<: *app

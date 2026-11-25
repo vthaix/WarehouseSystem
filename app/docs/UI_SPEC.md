@@ -26,7 +26,7 @@ Danh sách module/route/vai trò hiện hành nằm ở [generated/PROJECT_MANIF
 
 Form kế hoạch MUA hiện mã báo cáo thay `[object Object]`, ẩn NCC và dùng nhãn **Ngày mong nhận NVL**. Form đơn mua chỉ Tự nhập/Kế hoạch mua NVL; mỗi dòng NVL có NCC và giá, ngày PLAN tự điền/chỉ đọc. Nhận lô chọn NCC để lọc dòng. Lịch mới có min hôm nay, KHSX có max hạn giao đơn; backend kiểm lại. Chi tiết [MUA_NVL_VA_RANG_BUOC_NGAY.md](MUA_NVL_VA_RANG_BUOC_NGAY.md).
 
-Development có nút tạm **Xóa dữ liệu test** cạnh Đăng xuất cho mọi actor. Hộp thoại nêu phạm vi toàn hệ thống, danh mục giữ lại, yêu cầu nhập `XOA DU LIEU TEST`, có Hủy và khóa nút khi đang chạy. Thành công hiển thị backup và Đăng nhập lại. Trên điện thoại nhóm nút xuống hàng để tránh tràn. Tắt bằng `ENABLE_TEST_RESET=false`; production không hiện nút và endpoint bị chặn. Chi tiết [RESET_DU_LIEU_TEST.md](RESET_DU_LIEU_TEST.md).
+Development có nút tạm **Xóa dữ liệu test** cạnh Đăng xuất cho mọi actor. Hộp thoại nêu phạm vi toàn hệ thống, toàn bộ dữ liệu (cả danh mục, tài khoản) trở về bộ dữ liệu test mặc định, yêu cầu nhập `XOA DU LIEU TEST`, có Hủy và khóa nút khi đang chạy. Thành công hiển thị backup và Đăng nhập lại. Trên điện thoại nhóm nút xuống hàng để tránh tràn. Tắt bằng `ENABLE_TEST_RESET=false`; production không hiện nút và endpoint bị chặn. Chi tiết [RESET_DU_LIEU_TEST.md](RESET_DU_LIEU_TEST.md).
 
 UC-31 thực hiện tại **Kế hoạch sản xuất**, chọn đúng KHSX → **Phê duyệt**. Form gửi version của KHSX; không chuyển sang API duyệt đơn. Đơn hàng không có nút duyệt; khách tự thấy trạng thái đã phê duyệt sau khi giám đốc duyệt KHSX nguồn. Từ chối KHSX có lý do, trả planner chỉnh sửa và giữ đơn ở trạng thái hiện tại.
 

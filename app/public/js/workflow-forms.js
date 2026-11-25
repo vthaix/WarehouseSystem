@@ -7,12 +7,12 @@ createForm = async function () {
     if(isMysql && current === "customer-returns") {
       const deliveries=(await api("customer-return-deliveries")).data;
       if(!deliveries.length){toast("Chưa có dòng phiếu giao còn lượng được trả.");return;}
-      const warehouses=await options("warehouses"),locations=await options("warehouse-locations"),users=await options("users");
+      const warehouses=await options("warehouses"),users=await options("users");
       const editor=lineEditor("Dòng phiếu giao khách",deliveries.map(d=>({...d,name:d.delivery_code+" · Đơn "+(d.customer_order_code||"—")+" · "+(d.customer_name||"khách hàng")+" · "+d.item_name+" · Đã giao "+format(d.quantity)+", đã trả "+format(d.returned_quantity)+", còn được trả "+format(String(Number(d.quantity)-Number(d.returned_quantity)))})),"lines",["quantity"]);
       openModal("Ghi nhận hàng khách trả",formWrap(f("warehouse_id","select",true,warehouses)+f("receiver_id","select",true,users.filter(u=>u.roles.includes("WAREHOUSE_STAFF")))+f("return_location_id","select",true,[])+f("reason","textarea")+'<div class="span2 notice">Nhận vào nhóm cách ly để QC kiểm tra. Giữ nguyên lịch sử giao hàng, không tự giao bù hoặc hoàn tiền.</div>'+editor.html));
       editor.mount();
-      const sync=()=>{const warehouse=document.querySelector("#f-warehouse_id").value;document.querySelector("#f-return_location_id").innerHTML=locations.filter(l=>String(l.warehouse_id)===warehouse).map(l=>'<option value="'+esc(l.id)+'">'+esc(l.name||l.code)+'</option>').join("");};
-      document.querySelector("#f-warehouse_id").onchange=sync;sync();
+      const sync=async()=>{const warehouse=document.querySelector("#f-warehouse_id").value,locations=await options("warehouse-locations?warehouse_id="+encodeURIComponent(warehouse)),field=document.querySelector("#f-return_location_id");if(!field||document.querySelector("#f-warehouse_id").value!==warehouse)return;field.innerHTML=locations.map(l=>'<option value="'+esc(l.id)+'">'+esc(l.name||l.code)+'</option>').join("");};
+      document.querySelector("#f-warehouse_id").onchange=sync;await sync();
       bindForm(d=>({warehouse_id:d.warehouse_id,receiver_id:d.receiver_id,reason:d.reason,lines:readLines().map(l=>({original_stock_document_line_id:l.item_id,quantity:l.quantity,location_id:d.return_location_id}))}),current);return;
     }
     if (isMysql && current === "stocktake-minutes") {
